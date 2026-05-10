@@ -1,0 +1,26 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 220 200" fill="none">
+  <!-- Book / open wings -->
+  <path d="M8 155 Q55 128 110 138 Q165 128 212 155 L208 168 Q160 145 110 158 Q60 145 12 168 Z" fill="#5C2D08"/>
+  <!-- Owl body -->
+  <path d="M46 138 Q44 78 110 74 Q176 78 174 138 Q152 162 110 164 Q68 162 46 138Z" fill="#5C2D08"/>
+  <!-- Left eye white -->
+  <ellipse cx="82" cy="112" rx="25" ry="23" fill="white"/>
+  <!-- Right eye white -->
+  <ellipse cx="138" cy="112" rx="25" ry="23" fill="white"/>
+  <!-- Left pupil -->
+  <circle cx="82" cy="114" r="14" fill="#2D1305"/>
+  <!-- Right pupil -->
+  <circle cx="138" cy="114" r="14" fill="#2D1305"/>
+  <!-- V brow between eyes -->
+  <path d="M95 96 L110 106 L125 96" stroke="#3D1A05" stroke-width="5" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+  <!-- Beak -->
+  <path d="M103 122 L110 134 L117 122 Z" fill="#8B4513"/>
+  <!-- Graduation cap flat top -->
+  <polygon points="62,78 110,55 158,78" fill="#111111"/>
+  <!-- Cap box -->
+  <rect x="80" y="76" width="60" height="14" rx="3" fill="#111111"/>
+  <!-- Tassel string -->
+  <line x1="158" y1="78" x2="162" y2="106" stroke="#5C2D08" stroke-width="4" stroke-linecap="round"/>
+  <!-- Tassel end -->
+  <rect x="156" y="104" width="12" height="16" rx="3" fill="#5C2D08"/>
+</svg>

@@ -3,123 +3,269 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>AbiLearn — CBSE Class 10</title>
-  <meta name="description" content="Complete CBSE Class 10 study portal with notes, MCQs, and Owlix AI chatbot for Maths, Science, English and Social Science.">
+  <title>AbiLearn — CBSE Class 10 Study Platform</title>
+  <meta name="description" content="The best CBSE Class 10 study platform with notes, formula sheets, MCQs, PYQs and Owlix AI for instant doubt solving.">
   <link rel="stylesheet" href="css/style.css">
-  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>📚</text></svg>">
+  <link rel="icon" href="assets/logo.svg" type="image/svg+xml">
 </head>
 <body>
 
-  <!-- NAVBAR -->
-  <nav class="navbar">
-    <a href="index.html" class="logo">
-      <div class="logo-icon">📚</div>
-      <span class="logo-text">Abi<span>Learn</span></span>
-    </a>
-    <ul class="nav-links" id="navLinks">
-      <li><a href="index.html" class="active">Home</a></li>
-      <li><a href="maths.html">Maths</a></li>
-      <li><a href="science.html">Science</a></li>
-      <li><a href="english.html">English</a></li>
-      <li><a href="social.html">Social</a></li>
-    </ul>
-    <div class="nav-right">
-      <div class="search-bar">
-        <span class="search-icon">🔍</span>
-        <input type="text" placeholder="Search topics..." id="searchInput" autocomplete="off">
-        <div class="search-results" id="searchResults"></div>
-      </div>
-      <button class="hamburger" id="hamburger" aria-label="Menu">
-        <span></span><span></span><span></span>
-      </button>
-    </div>
-  </nav>
+<!-- ═══ NAVBAR ═══ -->
+<nav class="navbar">
+  <a href="index.html" class="logo">
+    <img src="assets/logo.svg" alt="AbiLearn" class="logo-img">
+    <span class="logo-text">Abi<span>Learn</span></span>
+  </a>
 
-  <!-- HERO -->
-  <section class="hero">
-    <h1>Master CBSE Class 10<br><span>Your Way</span></h1>
-    <p>Complete notes, MCQ practice, and instant doubt-solving with Owlix AI — for Maths, Science, English &amp; Social Science.</p>
-    <div class="hero-stats">
-      <div class="stat">
-        <div class="stat-number">50+</div>
-        <div class="stat-label">Chapters</div>
+  <ul class="nav-links" id="navLinks">
+    <li><a href="index.html" class="active">Home</a></li>
+    <li class="nav-dropdown">
+      <button class="nav-dropdown-toggle">Subjects <span class="dropdown-arrow">▾</span></button>
+      <div class="dropdown-menu">
+        <a href="maths.html"><div class="sub-icon maths">📐</div><div><div style="font-weight:700;color:white">Mathematics</div><div style="font-size:0.72rem;color:rgba(255,255,255,0.5)">Algebra, Geometry, Statistics</div></div></a>
+        <a href="science.html"><div class="sub-icon science">🔬</div><div><div style="font-weight:700;color:white">Science</div><div style="font-size:0.72rem;color:rgba(255,255,255,0.5)">Physics, Chemistry, Biology</div></div></a>
+        <a href="english.html"><div class="sub-icon english">📖</div><div><div style="font-weight:700;color:white">English</div><div style="font-size:0.72rem;color:rgba(255,255,255,0.5)">First Flight, Grammar, Writing</div></div></a>
+        <a href="social.html"><div class="sub-icon social">🌍</div><div><div style="font-weight:700;color:white">Social Science</div><div style="font-size:0.72rem;color:rgba(255,255,255,0.5)">History, Geography, Civics</div></div></a>
       </div>
-      <div class="stat">
-        <div class="stat-number">150+</div>
-        <div class="stat-label">MCQs</div>
+    </li>
+    <li><a href="#" onclick="document.getElementById('owlixToggle').click();return false;">Ask Owlix AI 🦉</a></li>
+  </ul>
+
+  <div class="nav-right">
+    <div class="search-bar">
+      <span class="search-icon">🔍</span>
+      <input type="text" placeholder="Search topics..." id="searchInput" autocomplete="off">
+      <div class="search-results" id="searchResults"></div>
+    </div>
+    <button class="btn-login">Log In</button>
+    <button class="btn-signup">Sign Up Free</button>
+    <button class="hamburger" id="hamburger" aria-label="Menu">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+</nav>
+
+<!-- ═══ HERO ═══ -->
+<section class="hero">
+  <div class="hero-blobs">
+    <div class="blob blob-1"></div>
+    <div class="blob blob-2"></div>
+    <div class="blob blob-3"></div>
+  </div>
+  <div class="hero-grid container" style="padding-top:0;padding-bottom:0">
+    <div class="hero-left">
+      <div class="hero-badge">✅ CBSE 2025 Board Aligned &nbsp;|&nbsp; 🏆 Trusted by Students</div>
+      <h1>Score <span class="highlight">Top Marks</span> in Class 10 Board Exams</h1>
+      <p>Complete notes, formula sheets, MCQ practice, PYQs — and instant doubt solving with <strong style="color:var(--purple-300)">Owlix AI</strong>. Everything you need to ace your boards, in one place.</p>
+      <div class="hero-cta">
+        <a href="maths.html" class="btn btn-primary btn-lg">Start Learning Now →</a>
+        <button onclick="document.getElementById('owlixToggle').click()" class="btn btn-glass btn-lg">Ask Owlix AI 🦉</button>
       </div>
-      <div class="stat">
-        <div class="stat-number">4</div>
-        <div class="stat-label">Subjects</div>
+      <div class="hero-social-proof">
+        <div class="proof-avatars">
+          <div class="proof-avatar">A</div>
+          <div class="proof-avatar">R</div>
+          <div class="proof-avatar">S</div>
+          <div class="proof-avatar">K</div>
+          <div class="proof-avatar">P</div>
+        </div>
+        <span class="proof-text"><strong>500+ students</strong> already using AbiLearn</span>
       </div>
-      <div class="stat">
-        <div class="stat-number">24/7</div>
-        <div class="stat-label">Owlix AI</div>
+    </div>
+    <div class="hero-right">
+      <div class="mockup-card">
+        <div class="mockup-header">
+          <div class="mockup-avatar">🦉</div>
+          <div>
+            <div class="mockup-name">Owlix AI</div>
+            <div class="mockup-status"><span class="online-dot"></span>Online — Ask me anything</div>
+          </div>
+        </div>
+        <div class="mockup-msg">
+          <strong>What is Ohm's Law?</strong>
+        </div>
+        <div class="mockup-msg" style="background:linear-gradient(135deg,rgba(124,58,237,0.15),rgba(167,139,250,0.1))">
+          ⚡ <strong style="color:var(--purple-300)">Ohm's Law:</strong><br>
+          <strong>V = IR</strong> (Voltage = Current × Resistance)<br><br>
+          📌 Key Points:<br>
+          1️⃣ V = voltage (Volts)<br>
+          2️⃣ I = current (Amperes)<br>
+          3️⃣ R = resistance (Ohms Ω)<br><br>
+          <strong>Power: P = VI = I²R = V²/R</strong>
+        </div>
+        <div class="mockup-chips">
+          <div class="mockup-chip">Photosynthesis? 🌱</div>
+          <div class="mockup-chip">Dandi March 📅</div>
+          <div class="mockup-chip">Quadratic formula 📐</div>
+        </div>
+        <div class="mockup-user-msg">Explain photosynthesis equation</div>
+        <div class="mockup-typing"><div class="typing-dot"></div><div class="typing-dot"></div><div class="typing-dot"></div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ STATS STRIP ═══ -->
+<div class="stats-strip">
+  <div class="stat-item"><span class="stat-num">50+</span><div class="stat-lbl">Chapters Covered</div></div>
+  <div class="stat-item"><span class="stat-num">150+</span><div class="stat-lbl">Practice MCQs</div></div>
+  <div class="stat-item"><span class="stat-num">4</span><div class="stat-lbl">Subjects</div></div>
+  <div class="stat-item"><span class="stat-num">100%</span><div class="stat-lbl">CBSE Aligned</div></div>
+  <div class="stat-item"><span class="stat-num">24/7</span><div class="stat-lbl">Owlix AI Support</div></div>
+</div>
+
+<!-- ═══ SUBJECTS ═══ -->
+<div class="container">
+  <section class="section">
+    <div class="section-head reveal">
+      <div class="section-label">📚 Your Study Hub</div>
+      <h2 class="section-title">Pick a Subject & Start</h2>
+      <p class="section-sub">Formula sheets, important notes, practice questions, PYQs — all organized for you</p>
+    </div>
+    <div class="subjects-grid" id="subjectsGrid"></div>
+  </section>
+
+  <!-- ═══ AI SECTION ═══ -->
+  <section class="section" style="background:linear-gradient(135deg,var(--purple-900),var(--purple-700));border-radius:var(--radius-xl);padding:3rem 2.5rem;margin:0 0 1rem">
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:2.5rem;align-items:center;max-width:900px;margin:0 auto">
+      <div>
+        <div class="section-label" style="color:var(--purple-300)">🦉 Owlix AI</div>
+        <h2 style="font-size:1.8rem;font-weight:800;color:white;letter-spacing:-0.5px;line-height:1.2">Your 24/7 AI<br>Doubt Solver</h2>
+        <p style="color:rgba(255,255,255,0.65);margin:1rem 0 1.5rem;font-size:0.9rem;line-height:1.7">Ask Owlix anything — Maths formulas, Science reactions, History facts, English summaries. Get point-by-point explanations instantly, anytime.</p>
+        <div style="display:flex;gap:0.75rem;flex-wrap:wrap">
+          <button onclick="document.getElementById('owlixToggle').click()" class="btn btn-white btn-md">Chat with Owlix →</button>
+          <div class="cbse-badge">🛡️ CBSE Aligned AI</div>
+        </div>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:0.6rem">
+        <div style="background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.12);border-radius:12px;padding:0.85rem 1.1rem;font-size:0.82rem;color:rgba(255,255,255,0.75)">💬 "What is Pythagoras theorem?"</div>
+        <div style="background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.12);border-radius:12px;padding:0.85rem 1.1rem;font-size:0.82rem;color:rgba(255,255,255,0.75)">💬 "Explain Dandi March step by step"</div>
+        <div style="background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.12);border-radius:12px;padding:0.85rem 1.1rem;font-size:0.82rem;color:rgba(255,255,255,0.75)">💬 "Summary of The Necklace story"</div>
+        <div style="background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.12);border-radius:12px;padding:0.85rem 1.1rem;font-size:0.82rem;color:rgba(255,255,255,0.75)">💬 "Board exam tips for scoring 95+"</div>
       </div>
     </div>
   </section>
 
-  <!-- SUBJECTS -->
-  <div class="container">
-    <section class="section">
-      <h2 class="section-title">Choose Your Subject</h2>
-      <p class="section-subtitle">Tap any subject card to start learning</p>
-      <div class="subjects-grid" id="subjectsGrid"></div>
-    </section>
-
-    <!-- TIPS -->
-    <section class="section">
-      <h2 class="section-title">📖 Smart Study Tips</h2>
-      <p class="section-subtitle">Proven strategies to ace your Board Exams</p>
-      <div class="tips-grid" id="tipsGrid"></div>
-    </section>
-
-    <!-- NOTICE BANNER -->
-    <section class="section">
-      <div style="background:linear-gradient(135deg,#667eea,#764ba2);border-radius:16px;padding:2rem;color:white;text-align:center">
-        <div style="font-size:2rem;margin-bottom:0.5rem">🦉</div>
-        <h3 style="font-size:1.4rem;font-weight:700;margin-bottom:0.5rem">Meet Owlix — Your AI Study Buddy</h3>
-        <p style="opacity:0.85;max-width:500px;margin:0 auto 1rem">Ask any doubt about Class 10 CBSE — Maths formulas, Science reactions, History events, English summaries. Available 24/7!</p>
-        <button onclick="document.getElementById('owlixToggle').click()" style="background:white;color:#6C63FF;border:none;padding:0.7rem 2rem;border-radius:50px;font-weight:700;cursor:pointer;font-size:0.95rem">
-          Chat with Owlix →
-        </button>
-      </div>
-    </section>
-  </div>
-
-  <footer>
-    <p style="font-size:1rem;margin-bottom:0.4rem">Made with ❤️ for CBSE Class 10 students</p>
-    <p style="font-size:0.85rem">AbiLearn &copy; 2025 &nbsp;|&nbsp; Powered by <a href="#">Owlix AI</a></p>
-  </footer>
-
-  <!-- OWLIX CHATBOT -->
-  <button class="owlix-toggle" id="owlixToggle" title="Ask Owlix AI">
-    🦉
-    <span class="owlix-badge">AI</span>
-  </button>
-  <div class="owlix-window" id="owlixWindow">
-    <div class="owlix-header">
-      <div class="owlix-avatar">🦉</div>
-      <div class="owlix-info">
-        <h3>Owlix</h3>
-        <div class="owlix-status">
-          <span class="status-dot"></span>
-          <p>AI Study Assistant</p>
+  <!-- ═══ TESTIMONIALS ═══ -->
+  <section class="section trust-section" style="background:transparent;border:none;margin:0">
+    <div class="section-head reveal">
+      <div class="section-label">🌟 Student Stories</div>
+      <h2 class="section-title">Students Love AbiLearn</h2>
+      <p class="section-sub">Real results from real Class 10 students</p>
+    </div>
+    <div class="trust-grid">
+      <div class="testimonial-card reveal reveal-d1">
+        <div class="stars">★★★★★</div>
+        <p class="testimonial-text">"AbiLearn's formula sheets saved my Maths exam. I revised all 14 chapters in just 2 days before boards. Scored 96/100!"</p>
+        <div class="testimonial-author">
+          <div class="author-avatar">A</div>
+          <div><div class="author-name">Aanya Sharma</div><div class="author-grade">CBSE Class 10, 2024</div></div>
         </div>
       </div>
-      <button class="owlix-close" id="owlixClose">✕</button>
+      <div class="testimonial-card reveal reveal-d2">
+        <div class="stars">★★★★★</div>
+        <p class="testimonial-text">"Owlix AI explained Heredity and Evolution in such a simple way. I was so confused before but after 10 minutes with Owlix, everything was clear!"</p>
+        <div class="testimonial-author">
+          <div class="author-avatar">R</div>
+          <div><div class="author-name">Rohan Mehta</div><div class="author-grade">CBSE Class 10, 2024</div></div>
+        </div>
+      </div>
+      <div class="testimonial-card reveal reveal-d3">
+        <div class="stars">★★★★★</div>
+        <p class="testimonial-text">"The Social Science notes are incredible. History, Geography, Civics all in one place. I went from 72 to 91 marks after using AbiLearn!"</p>
+        <div class="testimonial-author">
+          <div class="author-avatar">S</div>
+          <div><div class="author-name">Sneha Patel</div><div class="author-grade">CBSE Class 10, 2024</div></div>
+        </div>
+      </div>
     </div>
-    <div class="owlix-messages" id="owlixMessages"></div>
-    <div class="owlix-quick-replies" id="quickReplies"></div>
-    <div class="owlix-input-area">
-      <input type="text" class="owlix-input" id="owlixInput" placeholder="Ask Owlix your doubts...">
-      <button class="owlix-send" id="owlixSend">&#10148;</button>
+  </section>
+
+  <!-- ═══ STUDY TIPS ═══ -->
+  <section class="section">
+    <div class="section-head reveal">
+      <div class="section-label">💡 Study Strategy</div>
+      <h2 class="section-title">Smart Tips to Score 90+</h2>
+    </div>
+    <div class="tips-grid" id="tipsGrid"></div>
+  </section>
+</div>
+
+<!-- ═══ FOOTER ═══ -->
+<footer>
+  <div class="footer-grid">
+    <div class="footer-brand">
+      <div class="logo" style="margin-bottom:0.75rem">
+        <img src="assets/logo.svg" alt="AbiLearn" class="logo-img">
+        <span class="logo-text">Abi<span>Learn</span></span>
+      </div>
+      <p>The smartest way to prepare for CBSE Class 10 Board Exams. Notes, MCQs, PYQs and Owlix AI — all free.</p>
+      <div class="social-links">
+        <a href="#" class="social-link" title="Instagram">📸</a>
+        <a href="#" class="social-link" title="YouTube">▶️</a>
+        <a href="#" class="social-link" title="Telegram">✈️</a>
+        <a href="#" class="social-link" title="Twitter">🐦</a>
+      </div>
+    </div>
+    <div class="footer-col">
+      <h4>Subjects</h4>
+      <ul>
+        <li><a href="maths.html">Mathematics</a></li>
+        <li><a href="science.html">Science</a></li>
+        <li><a href="english.html">English</a></li>
+        <li><a href="social.html">Social Science</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h4>Quick Links</h4>
+      <ul>
+        <li><a href="#">Formula Sheets</a></li>
+        <li><a href="#">PYQs</a></li>
+        <li><a href="#">Practice MCQs</a></li>
+        <li><a href="#">NCERT Solutions</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h4>Support</h4>
+      <ul>
+        <li><a href="#">Contact Us</a></li>
+        <li><a href="#">Privacy Policy</a></li>
+        <li><a href="#">Terms of Use</a></li>
+        <li><a href="mailto:hello@abilearn.in">hello@abilearn.in</a></li>
+      </ul>
     </div>
   </div>
+  <div class="footer-bottom">
+    <span>© 2025 AbiLearn. All rights reserved.</span>
+    <div class="footer-badge">🏫 CBSE Aligned Platform</div>
+    <span>Made with ❤️ for Class 10 students</span>
+  </div>
+</footer>
 
-  <script src="js/data.js"></script>
-  <script src="js/app.js"></script>
-  <script src="js/owlix.js"></script>
-  <script>initHomePage();</script>
+<!-- ═══ OWLIX CHATBOT ═══ -->
+<button class="owlix-toggle" id="owlixToggle" title="Ask Owlix AI">
+  🦉<span class="owlix-badge">AI</span>
+</button>
+<div class="owlix-window" id="owlixWindow">
+  <div class="owlix-header">
+    <div class="owlix-avatar">🦉</div>
+    <div class="owlix-info">
+      <h3>Owlix AI</h3>
+      <div class="owlix-status"><span class="status-dot"></span><p>CBSE Class 10 Expert</p></div>
+    </div>
+    <button class="owlix-close" id="owlixClose">✕</button>
+  </div>
+  <div class="owlix-messages" id="owlixMessages"></div>
+  <div class="owlix-qr" id="quickReplies"></div>
+  <div class="owlix-input-row">
+    <input type="text" class="owlix-input" id="owlixInput" placeholder="Ask your doubt...">
+    <button class="owlix-send-btn" id="owlixSend">&#10148;</button>
+  </div>
+</div>
+
+<script src="js/data.js"></script>
+<script src="js/app.js"></script>
+<script src="js/owlix.js"></script>
+<script>initHomePage();</script>
 </body>
 </html>

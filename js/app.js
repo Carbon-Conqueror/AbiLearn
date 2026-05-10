@@ -1,515 +1,619 @@
-/* AbiLearn - Main Application Logic */
+/* AbiLearn — Main Application Logic v2 */
 
-/* ====== PROGRESS STORAGE ====== */
+/* ── SUBJECT TAB CONFIGS ── */
+const SUBJECT_TABS = {
+  maths: [
+    { id: 'formula-sheet', label: '📐 Formula Sheet' },
+    { id: 'question-bank', label: '📝 Question Bank' },
+    { id: 'questions',     label: '✏️ Questions' },
+    { id: 'pyqs',          label: '📋 PYQs' },
+    { id: 'summary',       label: '📖 Summary' }
+  ],
+  science: [
+    { id: 'formula-sheet',     label: '⚗️ Formula Sheet' },
+    { id: 'important-notes',   label: '📌 Important Notes' },
+    { id: 'practice-questions',label: '✏️ Practice Questions' },
+    { id: 'pyqs',              label: '📋 PYQs' },
+    { id: 'most-important',    label: '🎯 Most Important' },
+    { id: 'ncert-solutions',   label: '📗 NCERT Solutions' },
+    { id: 'summary',           label: '📖 Summary' }
+  ],
+  english: [
+    { id: 'first-flight', label: '✈️ First Flight' },
+    { id: 'footprints',   label: '👣 Footprints Without Feet' },
+    { id: 'grammar',      label: '📝 Grammar' },
+    { id: 'reading',      label: '📖 Reading' },
+    { id: 'writing',      label: '✍️ Writing' },
+    { id: 'pyqs',         label: '📋 PYQs' },
+    { id: 'summary',      label: '📑 Summary' }
+  ],
+  social: [
+    { id: 'important-notes',    label: '📌 Important Notes' },
+    { id: 'practice-questions', label: '✏️ Practice Questions' },
+    { id: 'maps',               label: '🗺️ Maps' },
+    { id: 'pyqs',               label: '📋 PYQs' },
+    { id: 'summary',            label: '📖 Summary' }
+  ]
+};
+
+/* ── PROGRESS ── */
 function getProgress() {
-  try { return JSON.parse(localStorage.getItem('abilearn_progress') || '{}'); }
-  catch { return {}; }
+  try { return JSON.parse(localStorage.getItem('abilearn_progress') || '{}'); } catch { return {}; }
 }
-function saveProgress(data) {
-  try { localStorage.setItem('abilearn_progress', JSON.stringify(data)); } catch {}
+function saveProgress(p) {
+  try { localStorage.setItem('abilearn_progress', JSON.stringify(p)); } catch {}
 }
-function getSubjectProgress(subjectId) {
+function getSubjectPct(subjectId) {
+  const sub = DATA.subjects.find(s => s.id === subjectId);
+  if (!sub) return 0;
   const p = getProgress();
-  const subject = DATA.subjects.find(s => s.id === subjectId);
-  if (!subject) return 0;
-  const total = subject.chapters.length;
-  const done = subject.chapters.filter(ch => p[subjectId + '_' + ch.id]).length;
-  return total ? Math.round((done / total) * 100) : 0;
+  const done = sub.chapters.filter(c => p[subjectId + '_' + c.id]).length;
+  return sub.chapters.length ? Math.round((done / sub.chapters.length) * 100) : 0;
 }
 
-/* ====== SEARCH ====== */
+/* ── SEARCH ── */
 function initSearch() {
-  const input = document.getElementById('searchInput');
-  const results = document.getElementById('searchResults');
-  if (!input || !results) return;
-
-  input.addEventListener('input', () => {
-    const q = input.value.trim().toLowerCase();
-    if (q.length < 2) { results.classList.remove('show'); return; }
-
-    const matches = [];
+  const inp = document.getElementById('searchInput');
+  const res = document.getElementById('searchResults');
+  if (!inp || !res) return;
+  inp.addEventListener('input', () => {
+    const q = inp.value.trim().toLowerCase();
+    if (q.length < 2) { res.classList.remove('show'); return; }
+    const hits = [];
     DATA.subjects.forEach(sub => {
       sub.chapters.forEach(ch => {
-        const searchText = (ch.title + ' ' + ch.subtitle + ' ' + (ch.keyPoints || []).join(' ')).toLowerCase();
-        if (searchText.includes(q)) {
-          matches.push({ subject: sub, chapter: ch });
-        }
+        if ((ch.title + ch.subtitle + (ch.keyPoints || []).join(' ')).toLowerCase().includes(q))
+          hits.push({ sub, ch });
       });
     });
-
-    if (matches.length === 0) {
-      results.innerHTML = '<div class="search-result-item"><div class="result-title">No results found</div></div>';
-    } else {
-      results.innerHTML = matches.slice(0, 8).map(m =>
-        `<div class="search-result-item" onclick="goToChapter('${m.subject.id}', ${m.chapter.id})">
-          <div class="result-subject">${m.subject.name}</div>
-          <div class="result-title">${m.chapter.title}</div>
-        </div>`
-      ).join('');
-    }
-    results.classList.add('show');
+    res.innerHTML = hits.length === 0
+      ? '<div class="search-result-item"><div class="result-title">No results found</div></div>'
+      : hits.slice(0, 7).map(h =>
+          `<div class="search-result-item" onclick="goTo('${h.sub.id}','${h.ch.id}')">
+            <div class="result-subject">${h.sub.name}</div>
+            <div class="result-title">${h.ch.title}</div>
+          </div>`).join('');
+    res.classList.add('show');
   });
-
-  document.addEventListener('click', e => {
-    if (!e.target.closest('.search-bar')) results.classList.remove('show');
-  });
+  document.addEventListener('click', e => { if (!e.target.closest('.search-bar')) res.classList.remove('show'); });
 }
 
-function goToChapter(subjectId, chapterId) {
-  const pages = { maths: 'maths.html', science: 'science.html', english: 'english.html', social: 'social.html' };
-  if (pages[subjectId]) {
-    sessionStorage.setItem('openChapter', chapterId);
-    window.location.href = pages[subjectId];
-  }
+function goTo(subjectId, chapterId) {
+  const map = { maths:'maths.html', science:'science.html', english:'english.html', social:'social.html' };
+  if (map[subjectId]) { sessionStorage.setItem('openChapter', chapterId); window.location.href = map[subjectId]; }
 }
 
-/* ====== HAMBURGER ====== */
+/* ── HAMBURGER ── */
 function initHamburger() {
   const btn = document.getElementById('hamburger');
   const nav = document.getElementById('navLinks');
-  if (!btn || !nav) return;
-  btn.addEventListener('click', () => nav.classList.toggle('open'));
+  if (btn && nav) btn.addEventListener('click', () => nav.classList.toggle('open'));
 }
 
-/* ====== HOME PAGE ====== */
+/* ── SCROLL REVEAL ── */
+function initReveal() {
+  const obs = new IntersectionObserver(entries => {
+    entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
+  }, { threshold: 0.12 });
+  document.querySelectorAll('.reveal').forEach(el => obs.observe(el));
+}
+
+/* ══════════════════════════════════════
+   HOME PAGE
+══════════════════════════════════════ */
 function initHomePage() {
-  initSearch();
-  initHamburger();
+  initSearch(); initHamburger();
   renderSubjectCards();
   renderTips();
-  setTimeout(() => animateProgressBars(), 300);
+  setTimeout(() => {
+    document.querySelectorAll('.progress-fill[data-w]').forEach(el => el.style.width = el.dataset.w + '%');
+    initReveal();
+  }, 200);
 }
 
 function renderSubjectCards() {
   const grid = document.getElementById('subjectsGrid');
   if (!grid) return;
-  const pages = { maths: 'maths.html', science: 'science.html', english: 'english.html', social: 'social.html' };
-  grid.innerHTML = DATA.subjects.map(sub => {
-    const progress = getSubjectProgress(sub.id);
+  const map = { maths:'maths.html', science:'science.html', english:'english.html', social:'social.html' };
+  grid.innerHTML = DATA.subjects.map((sub, i) => {
+    const pct = getSubjectPct(sub.id);
+    const qCount = sub.chapters.reduce((a, c) => a + (c.mcqs ? c.mcqs.length : 0), 0);
     return `
-      <a href="${pages[sub.id]}" class="subject-card ${sub.id}" title="Go to ${sub.name}">
-        <div class="subject-card-header">
-          <div class="subject-icon">${sub.icon}</div>
-          <div>
-            <h2>${sub.name}</h2>
-            <p>${sub.description}</p>
-          </div>
-        </div>
-        <div class="progress-bar-container">
-          <div class="progress-label">
-            <span>Progress</span><span>${progress}%</span>
-          </div>
-          <div class="progress-bar">
-            <div class="progress-fill" data-width="${progress}" style="width:0%"></div>
-          </div>
-        </div>
-        <div class="subject-card-footer">
-          <span class="chapter-count">${sub.chapters.length} Chapters</span>
-          <div class="card-arrow">›</div>
-        </div>
-      </a>`;
+    <a href="${map[sub.id]}" class="subject-card ${sub.id} reveal reveal-d${i + 1}">
+      <div class="card-top">
+        <div class="card-icon-wrap">${sub.icon}</div>
+        <div class="card-title">${sub.name}</div>
+        <div class="card-desc">${sub.description}</div>
+      </div>
+      <div class="card-meta">
+        <span class="meta-pill">${sub.chapters.length} Chapters</span>
+        <span class="meta-pill">${qCount} MCQs</span>
+      </div>
+      <div class="card-progress">
+        <div class="progress-row"><span>Your Progress</span><span>${pct}%</span></div>
+        <div class="progress-track"><div class="progress-fill" data-w="${pct}" style="width:0%"></div></div>
+      </div>
+      <div class="card-footer">
+        <span class="card-chapters">CBSE 2025</span>
+        <button class="continue-btn">${pct > 0 ? 'Continue' : 'Start'} Learning →</button>
+      </div>
+    </a>`;
   }).join('');
 }
 
-function animateProgressBars() {
-  document.querySelectorAll('.progress-fill[data-width]').forEach(el => {
-    el.style.width = el.dataset.width + '%';
-  });
-}
-
 function renderTips() {
-  const grid = document.getElementById('tipsGrid');
-  if (!grid) return;
-  grid.innerHTML = STUDY_TIPS.map(t => `
-    <div class="tip-card">
+  const g = document.getElementById('tipsGrid');
+  if (!g) return;
+  g.innerHTML = STUDY_TIPS.map(t => `
+    <div class="tip-card reveal">
       <div class="tip-icon">${t.icon}</div>
       <h4>${t.title}</h4>
       <p>${t.text}</p>
     </div>`).join('');
 }
 
-/* ====== SUBJECT PAGE ====== */
+/* ══════════════════════════════════════
+   SUBJECT PAGE
+══════════════════════════════════════ */
 function initSubjectPage(subjectId) {
-  initSearch();
-  initHamburger();
+  initSearch(); initHamburger();
   const subject = DATA.subjects.find(s => s.id === subjectId);
   if (!subject) return;
-  renderSubjectContent(subject);
-  initTabs(subjectId);
-  renderChapters(subject);
-  renderQuizTab(subject);
 
-  // Auto-open chapter from search
-  const openChapter = sessionStorage.getItem('openChapter');
-  if (openChapter) {
+  renderSubjectShell(subject);
+  renderTabContent(subject, SUBJECT_TABS[subjectId][0].id);
+
+  // Auto-open from search
+  const oc = sessionStorage.getItem('openChapter');
+  if (oc) {
     sessionStorage.removeItem('openChapter');
     setTimeout(() => {
-      const el = document.getElementById('chapter-' + openChapter);
-      if (el) { el.click(); el.closest('.chapter-item').scrollIntoView({ behavior: 'smooth', block: 'start' }); }
+      const el = document.querySelector(`[data-chapter-id="${oc}"]`);
+      if (el) { el.click(); el.closest('.chapter-item')?.scrollIntoView({ behavior: 'smooth' }); }
     }, 400);
   }
+  setTimeout(initReveal, 200);
 }
 
-function renderSubjectContent(subject) {
+function renderSubjectShell(subject) {
   const el = document.getElementById('subjectContent');
   if (!el) return;
+  const tabs = SUBJECT_TABS[subject.id];
+  const cls = subject.id + '-t';
   el.innerHTML = `
     <div class="subject-header ${subject.id}">
-      <div class="subject-header-content">
+      <div class="subject-header-inner">
         <div class="subject-header-icon">${subject.icon}</div>
         <div>
           <div class="subject-breadcrumb">
             <a href="index.html">🏠 Home</a> › ${subject.name}
           </div>
           <h1>${subject.name}</h1>
-          <p>${subject.description} &nbsp;|&nbsp; ${subject.chapters.length} Chapters</p>
+          <p>${subject.description} &nbsp;·&nbsp; ${subject.chapters.length} Chapters</p>
         </div>
       </div>
     </div>
-    <div class="tabs">
-      <div class="tabs-container">
-        <button class="tab-btn ${subject.id}-tab active" data-tab="chapters">📚 Chapters</button>
-        <button class="tab-btn ${subject.id}-tab" data-tab="quiz">🎯 Full Quiz</button>
-        <button class="tab-btn ${subject.id}-tab" data-tab="summary">📋 Summary</button>
+    <div class="tabs-bar">
+      <div class="tabs-scroll" id="tabsScroll">
+        ${tabs.map((t, i) => `
+          <button class="tab-btn ${cls} ${i === 0 ? 'active' : ''}"
+            data-tab="${t.id}" onclick="handleTabClick(this,'${subject.id}')">
+            ${t.label}
+          </button>`).join('')}
       </div>
     </div>
     <div class="container">
-      <div class="section">
-        <div id="tab-chapters" class="tab-panel active">
-          <div class="chapter-filter" id="chapterFilter"></div>
-          <div class="chapters-list" id="chaptersList"></div>
-        </div>
-        <div id="tab-quiz" class="tab-panel">
-          <div class="quiz-container" id="quizContainer"></div>
-        </div>
-        <div id="tab-summary" class="tab-panel">
-          <div id="summaryContent"></div>
-        </div>
-      </div>
+      <div class="section" id="tabContent"></div>
     </div>`;
 }
 
-function initTabs(subjectId) {
-  document.addEventListener('click', e => {
-    const btn = e.target.closest('.tab-btn');
+function handleTabClick(btn, subjectId) {
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  const subject = DATA.subjects.find(s => s.id === subjectId);
+  renderTabContent(subject, btn.dataset.tab);
+}
+
+/* ══════════════════════════════════════
+   TAB CONTENT ROUTER
+══════════════════════════════════════ */
+function renderTabContent(subject, tabId) {
+  const el = document.getElementById('tabContent');
+  if (!el) return;
+  el.innerHTML = '<div style="text-align:center;padding:2rem;color:var(--muted)">Loading...</div>';
+
+  setTimeout(() => {
+    switch (tabId) {
+      case 'formula-sheet':     el.innerHTML = buildFormulaSheet(subject); break;
+      case 'important-notes':   el.innerHTML = buildImportantNotes(subject); break;
+      case 'practice-questions':el.innerHTML = buildPracticeQuestions(subject); initMCQHandlers(el); break;
+      case 'question-bank':     el.innerHTML = buildPracticeQuestions(subject); initMCQHandlers(el); break;
+      case 'questions':         el.innerHTML = buildPracticeQuestions(subject); initMCQHandlers(el); break;
+      case 'pyqs':              el.innerHTML = buildPYQs(); break;
+      case 'most-important':    el.innerHTML = buildMostImportant(subject); break;
+      case 'ncert-solutions':   el.innerHTML = buildNCERT(); break;
+      case 'first-flight':      el.innerHTML = buildEnglishReader(subject, 'ff'); initChapterAccordion(el, subject.id); break;
+      case 'footprints':        el.innerHTML = buildEnglishReader(subject, 'fp'); initChapterAccordion(el, subject.id); break;
+      case 'grammar':           el.innerHTML = buildGrammar(); break;
+      case 'reading':           el.innerHTML = buildReading(); break;
+      case 'writing':           el.innerHTML = buildWriting(); break;
+      case 'maps':              el.innerHTML = buildMaps(); break;
+      case 'summary':           el.innerHTML = buildSummary(subject); break;
+      default:                  el.innerHTML = buildComingSoon('This section', 'Content coming soon!'); break;
+    }
+    initReveal();
+  }, 80);
+}
+
+/* ══════════════════════════════════════
+   FORMULA SHEET
+══════════════════════════════════════ */
+function buildFormulaSheet(subject) {
+  const colorMap = { maths:'var(--maths)', science:'var(--science)', english:'var(--english)', social:'var(--social)' };
+  const color = colorMap[subject.id] || 'var(--purple-600)';
+  const chapters = subject.chapters.filter(c => c.formulas && c.formulas.length);
+  if (!chapters.length) return buildComingSoon('Formula Sheet', 'Formulas will be added here soon.');
+  return `<h2 class="section-title" style="margin-bottom:1.5rem">📐 Formula Sheet — ${subject.name}</h2>
+    <div class="formula-sheet">
+      ${chapters.map(ch => `
+        <div class="formula-chapter-block reveal">
+          <div class="formula-chapter-title">
+            <span class="formula-num" style="background:${color}">${ch.id}</span>
+            ${ch.title}
+          </div>
+          <div class="formula-grid">
+            ${ch.formulas.map(f => `<div class="formula-pill">${escH(f)}</div>`).join('')}
+          </div>
+        </div>`).join('')}
+    </div>`;
+}
+
+/* ══════════════════════════════════════
+   IMPORTANT NOTES
+══════════════════════════════════════ */
+function buildImportantNotes(subject) {
+  const colorMap = { maths:'var(--maths)', science:'var(--science)', english:'var(--english)', social:'var(--social)' };
+  const color = colorMap[subject.id] || 'var(--purple-600)';
+  return `<h2 class="section-title" style="margin-bottom:1.5rem">📌 Important Notes — ${subject.name}</h2>
+    <div class="notes-grid">
+      ${subject.chapters.map(ch => `
+        <div class="notes-block reveal">
+          <div class="notes-chapter-title">
+            <span class="formula-num" style="background:${color};min-width:28px">${ch.id}</span>
+            ${ch.title}
+            <span style="font-size:0.72rem;color:var(--muted);font-weight:400;margin-left:auto">${ch.subtitle}</span>
+          </div>
+          <ul class="notes-list">
+            ${(ch.keyPoints || []).map(kp => `<li>${escH(kp)}</li>`).join('')}
+          </ul>
+        </div>`).join('')}
+    </div>`;
+}
+
+/* ══════════════════════════════════════
+   PRACTICE QUESTIONS / QUESTION BANK
+══════════════════════════════════════ */
+function buildPracticeQuestions(subject) {
+  const allMCQs = [];
+  subject.chapters.forEach(ch => {
+    (ch.mcqs || []).forEach(q => allMCQs.push({ ...q, chapter: ch.title, chId: ch.id }));
+  });
+  if (!allMCQs.length) return buildComingSoon('Practice Questions', 'Questions will be added here soon.');
+  const letters = ['A', 'B', 'C', 'D'];
+  return `<h2 class="section-title" style="margin-bottom:0.5rem">✏️ Practice Questions</h2>
+    <p style="color:var(--muted);margin-bottom:1.5rem;font-size:0.88rem">Tap an option to check your answer</p>
+    <div class="mcq-grid">
+      ${allMCQs.map((q, qi) => `
+        <div class="mcq-card reveal" data-correct="${q.ans}" data-exp="${escH(q.exp || '')}" data-explbl="${escH(q.opts[q.ans])}">
+          <div class="mcq-chapter-label">Ch ${q.chId} · ${q.chapter}</div>
+          <div class="mcq-q">Q${qi + 1}. ${q.q}</div>
+          <div class="mcq-opts">
+            ${q.opts.map((opt, i) => `
+              <button class="mcq-opt" data-idx="${i}">
+                <span class="opt-letter">${letters[i]}</span>${escH(opt)}
+              </button>`).join('')}
+          </div>
+          <div class="mcq-feedback"></div>
+        </div>`).join('')}
+    </div>`;
+}
+
+function initMCQHandlers(container) {
+  container.addEventListener('click', e => {
+    const btn = e.target.closest('.mcq-opt:not(.disabled)');
     if (!btn) return;
-    const tabId = btn.dataset.tab;
-    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-    document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
-    btn.classList.add('active');
-    const panel = document.getElementById('tab-' + tabId);
-    if (panel) panel.classList.add('active');
-    if (tabId === 'summary') renderSummary(subjectId);
-  });
-}
-
-/* ====== CHAPTERS ====== */
-function renderChapters(subject) {
-  const list = document.getElementById('chaptersList');
-  const filterDiv = document.getElementById('chapterFilter');
-  if (!list) return;
-
-  if (filterDiv) {
-    filterDiv.innerHTML = `
-      <button class="filter-btn active" data-filter="all">All Chapters</button>
-      <button class="filter-btn" data-filter="done">✅ Completed</button>
-      <button class="filter-btn" data-filter="pending">⏳ Pending</button>`;
-    filterDiv.addEventListener('click', e => {
-      const btn = e.target.closest('.filter-btn');
-      if (!btn) return;
-      filterDiv.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
-      btn.classList.add('active');
-      filterChapters(subject, btn.dataset.filter);
+    const card = btn.closest('.mcq-card');
+    const chosen = parseInt(btn.dataset.idx);
+    const correct = parseInt(card.dataset.correct);
+    card.querySelectorAll('.mcq-opt').forEach((b, i) => {
+      b.classList.add('disabled');
+      if (i === correct) b.classList.add('correct');
+      else if (i === chosen) b.classList.add('wrong');
     });
-  }
-
-  list.innerHTML = subject.chapters.map(ch => buildChapterHTML(subject.id, ch)).join('');
-
-  // Accordion click
-  list.addEventListener('click', e => {
-    const header = e.target.closest('.chapter-header');
-    const doneBtn = e.target.closest('.chapter-done-btn');
-
-    if (doneBtn) {
-      e.stopPropagation();
-      toggleChapterDone(subject.id, doneBtn.dataset.chapter, doneBtn);
-      return;
-    }
-    if (header) {
-      const item = header.closest('.chapter-item');
-      const isOpen = item.classList.contains('open');
-      document.querySelectorAll('.chapter-item.open').forEach(i => i.classList.remove('open'));
-      if (!isOpen) item.classList.add('open');
-    }
-  });
-
-  // MCQ click handling
-  list.addEventListener('click', e => {
-    const opt = e.target.closest('.mcq-option:not(.disabled)');
-    if (!opt) return;
-    const questionDiv = opt.closest('.mcq-question');
-    const answerIndex = parseInt(opt.dataset.index);
-    const correctIndex = parseInt(questionDiv.dataset.correct);
-
-    questionDiv.querySelectorAll('.mcq-option').forEach((o, i) => {
-      o.classList.add('disabled');
-      if (i === correctIndex) o.classList.add('correct');
-      else if (i === answerIndex) o.classList.add('wrong');
-    });
-
-    const feedback = questionDiv.querySelector('.mcq-feedback');
-    if (feedback) {
-      feedback.classList.add('show', answerIndex === correctIndex ? 'correct' : 'wrong');
-      feedback.textContent = answerIndex === correctIndex
-        ? '✅ Correct! ' + (questionDiv.dataset.exp || '')
-        : '❌ Wrong. The correct answer is: ' + questionDiv.dataset.expLabel + '. ' + (questionDiv.dataset.exp || '');
+    const fb = card.querySelector('.mcq-feedback');
+    if (fb) {
+      fb.classList.add('show', chosen === correct ? 'correct' : 'wrong');
+      fb.innerHTML = chosen === correct
+        ? `✅ <strong>Correct!</strong> ${escH(card.dataset.exp)}`
+        : `❌ <strong>Wrong.</strong> Correct answer: <strong>${escH(card.dataset.explbl)}</strong>. ${escH(card.dataset.exp)}`;
     }
   });
 }
 
-function buildChapterHTML(subjectId, ch) {
-  const progress = getProgress();
-  const isDone = !!progress[subjectId + '_' + ch.id];
-  const numClass = { maths: 'maths-num', science: 'science-num', english: 'english-num', social: 'social-num' }[subjectId] || '';
-
-  const keyPointsHTML = ch.keyPoints?.length
-    ? `<div class="key-points"><h4>🔑 Key Points</h4><ul>${ch.keyPoints.map(p => `<li>${p}</li>`).join('')}</ul></div>` : '';
-
-  const formulasHTML = ch.formulas?.length
-    ? `<div class="formulas"><h4>📐 Formulas / Key Info</h4>${ch.formulas.map(f => `<div class="formula-box">${f}</div>`).join('')}</div>` : '';
-
-  const mcqsHTML = ch.mcqs?.length
-    ? `<div class="mcq-section"><h4>✏️ Quick MCQ Practice</h4>${ch.mcqs.map((q, qi) => buildMCQHTML(q, qi)).join('')}</div>` : '';
-
+/* ══════════════════════════════════════
+   PYQs PLACEHOLDER
+══════════════════════════════════════ */
+function buildPYQs() {
   return `
-    <div class="chapter-item" id="chapter-item-${ch.id}">
-      <div class="chapter-header" id="chapter-${ch.id}">
-        <div class="chapter-number ${numClass}">${ch.id}</div>
-        <div class="chapter-title-group">
+    <div class="coming-soon">
+      <div class="cs-icon">📋</div>
+      <h3>Previous Year Questions (PYQs)</h3>
+      <p>CBSE Board exam PYQs from 2019–2024 are being added. Check back soon — or ask Owlix AI for PYQ-style questions!</p>
+      <button onclick="document.getElementById('owlixToggle').click()" class="btn btn-primary btn-md">Ask Owlix for PYQ Help →</button>
+    </div>`;
+}
+
+/* ══════════════════════════════════════
+   MOST IMPORTANT TOPICS (Science)
+══════════════════════════════════════ */
+function buildMostImportant(subject) {
+  const topics = [
+    { badge: '⚡ Physics', text: 'Ohm\'s Law, Series & Parallel Circuits, Electric Power — appear in every board exam' },
+    { badge: '🔭 Optics', text: 'Mirror formula (1/v + 1/u = 1/f), Lens formula, Power of lens — numericals always asked' },
+    { badge: '🌱 Biology', text: 'Photosynthesis equation, Reflex arc, Mendel\'s laws — 3-5 marks in boards' },
+    { badge: '⚗️ Chemistry', text: 'Types of chemical reactions with examples — definition + example questions common' },
+    { badge: '🧪 Acids & Bases', text: 'pH scale, neutralisation, indicators, baking soda vs washing soda' },
+    { badge: '🌍 Environment', text: '10% energy law, ozone depletion (CFCs), biodegradable vs non-biodegradable' },
+    { badge: '⚙️ Electricity', text: 'Joule\'s law of heating (H = I²Rt), numerical on power and energy consumption' },
+    { badge: '🔬 Heredity', text: 'Monohybrid cross ratio (3:1), dihybrid (9:3:3:1), Mendel\'s laws — must know' },
+    { badge: '💡 Magnetism', text: 'Fleming\'s Left-hand Rule (motor) vs Right-hand Rule (generator) — always confused' },
+    { badge: '🧬 Reproduction', text: 'Difference between asexual and sexual reproduction with examples' }
+  ];
+  return `<h2 class="section-title" style="margin-bottom:0.5rem">🎯 Most Important Topics</h2>
+    <p style="color:var(--muted);margin-bottom:1.5rem;font-size:0.88rem">High-probability topics for CBSE Board Exam</p>
+    <div class="important-topics">
+      ${topics.map((t, i) => `
+        <div class="topic-card reveal reveal-d${(i % 4) + 1}">
+          <div class="topic-badge">${t.badge}</div>
+          <div class="topic-text">${t.text}</div>
+        </div>`).join('')}
+    </div>`;
+}
+
+/* ══════════════════════════════════════
+   NCERT SOLUTIONS PLACEHOLDER
+══════════════════════════════════════ */
+function buildNCERT() {
+  return `
+    <div class="coming-soon">
+      <div class="cs-icon">📗</div>
+      <h3>NCERT Solutions</h3>
+      <p>Step-by-step NCERT textbook solutions for all chapters are being prepared. Your teacher's notes will also be added here.</p>
+      <button onclick="document.getElementById('owlixToggle').click()" class="btn btn-primary btn-md">Ask Owlix for Help →</button>
+    </div>`;
+}
+
+/* ══════════════════════════════════════
+   ENGLISH — FIRST FLIGHT & FOOTPRINTS
+══════════════════════════════════════ */
+function buildEnglishReader(subject, type) {
+  // type: 'ff' = First Flight (ch 1-8), 'fp' = Footprints (ch 9-11)
+  const ffChapters = subject.chapters.filter((_, i) => i < 8);
+  const fpChapters = subject.chapters.filter((_, i) => i >= 8);
+  const chapters = type === 'ff' ? ffChapters : fpChapters;
+  const title = type === 'ff' ? '✈️ First Flight' : '👣 Footprints Without Feet';
+
+  return `<h2 class="section-title" style="margin-bottom:1.5rem">${title}</h2>
+    <div class="chapters-list" id="chaptersList">
+      ${chapters.map(ch => buildChapterAccordionHTML(ch, subject.id, type === 'ff' ? 'nm-ff' : 'nm-fp')).join('')}
+    </div>`;
+}
+
+function buildChapterAccordionHTML(ch, subjectId, numClass) {
+  const p = getProgress();
+  const done = !!p[subjectId + '_' + ch.id];
+  const letters = ['A','B','C','D'];
+  const kpHTML = ch.keyPoints?.length
+    ? `<div class="kp-section"><h4>🔑 Key Points</h4><ul class="kp-list">${ch.keyPoints.map(k => `<li>${escH(k)}</li>`).join('')}</ul></div>` : '';
+  const fmHTML = ch.formulas?.length
+    ? `<div class="fm-section"><h4>📌 Key Info</h4>${ch.formulas.map(f => `<div class="fm-pill">${escH(f)}</div>`).join('')}</div>` : '';
+  const mcqHTML = ch.mcqs?.length
+    ? `<div class="mcq-section"><h4>✏️ Practice MCQs</h4>${ch.mcqs.map((q, qi) => `
+        <div class="mcq-card" style="margin-bottom:0.75rem" data-correct="${q.ans}" data-exp="${escH(q.exp||'')}" data-explbl="${escH(q.opts[q.ans])}">
+          <div class="mcq-q">${qi + 1}. ${q.q}</div>
+          <div class="mcq-opts">${q.opts.map((o, i) => `<button class="mcq-opt" data-idx="${i}"><span class="opt-letter">${letters[i]}</span>${escH(o)}</button>`).join('')}</div>
+          <div class="mcq-feedback"></div>
+        </div>`).join('')}</div>` : '';
+  return `
+    <div class="chapter-item">
+      <div class="chapter-header" data-chapter-id="${ch.id}">
+        <div class="chapter-num ${numClass}">${ch.id}</div>
+        <div class="chapter-info">
           <div class="chapter-title">${ch.title}</div>
-          <div class="chapter-subtitle">${ch.subtitle}</div>
+          <div class="chapter-sub">${ch.subtitle}</div>
         </div>
-        <button class="chapter-done-btn ${isDone ? 'done' : ''}" data-chapter="${ch.id}" title="Mark as done">✓</button>
+        <button class="chapter-done-btn ${done ? 'done' : ''}" data-subject="${subjectId}" data-cid="${ch.id}" title="Mark done" onclick="event.stopPropagation();toggleDone(this)">✓</button>
         <span class="chapter-toggle">▼</span>
       </div>
       <div class="chapter-body">
-        <div class="chapter-content">
-          ${keyPointsHTML}
-          ${formulasHTML}
-          ${mcqsHTML}
-        </div>
+        <div class="chapter-content">${kpHTML}${fmHTML}${mcqHTML}</div>
       </div>
     </div>`;
 }
 
-function buildMCQHTML(q, qi) {
-  const letters = ['A', 'B', 'C', 'D'];
-  return `
-    <div class="mcq-question" data-correct="${q.ans}" data-exp="${escapeHTML(q.exp || '')}" data-exp-label="${escapeHTML(q.opts[q.ans])}">
-      <div class="mcq-q-text">${qi + 1}. ${q.q}</div>
-      <div class="mcq-options">
-        ${q.opts.map((opt, i) => `
-          <div class="mcq-option" data-index="${i}">
-            <span class="option-letter">${letters[i]}</span>${opt}
-          </div>`).join('')}
-      </div>
-      <div class="mcq-feedback"></div>
-    </div>`;
+function initChapterAccordion(container, subjectId) {
+  container.addEventListener('click', e => {
+    const header = e.target.closest('.chapter-header');
+    const doneBtn = e.target.closest('.chapter-done-btn');
+    if (doneBtn) return; // handled by onclick
+    if (!header) return;
+    const item = header.closest('.chapter-item');
+    const isOpen = item.classList.contains('open');
+    container.querySelectorAll('.chapter-item.open').forEach(i => i.classList.remove('open'));
+    if (!isOpen) item.classList.add('open');
+  });
+  initMCQHandlers(container);
 }
 
-function escapeHTML(str) {
-  return str.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
-}
-
-function toggleChapterDone(subjectId, chapterId, btn) {
+function toggleDone(btn) {
   const p = getProgress();
-  const key = subjectId + '_' + chapterId;
+  const key = btn.dataset.subject + '_' + btn.dataset.cid;
   p[key] = !p[key];
   saveProgress(p);
   btn.classList.toggle('done', !!p[key]);
 }
 
-function filterChapters(subject, filter) {
-  const p = getProgress();
-  document.querySelectorAll('.chapter-item').forEach((el, i) => {
-    const ch = subject.chapters[i];
-    if (!ch) return;
-    const isDone = !!p[society + '_' + ch.id];
-    if (filter === 'all') el.style.display = '';
-    else if (filter === 'done') el.style.display = isDone ? '' : 'none';
-    else el.style.display = !isDone ? '' : 'none';
-  });
-}
-
-/* ====== FULL QUIZ ====== */
-let quizState = {};
-
-function renderQuizTab(subject) {
-  const container = document.getElementById('quizContainer');
-  if (!container) return;
-
-  // Collect all MCQs with chapter info
-  const allQ = [];
-  subject.chapters.forEach(ch => {
-    (ch.mcqs || []).forEach(q => allQ.push({ ...q, chapter: ch.title }));
-  });
-
-  if (allQ.length === 0) {
-    container.innerHTML = '<p style="text-align:center;color:var(--gray);padding:2rem">No quiz questions available yet.</p>';
-    return;
-  }
-
-  quizState = {
-    questions: shuffleArray(allQ),
-    current: 0,
-    score: 0,
-    answered: false,
-    subjectId: subject.id
-  };
-
-  renderQuizQuestion(container);
-}
-
-function renderQuizQuestion(container) {
-  const { questions, current, score } = quizState;
-  const total = questions.length;
-
-  if (current >= total) {
-    renderQuizResult(container, score, total);
-    return;
-  }
-
-  const q = questions[current];
-  const letters = ['A', 'B', 'C', 'D'];
-  const pct = Math.round((current / total) * 100);
-
-  container.innerHTML = `
-    <div class="quiz-header">
-      <div>
-        <div style="font-weight:700;margin-bottom:0.3rem">Question ${current + 1} of ${total}</div>
-        <div style="font-size:0.8rem;color:var(--gray)">${q.chapter}</div>
-        <div class="progress-bar" style="width:200px;margin-top:0.4rem">
-          <div class="progress-fill" style="width:${pct}%;background:var(--primary);transition:width 0.5s"></div>
-        </div>
-      </div>
-      <div class="quiz-score" style="text-align:right">
-        <div class="quiz-score-number">${score}</div>
-        <div class="quiz-score-label">Score</div>
-      </div>
-    </div>
-    <div class="quiz-card">
-      <div class="question-number">Question ${current + 1}</div>
-      <div class="question-text">${q.q}</div>
-      <div class="quiz-options">
-        ${q.opts.map((opt, i) => `
-          <button class="quiz-option-btn" data-index="${i}" onclick="handleQuizAnswer(this, ${i}, ${q.ans}, '${escapeHTML(q.exp || '')}')">
-            <span class="option-letter">${letters[i]}</span>${opt}
-          </button>`).join('')}
-      </div>
-      <div id="quizFeedback" style="margin-top:1rem;display:none;padding:0.75rem;border-radius:8px;font-size:0.88rem"></div>
-    </div>
-    <div class="quiz-nav">
-      <button class="btn btn-outline" onclick="skipQuestion()" id="skipBtn">Skip →</button>
-      <button class="btn btn-primary" onclick="nextQuestion()" id="nextBtn" disabled>Next Question →</button>
-    </div>`;
-}
-
-function handleQuizAnswer(btn, chosen, correct, explanation) {
-  if (quizState.answered) return;
-  quizState.answered = true;
-
-  document.querySelectorAll('.quiz-option-btn').forEach((b, i) => {
-    b.classList.add('disabled');
-    if (i === correct) b.classList.add('correct');
-    else if (i === chosen) b.classList.add('wrong');
-  });
-
-  if (chosen === correct) quizState.score++;
-
-  const feedback = document.getElementById('quizFeedback');
-  if (feedback) {
-    feedback.style.display = 'block';
-    feedback.style.background = chosen === correct ? '#f0fff7' : '#fff5f5';
-    feedback.style.color = chosen === correct ? '#00875a' : '#c0392b';
-    feedback.style.border = `1px solid ${chosen === correct ? '#00b894' : '#ff7675'}`;
-    feedback.textContent = (chosen === correct ? '✅ Correct! ' : '❌ Wrong. ') + explanation;
-  }
-
-  const nextBtn = document.getElementById('nextBtn');
-  if (nextBtn) nextBtn.disabled = false;
-}
-
-function nextQuestion() {
-  quizState.current++;
-  quizState.answered = false;
-  const container = document.getElementById('quizContainer');
-  if (container) renderQuizQuestion(container);
-}
-
-function skipQuestion() {
-  quizState.current++;
-  quizState.answered = false;
-  const container = document.getElementById('quizContainer');
-  if (container) renderQuizQuestion(container);
-}
-
-function renderQuizResult(container, score, total) {
-  const pct = Math.round((score / total) * 100);
-  const emoji = pct >= 80 ? '🏆' : pct >= 60 ? '🎉' : pct >= 40 ? '👍' : '📚';
-  const msg = pct >= 80 ? 'Outstanding! Board exam ready!' : pct >= 60 ? 'Great work! Keep revising.' : pct >= 40 ? 'Good effort! Review weak topics.' : 'Keep practicing — you\'ll get there!';
-
-  container.innerHTML = `
-    <div class="quiz-result">
-      <div class="result-emoji">${emoji}</div>
-      <div class="result-score">${score} / ${total}</div>
-      <div style="font-size:1.5rem;font-weight:700;margin:0.5rem 0">${pct}%</div>
-      <div class="result-text">${msg}</div>
-      <div style="display:flex;gap:1rem;justify-content:center;flex-wrap:wrap">
-        <button class="btn btn-primary" onclick="location.reload()">🔄 Try Again</button>
-        <button class="btn btn-outline" onclick="document.querySelector('[data-tab=chapters]').click()">📚 Review Chapters</button>
-      </div>
-    </div>`;
-}
-
-/* ====== SUMMARY TAB ====== */
-function renderSummary(subjectId) {
-  const el = document.getElementById('summaryContent');
-  if (!el || el.innerHTML.trim()) return;
-  const subject = DATA.subjects.find(s => s.id === subjectId);
-  if (!subject) return;
-
-  el.innerHTML = `
+/* ══════════════════════════════════════
+   GRAMMAR / READING / WRITING
+══════════════════════════════════════ */
+function buildGrammar() {
+  const topics = [
+    { title: 'Tenses', desc: 'Present, Past, Future — Simple, Continuous, Perfect, Perfect Continuous. Tense rules with examples.' },
+    { title: 'Determiners & Articles', desc: 'Use of a, an, the, some, any, each, every, much, many — with rules and exercises.' },
+    { title: 'Modals', desc: 'Can, could, may, might, shall, should, will, would, must, need, dare, used to, ought to.' },
+    { title: 'Subject-Verb Agreement', desc: 'Rules for singular and plural verbs with different subjects including collective nouns.' },
+    { title: 'Active and Passive Voice', desc: 'Transformations across all tenses with rules, exceptions and practice sentences.' },
+    { title: 'Direct & Indirect Speech', desc: 'Reporting statements, questions, commands. Changes in pronouns and tenses.' },
+    { title: 'Clauses', desc: 'Noun clause, Adjective clause, Adverb clause — identification and usage in sentences.' },
+    { title: 'Editing / Omission / Gap Filling', desc: 'Board exam question types — spotting errors, filling blanks with correct forms.' }
+  ];
+  return `<h2 class="section-title" style="margin-bottom:0.5rem">📝 Grammar</h2>
+    <p style="color:var(--muted);margin-bottom:1.5rem;font-size:0.88rem">CBSE Class 10 English Grammar Topics</p>
     <div style="display:grid;gap:1rem">
-      ${subject.chapters.map(ch => `
-        <div style="background:white;border-radius:16px;padding:1.5rem;box-shadow:var(--shadow-sm)">
-          <h3 style="font-size:1rem;font-weight:700;margin-bottom:0.75rem;display:flex;align-items:center;gap:0.5rem">
-            <span style="background:var(--${subject.id});color:${['english','social'].includes(subject.id)?'#333':'white'};width:28px;height:28px;border-radius:8px;display:inline-flex;align-items:center;justify-content:center;font-size:0.8rem;font-weight:700;flex-shrink:0">${ch.id}</span>
-            ${ch.title}
-          </h3>
-          ${ch.keyPoints?.slice(0,4).map(p => `<div style="font-size:0.85rem;padding:0.3rem 0 0.3rem 1rem;border-left:3px solid var(--${subject.id});margin-bottom:0.3rem;color:#444">${p}</div>`).join('') || ''}
+      ${topics.map(t => `
+        <div class="skill-card reveal">
+          <h3>${t.title}</h3>
+          <p>${t.desc}</p>
+          <div style="margin-top:1rem">
+            <button onclick="sendOwlixMessage('Explain ${t.title} in English grammar with examples')" class="btn btn-outline-purple btn-sm">Ask Owlix →</button>
+          </div>
         </div>`).join('')}
     </div>`;
 }
 
-/* ====== HELPERS ====== */
-function shuffleArray(arr) {
-  const a = [...arr];
-  for (let i = a.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
-    [a[i], a[j]] = [a[j], a[i]];
-  }
-  return a;
+function buildReading() {
+  return `
+    <h2 class="section-title" style="margin-bottom:0.5rem">📖 Reading Comprehension</h2>
+    <p style="color:var(--muted);margin-bottom:1.5rem;font-size:0.88rem">Strategies and practice for CBSE Board reading passages</p>
+    <div style="display:grid;gap:1rem">
+      <div class="skill-card reveal">
+        <h3>🎯 How to Attempt Reading Passages</h3>
+        <p>1. Read the questions FIRST before reading the passage.<br>
+        2. Skim the passage to understand the main idea (30 seconds).<br>
+        3. Read carefully, underlining key information related to questions.<br>
+        4. Answers are ALWAYS in the passage — never guess from outside knowledge.<br>
+        5. Use your own words for "In your own words" questions.<br>
+        6. Check spelling and grammar in your answers.</p>
+      </div>
+      <div class="skill-card reveal reveal-d2">
+        <h3>📋 Types of Questions in CBSE Board</h3>
+        <p>• <strong>Factual questions</strong> — directly from the passage<br>
+        • <strong>Inferential questions</strong> — reading between the lines<br>
+        • <strong>Vocabulary questions</strong> — find word similar in meaning<br>
+        • <strong>Title/Heading</strong> — summarize in a few words<br>
+        • <strong>Note-making</strong> — organized point format</p>
+      </div>
+      <div class="coming-soon" style="margin-top:0.5rem">
+        <div class="cs-icon">📄</div>
+        <h3>Practice Passages</h3>
+        <p>CBSE-style reading passages with questions and model answers will be added here. Check back soon!</p>
+      </div>
+    </div>`;
 }
 
-// Fix filterChapters bug — society should be subjectId
-function filterChapters(subject, filter) {
-  const p = getProgress();
-  document.querySelectorAll('.chapter-item').forEach((el, i) => {
-    const ch = subject.chapters[i];
-    if (!ch) return;
-    const isDone = !!p[subject.id + '_' + ch.id];
-    if (filter === 'all') el.style.display = '';
-    else if (filter === 'done') el.style.display = isDone ? '' : 'none';
-    else el.style.display = !isDone ? '' : 'none';
-  });
+function buildWriting() {
+  const types = [
+    { title: '📝 Formal Letter', desc: 'Letter to editor, principal, authority. Format: Sender → Date → Receiver → Subject → Body → Closing.' },
+    { title: '📰 Article Writing', desc: 'Format: Title → By (name) → Introduction → Body paragraphs → Conclusion. Use subheadings.' },
+    { title: '📣 Notice Writing', desc: 'Short, formal announcement. Format: Organization Name → NOTICE → Date → Title → Body → Name/Designation.' },
+    { title: '✉️ Informal Letter', desc: 'Letter to friend/relative. Casual tone, sharing news/experiences. No strict format needed.' },
+    { title: '🗣️ Speech Writing', desc: 'Respectful opening → Main points → Examples → Conclusion. Engaging, persuasive language.' },
+    { title: '📖 Story Writing', desc: 'Plot (beginning-middle-end), character development, moral. Use vivid language and dialogue.' }
+  ];
+  return `<h2 class="section-title" style="margin-bottom:0.5rem">✍️ Writing Skills</h2>
+    <p style="color:var(--muted);margin-bottom:1.5rem;font-size:0.88rem">CBSE Board exam writing formats and tips</p>
+    <div style="display:grid;gap:1rem">
+      ${types.map(t => `
+        <div class="skill-card reveal">
+          <h3>${t.title}</h3>
+          <p>${t.desc}</p>
+          <button onclick="sendOwlixMessage('How to write a ${t.title.replace(/[📝📰📣✉️🗣️📖]/g,'').trim()} for CBSE boards?')" class="btn btn-outline-purple btn-sm" style="margin-top:0.75rem">Get tips from Owlix →</button>
+        </div>`).join('')}
+    </div>`;
+}
+
+/* ══════════════════════════════════════
+   MAPS (Social Science)
+══════════════════════════════════════ */
+function buildMaps() {
+  const maps = [
+    { icon: '🗺️', name: 'Historical Maps — Nationalism in India', sub: 'Salt March route, Non-Cooperation centres, Partition maps' },
+    { icon: '🌾', name: 'Agricultural Map of India', sub: 'Kharif/Rabi crop distribution, Green Revolution states' },
+    { icon: '⛏️', name: 'Minerals & Resources Map', sub: 'Iron ore, coal, bauxite, mica, petroleum locations' },
+    { icon: '🏭', name: 'Industrial Map of India', sub: 'Cotton, steel, IT, cement, automobile industries' },
+    { icon: '🌊', name: 'Water Resources Map', sub: 'Major rivers, dams, multipurpose river projects (Bhakra, Hirakud)' },
+    { icon: '🚂', name: 'Lifelines of the Economy', sub: 'National highways, railway zones, major ports and airports' },
+    { icon: '🌍', name: 'Europe — Rise of Nationalism', sub: 'Map-based questions on unification of Germany & Italy' }
+  ];
+  return `
+    <div class="maps-section">
+      <div class="maps-header">
+        <h3>🗺️ Map Work — Social Science</h3>
+        <p>Important maps for CBSE Class 10 Board Exam</p>
+      </div>
+      <div class="maps-list">
+        ${maps.map(m => `
+          <div class="map-item reveal">
+            <div class="map-icon">${m.icon}</div>
+            <div>
+              <div class="map-name">${m.name}</div>
+              <div class="map-sub">${m.sub}</div>
+            </div>
+          </div>`).join('')}
+      </div>
+    </div>
+    <div style="margin-top:1.5rem">
+      ${buildComingSoon('Interactive Maps', 'Labeled, clickable maps for practice are coming soon. Use the list above to guide your atlas practice!')}
+    </div>`;
+}
+
+/* ══════════════════════════════════════
+   SUMMARY
+══════════════════════════════════════ */
+function buildSummary(subject) {
+  const colorMap = { maths:'var(--maths)', science:'var(--science)', english:'var(--english)', social:'var(--social)' };
+  const color = colorMap[subject.id] || 'var(--purple-600)';
+  return `<h2 class="section-title" style="margin-bottom:1.5rem">📖 Chapter Summaries — ${subject.name}</h2>
+    <div class="summary-grid">
+      ${subject.chapters.map(ch => `
+        <div class="summary-card reveal">
+          <div class="summary-card-title">
+            <span class="formula-num" style="background:${color};min-width:28px">${ch.id}</span>
+            ${ch.title}
+          </div>
+          <div class="summary-points">
+            ${(ch.keyPoints || []).slice(0, 4).map(k => `<div class="summary-point">${escH(k)}</div>`).join('')}
+          </div>
+        </div>`).join('')}
+    </div>`;
+}
+
+/* ══════════════════════════════════════
+   COMING SOON
+══════════════════════════════════════ */
+function buildComingSoon(name, msg) {
+  return `
+    <div class="coming-soon">
+      <div class="cs-icon">🚀</div>
+      <h3>${name} — Coming Soon</h3>
+      <p>${msg}</p>
+      <button onclick="document.getElementById('owlixToggle').click()" class="btn btn-primary btn-md">Ask Owlix Instead →</button>
+    </div>`;
+}
+
+/* ══════════════════════════════════════
+   HELPERS
+══════════════════════════════════════ */
+function escH(s) {
+  return String(s || '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
 }
