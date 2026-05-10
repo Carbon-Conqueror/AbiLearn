@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mathematics — AbiLearn CBSE Class 10</title>
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>📐</text></svg>">
+</head>
+<body>
+  <nav class="navbar">
+    <a href="index.html" class="logo">
+      <div class="logo-icon">📚</div>
+      <span class="logo-text">Abi<span>Learn</span></span>
+    </a>
+    <ul class="nav-links" id="navLinks">
+      <li><a href="index.html">Home</a></li>
+      <li><a href="maths.html" class="active">Maths</a></li>
+      <li><a href="science.html">Science</a></li>
+      <li><a href="english.html">English</a></li>
+      <li><a href="social.html">Social</a></li>
+    </ul>
+    <div class="nav-right">
+      <div class="search-bar">
+        <span class="search-icon">🔍</span>
+        <input type="text" placeholder="Search topics..." id="searchInput" autocomplete="off">
+        <div class="search-results" id="searchResults"></div>
+      </div>
+      <button class="hamburger" id="hamburger" aria-label="Menu">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </nav>
+  <div id="subjectContent"></div>
+  <footer>
+    <p>Made with ❤️ for CBSE Class 10 students | AbiLearn &copy; 2025</p>
+  </footer>
+  <button class="owlix-toggle" id="owlixToggle" title="Ask Owlix">🦉<span class="owlix-badge">AI</span></button>
+  <div class="owlix-window" id="owlixWindow">
+    <div class="owlix-header">
+      <div class="owlix-avatar">🦉</div>
+      <div class="owlix-info">
+        <h3>Owlix</h3>
+        <div class="owlix-status"><span class="status-dot"></span><p>AI Study Assistant</p></div>
+      </div>
+      <button class="owlix-close" id="owlixClose">✕</button>
+    </div>
+    <div class="owlix-messages" id="owlixMessages"></div>
+    <div class="owlix-quick-replies" id="quickReplies"></div>
+    <div class="owlix-input-area">
+      <input type="text" class="owlix-input" id="owlixInput" placeholder="Ask Owlix...">
+      <button class="owlix-send" id="owlixSend">&#10148;</button>
+    </div>
+  </div>
+  <script src="js/data.js"></script>
+  <script src="js/app.js"></script>
+  <script src="js/owlix.js"></script>
+  <script>initSubjectPage('maths');</script>
+</body>
+</html>
