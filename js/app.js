@@ -266,10 +266,15 @@ const PDFS = {
 
 /* Resolve PDF URL for iframe — local paths pass through, Drive links convert to embed */
 function toDriveEmbed(url) {
-  if (!url.startsWith('http')) return url; // local path — use directly
-  const m = url.match(/drive\.google\.com\/file\/d\/([^\/\?]+)/);
-  if (m) return `https://drive.google.com/file/d/${m[1]}/preview`;
-  return `https://docs.google.com/viewer?url=${encodeURIComponent(url)}&embedded=true`;
+  if (url.startsWith('http')) {
+    const m = url.match(/drive\.google\.com\/file\/d\/([^\/\?]+)/);
+    if (m) return `https://drive.google.com/file/d/${m[1]}/preview`;
+    return `https://docs.google.com/viewer?url=${encodeURIComponent(url)}&embedded=true`;
+  }
+  // Local path: build absolute URL so Google Docs Viewer can fetch it
+  const base = window.location.href.replace(/\/[^\/]*$/, '/');
+  const abs = new URL(url, base).href;
+  return `https://docs.google.com/viewer?url=${encodeURIComponent(abs)}&embedded=true`;
 }
 
 /* Render PDF cards for a subject tab ('formula' or 'notes') */
