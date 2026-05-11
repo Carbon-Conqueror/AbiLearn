@@ -277,49 +277,18 @@ function toDriveEmbed(url) {
   return `https://docs.google.com/viewer?url=${encodeURIComponent(abs)}&embedded=true`;
 }
 
-/* Render PDF cards for a subject tab ('formula' or 'notes') */
+/* Render PDFs inline — no button, just display immediately */
 function pdfCards(subject, tab) {
   const list = (PDFS[subject.id] || {})[tab] || [];
   if (!list.length) return '';
-  return `<div class="pdf-cards-grid">
-    ${list.map((p, i) => {
-      const vid = `pdfv-${subject.id}-${tab}-${i}`;
-      return `
-      <div class="pdf-card">
-        <div class="pdf-card-icon">📄</div>
-        <div class="pdf-card-info">
-          <div class="pdf-card-title">${escH(p.title)}</div>
-          <div class="pdf-card-desc">${escH(p.desc || '')}</div>
-        </div>
-        <button class="pdf-open-btn" id="btn-${vid}" onclick="togglePDF('${vid}','${escH(p.url)}','${escH(p.title)}')">Open PDF</button>
+  return list.map(p => `
+    <div class="pdf-embed-block">
+      <div class="pdf-embed-header">
+        <span class="pdf-embed-title">📄 ${escH(p.title)}</span>
+        ${p.desc ? `<span class="pdf-embed-desc">${escH(p.desc)}</span>` : ''}
       </div>
-      <div class="pdf-inline-viewer" id="${vid}" style="display:none">
-        <div class="pdf-inline-header">
-          <span class="pdf-inline-title">${escH(p.title)}</span>
-          <button class="pdf-inline-close" onclick="togglePDF('${vid}','${escH(p.url)}','${escH(p.title)}')">✕</button>
-        </div>
-        <iframe class="pdf-inline-frame" allowfullscreen></iframe>
-      </div>`;
-    }).join('')}
-  </div>`;
-}
-
-/* Toggle inline PDF viewer */
-function togglePDF(vid, url, title) {
-  const viewer = document.getElementById(vid);
-  const btn = document.getElementById('btn-' + vid);
-  if (!viewer) return;
-  const isOpen = viewer.style.display !== 'none';
-  if (isOpen) {
-    viewer.style.display = 'none';
-    viewer.querySelector('iframe').src = '';
-    if (btn) { btn.textContent = 'Open PDF'; btn.classList.remove('active'); }
-  } else {
-    viewer.querySelector('iframe').src = toDriveEmbed(url);
-    viewer.style.display = 'block';
-    if (btn) { btn.textContent = 'Close PDF'; btn.classList.add('active'); }
-    viewer.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-  }
+      <iframe class="pdf-embed-frame" src="${escH(toDriveEmbed(p.url))}" allowfullscreen></iframe>
+    </div>`).join('');
 }
 
 /* ══════════════════════════════════════
