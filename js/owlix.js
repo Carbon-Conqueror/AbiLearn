@@ -144,12 +144,12 @@ async function streamGemini(contents) {
   }
 
   try {
-    const url = `https://generativelanguage.googleapis.com/v1beta/models/${GEMINI_MODEL}:streamGenerateContent?key=${GEMINI_KEY}&alt=sse`;
+    const url = `https://generativelanguage.googleapis.com/v1/models/${GEMINI_MODEL}:streamGenerateContent?key=${GEMINI_KEY}&alt=sse`;
     const res = await fetch(url, {
       method: 'POST',
       headers: { 'content-type': 'application/json' },
       body: JSON.stringify({
-        system_instruction: { parts: [{ text: OWLIX_SYSTEM }] },
+        systemInstruction: { parts: [{ text: OWLIX_SYSTEM }] },
         contents,
         generationConfig: { temperature: 0.7, maxOutputTokens: 2048, topK: 40, topP: 0.95 }
       })
