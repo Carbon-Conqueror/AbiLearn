@@ -269,12 +269,137 @@ function buildFormulaSheet(subject) {
 }
 
 /* ══════════════════════════════════════
+   SECURE PDF VIEWER CONFIG
+   Teachers: add your PDF URLs here
+══════════════════════════════════════ */
+const SECURE_PDFS = {
+  // Format: subjectId: [ { title, url, description } ]
+  // Example: science: [{ title: 'Ch 1–5 Notes', url: '/pdfs/science-notes.pdf', description: 'Teacher notes for Physics & Chemistry' }]
+  maths:   [],
+  science: [],
+  english: [],
+  social:  []
+};
+
+// Active PDF viewer state (one per page)
+const _pdfState = {};
+
+function buildSecurePDFSection(subject) {
+  const pdfs = SECURE_PDFS[subject.id] || [];
+  if (!pdfs.length) {
+    return `<div class="pdf-upload-placeholder">
+      <div class="pdf-placeholder-icon">📄</div>
+      <div class="pdf-placeholder-title">Teacher PDFs</div>
+      <p class="pdf-placeholder-desc">No PDFs have been uploaded yet. When your teacher uploads notes, they'll appear here — protected so they can't be downloaded.</p>
+    </div>`;
+  }
+  return pdfs.map((pdf, idx) => `
+    <div class="secure-pdf-viewer" id="pdfViewer_${subject.id}_${idx}">
+      <div class="pdf-viewer-topbar">
+        <div class="pdf-viewer-info">
+          <span class="pdf-lock-badge">🔒 Protected</span>
+          <span class="pdf-doc-title">${escH(pdf.title)}</span>
+        </div>
+        <div class="pdf-viewer-desc">${escH(pdf.description || '')}</div>
+      </div>
+      <div class="pdf-canvas-wrap" id="pdfCanvasWrap_${subject.id}_${idx}">
+        <div class="pdf-loading-msg" id="pdfLoading_${subject.id}_${idx}">
+          <span class="pdf-spinner">⏳</span> Loading PDF...
+        </div>
+        <canvas id="pdfCanvas_${subject.id}_${idx}" class="pdf-canvas"></canvas>
+      </div>
+      <div class="pdf-nav-bar">
+        <button class="pdf-nav-btn" onclick="pdfPrevPage('${subject.id}',${idx})">◀</button>
+        <span class="pdf-page-info" id="pdfPageInfo_${subject.id}_${idx}">Page 1</span>
+        <button class="pdf-nav-btn" onclick="pdfNextPage('${subject.id}',${idx})">▶</button>
+        <span class="pdf-protected-note">🔒 Download disabled</span>
+      </div>
+    </div>`).join('');
+}
+
+function initSecurePDFViewers(subject) {
+  const pdfs = SECURE_PDFS[subject.id] || [];
+  if (!pdfs.length || typeof pdfjsLib === 'undefined') return;
+
+  pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+
+  pdfs.forEach((pdf, idx) => {
+    const stateKey = `${subject.id}_${idx}`;
+    const canvasEl = document.getElementById(`pdfCanvas_${subject.id}_${idx}`);
+    const loadingEl = document.getElementById(`pdfLoading_${subject.id}_${idx}`);
+    const wrapEl = document.getElementById(`pdfCanvasWrap_${subject.id}_${idx}`);
+    if (!canvasEl) return;
+
+    // Block right-click on canvas
+    if (wrapEl) {
+      wrapEl.addEventListener('contextmenu', e => e.preventDefault());
+    }
+
+    _pdfState[stateKey] = { currentPage: 1, totalPages: 0, pdfDoc: null, rendering: false };
+
+    pdfjsLib.getDocument({ url: pdf.url, disableAutoFetch: true, disableStream: true }).promise.then(doc => {
+      _pdfState[stateKey].pdfDoc = doc;
+      _pdfState[stateKey].totalPages = doc.numPages;
+      if (loadingEl) loadingEl.style.display = 'none';
+      renderPDFPage(subject.id, idx, 1);
+    }).catch(() => {
+      if (loadingEl) loadingEl.textContent = '⚠️ Unable to load PDF.';
+    });
+  });
+}
+
+function renderPDFPage(subjectId, idx, pageNum) {
+  const stateKey = `${subjectId}_${idx}`;
+  const state = _pdfState[stateKey];
+  if (!state || !state.pdfDoc || state.rendering) return;
+  state.rendering = true;
+  state.currentPage = Math.max(1, Math.min(pageNum, state.totalPages));
+
+  state.pdfDoc.getPage(state.currentPage).then(page => {
+    const canvas = document.getElementById(`pdfCanvas_${subjectId}_${idx}`);
+    if (!canvas) return;
+    const ctx = canvas.getContext('2d');
+    const viewport = page.getViewport({ scale: Math.min(1.4, canvas.parentElement.clientWidth / 612) });
+    canvas.width = viewport.width;
+    canvas.height = viewport.height;
+    page.render({ canvasContext: ctx, viewport }).promise.then(() => {
+      state.rendering = false;
+      const info = document.getElementById(`pdfPageInfo_${subjectId}_${idx}`);
+      if (info) info.textContent = `Page ${state.currentPage} of ${state.totalPages}`;
+    });
+  });
+}
+
+function pdfPrevPage(subjectId, idx) {
+  const state = _pdfState[`${subjectId}_${idx}`];
+  if (!state || state.currentPage <= 1) return;
+  renderPDFPage(subjectId, idx, state.currentPage - 1);
+}
+
+function pdfNextPage(subjectId, idx) {
+  const state = _pdfState[`${subjectId}_${idx}`];
+  if (!state || state.currentPage >= state.totalPages) return;
+  renderPDFPage(subjectId, idx, state.currentPage + 1);
+}
+
+// Block Ctrl+S and Ctrl+P globally when a PDF is visible
+document.addEventListener('keydown', e => {
+  if ((e.ctrlKey || e.metaKey) && (e.key === 's' || e.key === 'p')) {
+    if (document.querySelector('.secure-pdf-viewer')) {
+      e.preventDefault();
+      return false;
+    }
+  }
+});
+
+/* ══════════════════════════════════════
    IMPORTANT NOTES
 ══════════════════════════════════════ */
 function buildImportantNotes(subject) {
   const colorMap = { maths:'var(--maths)', science:'var(--science)', english:'var(--english)', social:'var(--social)' };
   const color = colorMap[subject.id] || 'var(--purple-600)';
-  return `<h2 class="section-title" style="margin-bottom:1.5rem">📌 Important Notes — ${subject.name}</h2>
+  const pdfSection = buildSecurePDFSection(subject);
+  const notesHTML = `<h2 class="section-title" style="margin-bottom:1.5rem">📌 Important Notes — ${subject.name}</h2>
     <div class="notes-grid">
       ${subject.chapters.map(ch => `
         <div class="notes-block reveal">
@@ -288,6 +413,11 @@ function buildImportantNotes(subject) {
           </ul>
         </div>`).join('')}
     </div>`;
+
+  // Init PDF viewers after DOM update
+  setTimeout(() => initSecurePDFViewers(subject), 200);
+
+  return `${pdfSection}${notesHTML}`;
 }
 
 /* ══════════════════════════════════════
