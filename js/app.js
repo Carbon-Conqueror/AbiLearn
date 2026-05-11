@@ -277,19 +277,87 @@ function toDriveEmbed(url) {
   return `https://docs.google.com/viewer?url=${encodeURIComponent(abs)}&embedded=true`;
 }
 
-/* Render PDFs inline — no button, just display immediately */
+/* Clickable PDF cards — open popup modal, no Drive */
 function pdfCards(subject, tab) {
   const list = (PDFS[subject.id] || {})[tab] || [];
   if (!list.length) return '';
-  return list.map(p => `
-    <div class="pdf-embed-block">
-      <div class="pdf-embed-header">
-        <span class="pdf-embed-title">📄 ${escH(p.title)}</span>
-        ${p.desc ? `<span class="pdf-embed-desc">${escH(p.desc)}</span>` : ''}
-      </div>
-      <iframe class="pdf-embed-frame" src="${escH(toDriveEmbed(p.url))}" allowfullscreen></iframe>
-    </div>`).join('');
+  return `<div class="pdf-cards-grid">
+    ${list.map(p => `
+      <div class="pdf-card" onclick="openPDF('${escH(p.url)}','${escH(p.title)}')">
+        <div class="pdf-card-icon">📄</div>
+        <div class="pdf-card-info">
+          <div class="pdf-card-title">${escH(p.title)}</div>
+          <div class="pdf-card-desc">${escH(p.desc || '')}</div>
+        </div>
+        <span class="pdf-card-arrow">›</span>
+      </div>`).join('')}
+  </div>`;
 }
+
+/* PDF.js popup — renders PDF directly, no external viewer */
+const PDFJS_SRC = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js';
+const PDFJS_WORKER = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+
+function openPDF(url, title) {
+  let modal = document.getElementById('pdfModal');
+  if (!modal) {
+    modal = document.createElement('div');
+    modal.id = 'pdfModal';
+    modal.innerHTML = `
+      <div class="pdf-modal-overlay" onclick="closePDF()"></div>
+      <div class="pdf-modal-box">
+        <div class="pdf-modal-header">
+          <span class="pdf-modal-title" id="pdfModalTitle"></span>
+          <button class="pdf-modal-close" onclick="closePDF()">✕</button>
+        </div>
+        <div class="pdf-modal-body" id="pdfModalBody">
+          <div class="pdf-loading">Loading PDF…</div>
+        </div>
+      </div>`;
+    document.body.appendChild(modal);
+  }
+  document.getElementById('pdfModalTitle').textContent = title;
+  document.getElementById('pdfModalBody').innerHTML = '<div class="pdf-loading">Loading PDF…</div>';
+  modal.classList.add('open');
+  document.body.style.overflow = 'hidden';
+
+  if (window.pdfjsLib) { renderPDF(url); return; }
+  const s = document.createElement('script');
+  s.src = PDFJS_SRC;
+  s.onload = () => renderPDF(url);
+  document.head.appendChild(s);
+}
+
+function renderPDF(url) {
+  const body = document.getElementById('pdfModalBody');
+  if (!body) return;
+  pdfjsLib.GlobalWorkerOptions.workerSrc = PDFJS_WORKER;
+  const base = window.location.href.replace(/\/[^\/]*$/, '/');
+  const absUrl = url.startsWith('http') ? url : new URL(url, base).href;
+
+  pdfjsLib.getDocument(absUrl).promise.then(pdf => {
+    body.innerHTML = '';
+    for (let n = 1; n <= pdf.numPages; n++) {
+      pdf.getPage(n).then(page => {
+        const vp = page.getViewport({ scale: Math.min(body.clientWidth / page.getViewport({ scale: 1 }).width, 2) });
+        const canvas = document.createElement('canvas');
+        canvas.width = vp.width; canvas.height = vp.height;
+        canvas.style.cssText = 'width:100%;display:block;margin-bottom:2px';
+        body.appendChild(canvas);
+        page.render({ canvasContext: canvas.getContext('2d'), viewport: vp });
+      });
+    }
+  }).catch(() => {
+    body.innerHTML = `<div class="pdf-error">Could not load PDF.<br><a href="${escH(absUrl)}" target="_blank">Tap to download</a></div>`;
+  });
+}
+
+function closePDF() {
+  const m = document.getElementById('pdfModal');
+  if (m) m.classList.remove('open');
+  document.body.style.overflow = '';
+}
+document.addEventListener('keydown', e => { if (e.key === 'Escape') closePDF(); });
 
 /* ══════════════════════════════════════
    FORMULA SHEET
