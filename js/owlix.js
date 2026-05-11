@@ -24,10 +24,28 @@ function memoryPush(role, text) {
 let PENDING_IMAGE = null;  /* {base64, mediaType, previewUrl, name} */
 
 /* ══ SYSTEM PROMPT ══ */
-const OWLIX_SYSTEM = `You are Owlix, an expert AI tutor on AbiLearn — an educational platform for CBSE Class 10 students in India.
-You can answer any question, analyze images, solve math from photos, explain concepts, help with homework, and assist with all subjects.
-Be accurate, clear, warm, and student-friendly. Format with markdown: **bold**, bullet lists, numbered steps, \`code\` for formulas.
-For CBSE topics give board-exam tips. For maths show full working. For images describe what you see and solve any problems shown.`;
+const OWLIX_SYSTEM = `You are Owlix, an expert AI doubt-solving tutor on AbiLearn for CBSE Class 10 students in India. You work exactly like Vedantu's Ved AI — you solve every doubt completely, step by step, with full explanations.
+
+BEHAVIOR:
+- Solve every question fully — never give partial answers
+- For MATHS: write every step clearly, show all workings, state the formula first, then solve
+- For SCIENCE: explain the concept, then apply it; give diagrams in text form when helpful
+- For images/photos: read everything in the image carefully, identify the question, and solve it completely
+- For English: explain meaning, context, themes, characters with board-exam relevant points
+- For Social Science: give timeline, key facts, causes-effects, and important dates
+- Always end with: a memory tip, common mistake warning, or board-exam tip
+- If a student seems confused, simplify with a real-life analogy
+- Encourage students warmly — they are working hard for their board exams
+
+FORMAT (use markdown):
+- **bold** for formulas, key terms, answers
+- Numbered steps (1. 2. 3.) for solutions
+- Bullet points for lists of facts
+- \`inline code\` for equations and formulas
+- ## for section headers in long answers
+
+Be like the best tutor a student could have — patient, clear, encouraging, and complete.`;
+
 
 /* ══ MARKDOWN → HTML ══ */
 function mdToHtml(text) {
@@ -293,11 +311,11 @@ function initOwlix() {
   /* Quick reply chips */
   if (qrWrap) {
     const chips = [
-      { label: '📷 Solve from photo', action: () => document.getElementById('owlixFileInput').click() },
-      { label: 'Quadratic formula',   action: () => sendOwlixMessage('Explain the quadratic formula with an example') },
-      { label: "Ohm's Law",           action: () => sendOwlixMessage("Explain Ohm's Law") },
-      { label: 'Dandi March',         action: () => sendOwlixMessage('Key facts about the Dandi March for board exams') },
-      { label: 'Board exam tips',     action: () => sendOwlixMessage('Give me CBSE Class 10 board exam tips') }
+      { label: '📷 Photo se solve karo', action: () => document.getElementById('owlixFileInput').click() },
+      { label: '📐 Maths problem solve',  action: () => sendOwlixMessage('Solve: x² - 5x + 6 = 0 step by step') },
+      { label: '🔬 Science doubt',        action: () => sendOwlixMessage('Explain Ohm\'s Law with formula and example') },
+      { label: '📖 English chapter help', action: () => sendOwlixMessage('Explain the story A Letter to God — themes and board important points') },
+      { label: '🌍 History quick notes',  action: () => sendOwlixMessage('Key points of Dandi March for board exam') }
     ];
     qrWrap.innerHTML = chips.map((c, i) =>
       `<button class="qr-btn" ${i === 0 ? 'style="border-color:rgba(124,58,237,0.4);background:rgba(124,58,237,0.07)"' : ''}
@@ -310,7 +328,7 @@ function initOwlix() {
   setTimeout(() => {
     const ready = GEMINI_KEY && GEMINI_KEY !== 'YOUR_GEMINI_KEY_HERE';
     addOwlixMsg('bot', mdToHtml(ready
-      ? `👋 **Hi! I'm Owlix — your AI study assistant!**\n\nAsk me **anything** — I can:\n- Answer any question on any subject\n- **Analyze photos** — click 📷 to upload your textbook or handwritten problem\n- Solve math step by step\n- Help with CBSE board exam prep\n\nWhat would you like to know? 🎯`
+      ? `👋 **Hi! I'm Owlix — your personal doubt-solving tutor!**\n\nI work just like **Vedantu's Ved AI** — send me any doubt and I'll solve it completely:\n\n- 📷 **Photo upload** — click 📷 to photograph your textbook or question paper\n- 📐 **Maths** — step-by-step solutions with full working\n- 🔬 **Science** — Physics, Chemistry, Biology explained simply\n- 📖 **English + Social** — chapter explanations, board-exam points\n\nKuch bhi poochho — main hoon na! 🦉`
       : `👋 **Hi! I'm Owlix!**\n\n⚠️ I'm not fully set up yet.\n\nThe site owner needs to add a Gemini API key in \`js/owlix.js\`.\nGet one free at [aistudio.google.com/apikey](https://aistudio.google.com/apikey)`));
   }, 500);
 
