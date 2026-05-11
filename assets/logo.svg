@@ -1,26 +1,43 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 220 200" fill="none">
-  <!-- Book / open wings -->
-  <path d="M8 155 Q55 128 110 138 Q165 128 212 155 L208 168 Q160 145 110 158 Q60 145 12 168 Z" fill="#5C2D08"/>
-  <!-- Owl body -->
-  <path d="M46 138 Q44 78 110 74 Q176 78 174 138 Q152 162 110 164 Q68 162 46 138Z" fill="#5C2D08"/>
-  <!-- Left eye white -->
-  <ellipse cx="82" cy="112" rx="25" ry="23" fill="white"/>
-  <!-- Right eye white -->
-  <ellipse cx="138" cy="112" rx="25" ry="23" fill="white"/>
-  <!-- Left pupil -->
-  <circle cx="82" cy="114" r="14" fill="#2D1305"/>
-  <!-- Right pupil -->
-  <circle cx="138" cy="114" r="14" fill="#2D1305"/>
-  <!-- V brow between eyes -->
-  <path d="M95 96 L110 106 L125 96" stroke="#3D1A05" stroke-width="5" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
-  <!-- Beak -->
-  <path d="M103 122 L110 134 L117 122 Z" fill="#8B4513"/>
-  <!-- Graduation cap flat top -->
-  <polygon points="62,78 110,55 158,78" fill="#111111"/>
-  <!-- Cap box -->
-  <rect x="80" y="76" width="60" height="14" rx="3" fill="#111111"/>
-  <!-- Tassel string -->
-  <line x1="158" y1="78" x2="162" y2="106" stroke="#5C2D08" stroke-width="4" stroke-linecap="round"/>
-  <!-- Tassel end -->
-  <rect x="156" y="104" width="12" height="16" rx="3" fill="#5C2D08"/>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 260 225" role="img" aria-label="AbiLearn">
+
+  <!-- ══ BOOK / OPEN WINGS (bottom) ══ -->
+  <path d="M72 150 C50 138 20 136 4 144 C4 160 38 163 62 161 C70 161 72 157 72 150Z" fill="#5C2308"/>
+  <path d="M188 150 C210 138 240 136 256 144 C256 160 222 163 198 161 C190 161 188 157 188 150Z" fill="#5C2308"/>
+  <path d="M72 157 Q130 170 188 157 L188 163 Q130 176 72 163Z" fill="#5C2308"/>
+
+  <!-- ══ OWL MAIN BODY ══ -->
+  <path d="M80 90 C68 98 62 112 62 128 C62 150 74 165 90 173 C104 180 118 181 130 181 C142 181 156 180 170 173 C186 165 198 150 198 128 C198 112 192 98 180 90 C165 82 95 82 80 90Z" fill="#5C2308"/>
+
+  <!-- Forehead connecting body to cap -->
+  <path d="M84 82 Q130 74 176 82 L174 92 Q130 84 86 92Z" fill="#5C2308"/>
+
+  <!-- ══ CAP BAND (black rounded bar on forehead) ══ -->
+  <rect x="82" y="70" width="96" height="20" rx="9" fill="#111111"/>
+
+  <!-- ══ GRADUATION CAP TOP (wide black diamond, white border) ══ -->
+  <polygon points="130,8 242,50 130,70 18,50" fill="#111111"/>
+  <polygon points="130,8 242,50 130,70 18,50" fill="none" stroke="white" stroke-width="3" stroke-linejoin="round"/>
+
+  <!-- ══ TASSEL ══ -->
+  <line x1="240" y1="52" x2="232" y2="96" stroke="#5C2308" stroke-width="2.5" stroke-linecap="round"/>
+  <ellipse cx="231" cy="99" rx="5" ry="4" fill="#5C2308"/>
+  <line x1="231" y1="102" x2="231" y2="118" stroke="#5C2308" stroke-width="2.5" stroke-linecap="round"/>
+  <path d="M225 118 Q231 136 237 118 Q231 150 225 118Z" fill="#5C2308"/>
+
+  <!-- ══ LEFT EYE — white socket with brown eyelid (half-closed/sleepy look) ══ -->
+  <ellipse cx="103" cy="120" rx="27" ry="22" fill="white"/>
+  <!-- Brown eyelid covering lower half of left eye -->
+  <path d="M76 122 Q103 138 130 122 L130 148 L76 148Z" fill="#5C2308"/>
+
+  <!-- ══ RIGHT EYE — mirror ══ -->
+  <ellipse cx="157" cy="120" rx="27" ry="22" fill="white"/>
+  <!-- Brown eyelid covering lower half of right eye -->
+  <path d="M130 122 Q157 138 184 122 L184 148 L130 148Z" fill="#5C2308"/>
+
+  <!-- ══ CENTRAL V FOREHEAD MARK (white, between eyes) ══ -->
+  <path d="M116 102 L130 122 L144 102 L130 96Z" fill="white"/>
+
+  <!-- ══ BEAK (small brown inverted triangle) ══ -->
+  <path d="M121 124 L130 138 L139 124 L130 121Z" fill="#5C2308"/>
+
 </svg>
