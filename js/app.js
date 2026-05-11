@@ -248,12 +248,45 @@ function renderTabContent(subject, tabId) {
 /* ══════════════════════════════════════
    FORMULA SHEET
 ══════════════════════════════════════ */
+/* ══════════════════════════════════════
+   FORMULA SHEET PDFs CONFIG
+   Add Google Drive PDF links for formula sheets here
+══════════════════════════════════════ */
+const FORMULA_PDFS = {
+  maths: [
+    { title: 'Ch 1 — Real Numbers', desc: 'Formula Sheet', url: 'https://drive.google.com/file/d/1YgCjmuCPWQ2kPCy5dZIT7MkAQLgdArEn/view?usp=drivesdk' }
+  ],
+  science: [
+    // { title: 'Physics Formulas', desc: 'All chapters', url: 'YOUR_DRIVE_LINK' }
+  ],
+  english: [],
+  social:  []
+};
+
 function buildFormulaSheet(subject) {
   const colorMap = { maths:'var(--maths)', science:'var(--science)', english:'var(--english)', social:'var(--social)' };
   const color = colorMap[subject.id] || 'var(--purple-600)';
   const chapters = subject.chapters.filter(c => c.formulas && c.formulas.length);
-  if (!chapters.length) return buildComingSoon('Formula Sheet', 'Formulas will be added here soon.');
-  return `<h2 class="section-title" style="margin-bottom:1.5rem">📐 Formula Sheet — ${subject.name}</h2>
+  const pdfs = FORMULA_PDFS[subject.id] || [];
+
+  const pdfSection = pdfs.length ? `
+    <h2 class="section-title" style="margin-bottom:1rem">📂 Formula PDFs</h2>
+    <div class="pdf-cards-grid" style="margin-bottom:2rem">
+      ${pdfs.map(pdf => `
+        <div class="pdf-card">
+          <div class="pdf-card-icon">📄</div>
+          <div class="pdf-card-info">
+            <div class="pdf-card-title">${escH(pdf.title)}</div>
+            <div class="pdf-card-desc">${escH(pdf.desc || '')}</div>
+          </div>
+          <button class="pdf-open-btn" onclick="openPDFViewer('${escH(pdf.url)}','${escH(pdf.title)}')">Open PDF</button>
+        </div>`).join('')}
+    </div>` : '';
+
+  if (!chapters.length && !pdfs.length) return buildComingSoon('Formula Sheet', 'Formulas will be added here soon.');
+
+  const formulaSection = chapters.length ? `
+    <h2 class="section-title" style="margin-bottom:1.5rem">📐 Formula Sheet — ${subject.name}</h2>
     <div class="formula-sheet">
       ${chapters.map(ch => `
         <div class="formula-chapter-block reveal">
@@ -265,7 +298,9 @@ function buildFormulaSheet(subject) {
             ${ch.formulas.map(f => `<div class="formula-pill">${escH(f)}</div>`).join('')}
           </div>
         </div>`).join('')}
-    </div>`;
+    </div>` : '';
+
+  return pdfSection + formulaSection;
 }
 
 /* ══════════════════════════════════════
@@ -278,7 +313,7 @@ function buildFormulaSheet(subject) {
 ══════════════════════════════════════ */
 const STUDY_PDFS = {
   maths: [
-    { title: 'Ch 1 — Real Numbers', desc: 'Important Notes', url: 'https://drive.google.com/file/d/1YgCjmuCPWQ2kPCy5dZIT7MkAQLgdArEn/view?usp=drivesdk' }
+    // { title: 'Ch 1 Notes', desc: 'Important Notes', url: 'YOUR_DRIVE_LINK' }
   ],
   science: [
     // { title: 'Physics Formula Sheet', desc: 'Light, Electricity, Magnetism', url: 'https://drive.google.com/file/d/YOUR_FILE_ID/view' }
