@@ -1148,10 +1148,10 @@ footer {
 }
 
 /* PDF Modal */
-#pdfViewerModal {
+#pdfModal {
   display:none;position:fixed;inset:0;z-index:9999;
 }
-#pdfViewerModal.open { display:flex;align-items:center;justify-content:center; }
+#pdfModal.open { display:flex;align-items:center;justify-content:center; }
 .pdf-modal-overlay {
   position:absolute;inset:0;background:rgba(0,0,0,0.6);backdrop-filter:blur(3px);
 }

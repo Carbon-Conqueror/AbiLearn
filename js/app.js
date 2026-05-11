@@ -246,159 +246,108 @@ function renderTabContent(subject, tabId) {
 }
 
 /* ══════════════════════════════════════
-   FORMULA SHEET
+   PDF CONFIG
+   How to add a PDF:
+   1. Upload to Google Drive
+   2. Share → "Anyone with the link" → Copy link
+   3. Paste under the right subject + tab below
 ══════════════════════════════════════ */
-/* ══════════════════════════════════════
-   FORMULA SHEET PDFs CONFIG
-   Add Google Drive PDF links for formula sheets here
-══════════════════════════════════════ */
-const FORMULA_PDFS = {
-  maths: [
-    { title: 'Ch 1 — Real Numbers', desc: 'Formula Sheet', url: 'https://drive.google.com/file/d/1YgCjmuCPWQ2kPCy5dZIT7MkAQLgdArEn/view?usp=drivesdk' }
-  ],
-  science: [
-    // { title: 'Physics Formulas', desc: 'All chapters', url: 'YOUR_DRIVE_LINK' }
-  ],
-  english: [],
-  social:  []
+const PDFS = {
+  maths: {
+    formula: [
+      { title: 'Ch 1 — Real Numbers', desc: 'Important Formula Sheet', url: 'https://drive.google.com/file/d/1YgCjmuCPWQ2kPCy5dZIT7MkAQLgdArEn/view?usp=drivesdk' }
+      // add more: { title: '...', desc: '...', url: '...' }
+    ],
+    notes: []
+  },
+  science:  { formula: [], notes: [] },
+  english:  { formula: [], notes: [] },
+  social:   { formula: [], notes: [] }
 };
 
-function buildFormulaSheet(subject) {
-  const colorMap = { maths:'var(--maths)', science:'var(--science)', english:'var(--english)', social:'var(--social)' };
-  const color = colorMap[subject.id] || 'var(--purple-600)';
-  const chapters = subject.chapters.filter(c => c.formulas && c.formulas.length);
-  const pdfs = FORMULA_PDFS[subject.id] || [];
-
-  const pdfSection = pdfs.length ? `
-    <h2 class="section-title" style="margin-bottom:1rem">📂 Formula PDFs</h2>
-    <div class="pdf-cards-grid" style="margin-bottom:2rem">
-      ${pdfs.map(pdf => `
-        <div class="pdf-card">
-          <div class="pdf-card-icon">📄</div>
-          <div class="pdf-card-info">
-            <div class="pdf-card-title">${escH(pdf.title)}</div>
-            <div class="pdf-card-desc">${escH(pdf.desc || '')}</div>
-          </div>
-          <button class="pdf-open-btn" onclick="openPDFViewer('${escH(pdf.url)}','${escH(pdf.title)}')">Open PDF</button>
-        </div>`).join('')}
-    </div>` : '';
-
-  if (!chapters.length && !pdfs.length) return buildComingSoon('Formula Sheet', 'Formulas will be added here soon.');
-
-  const formulaSection = chapters.length ? `
-    <h2 class="section-title" style="margin-bottom:1.5rem">📐 Formula Sheet — ${subject.name}</h2>
-    <div class="formula-sheet">
-      ${chapters.map(ch => `
-        <div class="formula-chapter-block reveal">
-          <div class="formula-chapter-title">
-            <span class="formula-num" style="background:${color}">${ch.id}</span>
-            ${ch.title}
-          </div>
-          <div class="formula-grid">
-            ${ch.formulas.map(f => `<div class="formula-pill">${escH(f)}</div>`).join('')}
-          </div>
-        </div>`).join('')}
-    </div>` : '';
-
-  return pdfSection + formulaSection;
-}
-
-/* ══════════════════════════════════════
-   PDF DOCUMENTS CONFIG
-   Add your Google Drive or any PDF links here.
-   How to get a Drive link:
-     1. Upload PDF to Google Drive
-     2. Right-click → Share → "Anyone with the link"
-     3. Copy the link and paste it below
-══════════════════════════════════════ */
-const STUDY_PDFS = {
-  maths: [
-    // { title: 'Ch 1 Notes', desc: 'Important Notes', url: 'YOUR_DRIVE_LINK' }
-  ],
-  science: [
-    // { title: 'Physics Formula Sheet', desc: 'Light, Electricity, Magnetism', url: 'https://drive.google.com/file/d/YOUR_FILE_ID/view' }
-  ],
-  english: [
-    // { title: 'First Flight Summary', desc: 'All chapters with key points', url: 'https://drive.google.com/file/d/YOUR_FILE_ID/view' }
-  ],
-  social: [
-    // { title: 'History Notes', desc: 'Nationalism, Industrialisation, Print', url: 'https://drive.google.com/file/d/YOUR_FILE_ID/view' }
-  ]
-};
-
-/* Convert any Google Drive share URL → embed URL */
-function toPDFEmbedUrl(url) {
-  // Drive: https://drive.google.com/file/d/FILE_ID/view... → preview
-  const driveMatch = url.match(/drive\.google\.com\/file\/d\/([^\/\?]+)/);
-  if (driveMatch) return `https://drive.google.com/file/d/${driveMatch[1]}/preview`;
-  // Already a preview URL
-  if (url.includes('drive.google.com') && url.includes('/preview')) return url;
-  // Any other PDF URL → Google Docs viewer
+/* Drive share link → embeddable iframe URL */
+function toDriveEmbed(url) {
+  const m = url.match(/drive\.google\.com\/file\/d\/([^\/\?]+)/);
+  if (m) return `https://drive.google.com/file/d/${m[1]}/preview`;
   return `https://docs.google.com/viewer?url=${encodeURIComponent(url)}&embedded=true`;
 }
 
-function buildPDFSection(subject) {
-  const pdfs = STUDY_PDFS[subject.id] || [];
-  if (!pdfs.length) {
-    return `<div class="pdf-empty-state">
-      <div style="font-size:2.5rem;margin-bottom:0.75rem">📂</div>
-      <div style="font-weight:700;font-size:1rem;color:var(--text);margin-bottom:0.4rem">No PDFs yet</div>
-      <p style="color:var(--muted);font-size:0.85rem;max-width:280px;margin:0 auto">
-        Upload notes to Google Drive and add the link in <code style="font-size:0.78rem;background:var(--purple-50);padding:1px 5px;border-radius:4px">js/app.js → STUDY_PDFS</code>
-      </p>
-    </div>`;
-  }
+/* Render PDF cards for a subject tab ('formula' or 'notes') */
+function pdfCards(subject, tab) {
+  const list = (PDFS[subject.id] || {})[tab] || [];
+  if (!list.length) return '';
   return `<div class="pdf-cards-grid">
-    ${pdfs.map((pdf, i) => `
+    ${list.map(p => `
       <div class="pdf-card">
         <div class="pdf-card-icon">📄</div>
         <div class="pdf-card-info">
-          <div class="pdf-card-title">${escH(pdf.title)}</div>
-          <div class="pdf-card-desc">${escH(pdf.desc || '')}</div>
+          <div class="pdf-card-title">${escH(p.title)}</div>
+          <div class="pdf-card-desc">${escH(p.desc || '')}</div>
         </div>
-        <button class="pdf-open-btn" onclick="openPDFViewer('${escH(pdf.url)}','${escH(pdf.title)}')">
-          Open PDF
-        </button>
+        <button class="pdf-open-btn" onclick="openPDF('${escH(p.url)}','${escH(p.title)}')">Open PDF</button>
       </div>`).join('')}
   </div>`;
 }
 
-/* PDF Viewer Modal */
-function openPDFViewer(url, title) {
-  const embedUrl = toPDFEmbedUrl(url);
-  let modal = document.getElementById('pdfViewerModal');
+/* Open PDF in full-screen modal */
+function openPDF(url, title) {
+  let modal = document.getElementById('pdfModal');
   if (!modal) {
     modal = document.createElement('div');
-    modal.id = 'pdfViewerModal';
+    modal.id = 'pdfModal';
     modal.innerHTML = `
-      <div class="pdf-modal-overlay" onclick="closePDFViewer()"></div>
+      <div class="pdf-modal-overlay" onclick="closePDF()"></div>
       <div class="pdf-modal-box">
         <div class="pdf-modal-header">
           <span class="pdf-modal-title" id="pdfModalTitle"></span>
-          <button class="pdf-modal-close" onclick="closePDFViewer()">✕</button>
+          <button class="pdf-modal-close" onclick="closePDF()">✕</button>
         </div>
         <iframe id="pdfModalFrame" class="pdf-modal-frame" allowfullscreen></iframe>
       </div>`;
     document.body.appendChild(modal);
   }
   document.getElementById('pdfModalTitle').textContent = title;
-  document.getElementById('pdfModalFrame').src = embedUrl;
+  document.getElementById('pdfModalFrame').src = toDriveEmbed(url);
   modal.classList.add('open');
   document.body.style.overflow = 'hidden';
 }
 
-function closePDFViewer() {
-  const modal = document.getElementById('pdfViewerModal');
-  if (modal) {
-    modal.classList.remove('open');
-    document.getElementById('pdfModalFrame').src = '';
-  }
+function closePDF() {
+  const modal = document.getElementById('pdfModal');
+  if (modal) { modal.classList.remove('open'); document.getElementById('pdfModalFrame').src = ''; }
   document.body.style.overflow = '';
 }
 
-document.addEventListener('keydown', e => {
-  if (e.key === 'Escape') closePDFViewer();
-});
+document.addEventListener('keydown', e => { if (e.key === 'Escape') closePDF(); });
+
+/* ══════════════════════════════════════
+   FORMULA SHEET
+══════════════════════════════════════ */
+function buildFormulaSheet(subject) {
+  const colorMap = { maths:'var(--maths)', science:'var(--science)', english:'var(--english)', social:'var(--social)' };
+  const color = colorMap[subject.id] || 'var(--purple-600)';
+  const chapters = subject.chapters.filter(c => c.formulas && c.formulas.length);
+  const cards = pdfCards(subject, 'formula');
+
+  if (!chapters.length && !cards) return buildComingSoon('Formula Sheet', 'Formulas will be added here soon.');
+
+  return `
+    ${cards ? `<h2 class="section-title" style="margin-bottom:1rem">📂 Formula PDFs</h2>${cards}` : ''}
+    ${chapters.length ? `
+      <h2 class="section-title" style="margin-bottom:1.5rem;margin-top:${cards ? '2rem' : '0'}">📐 Formula Sheet — ${subject.name}</h2>
+      <div class="formula-sheet">
+        ${chapters.map(ch => `
+          <div class="formula-chapter-block reveal">
+            <div class="formula-chapter-title">
+              <span class="formula-num" style="background:${color}">${ch.id}</span>
+              ${ch.title}
+            </div>
+            <div class="formula-grid">
+              ${ch.formulas.map(f => `<div class="formula-pill">${escH(f)}</div>`).join('')}
+            </div>
+          </div>`).join('')}
+      </div>` : ''}`;
+}
 
 /* ══════════════════════════════════════
    IMPORTANT NOTES
@@ -406,8 +355,10 @@ document.addEventListener('keydown', e => {
 function buildImportantNotes(subject) {
   const colorMap = { maths:'var(--maths)', science:'var(--science)', english:'var(--english)', social:'var(--social)' };
   const color = colorMap[subject.id] || 'var(--purple-600)';
-  const pdfSection = buildPDFSection(subject);
-  const notesHTML = `<h2 class="section-title" style="margin-bottom:1.5rem">📌 Important Notes — ${subject.name}</h2>
+  const cards = pdfCards(subject, 'notes');
+  return `
+    ${cards ? `<h2 class="section-title" style="margin-bottom:1rem">📂 Study PDFs</h2>${cards}` : ''}
+    <h2 class="section-title" style="margin-bottom:1.5rem;margin-top:${cards ? '2rem' : '0'}">📌 Important Notes — ${subject.name}</h2>
     <div class="notes-grid">
       ${subject.chapters.map(ch => `
         <div class="notes-block reveal">
@@ -421,10 +372,6 @@ function buildImportantNotes(subject) {
           </ul>
         </div>`).join('')}
     </div>`;
-
-  return `<h2 class="section-title" style="margin-bottom:1rem">📂 Study PDFs</h2>
-    ${pdfSection}
-    ${notesHTML}`;
 }
 
 /* ══════════════════════════════════════
