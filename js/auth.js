@@ -34,7 +34,7 @@ function createAuthModal() {
 
       <!-- Branding -->
       <div class="auth-brand">
-        <img src="assets/logo.svg" alt="AbiLearn" class="auth-logo">
+        <img src="assets/logo.jpeg" alt="AbiLearn" class="auth-logo">
         <span class="auth-brand-text">Abi<span>Learn</span></span>
       </div>
 
