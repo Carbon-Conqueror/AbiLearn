@@ -277,19 +277,19 @@ function toDriveEmbed(url) {
   return `https://docs.google.com/viewer?url=${encodeURIComponent(abs)}&embedded=true`;
 }
 
-/* Clickable PDF cards — open popup modal, no Drive */
+/* PDF cards with Open PDF button — opens popup modal */
 function pdfCards(subject, tab) {
   const list = (PDFS[subject.id] || {})[tab] || [];
   if (!list.length) return '';
   return `<div class="pdf-cards-grid">
     ${list.map(p => `
-      <div class="pdf-card" onclick="openPDF('${escH(p.url)}','${escH(p.title)}')">
+      <div class="pdf-card">
         <div class="pdf-card-icon">📄</div>
         <div class="pdf-card-info">
           <div class="pdf-card-title">${escH(p.title)}</div>
           <div class="pdf-card-desc">${escH(p.desc || '')}</div>
         </div>
-        <span class="pdf-card-arrow">›</span>
+        <button class="pdf-open-btn" onclick="openPDF('${escH(p.url)}','${escH(p.title)}')">Open PDF</button>
       </div>`).join('')}
   </div>`;
 }
