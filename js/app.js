@@ -277,48 +277,45 @@ function pdfCards(subject, tab) {
   const list = (PDFS[subject.id] || {})[tab] || [];
   if (!list.length) return '';
   return `<div class="pdf-cards-grid">
-    ${list.map(p => `
+    ${list.map((p, i) => {
+      const vid = `pdfv-${subject.id}-${tab}-${i}`;
+      return `
       <div class="pdf-card">
         <div class="pdf-card-icon">📄</div>
         <div class="pdf-card-info">
           <div class="pdf-card-title">${escH(p.title)}</div>
           <div class="pdf-card-desc">${escH(p.desc || '')}</div>
         </div>
-        <button class="pdf-open-btn" onclick="openPDF('${escH(p.url)}','${escH(p.title)}')">Open PDF</button>
-      </div>`).join('')}
+        <button class="pdf-open-btn" id="btn-${vid}" onclick="togglePDF('${vid}','${escH(p.url)}','${escH(p.title)}')">Open PDF</button>
+      </div>
+      <div class="pdf-inline-viewer" id="${vid}" style="display:none">
+        <div class="pdf-inline-header">
+          <span class="pdf-inline-title">${escH(p.title)}</span>
+          <button class="pdf-inline-close" onclick="togglePDF('${vid}','${escH(p.url)}','${escH(p.title)}')">✕</button>
+        </div>
+        <iframe class="pdf-inline-frame" allowfullscreen></iframe>
+      </div>`;
+    }).join('')}
   </div>`;
 }
 
-/* Open PDF in full-screen modal */
-function openPDF(url, title) {
-  let modal = document.getElementById('pdfModal');
-  if (!modal) {
-    modal = document.createElement('div');
-    modal.id = 'pdfModal';
-    modal.innerHTML = `
-      <div class="pdf-modal-overlay" onclick="closePDF()"></div>
-      <div class="pdf-modal-box">
-        <div class="pdf-modal-header">
-          <span class="pdf-modal-title" id="pdfModalTitle"></span>
-          <button class="pdf-modal-close" onclick="closePDF()">✕</button>
-        </div>
-        <iframe id="pdfModalFrame" class="pdf-modal-frame" allowfullscreen></iframe>
-      </div>`;
-    document.body.appendChild(modal);
+/* Toggle inline PDF viewer */
+function togglePDF(vid, url, title) {
+  const viewer = document.getElementById(vid);
+  const btn = document.getElementById('btn-' + vid);
+  if (!viewer) return;
+  const isOpen = viewer.style.display !== 'none';
+  if (isOpen) {
+    viewer.style.display = 'none';
+    viewer.querySelector('iframe').src = '';
+    if (btn) { btn.textContent = 'Open PDF'; btn.classList.remove('active'); }
+  } else {
+    viewer.querySelector('iframe').src = toDriveEmbed(url);
+    viewer.style.display = 'block';
+    if (btn) { btn.textContent = 'Close PDF'; btn.classList.add('active'); }
+    viewer.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
   }
-  document.getElementById('pdfModalTitle').textContent = title;
-  document.getElementById('pdfModalFrame').src = toDriveEmbed(url);
-  modal.classList.add('open');
-  document.body.style.overflow = 'hidden';
 }
-
-function closePDF() {
-  const modal = document.getElementById('pdfModal');
-  if (modal) { modal.classList.remove('open'); document.getElementById('pdfModalFrame').src = ''; }
-  document.body.style.overflow = '';
-}
-
-document.addEventListener('keydown', e => { if (e.key === 'Escape') closePDF(); });
 
 /* ══════════════════════════════════════
    FORMULA SHEET
