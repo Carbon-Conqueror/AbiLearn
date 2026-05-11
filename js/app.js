@@ -269,127 +269,100 @@ function buildFormulaSheet(subject) {
 }
 
 /* ══════════════════════════════════════
-   SECURE PDF VIEWER CONFIG
-   Teachers: add your PDF URLs here
+   PDF DOCUMENTS CONFIG
+   Add your Google Drive or any PDF links here.
+   How to get a Drive link:
+     1. Upload PDF to Google Drive
+     2. Right-click → Share → "Anyone with the link"
+     3. Copy the link and paste it below
 ══════════════════════════════════════ */
-const SECURE_PDFS = {
-  // Format: subjectId: [ { title, url, description } ]
-  // Example: science: [{ title: 'Ch 1–5 Notes', url: '/pdfs/science-notes.pdf', description: 'Teacher notes for Physics & Chemistry' }]
-  maths:   [],
-  science: [],
-  english: [],
-  social:  []
+const STUDY_PDFS = {
+  maths: [
+    // { title: 'Algebra Notes', desc: 'Chapters 1-4', url: 'https://drive.google.com/file/d/YOUR_FILE_ID/view' }
+  ],
+  science: [
+    // { title: 'Physics Formula Sheet', desc: 'Light, Electricity, Magnetism', url: 'https://drive.google.com/file/d/YOUR_FILE_ID/view' }
+  ],
+  english: [
+    // { title: 'First Flight Summary', desc: 'All chapters with key points', url: 'https://drive.google.com/file/d/YOUR_FILE_ID/view' }
+  ],
+  social: [
+    // { title: 'History Notes', desc: 'Nationalism, Industrialisation, Print', url: 'https://drive.google.com/file/d/YOUR_FILE_ID/view' }
+  ]
 };
 
-// Active PDF viewer state (one per page)
-const _pdfState = {};
+/* Convert any Google Drive share URL → embed URL */
+function toPDFEmbedUrl(url) {
+  // Drive: https://drive.google.com/file/d/FILE_ID/view... → preview
+  const driveMatch = url.match(/drive\.google\.com\/file\/d\/([^\/\?]+)/);
+  if (driveMatch) return `https://drive.google.com/file/d/${driveMatch[1]}/preview`;
+  // Already a preview URL
+  if (url.includes('drive.google.com') && url.includes('/preview')) return url;
+  // Any other PDF URL → Google Docs viewer
+  return `https://docs.google.com/viewer?url=${encodeURIComponent(url)}&embedded=true`;
+}
 
-function buildSecurePDFSection(subject) {
-  const pdfs = SECURE_PDFS[subject.id] || [];
+function buildPDFSection(subject) {
+  const pdfs = STUDY_PDFS[subject.id] || [];
   if (!pdfs.length) {
-    return `<div class="pdf-upload-placeholder">
-      <div class="pdf-placeholder-icon">📄</div>
-      <div class="pdf-placeholder-title">Teacher PDFs</div>
-      <p class="pdf-placeholder-desc">No PDFs have been uploaded yet. When your teacher uploads notes, they'll appear here — protected so they can't be downloaded.</p>
+    return `<div class="pdf-empty-state">
+      <div style="font-size:2.5rem;margin-bottom:0.75rem">📂</div>
+      <div style="font-weight:700;font-size:1rem;color:var(--text);margin-bottom:0.4rem">No PDFs yet</div>
+      <p style="color:var(--muted);font-size:0.85rem;max-width:280px;margin:0 auto">
+        Upload notes to Google Drive and add the link in <code style="font-size:0.78rem;background:var(--purple-50);padding:1px 5px;border-radius:4px">js/app.js → STUDY_PDFS</code>
+      </p>
     </div>`;
   }
-  return pdfs.map((pdf, idx) => `
-    <div class="secure-pdf-viewer" id="pdfViewer_${subject.id}_${idx}">
-      <div class="pdf-viewer-topbar">
-        <div class="pdf-viewer-info">
-          <span class="pdf-lock-badge">🔒 Protected</span>
-          <span class="pdf-doc-title">${escH(pdf.title)}</span>
+  return `<div class="pdf-cards-grid">
+    ${pdfs.map((pdf, i) => `
+      <div class="pdf-card">
+        <div class="pdf-card-icon">📄</div>
+        <div class="pdf-card-info">
+          <div class="pdf-card-title">${escH(pdf.title)}</div>
+          <div class="pdf-card-desc">${escH(pdf.desc || '')}</div>
         </div>
-        <div class="pdf-viewer-desc">${escH(pdf.description || '')}</div>
-      </div>
-      <div class="pdf-canvas-wrap" id="pdfCanvasWrap_${subject.id}_${idx}">
-        <div class="pdf-loading-msg" id="pdfLoading_${subject.id}_${idx}">
-          <span class="pdf-spinner">⏳</span> Loading PDF...
+        <button class="pdf-open-btn" onclick="openPDFViewer('${escH(pdf.url)}','${escH(pdf.title)}')">
+          Open PDF
+        </button>
+      </div>`).join('')}
+  </div>`;
+}
+
+/* PDF Viewer Modal */
+function openPDFViewer(url, title) {
+  const embedUrl = toPDFEmbedUrl(url);
+  let modal = document.getElementById('pdfViewerModal');
+  if (!modal) {
+    modal = document.createElement('div');
+    modal.id = 'pdfViewerModal';
+    modal.innerHTML = `
+      <div class="pdf-modal-overlay" onclick="closePDFViewer()"></div>
+      <div class="pdf-modal-box">
+        <div class="pdf-modal-header">
+          <span class="pdf-modal-title" id="pdfModalTitle"></span>
+          <button class="pdf-modal-close" onclick="closePDFViewer()">✕</button>
         </div>
-        <canvas id="pdfCanvas_${subject.id}_${idx}" class="pdf-canvas"></canvas>
-      </div>
-      <div class="pdf-nav-bar">
-        <button class="pdf-nav-btn" onclick="pdfPrevPage('${subject.id}',${idx})">◀</button>
-        <span class="pdf-page-info" id="pdfPageInfo_${subject.id}_${idx}">Page 1</span>
-        <button class="pdf-nav-btn" onclick="pdfNextPage('${subject.id}',${idx})">▶</button>
-        <span class="pdf-protected-note">🔒 Download disabled</span>
-      </div>
-    </div>`).join('');
-}
-
-function initSecurePDFViewers(subject) {
-  const pdfs = SECURE_PDFS[subject.id] || [];
-  if (!pdfs.length || typeof pdfjsLib === 'undefined') return;
-
-  pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
-
-  pdfs.forEach((pdf, idx) => {
-    const stateKey = `${subject.id}_${idx}`;
-    const canvasEl = document.getElementById(`pdfCanvas_${subject.id}_${idx}`);
-    const loadingEl = document.getElementById(`pdfLoading_${subject.id}_${idx}`);
-    const wrapEl = document.getElementById(`pdfCanvasWrap_${subject.id}_${idx}`);
-    if (!canvasEl) return;
-
-    // Block right-click on canvas
-    if (wrapEl) {
-      wrapEl.addEventListener('contextmenu', e => e.preventDefault());
-    }
-
-    _pdfState[stateKey] = { currentPage: 1, totalPages: 0, pdfDoc: null, rendering: false };
-
-    pdfjsLib.getDocument({ url: pdf.url, disableAutoFetch: true, disableStream: true }).promise.then(doc => {
-      _pdfState[stateKey].pdfDoc = doc;
-      _pdfState[stateKey].totalPages = doc.numPages;
-      if (loadingEl) loadingEl.style.display = 'none';
-      renderPDFPage(subject.id, idx, 1);
-    }).catch(() => {
-      if (loadingEl) loadingEl.textContent = '⚠️ Unable to load PDF.';
-    });
-  });
-}
-
-function renderPDFPage(subjectId, idx, pageNum) {
-  const stateKey = `${subjectId}_${idx}`;
-  const state = _pdfState[stateKey];
-  if (!state || !state.pdfDoc || state.rendering) return;
-  state.rendering = true;
-  state.currentPage = Math.max(1, Math.min(pageNum, state.totalPages));
-
-  state.pdfDoc.getPage(state.currentPage).then(page => {
-    const canvas = document.getElementById(`pdfCanvas_${subjectId}_${idx}`);
-    if (!canvas) return;
-    const ctx = canvas.getContext('2d');
-    const viewport = page.getViewport({ scale: Math.min(1.4, canvas.parentElement.clientWidth / 612) });
-    canvas.width = viewport.width;
-    canvas.height = viewport.height;
-    page.render({ canvasContext: ctx, viewport }).promise.then(() => {
-      state.rendering = false;
-      const info = document.getElementById(`pdfPageInfo_${subjectId}_${idx}`);
-      if (info) info.textContent = `Page ${state.currentPage} of ${state.totalPages}`;
-    });
-  });
-}
-
-function pdfPrevPage(subjectId, idx) {
-  const state = _pdfState[`${subjectId}_${idx}`];
-  if (!state || state.currentPage <= 1) return;
-  renderPDFPage(subjectId, idx, state.currentPage - 1);
-}
-
-function pdfNextPage(subjectId, idx) {
-  const state = _pdfState[`${subjectId}_${idx}`];
-  if (!state || state.currentPage >= state.totalPages) return;
-  renderPDFPage(subjectId, idx, state.currentPage + 1);
-}
-
-// Block Ctrl+S and Ctrl+P globally when a PDF is visible
-document.addEventListener('keydown', e => {
-  if ((e.ctrlKey || e.metaKey) && (e.key === 's' || e.key === 'p')) {
-    if (document.querySelector('.secure-pdf-viewer')) {
-      e.preventDefault();
-      return false;
-    }
+        <iframe id="pdfModalFrame" class="pdf-modal-frame" allowfullscreen></iframe>
+      </div>`;
+    document.body.appendChild(modal);
   }
+  document.getElementById('pdfModalTitle').textContent = title;
+  document.getElementById('pdfModalFrame').src = embedUrl;
+  modal.classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+
+function closePDFViewer() {
+  const modal = document.getElementById('pdfViewerModal');
+  if (modal) {
+    modal.classList.remove('open');
+    document.getElementById('pdfModalFrame').src = '';
+  }
+  document.body.style.overflow = '';
+}
+
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape') closePDFViewer();
 });
 
 /* ══════════════════════════════════════
@@ -398,7 +371,7 @@ document.addEventListener('keydown', e => {
 function buildImportantNotes(subject) {
   const colorMap = { maths:'var(--maths)', science:'var(--science)', english:'var(--english)', social:'var(--social)' };
   const color = colorMap[subject.id] || 'var(--purple-600)';
-  const pdfSection = buildSecurePDFSection(subject);
+  const pdfSection = buildPDFSection(subject);
   const notesHTML = `<h2 class="section-title" style="margin-bottom:1.5rem">📌 Important Notes — ${subject.name}</h2>
     <div class="notes-grid">
       ${subject.chapters.map(ch => `
@@ -414,10 +387,9 @@ function buildImportantNotes(subject) {
         </div>`).join('')}
     </div>`;
 
-  // Init PDF viewers after DOM update
-  setTimeout(() => initSecurePDFViewers(subject), 200);
-
-  return `${pdfSection}${notesHTML}`;
+  return `<h2 class="section-title" style="margin-bottom:1rem">📂 Study PDFs</h2>
+    ${pdfSection}
+    ${notesHTML}`;
 }
 
 /* ══════════════════════════════════════
