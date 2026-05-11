@@ -278,7 +278,7 @@ function buildFormulaSheet(subject) {
 ══════════════════════════════════════ */
 const STUDY_PDFS = {
   maths: [
-    // { title: 'Algebra Notes', desc: 'Chapters 1-4', url: 'https://drive.google.com/file/d/YOUR_FILE_ID/view' }
+    { title: 'Ch 1 — Real Numbers', desc: 'Important Notes', url: 'https://drive.google.com/file/d/1YgCjmuCPWQ2kPCy5dZIT7MkAQLgdArEn/view?usp=drivesdk' }
   ],
   science: [
     // { title: 'Physics Formula Sheet', desc: 'Light, Electricity, Magnetism', url: 'https://drive.google.com/file/d/YOUR_FILE_ID/view' }
