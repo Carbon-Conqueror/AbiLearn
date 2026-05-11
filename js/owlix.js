@@ -9,7 +9,7 @@
    Then replace the string below with your key.
    ───────────────────────────────────────────────────────────── */
 const GEMINI_KEY = 'AIzaSyAyYmORal6QD9fsDq7ceS31jPV2D6-8TKs';
-const GEMINI_MODEL = 'gemini-2.0-flash';
+const GEMINI_MODEL = 'gemini-1.5-flash';
 
 /* ══ CONVERSATION MEMORY (Gemini format) ══ */
 const OWLIX_MEMORY = [];   /* [{role:'user'|'model', parts:[{text}]}] */
@@ -156,9 +156,15 @@ async function streamGemini(contents) {
     });
 
     if (!res.ok) {
-      let msg = `Error ${res.status}.`;
-      try { const j = await res.json(); msg = j.error?.message || msg; } catch { /* skip */ }
-      if (bubble) bubble.innerHTML = mdToHtml(`❌ **${msg}**\n\nPlease try again.`);
+      let msg = `Error ${res.status}`;
+      try {
+        const j = await res.json();
+        msg = j.error?.message || msg;
+        if (res.status === 400) msg += '\n\nCheck that your Gemini API key has the Generative Language API enabled at [console.cloud.google.com](https://console.cloud.google.com/apis/library/generativelanguage.googleapis.com).';
+        if (res.status === 403) msg = 'API key does not have permission. Make sure the Generative Language API is enabled in Google Cloud Console.';
+        if (res.status === 429) msg = 'Too many requests — please wait a moment and try again.';
+      } catch { /* skip */ }
+      if (bubble) bubble.innerHTML = mdToHtml(`❌ **${msg}**`);
       return;
     }
 
@@ -195,8 +201,8 @@ async function streamGemini(contents) {
     if (bubble) { bubble.innerHTML = mdToHtml(fullText); msgs.scrollTop = msgs.scrollHeight; }
     memoryPush('model', fullText);
 
-  } catch {
-    if (bubble) bubble.innerHTML = mdToHtml(`❌ **Connection error.** Check your internet and try again.`);
+  } catch (err) {
+    if (bubble) bubble.innerHTML = mdToHtml(`❌ **Connection error.** ${err?.message || 'Check your internet and try again.'}`);
   }
 }
 
