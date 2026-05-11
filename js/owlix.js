@@ -8,7 +8,7 @@
       https://aistudio.google.com/apikey
    Then replace the string below with your key.
    ───────────────────────────────────────────────────────────── */
-const GEMINI_KEY = 'YOUR_GEMINI_KEY_HERE';
+const GEMINI_KEY = 'AIzaSyAyYmORal6QD9fsDq7ceS31jPV2D6-8TKs';
 const GEMINI_MODEL = 'gemini-2.0-flash';
 
 /* ══ CONVERSATION MEMORY (Gemini format) ══ */
