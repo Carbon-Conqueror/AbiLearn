@@ -255,8 +255,7 @@ function renderTabContent(subject, tabId) {
 const PDFS = {
   maths: {
     formula: [
-      { title: 'Ch 1 — Real Numbers', desc: 'Important Formula Sheet', url: 'https://drive.google.com/file/d/1YgCjmuCPWQ2kPCy5dZIT7MkAQLgdArEn/view?usp=drivesdk' }
-      // add more: { title: '...', desc: '...', url: '...' }
+      { title: 'Ch 1 — Real Numbers', desc: 'Important Formula Sheet', url: 'pdfs/maths/ch1-real-numbers-formula.pdf' }
     ],
     notes: []
   },
@@ -265,8 +264,9 @@ const PDFS = {
   social:   { formula: [], notes: [] }
 };
 
-/* Drive share link → embeddable iframe URL */
+/* Resolve PDF URL for iframe — local paths pass through, Drive links convert to embed */
 function toDriveEmbed(url) {
+  if (!url.startsWith('http')) return url; // local path — use directly
   const m = url.match(/drive\.google\.com\/file\/d\/([^\/\?]+)/);
   if (m) return `https://drive.google.com/file/d/${m[1]}/preview`;
   return `https://docs.google.com/viewer?url=${encodeURIComponent(url)}&embedded=true`;
