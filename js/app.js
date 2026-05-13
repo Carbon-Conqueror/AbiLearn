@@ -102,11 +102,31 @@ function goTo(subjectId, chapterId) {
   if (map[subjectId]) { sessionStorage.setItem('openChapter', chapterId); window.location.href = map[subjectId]; }
 }
 
-/* ── HAMBURGER ── */
-function initHamburger() {
-  const btn = document.getElementById('hamburger');
-  const nav = document.getElementById('navLinks');
-  if (btn && nav) btn.addEventListener('click', () => nav.classList.toggle('open'));
+/* ── DROPDOWN (click for touch, hover still works on desktop) ── */
+function initDropdowns() {
+  document.querySelectorAll('.nav-dropdown-toggle').forEach(btn => {
+    btn.addEventListener('click', e => {
+      e.stopPropagation();
+      const dd = btn.closest('.nav-dropdown');
+      const isOpen = dd.classList.contains('dd-open');
+      document.querySelectorAll('.nav-dropdown.dd-open').forEach(d => {
+        d.classList.remove('dd-open');
+        d.querySelector('.dropdown-arrow').style.transform = '';
+      });
+      if (!isOpen) {
+        dd.classList.add('dd-open');
+        dd.querySelector('.dropdown-arrow').style.transform = 'rotate(180deg)';
+      }
+    });
+  });
+  document.addEventListener('click', e => {
+    if (!e.target.closest('.nav-dropdown')) {
+      document.querySelectorAll('.nav-dropdown.dd-open').forEach(d => {
+        d.classList.remove('dd-open');
+        d.querySelector('.dropdown-arrow').style.transform = '';
+      });
+    }
+  });
 }
 
 /* ── SCROLL REVEAL ── */
@@ -121,7 +141,7 @@ function initReveal() {
    HOME PAGE
 ══════════════════════════════════════ */
 function initHomePage() {
-  initSearch(); initHamburger();
+  initSearch(); initDropdowns();
   renderSubjectCards();
   renderTips();
   setTimeout(() => {
@@ -175,7 +195,7 @@ function renderTips() {
    SUBJECT PAGE
 ══════════════════════════════════════ */
 function initSubjectPage(subjectId) {
-  initSearch(); initHamburger();
+  initSearch(); initDropdowns();
   const subject = DATA.subjects.find(s => s.id === subjectId);
   if (!subject) return;
 

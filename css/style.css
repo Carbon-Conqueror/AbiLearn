@@ -156,6 +156,11 @@ button { font-family:inherit;cursor:pointer; }
   pointer-events:all;
   transform:translateX(-50%) translateY(0);
 }
+.nav-dropdown.dd-open .dropdown-menu {
+  opacity:1;
+  pointer-events:all;
+  transform:translateX(-50%) translateY(0);
+}
 .dropdown-menu a {
   display:flex;align-items:center;gap:0.65rem;
   padding:0.65rem 1rem;
@@ -1225,8 +1230,8 @@ footer {
   }
   .nav-links::-webkit-scrollbar{display:none}
   .nav-links>li>a,.nav-dropdown-toggle{white-space:nowrap;font-size:0.72rem;padding:0.3rem 0.55rem}
-  .dropdown-menu{position:absolute;top:calc(100% + 4px);left:0;transform:none;opacity:0;pointer-events:none}
-  .nav-dropdown:hover .dropdown-menu,.nav-dropdown:focus-within .dropdown-menu{opacity:1;pointer-events:all}
+  .dropdown-menu{position:fixed;top:54px;left:0;right:0;width:100%;transform:none !important;opacity:0;pointer-events:none;border-radius:0 0 14px 14px;max-height:80vh;overflow-y:auto}
+  .nav-dropdown:hover .dropdown-menu,.nav-dropdown.dd-open .dropdown-menu{opacity:1;pointer-events:all}
   .hamburger{display:none !important}
   .btn-login{font-size:0.7rem;padding:0.28rem 0.55rem}
   .btn-signup{font-size:0.7rem;padding:0.28rem 0.65rem}
