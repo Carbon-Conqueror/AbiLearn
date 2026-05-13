@@ -1212,18 +1212,28 @@ footer {
   .footer-brand{grid-column:1/-1}
 }
 @media(max-width:768px){
-  .navbar{padding:0 1.25rem;height:64px}
-  .nav-links{display:none;position:absolute;top:64px;left:0;right:0;background:#FFFFFF;flex-direction:column;padding:1rem;border-bottom:1px solid var(--border);box-shadow:0 8px 24px rgba(91,33,182,0.1);z-index:999}
-  .nav-links.open{display:flex}
-  .dropdown-menu{position:static;transform:none;opacity:1;pointer-events:all;background:var(--purple-50);box-shadow:none;border-color:var(--border)}
-  .hamburger{display:flex}
-  .btn-login,.btn-signup{display:none}
-  .search-bar input{width:140px}
-  .search-bar input:focus{width:180px}
+  .navbar{padding:0.55rem 1rem;height:auto;flex-wrap:wrap;gap:0}
+  .logo{flex:1}
+  .nav-right{gap:0.35rem}
+  .nav-links{
+    display:flex !important;order:3;width:100%;
+    overflow-x:auto;gap:0;padding:0.3rem 0;
+    border-top:1px solid var(--border);margin-top:0.4rem;
+    -webkit-overflow-scrolling:touch;scrollbar-width:none;
+    position:static;background:transparent;box-shadow:none;flex-direction:row;
+  }
+  .nav-links::-webkit-scrollbar{display:none}
+  .nav-links>li>a,.nav-dropdown-toggle{white-space:nowrap;font-size:0.78rem;padding:0.38rem 0.7rem}
+  .dropdown-menu{position:absolute;top:calc(100% + 4px);left:0;transform:none;opacity:0;pointer-events:none}
+  .nav-dropdown:hover .dropdown-menu{opacity:1;pointer-events:all}
+  .hamburger{display:none !important}
+  .btn-login{font-size:0.72rem;padding:0.3rem 0.65rem}
+  .btn-signup{font-size:0.72rem;padding:0.3rem 0.75rem}
+  .search-bar{display:none}
   .hero{padding:3.5rem 1.25rem 3rem;min-height:unset}
   .hero h1{font-size:2rem}
   .subjects-grid{grid-template-columns:1fr}
-  .tabs-bar{top:64px}
+  .tabs-bar{top:0}
   .owlix-window{width:calc(100vw - 2rem);right:1rem;bottom:5.5rem}
   footer{padding:2rem 1rem 1.25rem}
   .footer-grid{grid-template-columns:1fr 1fr 1fr;gap:1rem}
@@ -1235,9 +1245,6 @@ footer {
   .footer-col ul li a{font-size:0.7rem}
   .footer-bottom{flex-direction:row;flex-wrap:wrap;gap:0.4rem;font-size:0.68rem;justify-content:center}
   .footer-badge{font-size:0.65rem;padding:0.2rem 0.6rem}
-  /* Login/Signup inside hamburger menu */
-  .nav-auth-mobile{display:flex !important;gap:0.5rem;padding:0.75rem 0 0.25rem;border-top:1px solid var(--border);margin-top:0.25rem}
-  .nav-auth-mobile .btn-login,.nav-auth-mobile .btn-signup{display:flex !important;font-size:0.82rem;padding:0.5rem 1rem}
 }
 .nav-auth-mobile{display:none}
 @media(max-width:480px){

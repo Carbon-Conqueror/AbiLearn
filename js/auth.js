@@ -238,29 +238,49 @@ function authSignup(e) {
   }, 800);
 }
 
-/* ══ GOOGLE SIGN-IN (Firebase-ready placeholder) ══ */
+/* ══ GOOGLE SIGN-IN — Google Identity Services ══ */
+const GOOGLE_CLIENT_ID = ''; // Paste your Client ID from console.cloud.google.com → APIs & Services → Credentials
+
 function authWithGoogle() {
-  // If Firebase is configured, use it. Otherwise show friendly message.
-  if (typeof firebase !== 'undefined' && firebase.auth) {
-    const provider = new firebase.auth.GoogleAuthProvider();
-    firebase.auth().signInWithPopup(provider).then(result => {
-      const u = result.user;
-      const sessionUser = { name: u.displayName, email: u.email, grade: 'Class 10', avatar: u.photoURL, joinDate: new Date().toISOString() };
-      saveUser(sessionUser);
-      closeAuthModal();
-      updateNavbarForUser(sessionUser);
-      showAuthToast(`Welcome, ${u.displayName.split(' ')[0]}! 🎉`);
-    }).catch(err => {
-      const errEl = document.getElementById('loginError') || document.getElementById('signupError');
-      if (errEl) errEl.textContent = err.message;
+  if (!GOOGLE_CLIENT_ID) {
+    const errEl = document.getElementById('loginError') || document.getElementById('signupError');
+    if (errEl) errEl.textContent = 'Google Sign-In is not set up yet. Please use email login.';
+    return;
+  }
+  const load = cb => {
+    if (window.google?.accounts?.id) { cb(); return; }
+    const s = document.createElement('script');
+    s.src = 'https://accounts.google.com/gsi/client';
+    s.onload = cb;
+    document.head.appendChild(s);
+  };
+  load(() => {
+    google.accounts.id.initialize({
+      client_id: GOOGLE_CLIENT_ID,
+      callback: handleGoogleCredential,
+      auto_select: false,
+      cancel_on_tap_outside: true,
     });
-  } else {
-    // Demo mode: create a guest account
-    const guestUser = { name: 'Google Student', email: 'google@demo.com', grade: 'Class 10', avatar: null, joinDate: new Date().toISOString(), isGuest: true };
-    saveUser(guestUser);
+    google.accounts.id.prompt(n => {
+      if (n.isNotDisplayed() || n.isSkippedMoment()) {
+        const errEl = document.getElementById('loginError') || document.getElementById('signupError');
+        if (errEl) errEl.textContent = 'Google Sign-In was dismissed. Try again or use email.';
+      }
+    });
+  });
+}
+
+function handleGoogleCredential(response) {
+  try {
+    const b64 = response.credential.split('.')[1].replace(/-/g, '+').replace(/_/g, '/');
+    const p = JSON.parse(atob(b64));
+    const user = { name: p.name, email: p.email, avatar: p.picture, grade: 'Class 10', joinDate: new Date().toISOString() };
+    saveUser(user);
     closeAuthModal();
-    updateNavbarForUser(guestUser);
-    showAuthToast('Signed in as Google Student (demo mode) 🎓');
+    updateNavbarForUser(user);
+    showAuthToast(`Welcome, ${(p.given_name || p.name).split(' ')[0]}! 🎉`);
+  } catch {
+    showAuthToast('Google Sign-In failed. Please try again.');
   }
 }
 
