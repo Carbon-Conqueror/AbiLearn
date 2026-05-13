@@ -280,9 +280,8 @@ function updateNavbarForUser(user) {
   const navRight  = document.querySelector('.nav-right');
   if (!navRight) return;
 
-  // Hide login/signup buttons
-  if (loginBtn)  loginBtn.style.display  = 'none';
-  if (signupBtn) signupBtn.style.display = 'none';
+  // Hide all login/signup buttons (desktop + mobile hamburger)
+  document.querySelectorAll('.btn-login,.btn-signup').forEach(b => b.style.display = 'none');
 
   // Remove existing user widget if any
   const old = document.getElementById('navUserWidget');
@@ -305,8 +304,8 @@ function updateNavbarForUser(user) {
         <div class="ud-grade">${user.grade}</div>
       </div>
       <div class="user-dropdown-links">
-        <a href="#" onclick="showAuthToast('Dashboard coming soon! 🚀');return false">📊 My Dashboard</a>
-        <a href="#" onclick="showAuthToast('Profile settings coming soon!');return false">⚙️ Settings</a>
+        <a href="#" onclick="openDashboard();return false">📊 My Dashboard</a>
+        <a href="#" onclick="openSettings();return false">⚙️ Settings</a>
         <a href="#" onclick="authLogout();return false" class="ud-logout">🚪 Log Out</a>
       </div>
     </div>`;
@@ -342,10 +341,7 @@ function toggleUserDropdown() {
 }
 
 function restoreNavbarButtons() {
-  const loginBtn  = document.querySelector('.btn-login');
-  const signupBtn = document.querySelector('.btn-signup');
-  if (loginBtn)  loginBtn.style.display  = '';
-  if (signupBtn) signupBtn.style.display = '';
+  document.querySelectorAll('.btn-login,.btn-signup').forEach(b => b.style.display = '');
   const widget = document.getElementById('navUserWidget');
   if (widget) widget.remove();
 }
@@ -379,3 +375,106 @@ function initAuth() {
 }
 
 document.addEventListener('DOMContentLoaded', initAuth);
+
+/* ══ DASHBOARD ══ */
+function openDashboard() {
+  const user = getUser(); if (!user) return;
+  const progress = (() => { try { return JSON.parse(localStorage.getItem('abilearn_progress') || '{}'); } catch { return {}; } })();
+  const subjects = [
+    { id:'maths',   icon:'📐', name:'Mathematics',   total:15 },
+    { id:'science', icon:'🔬', name:'Science',        total:15 },
+    { id:'english', icon:'📖', name:'English',        total:10 },
+    { id:'social',  icon:'🌍', name:'Social Science', total:12 }
+  ];
+  const initials = user.name.split(' ').map(w => w[0]).join('').toUpperCase().slice(0,2);
+  const joinDate = user.joinDate ? new Date(user.joinDate).toLocaleDateString('en-IN', { day:'numeric', month:'short', year:'numeric' }) : '—';
+  const rows = subjects.map(s => {
+    const done = Object.keys(progress).filter(k => k.startsWith(s.id + '_') && progress[k]).length;
+    const pct = Math.round((done / s.total) * 100);
+    return `<div class="dash-progress-row">
+      <span class="dash-subject-name">${s.icon} ${s.name}</span>
+      <div class="dash-bar-wrap"><div class="dash-bar-fill" style="width:${pct}%"></div></div>
+      <span class="dash-count">${done}/${s.total}</span>
+    </div>`;
+  }).join('');
+
+  let panel = document.getElementById('dashPanel');
+  if (!panel) { panel = document.createElement('div'); panel.id = 'dashPanel'; panel.className = 'panel-overlay'; document.body.appendChild(panel); }
+  panel.innerHTML = `
+    <div class="panel-box">
+      <div class="panel-top">
+        <span class="panel-title">📊 My Dashboard</span>
+        <button class="panel-close" onclick="closePanel('dashPanel')">✕</button>
+      </div>
+      <div class="panel-body">
+        <div class="dash-user-row">
+          <div class="dash-avatar">${initials}</div>
+          <div class="dash-user-info">
+            <div class="dash-name">${user.name}</div>
+            <div class="dash-grade">${user.grade} • Joined ${joinDate}</div>
+          </div>
+        </div>
+        <div class="panel-section">
+          <div class="panel-section-title">Study Progress</div>
+          ${rows}
+        </div>
+      </div>
+    </div>`;
+  panel.addEventListener('click', e => { if (e.target === panel) closePanel('dashPanel'); });
+  requestAnimationFrame(() => { panel.classList.add('open'); document.body.style.overflow = 'hidden'; });
+  const dd = document.getElementById('userDropdown'); if (dd) dd.classList.remove('open');
+}
+
+/* ══ SETTINGS ══ */
+function openSettings() {
+  const user = getUser(); if (!user) return;
+  let panel = document.getElementById('settingsPanel');
+  if (!panel) { panel = document.createElement('div'); panel.id = 'settingsPanel'; panel.className = 'panel-overlay'; document.body.appendChild(panel); }
+  panel.innerHTML = `
+    <div class="panel-box">
+      <div class="panel-top">
+        <span class="panel-title">⚙️ Settings</span>
+        <button class="panel-close" onclick="closePanel('settingsPanel')">✕</button>
+      </div>
+      <div class="panel-body">
+        <div class="panel-section">
+          <div class="panel-section-title">Profile</div>
+          <div class="settings-row"><span class="settings-row-label">Name</span><span class="settings-row-value">${user.name}</span></div>
+          <div class="settings-row"><span class="settings-row-label">Email</span><span class="settings-row-value">${user.email}</span></div>
+          <div class="settings-row"><span class="settings-row-label">Class</span><span class="settings-row-value">${user.grade}</span></div>
+        </div>
+        <div class="panel-section">
+          <div class="panel-section-title">App</div>
+          <div class="settings-row">
+            <span class="settings-row-label">Clear Study Progress</span>
+            <button class="settings-btn danger" onclick="clearProgress()">Clear</button>
+          </div>
+          <div class="settings-row">
+            <span class="settings-row-label">Log Out</span>
+            <button class="settings-btn" onclick="closePanel('settingsPanel');authLogout()">Log Out</button>
+          </div>
+        </div>
+        <div class="panel-section">
+          <div class="panel-section-title">About</div>
+          <div class="settings-row"><span class="settings-row-label">Version</span><span class="settings-row-value">AbiLearn v1.0</span></div>
+          <div class="settings-row"><span class="settings-row-label">Platform</span><span class="settings-row-value">CBSE Class 10</span></div>
+        </div>
+      </div>
+    </div>`;
+  panel.addEventListener('click', e => { if (e.target === panel) closePanel('settingsPanel'); });
+  requestAnimationFrame(() => { panel.classList.add('open'); document.body.style.overflow = 'hidden'; });
+  const dd = document.getElementById('userDropdown'); if (dd) dd.classList.remove('open');
+}
+
+function closePanel(id) {
+  const p = document.getElementById(id);
+  if (p) { p.classList.remove('open'); document.body.style.overflow = ''; }
+}
+
+function clearProgress() {
+  if (confirm('Clear all study progress? This cannot be undone.')) {
+    localStorage.removeItem('abilearn_progress');
+    closePanel('settingsPanel');
+    showAuthToast('Study progress cleared ✓');
+  }
+}

@@ -1,5 +1,24 @@
 /* AbiLearn — Main Application Logic v2 */
 
+/* ── SCROLL-HIDE HEADER ── */
+(function() {
+  let lastY = 0;
+  window.addEventListener('scroll', () => {
+    const nav = document.querySelector('.navbar');
+    const tabs = document.querySelector('.tabs-bar');
+    const y = window.scrollY;
+    const navH = nav ? nav.offsetHeight : 72;
+    if (y > lastY && y > navH) {
+      if (nav) nav.style.transform = 'translateY(-100%)';
+      if (tabs) tabs.style.top = '0';
+    } else {
+      if (nav) nav.style.transform = '';
+      if (tabs) tabs.style.top = '';
+    }
+    lastY = y;
+  }, { passive: true });
+})();
+
 /* ── SUBJECT TAB CONFIGS ── */
 const SUBJECT_TABS = {
   maths: [
@@ -321,6 +340,13 @@ function openPDF(url, title) {
   modal.classList.add('open');
   document.body.style.overflow = 'hidden';
 
+  // Go fullscreen
+  const box = modal.querySelector('.pdf-modal-box') || modal;
+  const fsEl = box.requestFullscreen ? box : (box.webkitRequestFullscreen ? box : null);
+  if (fsEl) {
+    (fsEl.requestFullscreen || fsEl.webkitRequestFullscreen).call(fsEl).catch(() => {});
+  }
+
   if (window.pdfjsLib) { renderPDF(url); return; }
   const s = document.createElement('script');
   s.src = PDFJS_SRC;
@@ -353,6 +379,8 @@ function renderPDF(url) {
 }
 
 function closePDF() {
+  if (document.fullscreenElement) document.exitFullscreen().catch(() => {});
+  else if (document.webkitFullscreenElement) document.webkitExitFullscreen();
   const m = document.getElementById('pdfModal');
   if (m) m.classList.remove('open');
   document.body.style.overflow = '';
