@@ -462,14 +462,16 @@ function renderPDF(url) {
   load.then(pdf => {
     body.innerHTML = '';
     const containerW = body.clientWidth - 10;
+    const dpr = window.devicePixelRatio || 1;
     for (let n = 1; n <= pdf.numPages; n++) {
       pdf.getPage(n).then(page => {
         const natW = page.getViewport({ scale: 1 }).width;
         const displayW = Math.round(containerW * _pdfZoom);
-        const vp = page.getViewport({ scale: displayW / natW });
+        const vp = page.getViewport({ scale: (displayW / natW) * dpr });
         const canvas = document.createElement('canvas');
-        canvas.width = vp.width; canvas.height = vp.height;
-        canvas.style.cssText = `display:block;margin:0 auto 4px;width:${displayW}px`;
+        canvas.width = vp.width;
+        canvas.height = vp.height;
+        canvas.style.cssText = `display:block;margin:0 auto 4px;width:${displayW}px;height:${Math.round(vp.height / dpr)}px`;
         body.appendChild(canvas);
         page.render({ canvasContext: canvas.getContext('2d'), viewport: vp });
       });
