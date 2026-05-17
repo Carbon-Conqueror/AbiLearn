@@ -1155,20 +1155,17 @@ footer {
 .pdf-open-btn:hover { background:var(--purple-700); }
 .pdf-tick { font-size:0.85rem;opacity:0.85; }
 
-/* PDF Modal Popup */
+/* PDF Modal Popup — fullscreen */
 #pdfModal {
   display:none;position:fixed;inset:0;z-index:9999;
 }
-#pdfModal.open { display:flex;align-items:center;justify-content:center; }
-.pdf-modal-overlay {
-  position:absolute;inset:0;background:rgba(0,0,0,0.65);backdrop-filter:blur(4px);
-}
+#pdfModal.open { display:block; }
+.pdf-modal-overlay { display:none; }
 .pdf-modal-box {
-  position:relative;z-index:1;
-  width:min(96vw,860px);height:92vh;
-  background:white;border-radius:16px;overflow:hidden;
+  position:fixed;inset:0;z-index:1;
+  width:100vw;height:100dvh;
+  background:white;border-radius:0;overflow:hidden;
   display:flex;flex-direction:column;
-  box-shadow:0 24px 60px rgba(0,0,0,0.4);
 }
 .pdf-modal-header {
   display:flex;align-items:center;justify-content:space-between;
@@ -1185,6 +1182,16 @@ footer {
   flex:1;overflow-y:auto;background:#525659;padding:0.5rem;
 }
 .pdf-modal-body canvas { border-radius:4px; }
+
+/* PDF card completion circle */
+.pdf-done-circle {
+  background:none;border:2px solid var(--border);border-radius:50%;
+  width:28px;height:28px;cursor:pointer;flex-shrink:0;
+  display:flex;align-items:center;justify-content:center;
+  font-size:0.75rem;color:transparent;
+  transition:var(--transition);
+}
+.pdf-done-circle.done { background:#10B981;border-color:#10B981;color:white; }
 .pdf-loading {
   display:flex;align-items:center;justify-content:center;
   height:100%;color:rgba(255,255,255,0.7);font-size:1rem;

@@ -347,20 +347,38 @@ function toDriveEmbed(url) {
   return `https://docs.google.com/viewer?url=${encodeURIComponent(abs)}&embedded=true`;
 }
 
-/* PDF cards with Open PDF button — opens popup modal */
+/* PDF completion helpers */
+function getPDFDone(url) {
+  try { return !!(JSON.parse(localStorage.getItem('pdf_done') || '{}')[url]); } catch { return false; }
+}
+function togglePDFDone(btn, url) {
+  try {
+    const store = JSON.parse(localStorage.getItem('pdf_done') || '{}');
+    store[url] = !store[url];
+    localStorage.setItem('pdf_done', JSON.stringify(store));
+    btn.classList.toggle('done', !!store[url]);
+    btn.title = store[url] ? 'Mark as unread' : 'Mark as read';
+  } catch {}
+}
+
+/* PDF cards with completion circle + Open PDF button */
 function pdfCards(subject, tab) {
   const list = (PDFS[subject.id] || {})[tab] || [];
   if (!list.length) return '';
   return `<div class="pdf-cards-grid">
-    ${list.map(p => `
+    ${list.map(p => {
+      const done = getPDFDone(p.url);
+      return `
       <div class="pdf-card">
         <div class="pdf-card-icon">📄</div>
         <div class="pdf-card-info">
           <div class="pdf-card-title">${escH(p.title)}</div>
           <div class="pdf-card-desc">${escH(p.desc || '')}</div>
         </div>
-        <button class="pdf-open-btn" onclick="openPDF('${escH(p.url)}','${escH(p.title)}')"><span class="pdf-tick">✓</span> Open PDF</button>
-      </div>`).join('')}
+        <button class="pdf-done-circle ${done ? 'done' : ''}" onclick="togglePDFDone(this,'${escH(p.url)}')" title="${done ? 'Mark as unread' : 'Mark as read'}">✓</button>
+        <button class="pdf-open-btn" onclick="openPDF('${escH(p.url)}','${escH(p.title)}')">Open PDF</button>
+      </div>`;
+    }).join('')}
   </div>`;
 }
 
@@ -390,13 +408,6 @@ function openPDF(url, title) {
   document.getElementById('pdfModalBody').innerHTML = '<div class="pdf-loading">Loading PDF…</div>';
   modal.classList.add('open');
   document.body.style.overflow = 'hidden';
-
-  // Go fullscreen
-  const box = modal.querySelector('.pdf-modal-box') || modal;
-  const fsEl = box.requestFullscreen ? box : (box.webkitRequestFullscreen ? box : null);
-  if (fsEl) {
-    (fsEl.requestFullscreen || fsEl.webkitRequestFullscreen).call(fsEl).catch(() => {});
-  }
 
   if (window.pdfjsLib) { renderPDF(url); return; }
   const s = document.createElement('script');
@@ -430,8 +441,6 @@ function renderPDF(url) {
 }
 
 function closePDF() {
-  if (document.fullscreenElement) document.exitFullscreen().catch(() => {});
-  else if (document.webkitFullscreenElement) document.webkitExitFullscreen();
   const m = document.getElementById('pdfModal');
   if (m) m.classList.remove('open');
   document.body.style.overflow = '';
