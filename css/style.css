@@ -1153,6 +1153,7 @@ footer {
   cursor:pointer;white-space:nowrap;transition:var(--transition);flex-shrink:0;
 }
 .pdf-open-btn:hover { background:var(--purple-700); }
+.pdf-tick { font-size:0.85rem;opacity:0.85; }
 
 /* PDF Modal Popup */
 #pdfModal {

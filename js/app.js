@@ -298,9 +298,34 @@ const PDFS = {
     ],
     notes: []
   },
-  science:  { formula: [], notes: [] },
-  english:  { formula: [], notes: [] },
-  social:   { formula: [], notes: [] }
+  science: { formula: [], notes: [] },
+  english: {
+    formula: [], notes: [],
+    'first-flight': [
+      { title: 'Ch 1 — A Letter to God',              desc: 'Prose', url: 'pdfs/english/ch1-a-letter-to-god.pdf' },
+      { title: 'Ch 2 — Nelson Mandela',                desc: 'Prose', url: 'pdfs/english/ch2-nelson-mandela.pdf' },
+      { title: 'Ch 3 — Two Stories About Flying',      desc: 'Prose', url: 'pdfs/english/ch3-two-stories-about-flying.pdf' },
+      { title: 'Ch 4 — From the Diary of Anne Frank',  desc: 'Prose', url: 'pdfs/english/ch4-from-diary-of-anne-frank.pdf' },
+      { title: 'Ch 6 — Mijbil the Otter',              desc: 'Prose', url: 'pdfs/english/ch6-mijbil-the-otter.pdf' },
+      { title: 'Ch 9 — Madam Rides the Bus',           desc: 'Prose', url: 'pdfs/english/ch9-madam-rides-the-bus.pdf' },
+      { title: 'Ch 10 — The Sermon at Benares',        desc: 'Prose', url: 'pdfs/english/ch10-the-sermon-at-benares.pdf' },
+      { title: 'Ch 11 — The Proposal',                 desc: 'Play',  url: 'pdfs/english/ch11-the-proposal.pdf' },
+      { title: 'Poem 1 — Dust of Snow',                desc: 'Poetry', url: 'pdfs/english/poem1-dust-of-snow.pdf' },
+      { title: 'Poem 2 — Fire and Ice',                desc: 'Poetry', url: 'pdfs/english/poem2-fire-and-ice.pdf' },
+      { title: 'Poem 3 — A Tiger in the Zoo',          desc: 'Poetry', url: 'pdfs/english/poem3-a-tiger-in-the-zoo.pdf' },
+      { title: 'Poem 4 — How to Tell Wild Animals',    desc: 'Poetry', url: 'pdfs/english/poem4-how-to-tell-wild-animals.pdf' },
+      { title: 'Poem 5 — The Ball Poem',               desc: 'Poetry', url: 'pdfs/english/poem5-the-ball-poem.pdf' },
+      { title: 'Poem 6 — Amanda!',                     desc: 'Poetry', url: 'pdfs/english/poem6-amanda.pdf' },
+      { title: 'Poem 7 — The Trees',                   desc: 'Poetry', url: 'pdfs/english/poem7-the-trees.pdf' },
+      { title: 'Poem 8 — Fog',                         desc: 'Poetry', url: 'pdfs/english/poem8-fog.pdf' },
+      { title: 'Poem 9 — The Tale of Custard the Dragon', desc: 'Poetry', url: 'pdfs/english/poem9-tale-of-custard-the-dragon.pdf' },
+      { title: 'Poem 10 — For Anne Gregory',           desc: 'Poetry', url: 'pdfs/english/poem10-for-anne-gregory.pdf' }
+    ],
+    footprints: [
+      { title: 'Ch 2 — The Thief\'s Story',            desc: 'Prose', url: 'pdfs/english/fw-ch2-the-thiefs-story.pdf' }
+    ]
+  },
+  social: { formula: [], notes: [] }
 };
 
 /* Resolve PDF URL for iframe — local paths pass through, Drive links convert to embed */
@@ -328,7 +353,7 @@ function pdfCards(subject, tab) {
           <div class="pdf-card-title">${escH(p.title)}</div>
           <div class="pdf-card-desc">${escH(p.desc || '')}</div>
         </div>
-        <button class="pdf-open-btn" onclick="openPDF('${escH(p.url)}','${escH(p.title)}')">Open PDF</button>
+        <button class="pdf-open-btn" onclick="openPDF('${escH(p.url)}','${escH(p.title)}')"><span class="pdf-tick">✓</span> Open PDF</button>
       </div>`).join('')}
   </div>`;
 }
@@ -568,13 +593,15 @@ function buildNCERT() {
    ENGLISH — FIRST FLIGHT & FOOTPRINTS
 ══════════════════════════════════════ */
 function buildEnglishReader(subject, type) {
-  // type: 'ff' = First Flight (ch 1-8), 'fp' = Footprints (ch 9-11)
   const ffChapters = subject.chapters.filter((_, i) => i < 8);
   const fpChapters = subject.chapters.filter((_, i) => i >= 8);
   const chapters = type === 'ff' ? ffChapters : fpChapters;
   const title = type === 'ff' ? '✈️ First Flight' : '👣 Footprints Without Feet';
+  const pdfTab = type === 'ff' ? 'first-flight' : 'footprints';
+  const cards = pdfCards(subject, pdfTab);
 
   return `<h2 class="section-title" style="margin-bottom:1.5rem">${title}</h2>
+    ${cards ? `<h3 class="section-sub" style="margin-bottom:0.75rem">📂 Chapter PDFs</h3>${cards}` : ''}
     <div class="chapters-list" id="chaptersList">
       ${chapters.map(ch => buildChapterAccordionHTML(ch, subject.id, type === 'ff' ? 'nm-ff' : 'nm-fp')).join('')}
     </div>`;
