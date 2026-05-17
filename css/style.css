@@ -1155,48 +1155,54 @@ footer {
 .pdf-open-btn:hover { background:var(--purple-700); }
 .pdf-tick { font-size:0.85rem;opacity:0.85; }
 
-/* PDF Modal Popup — fullscreen */
+/* PDF Modal Popup — fullscreen, no header */
 #pdfModal {
   display:none;position:fixed;inset:0;z-index:9999;
 }
 #pdfModal.open { display:block; }
-.pdf-modal-overlay { display:none; }
 .pdf-modal-box {
-  position:fixed;inset:0;z-index:1;
+  position:fixed;inset:0;
   width:100vw;height:100dvh;
-  background:white;border-radius:0;overflow:hidden;
-  display:flex;flex-direction:column;
+  background:#525659;
+  overflow:hidden;
 }
-.pdf-modal-header {
-  display:flex;align-items:center;justify-content:space-between;
-  padding:0.85rem 1.2rem;background:var(--purple-700);flex-shrink:0;
+.pdf-modal-body {
+  width:100%;height:100%;overflow:auto;padding:0.5rem;
 }
-.pdf-modal-title { font-weight:700;font-size:0.95rem;color:white;flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;min-width:0; }
-.pdf-modal-close {
-  background:rgba(255,255,255,0.15);border:none;color:white;
-  width:30px;height:30px;border-radius:50%;cursor:pointer;font-size:1rem;
-  display:flex;align-items:center;justify-content:center;transition:var(--transition);
+.pdf-modal-body canvas { border-radius:4px; }
+
+/* Floating close button */
+.pdf-float-close {
+  position:fixed;top:0.75rem;right:0.75rem;z-index:10;
+  width:36px;height:36px;border-radius:50%;border:none;cursor:pointer;
+  background:rgba(0,0,0,0.45);
+  backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);
+  color:white;font-size:1rem;
+  display:flex;align-items:center;justify-content:center;
+  transition:var(--transition);
 }
-.pdf-modal-close:hover { background:rgba(255,255,255,0.3); }
-.pdf-zoom-controls {
-  display:flex;align-items:center;gap:0.4rem;flex-shrink:0;margin-left:0.5rem;
+.pdf-float-close:hover { background:rgba(0,0,0,0.7); }
+
+/* Floating zoom pill */
+.pdf-float-zoom {
+  position:fixed;bottom:1.5rem;left:50%;transform:translateX(-50%);z-index:10;
+  display:flex;align-items:center;gap:0.35rem;
+  background:rgba(0,0,0,0.45);
+  backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);
+  border-radius:50px;padding:0.35rem 0.6rem;
 }
 .pdf-zoom-btn {
-  background:rgba(255,255,255,0.15);border:none;color:white;
-  width:26px;height:26px;border-radius:6px;cursor:pointer;
-  font-size:1.15rem;font-weight:700;line-height:1;
+  background:transparent;border:none;color:white;
+  width:28px;height:28px;border-radius:50%;cursor:pointer;
+  font-size:1.2rem;font-weight:700;line-height:1;
   display:flex;align-items:center;justify-content:center;
   transition:var(--transition);font-family:inherit;
 }
-.pdf-zoom-btn:hover { background:rgba(255,255,255,0.35); }
+.pdf-zoom-btn:hover { background:rgba(255,255,255,0.2); }
 #pdfZoomLevel {
   color:rgba(255,255,255,0.9);font-size:0.78rem;font-weight:600;
-  min-width:38px;text-align:center;
+  min-width:36px;text-align:center;
 }
-.pdf-modal-body {
-  flex:1;overflow:auto;background:#525659;padding:0.5rem;
-}
-.pdf-modal-body canvas { border-radius:4px; }
 
 /* PDF card completion circle */
 .pdf-done-circle {
@@ -1378,12 +1384,6 @@ footer {
   .footer-col ul li a{font-size:0.75rem}
   .footer-bottom{flex-direction:row;flex-wrap:wrap;gap:0.4rem;font-size:0.7rem;justify-content:center}
   .footer-badge{font-size:0.68rem;padding:0.2rem 0.65rem}
-
-  /* PDF modal header — tighter on mobile */
-  .pdf-modal-title{font-size:0.82rem;flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-  .pdf-modal-header{padding:0.7rem 0.9rem}
-  #pdfZoomLevel{min-width:30px;font-size:0.72rem}
-  .pdf-zoom-btn{width:24px;height:24px;font-size:1rem}
 
   /* Owlix promo — single column on mobile */
   .owlix-promo{padding:2rem 1.25rem;border-radius:var(--radius-lg)}

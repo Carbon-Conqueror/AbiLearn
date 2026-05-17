@@ -410,16 +410,12 @@ function openPDF(url, title) {
     modal = document.createElement('div');
     modal.id = 'pdfModal';
     modal.innerHTML = `
-      <div class="pdf-modal-overlay" onclick="closePDF()"></div>
       <div class="pdf-modal-box">
-        <div class="pdf-modal-header">
-          <span class="pdf-modal-title" id="pdfModalTitle"></span>
-          <div class="pdf-zoom-controls">
-            <button class="pdf-zoom-btn" onclick="zoomPDF(-0.25)">−</button>
-            <span id="pdfZoomLevel">100%</span>
-            <button class="pdf-zoom-btn" onclick="zoomPDF(0.25)">+</button>
-          </div>
-          <button class="pdf-modal-close" onclick="closePDF()">✕</button>
+        <button class="pdf-float-close" onclick="closePDF()">✕</button>
+        <div class="pdf-float-zoom">
+          <button class="pdf-zoom-btn" onclick="zoomPDF(-0.25)">−</button>
+          <span id="pdfZoomLevel">100%</span>
+          <button class="pdf-zoom-btn" onclick="zoomPDF(0.25)">+</button>
         </div>
         <div class="pdf-modal-body" id="pdfModalBody">
           <div class="pdf-loading">Loading PDF…</div>
@@ -427,7 +423,6 @@ function openPDF(url, title) {
       </div>`;
     document.body.appendChild(modal);
   }
-  document.getElementById('pdfModalTitle').textContent = title;
   document.getElementById('pdfZoomLevel').textContent = '100%';
   document.getElementById('pdfModalBody').innerHTML = '<div class="pdf-loading">Loading PDF…</div>';
   modal.classList.add('open');
