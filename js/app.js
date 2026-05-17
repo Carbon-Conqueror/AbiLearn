@@ -522,22 +522,27 @@ function buildImportantNotes(subject) {
   const colorMap = { maths:'var(--maths)', science:'var(--science)', english:'var(--english)', social:'var(--social)' };
   const color = colorMap[subject.id] || 'var(--purple-600)';
   const cards = pdfCards(subject, 'notes');
+  const chapters = subject.chapters.filter(c => c.keyPoints && c.keyPoints.length);
+
+  if (!cards && !chapters.length) return buildComingSoon('Important Notes', 'Notes for all chapters will be added here soon.');
+
   return `
     ${cards ? `<h2 class="section-title" style="margin-bottom:1rem">📂 Study PDFs</h2>${cards}` : ''}
-    <h2 class="section-title" style="margin-bottom:1.5rem;margin-top:${cards ? '2rem' : '0'}">📌 Important Notes — ${subject.name}</h2>
-    <div class="notes-grid">
-      ${subject.chapters.map(ch => `
-        <div class="notes-block reveal">
-          <div class="notes-chapter-title">
-            <span class="formula-num" style="background:${color};min-width:28px">${ch.id}</span>
-            ${ch.title}
-            <span style="font-size:0.72rem;color:var(--muted);font-weight:400;margin-left:auto">${ch.subtitle}</span>
-          </div>
-          <ul class="notes-list">
-            ${(ch.keyPoints || []).map(kp => `<li>${escH(kp)}</li>`).join('')}
-          </ul>
-        </div>`).join('')}
-    </div>`;
+    ${chapters.length ? `
+      <h2 class="section-title" style="margin-bottom:1.5rem;margin-top:${cards ? '2rem' : '0'}">📌 Important Notes — ${subject.name}</h2>
+      <div class="notes-grid">
+        ${chapters.map(ch => `
+          <div class="notes-block reveal">
+            <div class="notes-chapter-title">
+              <span class="formula-num" style="background:${color};min-width:28px">${ch.id}</span>
+              ${ch.title}
+              <span style="font-size:0.72rem;color:var(--muted);font-weight:400;margin-left:auto">${ch.subtitle}</span>
+            </div>
+            <ul class="notes-list">
+              ${(ch.keyPoints || []).map(kp => `<li>${escH(kp)}</li>`).join('')}
+            </ul>
+          </div>`).join('')}
+      </div>` : ''}`;
 }
 
 /* ══════════════════════════════════════
@@ -828,9 +833,13 @@ function buildMaps() {
 function buildSummary(subject) {
   const colorMap = { maths:'var(--maths)', science:'var(--science)', english:'var(--english)', social:'var(--social)' };
   const color = colorMap[subject.id] || 'var(--purple-600)';
+  const chapters = subject.chapters.filter(c => c.keyPoints && c.keyPoints.length);
+
+  if (!chapters.length) return buildComingSoon('Chapter Summaries', 'Summaries for all chapters will be added here soon.');
+
   return `<h2 class="section-title" style="margin-bottom:1.5rem">📖 Chapter Summaries — ${subject.name}</h2>
     <div class="summary-grid">
-      ${subject.chapters.map(ch => `
+      ${chapters.map(ch => `
         <div class="summary-card reveal">
           <div class="summary-card-title">
             <span class="formula-num" style="background:${color};min-width:28px">${ch.id}</span>

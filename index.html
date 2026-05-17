@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>AbiLearn — CBSE Class 10 Study Platform</title>
   <meta name="description" content="The best CBSE Class 10 study platform with notes, formula sheets, MCQs, PYQs and Owlix AI for instant doubt solving.">
-  <link rel="stylesheet" href="css/style.css?v=24">
+  <link rel="stylesheet" href="css/style.css?v=25">
   <link rel="icon" href="assets/logo.jpeg" type="image/jpeg">
 </head>
 <body>
@@ -123,22 +123,22 @@
   </section>
 
   <!-- ═══ AI SECTION ═══ -->
-  <section class="section" style="background:linear-gradient(135deg,var(--purple-900),var(--purple-700));border-radius:var(--radius-xl);padding:3rem 2.5rem;margin:0 0 1rem">
-    <div style="display:grid;grid-template-columns:1fr 1fr;gap:2.5rem;align-items:center;max-width:900px;margin:0 auto">
-      <div>
-        <div class="section-label" style="color:var(--purple-300)">🦉 Owlix AI</div>
-        <h2 style="font-size:1.8rem;font-weight:800;color:white;letter-spacing:-0.5px;line-height:1.2">Your 24/7 AI<br>Doubt Solver</h2>
-        <p style="color:rgba(255,255,255,0.65);margin:1rem 0 1.5rem;font-size:0.9rem;line-height:1.7">Ask Owlix anything — Maths formulas, Science reactions, History facts, English summaries. Get point-by-point explanations instantly, anytime.</p>
-        <div style="display:flex;gap:0.75rem;flex-wrap:wrap">
+  <section class="section owlix-promo">
+    <div class="owlix-promo-grid">
+      <div class="owlix-promo-left">
+        <div class="section-label owlix-label">🦉 Owlix AI</div>
+        <h2 class="owlix-promo-title">Your 24/7 AI<br>Doubt Solver</h2>
+        <p class="owlix-promo-desc">Ask Owlix anything — Maths formulas, Science reactions, History facts, English summaries. Get point-by-point explanations instantly, anytime.</p>
+        <div class="owlix-promo-cta">
           <button onclick="document.getElementById('owlixToggle').click()" class="btn btn-white btn-md">Chat with Owlix →</button>
           <div class="cbse-badge">🛡️ CBSE Aligned AI</div>
         </div>
       </div>
-      <div style="display:flex;flex-direction:column;gap:0.6rem">
-        <div style="background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.12);border-radius:12px;padding:0.85rem 1.1rem;font-size:0.82rem;color:rgba(255,255,255,0.75)">💬 "What is Pythagoras theorem?"</div>
-        <div style="background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.12);border-radius:12px;padding:0.85rem 1.1rem;font-size:0.82rem;color:rgba(255,255,255,0.75)">💬 "Explain Dandi March step by step"</div>
-        <div style="background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.12);border-radius:12px;padding:0.85rem 1.1rem;font-size:0.82rem;color:rgba(255,255,255,0.75)">💬 "Summary of The Necklace story"</div>
-        <div style="background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.12);border-radius:12px;padding:0.85rem 1.1rem;font-size:0.82rem;color:rgba(255,255,255,0.75)">💬 "Board exam tips for scoring 95+"</div>
+      <div class="owlix-promo-right">
+        <div class="owlix-example-card">💬 "What is Pythagoras theorem?"</div>
+        <div class="owlix-example-card">💬 "Explain Dandi March step by step"</div>
+        <div class="owlix-example-card">💬 "Summary of The Necklace story"</div>
+        <div class="owlix-example-card">💬 "Board exam tips for scoring 95+"</div>
       </div>
     </div>
   </section>
@@ -261,7 +261,7 @@
 </div>
 
 <script src="js/data.js"></script>
-<script src="js/app.js?v=25"></script>
+<script src="js/app.js?v=26"></script>
 <script src="js/owlix.js?v=10"></script>
 <script src="js/auth.js?v=19"></script>
 <script>initHomePage();</script>
