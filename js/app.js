@@ -62,12 +62,24 @@ function getProgress() {
 function saveProgress(p) {
   try { localStorage.setItem('abilearn_progress', JSON.stringify(p)); } catch {}
 }
+function getPDFStore() {
+  try { return JSON.parse(localStorage.getItem('pdf_done') || '{}'); } catch { return {}; }
+}
 function getSubjectPct(subjectId) {
+  // Count all PDFs configured for this subject
+  const subPdfs = PDFS[subjectId] || {};
+  const allPdfs = Object.values(subPdfs).flat();
+  if (allPdfs.length) {
+    const store = getPDFStore();
+    const done = allPdfs.filter(p => store[p.url]).length;
+    return Math.round((done / allPdfs.length) * 100);
+  }
+  // Fallback: chapter-based (for subjects with no PDFs uploaded yet)
   const sub = DATA.subjects.find(s => s.id === subjectId);
-  if (!sub) return 0;
+  if (!sub || !sub.chapters.length) return 0;
   const p = getProgress();
   const done = sub.chapters.filter(c => p[subjectId + '_' + c.id]).length;
-  return sub.chapters.length ? Math.round((done / sub.chapters.length) * 100) : 0;
+  return Math.round((done / sub.chapters.length) * 100);
 }
 
 /* ── SEARCH ── */
@@ -353,7 +365,7 @@ function getPDFDone(url) {
 }
 function togglePDFDone(btn, url) {
   try {
-    const store = JSON.parse(localStorage.getItem('pdf_done') || '{}');
+    const store = getPDFStore();
     store[url] = !store[url];
     localStorage.setItem('pdf_done', JSON.stringify(store));
     btn.classList.toggle('done', !!store[url]);
