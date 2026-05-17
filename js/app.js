@@ -271,8 +271,8 @@ function renderTabContent(subject, tabId) {
       case 'pyqs':              el.innerHTML = buildPYQs(); break;
       case 'most-important':    el.innerHTML = buildMostImportant(subject); break;
       case 'ncert-solutions':   el.innerHTML = buildNCERT(); break;
-      case 'first-flight':      el.innerHTML = buildEnglishReader(subject, 'ff'); initChapterAccordion(el, subject.id); break;
-      case 'footprints':        el.innerHTML = buildEnglishReader(subject, 'fp'); initChapterAccordion(el, subject.id); break;
+      case 'first-flight':      el.innerHTML = buildEnglishReader(subject, 'ff'); break;
+      case 'footprints':        el.innerHTML = buildEnglishReader(subject, 'fp'); break;
       case 'grammar':           el.innerHTML = buildGrammar(); break;
       case 'reading':           el.innerHTML = buildReading(); break;
       case 'writing':           el.innerHTML = buildWriting(); break;
@@ -385,8 +385,14 @@ function pdfCards(subject, tab) {
 /* PDF.js popup — renders PDF directly, no external viewer */
 const PDFJS_SRC = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js';
 const PDFJS_WORKER = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+let _pdfUrl = '';
+let _pdfZoom = 1.0;
+let _pdfDoc = null;
 
 function openPDF(url, title) {
+  _pdfUrl = url;
+  _pdfZoom = 1.0;
+  _pdfDoc = null;
   let modal = document.getElementById('pdfModal');
   if (!modal) {
     modal = document.createElement('div');
@@ -396,6 +402,11 @@ function openPDF(url, title) {
       <div class="pdf-modal-box">
         <div class="pdf-modal-header">
           <span class="pdf-modal-title" id="pdfModalTitle"></span>
+          <div class="pdf-zoom-controls">
+            <button class="pdf-zoom-btn" onclick="zoomPDF(-0.25)">−</button>
+            <span id="pdfZoomLevel">100%</span>
+            <button class="pdf-zoom-btn" onclick="zoomPDF(0.25)">+</button>
+          </div>
           <button class="pdf-modal-close" onclick="closePDF()">✕</button>
         </div>
         <div class="pdf-modal-body" id="pdfModalBody">
@@ -405,6 +416,7 @@ function openPDF(url, title) {
     document.body.appendChild(modal);
   }
   document.getElementById('pdfModalTitle').textContent = title;
+  document.getElementById('pdfZoomLevel').textContent = '100%';
   document.getElementById('pdfModalBody').innerHTML = '<div class="pdf-loading">Loading PDF…</div>';
   modal.classList.add('open');
   document.body.style.overflow = 'hidden';
@@ -416,21 +428,36 @@ function openPDF(url, title) {
   document.head.appendChild(s);
 }
 
+function zoomPDF(delta) {
+  _pdfZoom = Math.round(Math.max(0.5, Math.min(3.0, _pdfZoom + delta)) * 10) / 10;
+  const el = document.getElementById('pdfZoomLevel');
+  if (el) el.textContent = Math.round(_pdfZoom * 100) + '%';
+  renderPDF(_pdfUrl);
+}
+
 function renderPDF(url) {
   const body = document.getElementById('pdfModalBody');
   if (!body) return;
+  body.innerHTML = '<div class="pdf-loading">Loading PDF…</div>';
   pdfjsLib.GlobalWorkerOptions.workerSrc = PDFJS_WORKER;
   const base = window.location.href.replace(/\/[^\/]*$/, '/');
   const absUrl = url.startsWith('http') ? url : new URL(url, base).href;
 
-  pdfjsLib.getDocument(absUrl).promise.then(pdf => {
+  const load = (_pdfDoc && _pdfUrl === url)
+    ? Promise.resolve(_pdfDoc)
+    : pdfjsLib.getDocument(absUrl).promise.then(doc => { _pdfDoc = doc; return doc; });
+
+  load.then(pdf => {
     body.innerHTML = '';
+    const containerW = body.clientWidth - 10;
     for (let n = 1; n <= pdf.numPages; n++) {
       pdf.getPage(n).then(page => {
-        const vp = page.getViewport({ scale: Math.min(body.clientWidth / page.getViewport({ scale: 1 }).width, 2) });
+        const natW = page.getViewport({ scale: 1 }).width;
+        const displayW = Math.round(containerW * _pdfZoom);
+        const vp = page.getViewport({ scale: displayW / natW });
         const canvas = document.createElement('canvas');
         canvas.width = vp.width; canvas.height = vp.height;
-        canvas.style.cssText = 'width:100%;display:block;margin-bottom:2px';
+        canvas.style.cssText = `display:block;margin:0 auto 4px;width:${displayW}px`;
         body.appendChild(canvas);
         page.render({ canvasContext: canvas.getContext('2d'), viewport: vp });
       });
@@ -608,18 +635,11 @@ function buildNCERT() {
    ENGLISH — FIRST FLIGHT & FOOTPRINTS
 ══════════════════════════════════════ */
 function buildEnglishReader(subject, type) {
-  const ffChapters = subject.chapters.filter((_, i) => i < 8);
-  const fpChapters = subject.chapters.filter((_, i) => i >= 8);
-  const chapters = type === 'ff' ? ffChapters : fpChapters;
   const title = type === 'ff' ? '✈️ First Flight' : '👣 Footprints Without Feet';
   const pdfTab = type === 'ff' ? 'first-flight' : 'footprints';
   const cards = pdfCards(subject, pdfTab);
-
   return `<h2 class="section-title" style="margin-bottom:1.5rem">${title}</h2>
-    ${cards ? `<h3 class="section-sub" style="margin-bottom:0.75rem">📂 Chapter PDFs</h3>${cards}` : ''}
-    <div class="chapters-list" id="chaptersList">
-      ${chapters.map(ch => buildChapterAccordionHTML(ch, subject.id, type === 'ff' ? 'nm-ff' : 'nm-fp')).join('')}
-    </div>`;
+    ${cards || buildComingSoon(title, 'PDFs for this section will be added here soon.')}`;
 }
 
 function buildChapterAccordionHTML(ch, subjectId, numClass) {

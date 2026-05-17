@@ -1178,8 +1178,23 @@ footer {
   display:flex;align-items:center;justify-content:center;transition:var(--transition);
 }
 .pdf-modal-close:hover { background:rgba(255,255,255,0.3); }
+.pdf-zoom-controls {
+  display:flex;align-items:center;gap:0.4rem;margin:0 0.5rem 0 auto;
+}
+.pdf-zoom-btn {
+  background:rgba(255,255,255,0.15);border:none;color:white;
+  width:26px;height:26px;border-radius:6px;cursor:pointer;
+  font-size:1.15rem;font-weight:700;line-height:1;
+  display:flex;align-items:center;justify-content:center;
+  transition:var(--transition);font-family:inherit;
+}
+.pdf-zoom-btn:hover { background:rgba(255,255,255,0.35); }
+#pdfZoomLevel {
+  color:rgba(255,255,255,0.9);font-size:0.78rem;font-weight:600;
+  min-width:38px;text-align:center;
+}
 .pdf-modal-body {
-  flex:1;overflow-y:auto;background:#525659;padding:0.5rem;
+  flex:1;overflow:auto;background:#525659;padding:0.5rem;
 }
 .pdf-modal-body canvas { border-radius:4px; }
 
