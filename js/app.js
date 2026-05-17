@@ -322,7 +322,13 @@ const PDFS = {
       { title: 'Poem 10 — For Anne Gregory',           desc: 'Poetry', url: 'pdfs/english/poem10-for-anne-gregory.pdf' }
     ],
     footprints: [
-      { title: 'Ch 2 — The Thief\'s Story',            desc: 'Prose', url: 'pdfs/english/fw-ch2-the-thiefs-story.pdf' }
+      { title: 'Ch 1 — A Triumph of Surgery',       desc: 'Prose', url: 'pdfs/english/fw-ch1-a-triumph-of-surgery.pdf' },
+      { title: 'Ch 2 — The Thief\'s Story',         desc: 'Prose', url: 'pdfs/english/fw-ch2-the-thiefs-story.pdf' },
+      { title: 'Ch 3 — The Midnight Visitor',       desc: 'Prose', url: 'pdfs/english/fw-ch3-the-midnight-visitor.pdf' },
+      { title: 'Ch 4 — A Question of Trust',        desc: 'Prose', url: 'pdfs/english/fw-ch4-a-question-of-trust.pdf' },
+      { title: 'Ch 5 — Footprints Without Feet',    desc: 'Prose', url: 'pdfs/english/fw-ch5-footprints-without-feet.pdf' },
+      { title: 'Ch 7 — The Necklace',               desc: 'Prose', url: 'pdfs/english/fw-ch7-the-necklace.pdf' },
+      { title: 'Ch 8 — Bholi',                      desc: 'Prose', url: 'pdfs/english/fw-ch8-bholi.pdf' }
     ]
   },
   social: { formula: [], notes: [] }
