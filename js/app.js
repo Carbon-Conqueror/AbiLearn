@@ -306,7 +306,18 @@ function renderTabContent(subject, tabId) {
 const PDFS = {
   maths: {
     formula: [
-      { title: 'Ch 1 — Real Numbers', desc: 'Important Formula Sheet', url: 'pdfs/maths/ch1-real-numbers-formula.pdf' }
+      { title: 'Ch 1 — Real Numbers',                        desc: 'Number systems, HCF, LCM, Euclid\'s lemma',     url: 'assets/formula/ch01-real-numbers.png' },
+      { title: 'Ch 2 — Polynomials',                         desc: 'Zeros, factor theorem, division algorithm',      url: 'assets/formula/ch02-polynomials.png' },
+      { title: 'Ch 3 — Pair of Linear Equations',            desc: 'Methods: graphical, substitution, elimination',  url: 'assets/formula/ch03-linear-equations.png' },
+      { title: 'Ch 4 — Quadratic Equations',                 desc: 'Discriminant, quadratic formula, nature of roots',url: 'assets/formula/ch04-quadratic-equations.png' },
+      { title: 'Ch 5 — Arithmetic Progressions',             desc: 'nth term, sum of AP, key formulas',             url: 'assets/formula/ch05-arithmetic-progressions.png' },
+      { title: 'Ch 6 — Triangles',                           desc: 'Similarity, Thales theorem, Pythagoras',        url: 'assets/formula/ch06-triangles.png' },
+      { title: 'Ch 7 — Coordinate Geometry',                 desc: 'Distance, section, midpoint, area formulas',    url: 'assets/formula/ch07-coordinate-geometry.png' },
+      { title: 'Ch 8 — Introduction to Trigonometry',        desc: 'Ratios, identities, standard values',           url: 'assets/formula/ch08-trigonometry.png' },
+      { title: 'Ch 9 — Applications of Trigonometry',        desc: 'Heights & distances, angle of elevation',       url: 'assets/formula/ch09-applications-trigonometry.png' },
+      { title: 'Ch 10 — Circles',                            desc: 'Tangent, secant, arc, sector formulas',         url: 'assets/formula/ch10-circles.png' },
+      { title: 'Ch 13 — Surface Areas and Volumes',          desc: 'Cuboid, cylinder, cone, sphere formulas',       url: 'assets/formula/ch13-surface-areas-volumes.png' },
+      { title: 'Ch 14 — Statistics',                         desc: 'Mean, median, mode for grouped data',           url: 'assets/formula/ch14-statistics.png' }
     ],
     notes: []
   },
