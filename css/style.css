@@ -1170,6 +1170,7 @@ footer {
   width:100%;height:100%;overflow:auto;padding:0.5rem;
 }
 .pdf-modal-body canvas { border-radius:4px; }
+.pdf-img-view { border-radius:4px; display:block; margin:0 auto; transition:width 0.15s ease; }
 
 /* Floating close button */
 .pdf-float-close {

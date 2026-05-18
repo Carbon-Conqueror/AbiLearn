@@ -373,38 +373,45 @@ function togglePDFDone(btn, url) {
   } catch {}
 }
 
-/* PDF cards with completion circle + Open PDF button */
+/* PDF/image cards with completion circle + Open button */
 function pdfCards(subject, tab) {
   const list = (PDFS[subject.id] || {})[tab] || [];
   if (!list.length) return '';
   return `<div class="pdf-cards-grid">
     ${list.map(p => {
       const done = getPDFDone(p.url);
+      const isImg = _isImageUrl(p.url);
       return `
       <div class="pdf-card">
-        <div class="pdf-card-icon">📄</div>
+        <div class="pdf-card-icon">${isImg ? '🖼️' : '📄'}</div>
         <div class="pdf-card-info">
           <div class="pdf-card-title">${escH(p.title)}</div>
           <div class="pdf-card-desc">${escH(p.desc || '')}</div>
         </div>
         <button class="pdf-done-circle ${done ? 'done' : ''}" onclick="togglePDFDone(this,'${escH(p.url)}')" title="${done ? 'Mark as unread' : 'Mark as read'}">✓</button>
-        <button class="pdf-open-btn" onclick="openPDF('${escH(p.url)}','${escH(p.title)}')">Open PDF</button>
+        <button class="pdf-open-btn" onclick="openPDF('${escH(p.url)}','${escH(p.title)}')">Open</button>
       </div>`;
     }).join('')}
   </div>`;
 }
 
-/* PDF.js popup — renders PDF directly, no external viewer */
+/* PDF.js popup — renders PDF or image directly, no external viewer */
 const PDFJS_SRC = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js';
 const PDFJS_WORKER = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
 let _pdfUrl = '';
 let _pdfZoom = 1.0;
 let _pdfDoc = null;
+let _isImage = false;
+
+function _isImageUrl(url) {
+  return /\.(jpe?g|png|webp|gif|svg)(\?.*)?$/i.test(url);
+}
 
 function openPDF(url, title) {
   _pdfUrl = url;
   _pdfZoom = 1.0;
   _pdfDoc = null;
+  _isImage = _isImageUrl(url);
   let modal = document.getElementById('pdfModal');
   if (!modal) {
     modal = document.createElement('div');
@@ -418,16 +425,17 @@ function openPDF(url, title) {
           <button class="pdf-zoom-btn" onclick="zoomPDF(0.25)">+</button>
         </div>
         <div class="pdf-modal-body" id="pdfModalBody">
-          <div class="pdf-loading">Loading PDF…</div>
+          <div class="pdf-loading">Loading…</div>
         </div>
       </div>`;
     document.body.appendChild(modal);
   }
   document.getElementById('pdfZoomLevel').textContent = '100%';
-  document.getElementById('pdfModalBody').innerHTML = '<div class="pdf-loading">Loading PDF…</div>';
+  document.getElementById('pdfModalBody').innerHTML = '<div class="pdf-loading">Loading…</div>';
   modal.classList.add('open');
   document.body.style.overflow = 'hidden';
 
+  if (_isImage) { renderImage(url); return; }
   if (window.pdfjsLib) { renderPDF(url); return; }
   const s = document.createElement('script');
   s.src = PDFJS_SRC;
@@ -435,10 +443,27 @@ function openPDF(url, title) {
   document.head.appendChild(s);
 }
 
+function renderImage(url) {
+  const body = document.getElementById('pdfModalBody');
+  if (!body) return;
+  body.innerHTML = '';
+  const img = document.createElement('img');
+  img.className = 'pdf-img-view';
+  img.style.cssText = `display:block;margin:0 auto;width:${Math.round(_pdfZoom * 100)}%;max-width:none`;
+  img.onerror = () => { body.innerHTML = `<div class="pdf-error">Could not load image.</div>`; };
+  body.appendChild(img);
+  img.src = url;
+}
+
 function zoomPDF(delta) {
-  _pdfZoom = Math.round(Math.max(0.5, Math.min(3.0, _pdfZoom + delta)) * 10) / 10;
+  _pdfZoom = Math.round(Math.max(0.5, Math.min(5.0, _pdfZoom + delta)) * 10) / 10;
   const el = document.getElementById('pdfZoomLevel');
   if (el) el.textContent = Math.round(_pdfZoom * 100) + '%';
+  if (_isImage) {
+    const img = document.querySelector('#pdfModalBody .pdf-img-view');
+    if (img) img.style.width = Math.round(_pdfZoom * 100) + '%';
+    return;
+  }
   renderPDF(_pdfUrl);
 }
 
