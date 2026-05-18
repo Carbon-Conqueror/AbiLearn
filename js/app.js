@@ -497,6 +497,8 @@ function openPDF(url, title) {
   document.body.style.overflow = 'hidden';
 
   if (_isImage) { renderImage(url); return; }
+  const body2 = document.getElementById('pdfModalBody');
+  if (body2) body2.style.padding = '0.5rem';
   if (window.pdfjsLib) { renderPDF(url); return; }
   const s = document.createElement('script');
   s.src = PDFJS_SRC;
@@ -508,12 +510,24 @@ function renderImage(url) {
   const body = document.getElementById('pdfModalBody');
   if (!body) return;
   body.innerHTML = '';
+  body.style.padding = '0';
   const img = document.createElement('img');
   img.className = 'pdf-img-view';
-  img.style.cssText = `display:block;margin:0 auto;width:${Math.round(_pdfZoom * 100)}%;max-width:none`;
+  _applyImgZoom(img);
   img.onerror = () => { body.innerHTML = `<div class="pdf-error">Could not load image.</div>`; };
   body.appendChild(img);
   img.src = url;
+}
+
+function _applyImgZoom(img) {
+  const pct = Math.round(_pdfZoom * 100);
+  if (_pdfZoom <= 1) {
+    // Height-first: fill the full screen height, let width scale naturally
+    img.style.cssText = `display:block;margin:0 auto;height:${pct}%;width:auto;max-width:100%;`;
+  } else {
+    // Zoomed in: width-based so user can scroll horizontally too
+    img.style.cssText = `display:block;margin:0 auto;height:${pct}%;width:auto;max-width:none;`;
+  }
 }
 
 function zoomPDF(delta) {
@@ -522,7 +536,7 @@ function zoomPDF(delta) {
   if (el) el.textContent = Math.round(_pdfZoom * 100) + '%';
   if (_isImage) {
     const img = document.querySelector('#pdfModalBody .pdf-img-view');
-    if (img) img.style.width = Math.round(_pdfZoom * 100) + '%';
+    _applyImgZoom(img);
     return;
   }
   renderPDF(_pdfUrl);
@@ -581,7 +595,7 @@ function buildFormulaSheet(subject) {
   if (!chapters.length && !cards) return buildComingSoon('Formula Sheet', 'Formulas will be added here soon.');
 
   return `
-    ${cards ? `<h2 class="section-title" style="margin-bottom:1rem">📂 Formula PDFs</h2>${cards}` : ''}
+    ${cards ? `<h2 class="section-title" style="margin-bottom:1rem">📐 Formula Sheets</h2>${cards}` : ''}
     ${chapters.length ? `
       <h2 class="section-title" style="margin-bottom:1.5rem;margin-top:${cards ? '2rem' : '0'}">📐 Formula Sheet — ${subject.name}</h2>
       <div class="formula-sheet">
