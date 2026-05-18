@@ -114,6 +114,56 @@ function goTo(subjectId, chapterId) {
   if (map[subjectId]) { sessionStorage.setItem('openChapter', chapterId); window.location.href = map[subjectId]; }
 }
 
+/* ── MOBILE HAMBURGER MENU ── */
+function initMobileNav() {
+  if (document.getElementById('hamburgerBtn')) return;
+  const nav = document.querySelector('.navbar');
+  if (!nav) return;
+
+  const ham = document.createElement('button');
+  ham.className = 'hamburger';
+  ham.id = 'hamburgerBtn';
+  ham.setAttribute('aria-label', 'Menu');
+  ham.innerHTML = '<span></span><span></span><span></span>';
+  nav.appendChild(ham);
+
+  const menu = document.createElement('div');
+  menu.className = 'mobile-menu';
+  menu.id = 'mobileMenu';
+  menu.innerHTML = `
+    <div class="mobile-menu-inner">
+      <a href="index.html" class="mobile-nav-link">🏠 Home</a>
+      <div class="mobile-nav-section">Subjects</div>
+      <a href="maths.html" class="mobile-nav-link mobile-sub-link">📐 Mathematics</a>
+      <a href="science.html" class="mobile-nav-link mobile-sub-link">🔬 Science</a>
+      <a href="english.html" class="mobile-nav-link mobile-sub-link">📖 English</a>
+      <a href="social.html" class="mobile-nav-link mobile-sub-link">🌍 Social Science</a>
+      <button class="mobile-nav-link" onclick="closeMobileMenu();setTimeout(()=>document.getElementById('owlixToggle').click(),150)">🦉 Ask Owlix AI</button>
+      <div class="mobile-menu-actions">
+        <button class="btn-login">Log In</button>
+        <button class="btn-signup">Sign Up Free</button>
+      </div>
+    </div>`;
+  document.body.appendChild(menu);
+
+  ham.addEventListener('click', () => {
+    const open = menu.classList.toggle('open');
+    ham.classList.toggle('open', open);
+    document.body.style.overflow = open ? 'hidden' : '';
+  });
+  menu.addEventListener('click', e => {
+    if (e.target === menu) closeMobileMenu();
+  });
+}
+
+function closeMobileMenu() {
+  const m = document.getElementById('mobileMenu');
+  const h = document.getElementById('hamburgerBtn');
+  if (m) m.classList.remove('open');
+  if (h) h.classList.remove('open');
+  document.body.style.overflow = '';
+}
+
 /* ── DROPDOWN (click for touch, hover still works on desktop) ── */
 function initDropdowns() {
   document.querySelectorAll('.nav-dropdown-toggle').forEach(btn => {
@@ -153,7 +203,7 @@ function initReveal() {
    HOME PAGE
 ══════════════════════════════════════ */
 function initHomePage() {
-  initSearch(); initDropdowns();
+  initSearch(); initDropdowns(); initMobileNav();
   renderSubjectCards();
   renderTips();
   setTimeout(() => {
@@ -207,7 +257,7 @@ function renderTips() {
    SUBJECT PAGE
 ══════════════════════════════════════ */
 function initSubjectPage(subjectId) {
-  initSearch(); initDropdowns();
+  initSearch(); initDropdowns(); initMobileNav();
   const subject = DATA.subjects.find(s => s.id === subjectId);
   if (!subject) return;
 
