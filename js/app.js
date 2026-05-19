@@ -369,7 +369,15 @@ const PDFS = {
       { title: 'Ch 13 — Surface Areas and Volumes',          desc: 'Cuboid, cylinder, cone, sphere formulas',       url: 'assets/formula/ch13-surface-areas-volumes.png' },
       { title: 'Ch 14 — Statistics',                         desc: 'Mean, median, mode for grouped data',           url: 'assets/formula/ch14-statistics.png' }
     ],
-    notes: []
+    notes: [],
+    pyqs: [
+      // ── 2023 ──────────────────────────────────────────────────────────
+      { title: '2023 · Set 1 (30/1/1)',  desc: 'Mathematics Standard — Theory, 80 marks, 3 hrs', url: 'pdfs/maths/pyqs/2023-qp-set1.pdf' },
+      { title: '2023 · Set 2 (30/1/2)',  desc: 'Mathematics Standard — Theory, 80 marks, 3 hrs', url: 'pdfs/maths/pyqs/2023-qp-set2.pdf' },
+      { title: '2023 · Set 3 (30/1/3)',  desc: 'Mathematics Standard — Theory, 80 marks, 3 hrs', url: 'pdfs/maths/pyqs/2023-qp-set3.pdf' },
+      // ── 2022 ──────────────────────────────────────────────────────────
+      { title: '2022 · Set 1 (30/2/1)',  desc: 'Mathematics Standard — Term II, 40 marks, 2 hrs', url: 'pdfs/maths/pyqs/2022-qp-set1.pdf' }
+    ]
   },
   science: { formula: [], notes: [] },
   english: {
