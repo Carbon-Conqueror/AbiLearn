@@ -524,7 +524,7 @@ function pdfCards(subject, tab) {
           <div class="pdf-card-desc">${escH(p.desc || '')}</div>
         </div>
         <button class="pdf-done-circle ${done ? 'done' : ''}" onclick="togglePDFDone(this,'${escH(p.url)}')" title="${done ? 'Mark as unread' : 'Mark as read'}">✓</button>
-        <button class="pdf-open-btn" onclick="openPDF('${escH(p.url)}','${escH(p.title)}')">${isImg ? 'View' : 'Open ↗'}</button>
+        <button class="pdf-open-btn" onclick="openPDF('${escH(p.url)}','${escH(p.title)}')">Open</button>
       </div>`;
     }).join('')}
   </div>`;
@@ -545,17 +545,11 @@ function _isImageUrl(url) {
 
 function openPDF(url, title) {
   _pdfUrl = url;
+  _pdfZoom = 1.0;
+  _pdfDoc = null;
   _isImage = _isImageUrl(url);
   if (_pdfObserver) { _pdfObserver.disconnect(); _pdfObserver = null; }
 
-  // PDFs: open in new tab so every browser/device uses its native viewer
-  if (!_isImage) {
-    window.open(url, '_blank', 'noopener');
-    return;
-  }
-
-  // Images: show in the in-page modal with zoom controls
-  _pdfZoom = 1.0;
   let modal = document.getElementById('pdfModal');
   if (!modal) {
     modal = document.createElement('div');
@@ -563,7 +557,7 @@ function openPDF(url, title) {
     modal.innerHTML = `
       <div class="pdf-modal-box">
         <button class="pdf-float-close" onclick="closePDF()">✕</button>
-        <div class="pdf-float-zoom" id="pdfZoomBar">
+        <div class="pdf-float-zoom">
           <button class="pdf-zoom-btn" onclick="zoomPDF(-0.25)">−</button>
           <span id="pdfZoomLevel">100%</span>
           <button class="pdf-zoom-btn" onclick="zoomPDF(0.25)">+</button>
@@ -574,11 +568,85 @@ function openPDF(url, title) {
   }
   document.getElementById('pdfZoomLevel').textContent = '100%';
   const body = document.getElementById('pdfModalBody');
-  body.style.padding = '0.5rem';
   body.innerHTML = '<div class="pdf-loading">Loading…</div>';
+  body.style.padding = _isImage ? '0.5rem' : '0';
   modal.classList.add('open');
   document.body.style.overflow = 'hidden';
-  renderImage(url);
+
+  if (_isImage) { renderImage(url); return; }
+  if (window.pdfjsLib) { renderPDF(url); return; }
+  const s = document.createElement('script');
+  s.src = PDFJS_SRC;
+  s.onload = () => renderPDF(url);
+  document.head.appendChild(s);
+}
+
+function renderPDF(url) {
+  const body = document.getElementById('pdfModalBody');
+  if (!body) return;
+  if (_pdfObserver) { _pdfObserver.disconnect(); _pdfObserver = null; }
+  body.innerHTML = '<div class="pdf-loading">Loading PDF…</div>';
+  pdfjsLib.GlobalWorkerOptions.workerSrc = PDFJS_WORKER;
+  const base = window.location.href.replace(/\/[^\/]*$/, '/');
+  const absUrl = url.startsWith('http') ? url : new URL(url, base).href;
+
+  // Range requests: PDF.js fetches only metadata + requested pages, not the whole file
+  const load = (_pdfDoc && _pdfUrl === url)
+    ? Promise.resolve(_pdfDoc)
+    : pdfjsLib.getDocument({
+        url: absUrl,
+        rangeChunkSize: 65536,
+        disableRange: false,
+        disableStream: false
+      }).promise.then(doc => { _pdfDoc = doc; return doc; });
+
+  load.then(pdf => {
+    body.innerHTML = '';
+    const containerW = body.clientWidth - 10;
+    const dpr = window.devicePixelRatio || 1;
+    const displayW = Math.round(containerW * _pdfZoom);
+    const estH = Math.round(displayW * 1.414); // A4 aspect placeholder
+
+    function renderPage(w) {
+      if (w.dataset.rendered === '1') return;
+      w.dataset.rendered = '1';
+      pdf.getPage(parseInt(w.dataset.page)).then(page => {
+        const vp = page.getViewport({ scale: (displayW / page.getViewport({ scale: 1 }).width) * dpr });
+        const canvas = document.createElement('canvas');
+        canvas.width = vp.width;
+        canvas.height = vp.height;
+        const h = Math.round(vp.height / dpr);
+        canvas.style.cssText = `display:block;width:${displayW}px;height:${h}px;`;
+        w.style.cssText = `display:block;margin:0 auto 4px;width:${displayW}px;height:${h}px;`;
+        w.innerHTML = '';
+        w.appendChild(canvas);
+        page.render({ canvasContext: canvas.getContext('2d'), viewport: vp });
+      });
+    }
+
+    const wrappers = [];
+    for (let n = 1; n <= pdf.numPages; n++) {
+      const w = document.createElement('div');
+      w.dataset.page = n;
+      w.dataset.rendered = '0';
+      w.style.cssText = `display:block;margin:0 auto 4px;width:${displayW}px;height:${estH}px;background:#e0e0e0;border-radius:2px;`;
+      body.appendChild(w);
+      wrappers.push(w);
+    }
+
+    // Render first 2 pages immediately
+    renderPage(wrappers[0]);
+    if (wrappers[1]) renderPage(wrappers[1]);
+
+    // Lazy-render rest as user scrolls
+    _pdfObserver = new IntersectionObserver(entries => {
+      entries.forEach(e => { if (e.isIntersecting) renderPage(e.target); });
+    }, { root: body, rootMargin: '400px 0px', threshold: 0 });
+    wrappers.slice(2).forEach(w => _pdfObserver.observe(w));
+
+  }).catch(() => {
+    body.innerHTML = `<div class="pdf-error">Could not load PDF.<br><a href="${escH(absUrl)}" target="_blank" style="color:#a78bfa">Tap here to open</a></div>`;
+  });
 }
 
 function renderImage(url) {
