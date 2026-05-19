@@ -387,7 +387,23 @@ const PDFS = {
       { title: '2022 · Set 1 (30/2/1)',  desc: 'Mathematics Standard — Term II, 40 marks, 2 hrs', url: 'pdfs/maths/pyqs/2022-qp-set1.pdf' }
     ]
   },
-  science: { formula: [], notes: [] },
+  science: {
+    formula: [], notes: [],
+    pyqs: [
+      // ── 2025 ──────────────────────────────────────────────────────────
+      { title: '2025 · Set 1 (31/1/1)', desc: 'Science — 80 marks, 3 hrs, 39 questions', url: 'pdfs/science/pyqs/2025-qp-set1.pdf' },
+      { title: '2025 · Set 2 (31/1/2)', desc: 'Science — 80 marks, 3 hrs, 39 questions', url: 'pdfs/science/pyqs/2025-qp-set2.pdf' },
+      { title: '2025 · Set 3 (31/1/3)', desc: 'Science — 80 marks, 3 hrs, 39 questions', url: 'pdfs/science/pyqs/2025-qp-set3.pdf' },
+      // ── 2024 ──────────────────────────────────────────────────────────
+      { title: '2024 · Set 1 (31/1/1)', desc: 'Science — 80 marks, 3 hrs, 39 questions', url: 'pdfs/science/pyqs/2024-qp-set1.pdf' },
+      { title: '2024 · Set 2 (31/1/2)', desc: 'Science — 80 marks, 3 hrs, 39 questions', url: 'pdfs/science/pyqs/2024-qp-set2.pdf' },
+      { title: '2024 · Set 3 (31/1/3)', desc: 'Science — 80 marks, 3 hrs, 39 questions', url: 'pdfs/science/pyqs/2024-qp-set3.pdf' },
+      // ── 2023 ──────────────────────────────────────────────────────────
+      { title: '2023 · Set 1 (31/1/1)', desc: 'Science — 80 marks, 3 hrs, 39 questions', url: 'pdfs/science/pyqs/2023-qp-set1.pdf' },
+      { title: '2023 · Set 2 (31/1/2)', desc: 'Science — 80 marks, 3 hrs, 39 questions', url: 'pdfs/science/pyqs/2023-qp-set2.pdf' },
+      { title: '2023 · Set 3 (31/1/3)', desc: 'Science — 80 marks, 3 hrs, 39 questions', url: 'pdfs/science/pyqs/2023-qp-set3.pdf' }
+    ]
+  },
   english: {
     formula: [], notes: [],
     pyqs: [
