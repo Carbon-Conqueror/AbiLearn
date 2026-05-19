@@ -330,7 +330,7 @@ function renderTabContent(subject, tabId) {
       case 'practice-questions':el.innerHTML = buildPracticeQuestions(subject); initMCQHandlers(el); break;
       case 'question-bank':     el.innerHTML = buildPracticeQuestions(subject); initMCQHandlers(el); break;
       case 'questions':         el.innerHTML = buildPracticeQuestions(subject); initMCQHandlers(el); break;
-      case 'pyqs':              el.innerHTML = buildPYQs(); break;
+      case 'pyqs':              el.innerHTML = buildPYQs(subject); break;
       case 'most-important':    el.innerHTML = buildMostImportant(subject); break;
       case 'ncert-solutions':   el.innerHTML = buildNCERT(); break;
       case 'first-flight':      el.innerHTML = buildEnglishReader(subject, 'ff'); break;
@@ -374,6 +374,32 @@ const PDFS = {
   science: { formula: [], notes: [] },
   english: {
     formula: [], notes: [],
+    pyqs: [
+      // ── 2025 ──────────────────────────────────────────────────────────
+      { title: '2025 · Set 1',            desc: 'CBSE Board Question Paper',             url: 'pdfs/english/pyqs/2025-qp-set1.pdf' },
+      { title: '2025 · Set 2',            desc: 'CBSE Board Question Paper',             url: 'pdfs/english/pyqs/2025-qp-set2.pdf' },
+      { title: '2025 · Set 3',            desc: 'CBSE Board Question Paper',             url: 'pdfs/english/pyqs/2025-qp-set3.pdf' },
+      { title: '2025 · Set 4',            desc: 'CBSE Board Question Paper',             url: 'pdfs/english/pyqs/2025-qp-set4.pdf' },
+      { title: '2025 · Marking Scheme',   desc: 'Official CBSE Answer Key',              url: 'pdfs/english/pyqs/2025-marking-scheme.pdf' },
+      // ── 2024 (Marking Schemes with full Q+A) ──────────────────────────
+      { title: '2024 · Answer Key 1',     desc: 'CBSE Official — Set 2/1/1',             url: 'pdfs/english/pyqs/2024-ms-set1.pdf' },
+      { title: '2024 · Answer Key 2',     desc: 'CBSE Official — Set 2/1/2',             url: 'pdfs/english/pyqs/2024-ms-set2.pdf' },
+      { title: '2024 · Answer Key 3',     desc: 'CBSE Official — Set 2/1/3',             url: 'pdfs/english/pyqs/2024-ms-set3.pdf' },
+      { title: '2024 · Answer Key 4',     desc: 'CBSE Official — Set 2/2/3',             url: 'pdfs/english/pyqs/2024-ms-set4.pdf' },
+      { title: '2024 · Answer Key 5',     desc: 'CBSE Official — Set 2/3/3',             url: 'pdfs/english/pyqs/2024-ms-set5.pdf' },
+      // ── 2023 ──────────────────────────────────────────────────────────
+      { title: '2023 · Set 1',            desc: 'CBSE Board Question Paper',             url: 'pdfs/english/pyqs/2023-qp-set1.pdf' },
+      { title: '2023 · Set 2',            desc: 'CBSE Board Question Paper',             url: 'pdfs/english/pyqs/2023-qp-set2.pdf' },
+      { title: '2023 · Set 3',            desc: 'CBSE Board Question Paper',             url: 'pdfs/english/pyqs/2023-qp-set3.pdf' },
+      { title: '2023 · Set 4',            desc: 'CBSE Board Question Paper',             url: 'pdfs/english/pyqs/2023-qp-set4.pdf' },
+      { title: '2023 · Set 5',            desc: 'CBSE Board Question Paper',             url: 'pdfs/english/pyqs/2023-qp-set5.pdf' },
+      { title: '2023 · Marking Scheme 1', desc: 'Official CBSE Answer Key — Set 2/4/1', url: 'pdfs/english/pyqs/2023-ms-set1.pdf' },
+      { title: '2023 · Marking Scheme 2', desc: 'Official CBSE Answer Key — Set 2/4/3', url: 'pdfs/english/pyqs/2023-ms-set2.pdf' },
+      // ── 2022 ──────────────────────────────────────────────────────────
+      { title: '2022 · Set 1',            desc: 'CBSE Board Question Paper',             url: 'pdfs/english/pyqs/2022-qp-set1.pdf' },
+      { title: '2022 · Set 2',            desc: 'CBSE Board Question Paper',             url: 'pdfs/english/pyqs/2022-qp-set2.pdf' },
+      { title: '2022 · Set 3',            desc: 'CBSE Board Question Paper',             url: 'pdfs/english/pyqs/2022-qp-set3.pdf' }
+    ],
     'first-flight': [
       { title: 'Ch 1 — A Letter to God',              desc: 'Prose', url: 'pdfs/english/ch1-a-letter-to-god.pdf' },
       { title: 'Ch 2 — Nelson Mandela',                desc: 'Prose', url: 'pdfs/english/ch2-nelson-mandela.pdf' },
@@ -695,13 +721,24 @@ function initMCQHandlers(container) {
 /* ══════════════════════════════════════
    PYQs PLACEHOLDER
 ══════════════════════════════════════ */
-function buildPYQs() {
+function buildPYQs(subject) {
+  const cards = subject ? pdfCards(subject, 'pyqs') : '';
+  if (!cards) {
+    return `
+      <div class="coming-soon">
+        <div class="cs-icon">📋</div>
+        <h3>PYQs — Coming Soon</h3>
+        <p>CBSE Board exam question papers will be added here soon.</p>
+        <button onclick="document.getElementById('owlixToggle').click()" class="btn btn-primary btn-md">Ask Owlix for PYQ Help →</button>
+      </div>`;
+  }
   return `
-    <div class="coming-soon">
-      <div class="cs-icon">📋</div>
-      <h3>Previous Year Questions (PYQs)</h3>
-      <p>CBSE Board exam PYQs from 2019–2024 are being added. Check back soon — or ask Owlix AI for PYQ-style questions!</p>
-      <button onclick="document.getElementById('owlixToggle').click()" class="btn btn-primary btn-md">Ask Owlix for PYQ Help →</button>
+    <div>
+      <div style="display:flex;align-items:center;gap:0.75rem;margin-bottom:1.5rem;flex-wrap:wrap">
+        <h2 class="section-title" style="margin:0">📋 Previous Year Question Papers</h2>
+        <span style="font-size:0.78rem;color:var(--muted);background:var(--surface);padding:0.2rem 0.65rem;border-radius:20px">2022 · 2023 · 2024 · 2025</span>
+      </div>
+      ${cards}
     </div>`;
 }
 
