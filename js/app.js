@@ -446,7 +446,23 @@ const PDFS = {
       { title: 'Ch 8 — Bholi',                      desc: 'Prose', url: 'pdfs/english/fw-ch8-bholi.pdf' }
     ]
   },
-  social: { formula: [], notes: [] }
+  social: {
+    formula: [], notes: [],
+    pyqs: [
+      // ── 2025 ──────────────────────────────────────────────────────────
+      { title: '2025 · Set 1 (32/1/1)', desc: 'Social Science — 80 marks, 3 hrs, includes map', url: 'pdfs/social/pyqs/2025-qp-set1.pdf' },
+      { title: '2025 · Set 2 (32/1/2)', desc: 'Social Science — 80 marks, 3 hrs, includes map', url: 'pdfs/social/pyqs/2025-qp-set2.pdf' },
+      { title: '2025 · Set 3 (32/1/3)', desc: 'Social Science — 80 marks, 3 hrs, includes map', url: 'pdfs/social/pyqs/2025-qp-set3.pdf' },
+      // ── 2024 ──────────────────────────────────────────────────────────
+      { title: '2024 · Set 1 (32/1/1)', desc: 'Social Science — 80 marks, 3 hrs, includes map', url: 'pdfs/social/pyqs/2024-qp-set1.pdf' },
+      { title: '2024 · Set 2 (32/1/2)', desc: 'Social Science — 80 marks, 3 hrs, includes map', url: 'pdfs/social/pyqs/2024-qp-set2.pdf' },
+      { title: '2024 · Set 3 (32/1/3)', desc: 'Social Science — 80 marks, 3 hrs, includes map', url: 'pdfs/social/pyqs/2024-qp-set3.pdf' },
+      // ── 2023 ──────────────────────────────────────────────────────────
+      { title: '2023 · Set 1 (32/1/1)', desc: 'Social Science — 80 marks, 3 hrs, includes map', url: 'pdfs/social/pyqs/2023-qp-set1.pdf' },
+      { title: '2023 · Set 2 (32/1/2)', desc: 'Social Science — 80 marks, 3 hrs, includes map', url: 'pdfs/social/pyqs/2023-qp-set2.pdf' },
+      { title: '2023 · Set 3 (32/1/3)', desc: 'Social Science — 80 marks, 3 hrs, includes map', url: 'pdfs/social/pyqs/2023-qp-set3.pdf' }
+    ]
+  }
 };
 
 /* Resolve PDF URL for iframe — local paths pass through, Drive links convert to embed */
