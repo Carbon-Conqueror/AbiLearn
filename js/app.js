@@ -524,7 +524,7 @@ function pdfCards(subject, tab) {
           <div class="pdf-card-desc">${escH(p.desc || '')}</div>
         </div>
         <button class="pdf-done-circle ${done ? 'done' : ''}" onclick="togglePDFDone(this,'${escH(p.url)}')" title="${done ? 'Mark as unread' : 'Mark as read'}">✓</button>
-        <button class="pdf-open-btn" onclick="openPDF('${escH(p.url)}','${escH(p.title)}')">Open</button>
+        <button class="pdf-open-btn" onclick="openPDF('${escH(p.url)}','${escH(p.title)}')">${isImg ? 'View' : 'Open ↗'}</button>
       </div>`;
     }).join('')}
   </div>`;
@@ -545,11 +545,17 @@ function _isImageUrl(url) {
 
 function openPDF(url, title) {
   _pdfUrl = url;
-  _pdfZoom = 1.0;
-  _pdfDoc = null;
   _isImage = _isImageUrl(url);
   if (_pdfObserver) { _pdfObserver.disconnect(); _pdfObserver = null; }
 
+  // PDFs: open in new tab so every browser/device uses its native viewer
+  if (!_isImage) {
+    window.open(url, '_blank', 'noopener');
+    return;
+  }
+
+  // Images: show in the in-page modal with zoom controls
+  _pdfZoom = 1.0;
   let modal = document.getElementById('pdfModal');
   if (!modal) {
     modal = document.createElement('div');
@@ -566,25 +572,13 @@ function openPDF(url, title) {
       </div>`;
     document.body.appendChild(modal);
   }
+  document.getElementById('pdfZoomLevel').textContent = '100%';
+  const body = document.getElementById('pdfModalBody');
+  body.style.padding = '0.5rem';
+  body.innerHTML = '<div class="pdf-loading">Loading…</div>';
   modal.classList.add('open');
   document.body.style.overflow = 'hidden';
-
-  const body = document.getElementById('pdfModalBody');
-  const zoomBar = document.getElementById('pdfZoomBar');
-
-  if (_isImage) {
-    if (zoomBar) zoomBar.style.display = '';
-    document.getElementById('pdfZoomLevel').textContent = '100%';
-    body.style.padding = '0.5rem';
-    body.innerHTML = '<div class="pdf-loading">Loading…</div>';
-    renderImage(url);
-    return;
-  }
-
-  // Use native browser PDF viewer — streams instantly, no JS overhead
-  if (zoomBar) zoomBar.style.display = 'none';
-  body.style.padding = '0';
-  body.innerHTML = `<iframe src="${escH(url)}" style="width:100%;height:100%;border:none;display:block;" title="${escH(title)}"></iframe>`;
+  renderImage(url);
 }
 
 function renderImage(url) {
