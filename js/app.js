@@ -371,6 +371,14 @@ const PDFS = {
     ],
     notes: [],
     pyqs: [
+      // ── 2025 ──────────────────────────────────────────────────────────
+      { title: '2025 · Set 1 (30/1/1)',  desc: 'Mathematics Standard — Theory, 80 marks, 3 hrs', url: 'pdfs/maths/pyqs/2025-qp-set1.pdf' },
+      { title: '2025 · Set 2 (30/1/2)',  desc: 'Mathematics Standard — Theory, 80 marks, 3 hrs', url: 'pdfs/maths/pyqs/2025-qp-set2.pdf' },
+      { title: '2025 · Set 3 (30/1/3)',  desc: 'Mathematics Standard — Theory, 80 marks, 3 hrs', url: 'pdfs/maths/pyqs/2025-qp-set3.pdf' },
+      // ── 2024 ──────────────────────────────────────────────────────────
+      { title: '2024 · Set 1 (30/1/1)',  desc: 'Mathematics Standard — Theory, 80 marks, 3 hrs', url: 'pdfs/maths/pyqs/2024-qp-set1.pdf' },
+      { title: '2024 · Set 2 (30/1/2)',  desc: 'Mathematics Standard — Theory, 80 marks, 3 hrs', url: 'pdfs/maths/pyqs/2024-qp-set2.pdf' },
+      { title: '2024 · Set 3 (30/1/3)',  desc: 'Mathematics Standard — Theory, 80 marks, 3 hrs', url: 'pdfs/maths/pyqs/2024-qp-set3.pdf' },
       // ── 2023 ──────────────────────────────────────────────────────────
       { title: '2023 · Set 1 (30/1/1)',  desc: 'Mathematics Standard — Theory, 80 marks, 3 hrs', url: 'pdfs/maths/pyqs/2023-qp-set1.pdf' },
       { title: '2023 · Set 2 (30/1/2)',  desc: 'Mathematics Standard — Theory, 80 marks, 3 hrs', url: 'pdfs/maths/pyqs/2023-qp-set2.pdf' },
