@@ -537,6 +537,7 @@ let _pdfUrl = '';
 let _pdfZoom = 1.0;
 let _pdfDoc = null;
 let _isImage = false;
+let _pdfObserver = null;
 
 function _isImageUrl(url) {
   return /\.(jpe?g|png|webp|gif|svg)(\?.*)?$/i.test(url);
@@ -619,38 +620,71 @@ function zoomPDF(delta) {
 function renderPDF(url) {
   const body = document.getElementById('pdfModalBody');
   if (!body) return;
+  if (_pdfObserver) { _pdfObserver.disconnect(); _pdfObserver = null; }
   body.innerHTML = '<div class="pdf-loading">Loading PDF…</div>';
   pdfjsLib.GlobalWorkerOptions.workerSrc = PDFJS_WORKER;
   const base = window.location.href.replace(/\/[^\/]*$/, '/');
   const absUrl = url.startsWith('http') ? url : new URL(url, base).href;
 
+  // Enable HTTP range requests so PDF.js fetches only what it needs
   const load = (_pdfDoc && _pdfUrl === url)
     ? Promise.resolve(_pdfDoc)
-    : pdfjsLib.getDocument(absUrl).promise.then(doc => { _pdfDoc = doc; return doc; });
+    : pdfjsLib.getDocument({ url: absUrl, rangeChunkSize: 65536, disableRange: false, disableStream: false })
+        .promise.then(doc => { _pdfDoc = doc; return doc; });
 
   load.then(pdf => {
     body.innerHTML = '';
     const containerW = body.clientWidth - 10;
     const dpr = window.devicePixelRatio || 1;
-    for (let n = 1; n <= pdf.numPages; n++) {
-      pdf.getPage(n).then(page => {
+    const displayW = Math.round(containerW * _pdfZoom);
+
+    function renderPage(w) {
+      if (w.dataset.rendered === '1') return;
+      w.dataset.rendered = '1';
+      pdf.getPage(parseInt(w.dataset.page)).then(page => {
         const natW = page.getViewport({ scale: 1 }).width;
-        const displayW = Math.round(containerW * _pdfZoom);
         const vp = page.getViewport({ scale: (displayW / natW) * dpr });
         const canvas = document.createElement('canvas');
         canvas.width = vp.width;
         canvas.height = vp.height;
-        canvas.style.cssText = `display:block;margin:0 auto 4px;width:${displayW}px;height:${Math.round(vp.height / dpr)}px`;
-        body.appendChild(canvas);
+        const h = Math.round(vp.height / dpr);
+        canvas.style.cssText = `display:block;width:${displayW}px;height:${h}px;`;
+        w.style.cssText = `display:block;margin:0 auto 4px;width:${displayW}px;height:${h}px;`;
+        w.innerHTML = '';
+        w.appendChild(canvas);
         page.render({ canvasContext: canvas.getContext('2d'), viewport: vp });
       });
     }
+
+    // Create placeholder for every page (grey box, A4 aspect ratio)
+    const wrappers = [];
+    const estH = Math.round(displayW * 1.414);
+    for (let n = 1; n <= pdf.numPages; n++) {
+      const w = document.createElement('div');
+      w.dataset.page = n;
+      w.dataset.rendered = '0';
+      w.style.cssText = `display:block;margin:0 auto 4px;width:${displayW}px;height:${estH}px;background:#e8e8e8;border-radius:2px;`;
+      body.appendChild(w);
+      wrappers.push(w);
+    }
+
+    // Render first 2 pages immediately so user sees content right away
+    renderPage(wrappers[0]);
+    if (wrappers[1]) renderPage(wrappers[1]);
+
+    // Lazy-render the rest as they scroll into view
+    _pdfObserver = new IntersectionObserver(entries => {
+      entries.forEach(e => { if (e.isIntersecting) renderPage(e.target); });
+    }, { root: body, rootMargin: '400px 0px', threshold: 0 });
+    wrappers.slice(2).forEach(w => _pdfObserver.observe(w));
+
   }).catch(() => {
     body.innerHTML = `<div class="pdf-error">Could not load PDF.<br><a href="${escH(absUrl)}" target="_blank">Tap to download</a></div>`;
   });
 }
 
 function closePDF() {
+  if (_pdfObserver) { _pdfObserver.disconnect(); _pdfObserver = null; }
   const m = document.getElementById('pdfModal');
   if (m) m.classList.remove('open');
   document.body.style.overflow = '';
