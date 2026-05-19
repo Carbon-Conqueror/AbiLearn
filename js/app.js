@@ -23,7 +23,7 @@
 const SUBJECT_TABS = {
   maths: [
     { id: 'formula-sheet', label: '📐 Formula Sheet' },
-    { id: 'question-bank', label: '📝 Question Bank' },
+    { id: 'question-gen', label: '🎲 Question Generator' },
     { id: 'questions',     label: '✏️ Questions' },
     { id: 'pyqs',          label: '📋 PYQs' },
     { id: 'summary',       label: '📖 Summary' }
@@ -328,7 +328,7 @@ function renderTabContent(subject, tabId) {
       case 'formula-sheet':     el.innerHTML = buildFormulaSheet(subject); break;
       case 'important-notes':   el.innerHTML = buildImportantNotes(subject); break;
       case 'practice-questions':el.innerHTML = buildPracticeQuestions(subject); initMCQHandlers(el); break;
-      case 'question-bank':     el.innerHTML = buildPracticeQuestions(subject); initMCQHandlers(el); break;
+      case 'question-gen':      el.innerHTML = buildQuestionGenerator(subject); break;
       case 'questions':         el.innerHTML = buildPracticeQuestions(subject); initMCQHandlers(el); break;
       case 'pyqs':              el.innerHTML = buildPYQs(subject); break;
       case 'most-important':    el.innerHTML = buildMostImportant(subject); break;
@@ -1135,6 +1135,144 @@ function buildSummary(subject) {
         </div>`).join('')}
     </div>`;
 }
+
+/* ══════════════════════════════════════
+   QUESTION GENERATOR (Maths)
+══════════════════════════════════════ */
+function buildQuestionGenerator(subject) {
+  if (subject.id !== 'maths') return buildComingSoon('Question Generator', 'Coming soon for this subject!');
+
+  return `
+    <div class="qgen-wrap">
+      <div class="qgen-controls">
+        <div class="qgen-filters">
+          <span style="font-weight:700;color:var(--text);font-size:0.9rem">Marks:</span>
+          <button class="qgen-filter active" data-m="0">All</button>
+          <button class="qgen-filter" data-m="2">2M</button>
+          <button class="qgen-filter" data-m="3">3M</button>
+          <button class="qgen-filter" data-m="5">5M</button>
+        </div>
+        <div class="qgen-filters" style="margin-top:0.5rem">
+          <span style="font-weight:700;color:var(--text);font-size:0.9rem">Chapter:</span>
+          <select class="qgen-ch-sel" id="qgenChapter">
+            <option value="0">All Chapters</option>
+            ${subject.chapters.map(c => `<option value="${c.id}">Ch ${c.id}: ${c.title}</option>`).join('')}
+          </select>
+        </div>
+        <div style="display:flex;align-items:center;gap:1rem;margin-top:1rem;flex-wrap:wrap">
+          <label style="font-size:0.88rem;color:var(--muted)">Questions per set:
+            <select class="qgen-ch-sel" id="qgenCount" style="margin-left:0.4rem">
+              <option value="5">5</option>
+              <option value="8" selected>8</option>
+              <option value="10">10</option>
+              <option value="15">15</option>
+            </select>
+          </label>
+          <button class="btn btn-primary btn-sm" onclick="generateQuestions()">🎲 Generate New Set</button>
+          <button class="btn btn-sm" onclick="resetQGenSeen()" style="background:var(--surface);color:var(--muted);border:1px solid var(--border)">↺ Reset Seen</button>
+        </div>
+      </div>
+      <div id="qgenOutput" style="margin-top:1.5rem"></div>
+    </div>`;
+}
+
+// Question Generator state
+let _qgenSeenKey = 'qgen_seen_maths';
+
+function getQGenSeen() {
+  try { return new Set(JSON.parse(localStorage.getItem(_qgenSeenKey) || '[]')); } catch { return new Set(); }
+}
+function saveQGenSeen(seen) {
+  try { localStorage.setItem(_qgenSeenKey, JSON.stringify([...seen])); } catch {}
+}
+function resetQGenSeen() {
+  try { localStorage.removeItem(_qgenSeenKey); } catch {}
+  generateQuestions();
+}
+
+function generateQuestions() {
+  const out = document.getElementById('qgenOutput');
+  if (!out) return;
+
+  // Read filters
+  const mFilter = parseInt(document.querySelector('.qgen-filter.active')?.dataset.m || '0');
+  const chFilter = parseInt(document.getElementById('qgenChapter')?.value || '0');
+  const count = parseInt(document.getElementById('qgenCount')?.value || '8');
+
+  // Filter pool
+  let pool = MATHS_QBANK.filter(q =>
+    (mFilter === 0 || q.m === mFilter) &&
+    (chFilter === 0 || q.ch === chFilter)
+  );
+
+  if (!pool.length) {
+    out.innerHTML = '<div class="coming-soon"><p>No questions match this filter.</p></div>';
+    return;
+  }
+
+  // Exclude seen questions; if pool exhausted reset seen for this filter
+  let seen = getQGenSeen();
+  let unseen = pool.filter(q => !seen.has(q.id));
+  if (unseen.length < count) {
+    // Remove seen IDs only for this pool to avoid full reset
+    pool.forEach(q => seen.delete(q.id));
+    saveQGenSeen(seen);
+    unseen = pool;
+  }
+
+  // Shuffle and pick
+  const shuffled = unseen.sort(() => Math.random() - 0.5);
+  const selected = shuffled.slice(0, Math.min(count, shuffled.length));
+
+  // Mark as seen
+  selected.forEach(q => seen.add(q.id));
+  saveQGenSeen(seen);
+
+  // Chapter name lookup
+  const chMap = {};
+  if (typeof DATA !== 'undefined') {
+    const sub = DATA.subjects.find(s => s.id === 'maths');
+    if (sub) sub.chapters.forEach(c => { chMap[c.id] = c.title; });
+  }
+
+  const markColors = { 2: '#10B981', 3: '#3B82F6', 5: '#8B5CF6' };
+
+  out.innerHTML = `
+    <div style="font-size:0.82rem;color:var(--muted);margin-bottom:1rem">
+      Showing ${selected.length} questions · ${pool.length - selected.length} remaining unseen
+    </div>
+    ${selected.map((q, i) => `
+    <div class="qgen-card" id="qc-${i}">
+      <div class="qgen-card-top">
+        <span class="qgen-mark-badge" style="background:${markColors[q.m] || '#6366f1'}20;color:${markColors[q.m] || '#6366f1'};border:1px solid ${markColors[q.m] || '#6366f1'}40">${q.m} Marks</span>
+        <span class="qgen-ch-badge">Ch ${q.ch} · ${chMap[q.ch] || ''}</span>
+      </div>
+      <div class="qgen-q">Q${i + 1}. ${escH(q.q)}</div>
+      <button class="qgen-ans-btn" onclick="toggleQGenAns(${i})">Show Answer ▾</button>
+      <div class="qgen-ans" id="qa-${i}" style="display:none">${escH(q.a)}</div>
+    </div>`).join('')}`;
+}
+
+function toggleQGenAns(i) {
+  const ans = document.getElementById('qa-' + i);
+  const btn = ans?.previousElementSibling;
+  if (!ans) return;
+  const show = ans.style.display === 'none';
+  ans.style.display = show ? 'block' : 'none';
+  if (btn) btn.textContent = show ? 'Hide Answer ▴' : 'Show Answer ▾';
+}
+
+// wire up filter buttons
+document.addEventListener('click', e => {
+  const f = e.target.closest('.qgen-filter');
+  if (!f) return;
+  f.closest('.qgen-filters').querySelectorAll('.qgen-filter').forEach(b => b.classList.remove('active'));
+  f.classList.add('active');
+  generateQuestions();
+});
+document.addEventListener('change', e => {
+  if (e.target.id === 'qgenChapter' || e.target.id === 'qgenCount') generateQuestions();
+});
 
 /* ══════════════════════════════════════
    COMING SOON

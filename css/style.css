@@ -1864,3 +1864,20 @@ footer {
 .settings-btn:hover { background:var(--bg); }
 .settings-btn.danger { border-color:#FCA5A5;color:#DC2626; }
 .settings-btn.danger:hover { background:#FEF2F2; }
+
+/* ── QUESTION GENERATOR ── */
+.qgen-wrap { max-width:800px;margin:0 auto; }
+.qgen-controls { background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:1.25rem 1.5rem; }
+.qgen-filters { display:flex;align-items:center;gap:0.5rem;flex-wrap:wrap; }
+.qgen-filter { background:var(--surface);border:1.5px solid var(--border);color:var(--muted);padding:0.3rem 0.85rem;border-radius:50px;font-size:0.82rem;font-weight:600;cursor:pointer;transition:var(--transition); }
+.qgen-filter.active { background:var(--purple-600);border-color:var(--purple-600);color:white; }
+.qgen-ch-sel { background:var(--surface);border:1.5px solid var(--border);border-radius:8px;color:var(--text);padding:0.3rem 0.6rem;font-size:0.82rem;cursor:pointer; }
+.qgen-card { background:var(--card);border:1px solid var(--border);border-radius:14px;padding:1.25rem 1.5rem;margin-bottom:1rem;transition:var(--transition); }
+.qgen-card:hover { border-color:var(--purple-400); }
+.qgen-card-top { display:flex;align-items:center;gap:0.6rem;margin-bottom:0.75rem;flex-wrap:wrap; }
+.qgen-mark-badge { font-size:0.75rem;font-weight:700;padding:0.2rem 0.65rem;border-radius:50px; }
+.qgen-ch-badge { font-size:0.75rem;color:var(--muted);background:var(--surface);padding:0.2rem 0.65rem;border-radius:50px;border:1px solid var(--border); }
+.qgen-q { font-size:0.95rem;font-weight:600;color:var(--text);line-height:1.6;margin-bottom:0.75rem; }
+.qgen-ans-btn { background:transparent;border:1.5px solid var(--purple-400);color:var(--purple-400);padding:0.3rem 0.9rem;border-radius:8px;font-size:0.82rem;font-weight:600;cursor:pointer;transition:var(--transition); }
+.qgen-ans-btn:hover { background:var(--purple-600);border-color:var(--purple-600);color:white; }
+.qgen-ans { background:var(--surface);border-left:3px solid var(--purple-400);padding:0.9rem 1rem;border-radius:0 8px 8px 0;margin-top:0.75rem;font-size:0.88rem;color:var(--text);line-height:1.7;white-space:pre-wrap; }
