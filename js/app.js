@@ -548,6 +548,8 @@ function openPDF(url, title) {
   _pdfZoom = 1.0;
   _pdfDoc = null;
   _isImage = _isImageUrl(url);
+  if (_pdfObserver) { _pdfObserver.disconnect(); _pdfObserver = null; }
+
   let modal = document.getElementById('pdfModal');
   if (!modal) {
     modal = document.createElement('div');
@@ -555,30 +557,34 @@ function openPDF(url, title) {
     modal.innerHTML = `
       <div class="pdf-modal-box">
         <button class="pdf-float-close" onclick="closePDF()">✕</button>
-        <div class="pdf-float-zoom">
+        <div class="pdf-float-zoom" id="pdfZoomBar">
           <button class="pdf-zoom-btn" onclick="zoomPDF(-0.25)">−</button>
           <span id="pdfZoomLevel">100%</span>
           <button class="pdf-zoom-btn" onclick="zoomPDF(0.25)">+</button>
         </div>
-        <div class="pdf-modal-body" id="pdfModalBody">
-          <div class="pdf-loading">Loading…</div>
-        </div>
+        <div class="pdf-modal-body" id="pdfModalBody"></div>
       </div>`;
     document.body.appendChild(modal);
   }
-  document.getElementById('pdfZoomLevel').textContent = '100%';
-  document.getElementById('pdfModalBody').innerHTML = '<div class="pdf-loading">Loading…</div>';
   modal.classList.add('open');
   document.body.style.overflow = 'hidden';
 
-  if (_isImage) { renderImage(url); return; }
-  const body2 = document.getElementById('pdfModalBody');
-  if (body2) body2.style.padding = '0.5rem';
-  if (window.pdfjsLib) { renderPDF(url); return; }
-  const s = document.createElement('script');
-  s.src = PDFJS_SRC;
-  s.onload = () => renderPDF(url);
-  document.head.appendChild(s);
+  const body = document.getElementById('pdfModalBody');
+  const zoomBar = document.getElementById('pdfZoomBar');
+
+  if (_isImage) {
+    if (zoomBar) zoomBar.style.display = '';
+    document.getElementById('pdfZoomLevel').textContent = '100%';
+    body.style.padding = '0.5rem';
+    body.innerHTML = '<div class="pdf-loading">Loading…</div>';
+    renderImage(url);
+    return;
+  }
+
+  // Use native browser PDF viewer — streams instantly, no JS overhead
+  if (zoomBar) zoomBar.style.display = 'none';
+  body.style.padding = '0';
+  body.innerHTML = `<iframe src="${escH(url)}" style="width:100%;height:100%;border:none;display:block;" title="${escH(title)}"></iframe>`;
 }
 
 function renderImage(url) {
