@@ -49,6 +49,7 @@ const SUBJECT_TABS = {
   social: [
     { id: 'important-notes',    label: '📌 Important Notes' },
     { id: 'practice-questions', label: '✏️ Practice Questions' },
+    { id: 'social-qbank',       label: '📝 Question Bank' },
     { id: 'maps',               label: '🗺️ Maps' },
     { id: 'pyqs',               label: '📋 PYQs' },
     { id: 'summary',            label: '📖 Summary' }
@@ -338,6 +339,7 @@ function renderTabContent(subject, tabId) {
       case 'grammar':           el.innerHTML = buildGrammar(); break;
       case 'reading':           el.innerHTML = buildReading(); break;
       case 'writing':           el.innerHTML = buildWriting(); break;
+      case 'social-qbank':      el.innerHTML = buildSocialQBank(subject); break;
       case 'maps':              el.innerHTML = buildMaps(); break;
       case 'summary':           el.innerHTML = buildSummary(subject); break;
       default:                  el.innerHTML = buildComingSoon('This section', 'Content coming soon!'); break;
@@ -464,6 +466,32 @@ const PDFS = {
   },
   social: {
     formula: [], notes: [],
+    history: [
+      { title: 'Ch 1 — The Rise of Nationalism in Europe', desc: 'Question Bank · 2M + 3M + 5M · PYQ-Based 2020–2024', url: 'pdfs/social/history/ch1-rise-of-nationalism.pdf' },
+      { title: 'Ch 2 — Nationalism in India',              desc: 'Question Bank · 2M + 3M + 5M · PYQ-Based 2020–2024', url: 'pdfs/social/history/ch2-nationalism-in-india.pdf' },
+      { title: 'Ch 5 — Print Culture and the Modern World',desc: 'Question Bank · 2M + 3M + 5M · PYQ-Based 2020–2024', url: 'pdfs/social/history/ch5-print-culture.pdf' }
+    ],
+    geography: [
+      { title: 'Ch 1 — Resources and Development',   desc: 'Question Bank · 2M + 3M + 5M', url: 'pdfs/social/geography/ch1-resources-and-development.pdf' },
+      { title: 'Ch 2 — Forest and Wildlife Resources',desc: 'Question Bank · 2M + 3M + 5M', url: 'pdfs/social/geography/ch2-forest-and-wildlife.pdf' },
+      { title: 'Ch 3 — Water Resources',             desc: 'Question Bank · 2M + 3M + 5M', url: 'pdfs/social/geography/ch3-water-resources.pdf' },
+      { title: 'Ch 4 — Agriculture',                 desc: 'Question Bank · 2M + 3M + 5M', url: 'pdfs/social/geography/ch4-agriculture.pdf' },
+      { title: 'Ch 5 — Minerals and Energy Resources',desc: 'Question Bank · 2M + 3M + 5M', url: 'pdfs/social/geography/ch5-minerals-and-energy.pdf' },
+      { title: 'Ch 6 — Manufacturing Industries',    desc: 'Question Bank · 2M + 3M + 5M', url: 'pdfs/social/geography/ch6-manufacturing-industries.pdf' }
+    ],
+    civics: [
+      { title: 'Ch 1 — Power Sharing',            desc: 'Question Bank · 2M + 3M + 5M', url: 'pdfs/social/civics/ch1-power-sharing.pdf' },
+      { title: 'Ch 2 — Federalism',               desc: 'Question Bank · 2M + 3M + 5M', url: 'pdfs/social/civics/ch2-federalism.pdf' },
+      { title: 'Ch 3 — Democracy and Diversity',  desc: 'Question Bank · 2M + 3M + 5M', url: 'pdfs/social/civics/ch3-democracy-and-diversity.pdf' },
+      { title: 'Ch 4 — Gender, Religion and Caste',desc: 'Question Bank · 2M + 3M + 5M', url: 'pdfs/social/civics/ch4-gender-religion-caste.pdf' },
+      { title: 'Ch 5 — Popular Struggles and Movements', desc: 'Question Bank · 2M + 3M + 5M', url: 'pdfs/social/civics/ch5-popular-struggles.pdf' }
+    ],
+    economics: [
+      { title: 'Ch 1 — Development',                      desc: 'Question Bank · 2M + 3M + 5M', url: 'pdfs/social/economics/ch1-development.pdf' },
+      { title: 'Ch 2 — Sectors of the Indian Economy',    desc: 'Question Bank · 2M + 3M + 5M', url: 'pdfs/social/economics/ch2-sectors-of-economy.pdf' },
+      { title: 'Ch 3 — Money and Credit',                 desc: 'Question Bank · 2M + 3M + 5M', url: 'pdfs/social/economics/ch3-money-and-credit.pdf' },
+      { title: 'Ch 4 — Globalisation and the Indian Economy', desc: 'Question Bank · 2M + 3M + 5M', url: 'pdfs/social/economics/ch4-globalisation.pdf' }
+    ],
     pyqs: [
       // ── 2025 ──────────────────────────────────────────────────────────
       { title: '2025 · Set 1 (32/1/1)', desc: 'Social Science — 80 marks, 3 hrs, includes map', url: 'pdfs/social/pyqs/2025-qp-set1.pdf' },
@@ -1073,6 +1101,50 @@ function buildWriting() {
           <p>${t.desc}</p>
           <button onclick="sendOwlixMessage('How to write a ${t.title.replace(/[📝📰📣✉️🗣️📖]/g,'').trim()} for CBSE boards?')" class="btn btn-outline-purple btn-sm" style="margin-top:0.75rem">Get tips from Owlix →</button>
         </div>`).join('')}
+    </div>`;
+}
+
+/* ══════════════════════════════════════
+   SOCIAL SCIENCE QUESTION BANK
+══════════════════════════════════════ */
+function buildSocialQBank(subject) {
+  const pdfs = PDFS.social;
+  const sections = [
+    { key: 'history',   icon: '📜', label: 'History',   color: '#EF4444' },
+    { key: 'geography', icon: '🌍', label: 'Geography',  color: '#10B981' },
+    { key: 'civics',    icon: '🏛️', label: 'Civics',    color: '#3B82F6' },
+    { key: 'economics', icon: '💰', label: 'Economics',  color: '#F59E0B' }
+  ];
+  return `
+    <div>
+      <h2 class="section-title" style="margin-bottom:1.5rem">📝 Question Bank — 2M · 3M · 5M</h2>
+      ${sections.map(s => {
+        const list = pdfs[s.key] || [];
+        if (!list.length) return '';
+        return `
+        <div style="margin-bottom:2rem">
+          <div style="display:flex;align-items:center;gap:0.6rem;margin-bottom:0.9rem">
+            <span style="font-size:1.3rem">${s.icon}</span>
+            <h3 style="margin:0;font-size:1rem;font-weight:800;color:${s.color}">${s.label}</h3>
+            <span style="font-size:0.75rem;color:var(--muted);background:var(--surface);padding:0.15rem 0.55rem;border-radius:20px;border:1px solid var(--border)">${list.length} chapters</span>
+          </div>
+          <div class="pdf-cards-grid">
+            ${list.map(p => {
+              const done = getPDFDone(p.url);
+              return `
+              <div class="pdf-card">
+                <div class="pdf-card-icon">📄</div>
+                <div class="pdf-card-info">
+                  <div class="pdf-card-title">${escH(p.title)}</div>
+                  <div class="pdf-card-desc">${escH(p.desc)}</div>
+                </div>
+                <button class="pdf-done-circle ${done ? 'done' : ''}" onclick="togglePDFDone(this,'${escH(p.url)}')" title="${done ? 'Mark as unread' : 'Mark as read'}">✓</button>
+                <button class="pdf-open-btn" onclick="openPDF('${escH(p.url)}','${escH(p.title)}')">Open</button>
+              </div>`;
+            }).join('')}
+          </div>
+        </div>`;
+      }).join('')}
     </div>`;
 }
 
