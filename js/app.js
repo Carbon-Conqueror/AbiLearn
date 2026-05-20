@@ -47,12 +47,12 @@ const SUBJECT_TABS = {
     { id: 'summary',      label: '📑 Summary' }
   ],
   social: [
-    { id: 'important-notes',    label: '📌 Important Notes' },
+    { id: 'social-notes',       label: '📖 Notes' },
     { id: 'practice-questions', label: '✏️ Practice Questions' },
     { id: 'social-qbank',       label: '📝 Question Bank' },
     { id: 'maps',               label: '🗺️ Maps' },
     { id: 'pyqs',               label: '📋 PYQs' },
-    { id: 'summary',            label: '📖 Summary' }
+    { id: 'summary',            label: '📑 Summary' }
   ]
 };
 
@@ -339,6 +339,7 @@ function renderTabContent(subject, tabId) {
       case 'grammar':           el.innerHTML = buildGrammar(); break;
       case 'reading':           el.innerHTML = buildReading(); break;
       case 'writing':           el.innerHTML = buildWriting(); break;
+      case 'social-notes':      el.innerHTML = buildSocialNotes(subject); break;
       case 'social-qbank':      el.innerHTML = buildSocialQBank(subject); break;
       case 'maps':              el.innerHTML = buildMaps(); break;
       case 'summary':           el.innerHTML = buildSummary(subject); break;
@@ -466,6 +467,29 @@ const PDFS = {
   },
   social: {
     formula: [], notes: [],
+    notes_history: [
+      { title: 'Ch 1 — The Rise of Nationalism in Europe', desc: 'AbiLearn Notes · Proper Big-Font', url: 'pdfs/social/notes/history/ch1-rise-of-nationalism.pdf' },
+      { title: 'Ch 2 — Nationalism in India',              desc: 'AbiLearn Notes · Clean Structured', url: 'pdfs/social/notes/history/ch2-nationalism-in-india.pdf' },
+      { title: 'Ch 3 — The Making of a Global World',      desc: 'AbiLearn Notes · 9 Subtopics',     url: 'pdfs/social/notes/history/ch3-making-of-global-world.pdf' }
+    ],
+    notes_geography: [
+      { title: 'Ch 1 — Resources and Development',         desc: 'AbiLearn Notes · Deep Structured', url: 'pdfs/social/notes/geography/ch1-resources-development.pdf' },
+      { title: 'Ch 2 — Forest and Wildlife Resources',     desc: 'AbiLearn Notes · Deep Structured', url: 'pdfs/social/notes/geography/ch2-forest-wildlife.pdf' },
+      { title: 'Ch 3 — Water Resources',                   desc: 'AbiLearn Notes · Deep Structured', url: 'pdfs/social/notes/geography/ch3-water-resources.pdf' },
+      { title: 'Ch 4 — Agriculture',                       desc: 'AbiLearn Notes · Deep Structured', url: 'pdfs/social/notes/geography/ch4-agriculture.pdf' },
+      { title: 'Ch 5 — Minerals and Energy Resources',     desc: 'AbiLearn Notes · Deep Structured', url: 'pdfs/social/notes/geography/ch5-minerals-energy.pdf' },
+      { title: 'Ch 6 — Manufacturing Industries',          desc: 'AbiLearn Notes · Deep Structured', url: 'pdfs/social/notes/geography/ch6-manufacturing-industries.pdf' }
+    ],
+    notes_civics: [
+      { title: 'Ch 1 — Power-Sharing',                     desc: 'AbiLearn Notes · Deep Structured', url: 'pdfs/social/notes/civics/ch1-power-sharing.pdf' },
+      { title: 'Ch 2 — Federalism',                        desc: 'AbiLearn Notes · Deep Structured', url: 'pdfs/social/notes/civics/ch2-federalism.pdf' }
+    ],
+    notes_economics: [
+      { title: 'Ch 1 — Development',                       desc: 'AbiLearn Notes · Deep Structured', url: 'pdfs/social/notes/economics/ch1-development.pdf' },
+      { title: 'Ch 2 — Sectors of the Indian Economy',     desc: 'AbiLearn Notes · Deep Structured', url: 'pdfs/social/notes/economics/ch2-sectors-economy.pdf' },
+      { title: 'Ch 3 — Money and Credit',                  desc: 'AbiLearn Notes · Deep Structured', url: 'pdfs/social/notes/economics/ch3-money-credit.pdf' },
+      { title: 'Ch 4 — Globalisation and the Indian Economy', desc: 'AbiLearn Notes · Deep Structured', url: 'pdfs/social/notes/economics/ch4-globalisation.pdf' }
+    ],
     history: [
       { title: 'Ch 1 — The Rise of Nationalism in Europe', desc: 'Question Bank · 2M + 3M + 5M · PYQ-Based 2020–2024', url: 'pdfs/social/history/ch1-rise-of-nationalism.pdf' },
       { title: 'Ch 2 — Nationalism in India',              desc: 'Question Bank · 2M + 3M + 5M · PYQ-Based 2020–2024', url: 'pdfs/social/history/ch2-nationalism-in-india.pdf' },
@@ -1107,6 +1131,47 @@ function buildWriting() {
 /* ══════════════════════════════════════
    SOCIAL SCIENCE QUESTION BANK
 ══════════════════════════════════════ */
+function buildSocialNotes(subject) {
+  const pdfs = PDFS.social;
+  const sections = [
+    { key: 'notes_history',   icon: '📜', label: 'History',   color: '#EF4444' },
+    { key: 'notes_geography', icon: '🌍', label: 'Geography',  color: '#10B981' },
+    { key: 'notes_civics',    icon: '🏛️', label: 'Civics',    color: '#3B82F6' },
+    { key: 'notes_economics', icon: '💰', label: 'Economics',  color: '#F59E0B' }
+  ];
+  return `
+    <div>
+      <h2 class="section-title" style="margin-bottom:1.5rem">📖 Chapter Notes</h2>
+      ${sections.map(s => {
+        const list = pdfs[s.key] || [];
+        if (!list.length) return '';
+        return `
+        <div style="margin-bottom:2rem">
+          <div style="display:flex;align-items:center;gap:0.6rem;margin-bottom:0.9rem">
+            <span style="font-size:1.3rem">${s.icon}</span>
+            <h3 style="margin:0;font-size:1rem;font-weight:800;color:${s.color}">${s.label}</h3>
+            <span style="font-size:0.75rem;color:var(--muted);background:var(--surface);padding:0.15rem 0.55rem;border-radius:20px;border:1px solid var(--border)">${list.length} chapters</span>
+          </div>
+          <div class="pdf-cards-grid">
+            ${list.map(p => {
+              const done = getPDFDone(p.url);
+              return `
+              <div class="pdf-card">
+                <div class="pdf-card-icon">📄</div>
+                <div class="pdf-card-info">
+                  <div class="pdf-card-title">${escH(p.title)}</div>
+                  <div class="pdf-card-desc">${escH(p.desc)}</div>
+                </div>
+                <button class="pdf-done-circle ${done ? 'done' : ''}" onclick="togglePDFDone(this,'${escH(p.url)}')" title="${done ? 'Mark as unread' : 'Mark as read'}">✓</button>
+                <button class="pdf-open-btn" onclick="openPDF('${escH(p.url)}','${escH(p.title)}')">Open</button>
+              </div>`;
+            }).join('')}
+          </div>
+        </div>`;
+      }).join('')}
+    </div>`;
+}
+
 function buildSocialQBank(subject) {
   const pdfs = PDFS.social;
   const sections = [
