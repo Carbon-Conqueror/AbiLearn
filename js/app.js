@@ -616,8 +616,10 @@ function pdfCards(subject, tab) {
 }
 
 /* PDF.js popup — renders PDF or image directly, no external viewer */
-const PDFJS_SRC = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js';
+const PDFJS_SRC    = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js';
 const PDFJS_WORKER = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+const PDFJS_CMAPS  = 'https://cdn.jsdelivr.net/npm/pdfjs-dist@3.11.174/cmaps/';
+const PDFJS_FONTS  = 'https://cdn.jsdelivr.net/npm/pdfjs-dist@3.11.174/standard_fonts/';
 let _pdfUrl = '';
 let _pdfZoom = 1.0;
 let _pdfDoc = null;
@@ -713,8 +715,15 @@ function renderPDF(url) {
 
   const load = (_pdfDoc && _pdfUrl === url)
     ? Promise.resolve(_pdfDoc)
-    : pdfjsLib.getDocument({ url: absUrl, rangeChunkSize: 65536, disableRange: false, disableStream: false })
-        .promise.then(doc => { _pdfDoc = doc; return doc; });
+    : pdfjsLib.getDocument({
+        url: absUrl,
+        rangeChunkSize: 65536,
+        disableRange: false,
+        disableStream: false,
+        cMapUrl: PDFJS_CMAPS,
+        cMapPacked: true,
+        standardFontDataUrl: PDFJS_FONTS
+      }).promise.then(doc => { _pdfDoc = doc; return doc; });
 
   load.then(pdf => {
     body.innerHTML = '';
@@ -722,8 +731,7 @@ function renderPDF(url) {
     // clientWidth can be 0 on mobile before layout settles — fall back to innerWidth
     const rawW = body.clientWidth > 32 ? body.clientWidth : window.innerWidth;
     const containerW = rawW - 16;
-    // Cap DPR at 2 to avoid oversized canvases on 3× displays
-    const dpr = Math.min(window.devicePixelRatio || 1, 2);
+    const dpr = window.devicePixelRatio || 1;
     const displayW = Math.max(Math.round(containerW * _pdfZoom), 200);
 
     function renderPage(w) {
