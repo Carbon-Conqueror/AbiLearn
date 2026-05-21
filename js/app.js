@@ -23,7 +23,8 @@
 const SUBJECT_TABS = {
   maths: [
     { id: 'formula-sheet', label: '📐 Formula Sheet' },
-    { id: 'question-gen', label: '🎲 Question Generator' },
+    { id: 'question-gen',  label: '🎲 Question Generator' },
+    { id: 'maths-qbank',   label: '📝 Question Bank' },
     { id: 'questions',     label: '✏️ Questions' },
     { id: 'pyqs',          label: '📋 PYQs' },
     { id: 'summary',       label: '📖 Summary' }
@@ -339,6 +340,7 @@ function renderTabContent(subject, tabId) {
       case 'grammar':           el.innerHTML = buildGrammar(); break;
       case 'reading':           el.innerHTML = buildReading(); break;
       case 'writing':           el.innerHTML = buildWriting(); break;
+      case 'maths-qbank':       el.innerHTML = buildMathsQBank(subject); break;
       case 'social-notes':      el.innerHTML = buildSocialNotes(subject); break;
       case 'social-qbank':      el.innerHTML = buildSocialQBank(subject); break;
       case 'maps':              el.innerHTML = buildMaps(); break;
@@ -358,6 +360,20 @@ function renderTabContent(subject, tabId) {
 ══════════════════════════════════════ */
 const PDFS = {
   maths: {
+    qbank: [
+      { title: 'Ch 1 — Real Numbers',                    desc: 'Question Bank · 2M + 3M + 5M', url: 'pdfs/maths/qbank/ch1-real-numbers.pdf' },
+      { title: 'Ch 2 — Polynomials',                     desc: 'Question Bank · 2M + 3M + 5M', url: 'pdfs/maths/qbank/ch2-polynomials.pdf' },
+      { title: 'Ch 3 — Pair of Linear Equations',        desc: 'Question Bank · 2M + 3M + 5M', url: 'pdfs/maths/qbank/ch3-linear-equations.pdf' },
+      { title: 'Ch 4 — Quadratic Equations',             desc: 'Question Bank · 2M + 3M + 5M', url: 'pdfs/maths/qbank/ch4-quadratic-equations.pdf' },
+      { title: 'Ch 5 — Arithmetic Progressions',         desc: 'Question Bank · 2M + 3M + 5M', url: 'pdfs/maths/qbank/ch5-arithmetic-progressions.pdf' },
+      { title: 'Ch 7 — Coordinate Geometry',             desc: 'Question Bank · 2M + 3M + 5M', url: 'pdfs/maths/qbank/ch7-coordinate-geometry.pdf' },
+      { title: 'Ch 8 — Introduction to Trigonometry',    desc: 'Question Bank · 2M + 3M + 5M', url: 'pdfs/maths/qbank/ch8-introduction-to-trigonometry.pdf' },
+      { title: 'Ch 9 — Some Applications of Trigonometry', desc: 'Question Bank · 2M + 3M + 5M', url: 'pdfs/maths/qbank/ch9-applications-of-trigonometry.pdf' },
+      { title: 'Ch 11 — Areas Related to Circles',       desc: 'Question Bank · 2M + 3M + 5M', url: 'pdfs/maths/qbank/ch11-areas-related-to-circles.pdf' },
+      { title: 'Ch 12 — Surface Areas and Volumes',      desc: 'Question Bank · 2M + 3M + 5M', url: 'pdfs/maths/qbank/ch12-surface-areas-and-volumes.pdf' },
+      { title: 'Ch 13 — Statistics',                     desc: 'Question Bank · 2M + 3M + 5M', url: 'pdfs/maths/qbank/ch13-statistics.pdf' },
+      { title: 'Ch 14 — Probability',                    desc: 'Question Bank · 2M + 3M + 5M', url: 'pdfs/maths/qbank/ch14-probability.pdf' }
+    ],
     formula: [
       { title: 'Ch 1 — Real Numbers',                        desc: 'Number systems, HCF, LCM, Euclid\'s lemma',     url: 'assets/formula/ch01-real-numbers.png' },
       { title: 'Ch 2 — Polynomials',                         desc: 'Zeros, factor theorem, division algorithm',      url: 'assets/formula/ch02-polynomials.png' },
@@ -1131,6 +1147,29 @@ function buildWriting() {
 /* ══════════════════════════════════════
    SOCIAL SCIENCE QUESTION BANK
 ══════════════════════════════════════ */
+function buildMathsQBank(subject) {
+  const list = PDFS.maths.qbank || [];
+  return `
+    <div>
+      <h2 class="section-title" style="margin-bottom:1.5rem">📝 Question Bank — 2M · 3M · 5M</h2>
+      <div class="pdf-cards-grid">
+        ${list.map(p => {
+          const done = getPDFDone(p.url);
+          return `
+          <div class="pdf-card">
+            <div class="pdf-card-icon">📄</div>
+            <div class="pdf-card-info">
+              <div class="pdf-card-title">${escH(p.title)}</div>
+              <div class="pdf-card-desc">${escH(p.desc)}</div>
+            </div>
+            <button class="pdf-done-circle ${done ? 'done' : ''}" onclick="togglePDFDone(this,'${escH(p.url)}')" title="${done ? 'Mark as unread' : 'Mark as read'}">✓</button>
+            <button class="pdf-open-btn" onclick="openPDF('${escH(p.url)}','${escH(p.title)}')">Open</button>
+          </div>`;
+        }).join('')}
+      </div>
+    </div>`;
+}
+
 function buildSocialNotes(subject) {
   const pdfs = PDFS.social;
   const sections = [
