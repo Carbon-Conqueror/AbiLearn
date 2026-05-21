@@ -31,6 +31,7 @@ const SUBJECT_TABS = {
   ],
   science: [
     { id: 'formula-sheet',     label: '⚗️ Formula Sheet' },
+    { id: 'science-qbank',     label: '📝 Question Bank' },
     { id: 'important-notes',   label: '📌 Important Notes' },
     { id: 'practice-questions',label: '✏️ Practice Questions' },
     { id: 'pyqs',              label: '📋 PYQs' },
@@ -341,6 +342,7 @@ function renderTabContent(subject, tabId) {
       case 'reading':           el.innerHTML = buildReading(); break;
       case 'writing':           el.innerHTML = buildWriting(); break;
       case 'maths-qbank':       el.innerHTML = buildMathsQBank(subject); break;
+      case 'science-qbank':     el.innerHTML = buildScienceQBank(subject); break;
       case 'social-notes':      el.innerHTML = buildSocialNotes(subject); break;
       case 'social-qbank':      el.innerHTML = buildSocialQBank(subject); break;
       case 'maps':              el.innerHTML = buildMaps(); break;
@@ -408,6 +410,21 @@ const PDFS = {
   },
   science: {
     formula: [], notes: [],
+    qbank: [
+      { title: 'Ch 1 — Chemical Reactions and Equations',   desc: 'Question Bank · 2M + 3M + 5M', url: 'pdfs/science/qbank/ch1-chemical-reactions.pdf' },
+      { title: 'Ch 2 — Acids, Bases and Salts',             desc: 'Question Bank · 2M + 3M + 5M', url: 'pdfs/science/qbank/ch2-acids-bases-salts.pdf' },
+      { title: 'Ch 3 — Metals and Non-Metals',              desc: 'Question Bank · 2M + 3M + 5M', url: 'pdfs/science/qbank/ch3-metals-and-non-metals.pdf' },
+      { title: 'Ch 4 — Carbon and Its Compounds',           desc: 'Question Bank · 2M + 3M + 5M', url: 'pdfs/science/qbank/ch4-carbon-and-compounds.pdf' },
+      { title: 'Ch 5 — Life Processes',                     desc: 'Question Bank · 2M + 3M + 5M', url: 'pdfs/science/qbank/ch5-life-processes.pdf' },
+      { title: 'Ch 6 — Control and Coordination',           desc: 'Question Bank · 2M + 3M + 5M', url: 'pdfs/science/qbank/ch6-control-and-coordination.pdf' },
+      { title: 'Ch 7 — How do Organisms Reproduce?',        desc: 'Question Bank · 2M + 3M + 5M', url: 'pdfs/science/qbank/ch7-how-organisms-reproduce.pdf' },
+      { title: 'Ch 8 — Heredity',                           desc: 'Question Bank · 2M + 3M + 5M', url: 'pdfs/science/qbank/ch8-heredity.pdf' },
+      { title: 'Ch 9 — Light: Reflection and Refraction',   desc: 'Question Bank · 2M + 3M + 5M', url: 'pdfs/science/qbank/ch9-light-reflection-refraction.pdf' },
+      { title: 'Ch 10 — The Human Eye and the Colourful World', desc: 'Question Bank · 2M + 3M + 5M', url: 'pdfs/science/qbank/ch10-human-eye-colourful-world.pdf' },
+      { title: 'Ch 11 — Electricity',                       desc: 'Question Bank · 2M + 3M + 5M', url: 'pdfs/science/qbank/ch11-electricity.pdf' },
+      { title: 'Ch 12 — Magnetic Effects of Electric Current', desc: 'Question Bank · 2M + 3M + 5M', url: 'pdfs/science/qbank/ch12-magnetic-effects.pdf' },
+      { title: 'Ch 13 — Our Environment',                   desc: 'Question Bank · 2M + 3M + 5M', url: 'pdfs/science/qbank/ch13-our-environment.pdf' }
+    ],
     pyqs: [
       // ── 2025 ──────────────────────────────────────────────────────────
       { title: '2025 · Set 1 (31/1/1)', desc: 'Science — 80 marks, 3 hrs, 39 questions', url: 'pdfs/science/pyqs/2025-qp-set1.pdf' },
@@ -1147,6 +1164,29 @@ function buildWriting() {
 /* ══════════════════════════════════════
    SOCIAL SCIENCE QUESTION BANK
 ══════════════════════════════════════ */
+function buildScienceQBank(subject) {
+  const list = PDFS.science.qbank || [];
+  return `
+    <div>
+      <h2 class="section-title" style="margin-bottom:1.5rem">📝 Question Bank — 2M · 3M · 5M</h2>
+      <div class="pdf-cards-grid">
+        ${list.map(p => {
+          const done = getPDFDone(p.url);
+          return `
+          <div class="pdf-card">
+            <div class="pdf-card-icon">📄</div>
+            <div class="pdf-card-info">
+              <div class="pdf-card-title">${escH(p.title)}</div>
+              <div class="pdf-card-desc">${escH(p.desc)}</div>
+            </div>
+            <button class="pdf-done-circle ${done ? 'done' : ''}" onclick="togglePDFDone(this,'${escH(p.url)}')" title="${done ? 'Mark as unread' : 'Mark as read'}">✓</button>
+            <button class="pdf-open-btn" onclick="openPDF('${escH(p.url)}','${escH(p.title)}')">Open</button>
+          </div>`;
+        }).join('')}
+      </div>
+    </div>`;
+}
+
 function buildMathsQBank(subject) {
   const list = PDFS.maths.qbank || [];
   return `
