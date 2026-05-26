@@ -619,7 +619,7 @@ function pdfCards(subject, tab) {
 const PDFJS_SRC    = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js';
 const PDFJS_WORKER = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
 const PDFJS_CMAPS  = 'https://cdn.jsdelivr.net/npm/pdfjs-dist@3.11.174/cmaps/';
-const PDFJS_FONTS  = 'https://cdn.jsdelivr.net/npm/pdfjs-dist@3.11.174/standard_fonts/';
+const PDFJS_FONTS  = 'fonts/standard/';
 let _pdfUrl = '';
 let _pdfZoom = 1.0;
 let _pdfDoc = null;
