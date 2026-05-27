@@ -30,6 +30,7 @@ const SUBJECT_TABS = {
     { id: 'summary',       label: '📖 Summary' }
   ],
   science: [
+    { id: 'science-notes',     label: '📖 Notes' },
     { id: 'formula-sheet',     label: '⚗️ Formula Sheet' },
     { id: 'science-qbank',     label: '📝 Question Bank' },
     { id: 'important-notes',   label: '📌 Important Notes' },
@@ -342,6 +343,7 @@ function renderTabContent(subject, tabId) {
       case 'reading':           el.innerHTML = buildReading(); break;
       case 'writing':           el.innerHTML = buildWriting(); break;
       case 'maths-qbank':       el.innerHTML = buildMathsQBank(subject); break;
+      case 'science-notes':     el.innerHTML = buildScienceNotes(subject); break;
       case 'science-qbank':     el.innerHTML = buildScienceQBank(subject); break;
       case 'social-notes':      el.innerHTML = buildSocialNotes(subject); break;
       case 'social-qbank':      el.innerHTML = buildSocialQBank(subject); break;
@@ -409,7 +411,20 @@ const PDFS = {
     ]
   },
   science: {
-    formula: [], notes: [],
+    formula: [],
+    notes: [
+      { title: 'Ch 2 — Acids, Bases and Salts',             desc: 'Complete Notes', url: 'pdfs/science/notes/ch2-acids-bases-salts.pdf' },
+      { title: 'Ch 3 — Metals and Non-Metals',              desc: 'Complete Notes', url: 'pdfs/science/notes/ch3-metals-and-non-metals.pdf' },
+      { title: 'Ch 5 — Life Processes',                     desc: 'Complete Notes', url: 'pdfs/science/notes/ch5-life-processes.pdf' },
+      { title: 'Ch 6 — Control and Coordination',           desc: 'Complete Notes', url: 'pdfs/science/notes/ch6-control-and-coordination.pdf' },
+      { title: 'Ch 7 — How do Organisms Reproduce?',        desc: 'Complete Notes', url: 'pdfs/science/notes/ch7-how-organisms-reproduce.pdf' },
+      { title: 'Ch 8 — Heredity',                           desc: 'Complete Notes', url: 'pdfs/science/notes/ch8-heredity.pdf' },
+      { title: 'Ch 9 — Light: Reflection and Refraction',   desc: 'Complete Notes', url: 'pdfs/science/notes/ch9-light-reflection-refraction.pdf' },
+      { title: 'Ch 10 — The Human Eye and the Colourful World', desc: 'Complete Notes', url: 'pdfs/science/notes/ch10-human-eye-colourful-world.pdf' },
+      { title: 'Ch 11 — Electricity',                       desc: 'Complete Notes', url: 'pdfs/science/notes/ch11-electricity.pdf' },
+      { title: 'Ch 12 — Magnetic Effects of Electric Current', desc: 'Complete Notes', url: 'pdfs/science/notes/ch12-magnetic-effects.pdf' },
+      { title: 'Ch 13 — Our Environment',                   desc: 'Complete Notes', url: 'pdfs/science/notes/ch13-our-environment.pdf' }
+    ],
     qbank: [
       { title: 'Ch 1 — Chemical Reactions and Equations',   desc: 'Question Bank · 2M + 3M + 5M', url: 'pdfs/science/qbank/ch1-chemical-reactions.pdf' },
       { title: 'Ch 2 — Acids, Bases and Salts',             desc: 'Question Bank · 2M + 3M + 5M', url: 'pdfs/science/qbank/ch2-acids-bases-salts.pdf' },
@@ -1107,6 +1122,29 @@ function buildWriting() {
 /* ══════════════════════════════════════
    SOCIAL SCIENCE QUESTION BANK
 ══════════════════════════════════════ */
+function buildScienceNotes(subject) {
+  const list = PDFS.science.notes || [];
+  return `
+    <div>
+      <h2 class="section-title" style="margin-bottom:1.5rem">📖 Chapter Notes</h2>
+      <div class="pdf-cards-grid">
+        ${list.map(p => {
+          const done = getPDFDone(p.url);
+          return `
+          <div class="pdf-card">
+            <div class="pdf-card-icon">📄</div>
+            <div class="pdf-card-info">
+              <div class="pdf-card-title">${escH(p.title)}</div>
+              <div class="pdf-card-desc">${escH(p.desc)}</div>
+            </div>
+            <button class="pdf-done-circle ${done ? 'done' : ''}" onclick="togglePDFDone(this,'${escH(p.url)}')" title="${done ? 'Mark as unread' : 'Mark as read'}">✓</button>
+            <button class="pdf-open-btn" onclick="openPDF('${escH(p.url)}','${escH(p.title)}')">Open</button>
+          </div>`;
+        }).join('')}
+      </div>
+    </div>`;
+}
+
 function buildScienceQBank(subject) {
   const list = PDFS.science.qbank || [];
   return `
