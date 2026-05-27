@@ -30,7 +30,6 @@ const SUBJECT_TABS = {
     { id: 'summary',       label: '📖 Summary' }
   ],
   science: [
-    { id: 'science-notes',     label: '📖 Notes' },
     { id: 'formula-sheet',     label: '⚗️ Formula Sheet' },
     { id: 'science-qbank',     label: '📝 Question Bank' },
     { id: 'important-notes',   label: '📌 Important Notes' },
@@ -343,7 +342,6 @@ function renderTabContent(subject, tabId) {
       case 'reading':           el.innerHTML = buildReading(); break;
       case 'writing':           el.innerHTML = buildWriting(); break;
       case 'maths-qbank':       el.innerHTML = buildMathsQBank(subject); break;
-      case 'science-notes':     el.innerHTML = buildScienceNotes(subject); break;
       case 'science-qbank':     el.innerHTML = buildScienceQBank(subject); break;
       case 'social-notes':      el.innerHTML = buildSocialNotes(subject); break;
       case 'social-qbank':      el.innerHTML = buildSocialQBank(subject); break;
@@ -1122,29 +1120,6 @@ function buildWriting() {
 /* ══════════════════════════════════════
    SOCIAL SCIENCE QUESTION BANK
 ══════════════════════════════════════ */
-function buildScienceNotes(subject) {
-  const list = PDFS.science.notes || [];
-  return `
-    <div>
-      <h2 class="section-title" style="margin-bottom:1.5rem">📖 Chapter Notes</h2>
-      <div class="pdf-cards-grid">
-        ${list.map(p => {
-          const done = getPDFDone(p.url);
-          return `
-          <div class="pdf-card">
-            <div class="pdf-card-icon">📄</div>
-            <div class="pdf-card-info">
-              <div class="pdf-card-title">${escH(p.title)}</div>
-              <div class="pdf-card-desc">${escH(p.desc)}</div>
-            </div>
-            <button class="pdf-done-circle ${done ? 'done' : ''}" onclick="togglePDFDone(this,'${escH(p.url)}')" title="${done ? 'Mark as unread' : 'Mark as read'}">✓</button>
-            <button class="pdf-open-btn" onclick="openPDF('${escH(p.url)}','${escH(p.title)}')">Open</button>
-          </div>`;
-        }).join('')}
-      </div>
-    </div>`;
-}
-
 function buildScienceQBank(subject) {
   const list = PDFS.science.qbank || [];
   return `
