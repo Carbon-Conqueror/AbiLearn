@@ -972,7 +972,7 @@ function openChapterMCQs(chId, title) {
   const body = document.getElementById('mcqModalBody');
   body.innerHTML = `<div class="mcq-grid">
     ${mcqs.map((q, qi) => `
-      <div class="mcq-card reveal" data-correct="${q.ans}" data-exp="${escH(q.exp || '')}" data-explbl="${escH(q.opts[q.ans])}">
+      <div class="mcq-card" data-correct="${q.ans}" data-exp="${escH(q.exp || '')}" data-explbl="${escH(q.opts[q.ans])}">
         <div class="mcq-q">Q${qi + 1}. ${q.q}</div>
         <div class="mcq-opts">
           ${q.opts.map((opt, i) => `
