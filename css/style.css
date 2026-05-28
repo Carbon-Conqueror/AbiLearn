@@ -1193,6 +1193,43 @@ footer {
 .pdf-open-btn:hover { background:var(--purple-700); }
 .pdf-tick { font-size:0.85rem;opacity:0.85; }
 
+/* MCQ Modal Popup */
+#mcqModal {
+  display:none;position:fixed;inset:0;z-index:9998;
+}
+#mcqModal.open { display:block; }
+.mcq-modal-box {
+  position:fixed;inset:0;display:flex;flex-direction:column;
+  background:var(--bg);overflow:hidden;
+}
+.mcq-modal-hdr {
+  display:flex;align-items:center;justify-content:space-between;
+  gap:0.75rem;padding:0.75rem 1rem;
+  background:var(--card-bg);border-bottom:1px solid var(--border);
+  flex-shrink:0;
+}
+.mcq-modal-title-wrap { display:flex;flex-direction:column;min-width:0; }
+.mcq-modal-title {
+  font-weight:700;font-size:1rem;color:var(--text);
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+}
+.mcq-modal-meta { font-size:0.78rem;color:var(--muted); }
+.mcq-score-pill {
+  background:var(--purple-600);color:white;
+  font-size:0.78rem;font-weight:700;
+  padding:0.25rem 0.65rem;border-radius:50px;white-space:nowrap;
+}
+.mcq-modal-close {
+  background:transparent;border:1px solid var(--border);color:var(--text);
+  width:32px;height:32px;border-radius:50%;font-size:0.9rem;cursor:pointer;
+  display:flex;align-items:center;justify-content:center;
+  transition:var(--transition);flex-shrink:0;
+}
+.mcq-modal-close:hover { background:var(--border); }
+.mcq-modal-body {
+  flex:1;overflow-y:auto;padding:1rem;
+}
+
 /* PDF Modal Popup — fullscreen, no header */
 #pdfModal {
   display:none;position:fixed;inset:0;z-index:9999;

@@ -33,7 +33,7 @@ const SUBJECT_TABS = {
     { id: 'formula-sheet',     label: '⚗️ Formula Sheet' },
     { id: 'science-qbank',     label: '📝 Question Bank' },
     { id: 'important-notes',   label: '📌 Important Notes' },
-    { id: 'practice-questions',label: '✏️ Practice Questions' },
+    { id: 'practice-questions',label: '🧠 MCQs' },
     { id: 'pyqs',              label: '📋 PYQs' },
     { id: 'most-important',    label: '🎯 Most Important' },
     { id: 'ncert-solutions',   label: '📗 NCERT Solutions' },
@@ -330,7 +330,13 @@ function renderTabContent(subject, tabId) {
     switch (tabId) {
       case 'formula-sheet':     el.innerHTML = buildFormulaSheet(subject); break;
       case 'important-notes':   el.innerHTML = buildImportantNotes(subject); break;
-      case 'practice-questions':el.innerHTML = buildPracticeQuestions(subject); initMCQHandlers(el); break;
+      case 'practice-questions':
+        if (subject && subject.id === 'science' && typeof SCIENCE_MCQS !== 'undefined') {
+          el.innerHTML = buildScienceMCQCards(subject);
+        } else {
+          el.innerHTML = buildPracticeQuestions(subject); initMCQHandlers(el);
+        }
+        break;
       case 'question-gen':      el.innerHTML = buildQuestionGenerator(subject); break;
       case 'questions':         el.innerHTML = buildPracticeQuestions(subject); initMCQHandlers(el); break;
       case 'pyqs':              el.innerHTML = buildPYQs(subject); break;
@@ -909,6 +915,119 @@ function initMCQHandlers(container) {
     }
   });
 }
+
+/* ══════════════════════════════════════
+   SCIENCE MCQ CHAPTER CARDS + MODAL
+══════════════════════════════════════ */
+function buildScienceMCQCards(subject) {
+  const chapters = subject.chapters || [];
+  const cards = chapters.map(ch => {
+    const count = (SCIENCE_MCQS[ch.id] || []).length;
+    return `
+      <div class="pdf-card">
+        <div class="pdf-card-icon">🧪</div>
+        <div class="pdf-card-info">
+          <div class="pdf-card-title">Ch ${ch.id}: ${escH(ch.title)}</div>
+          <div class="pdf-card-desc">${count} MCQs · Medium–Difficult</div>
+        </div>
+        <button class="pdf-open-btn" onclick="openChapterMCQs(${ch.id}, '${escH(ch.title)}')">Open</button>
+      </div>`;
+  }).join('');
+  return `
+    <h2 class="section-title" style="margin-bottom:0.3rem">🧠 Chapter MCQs</h2>
+    <p style="color:var(--muted);margin-bottom:1.5rem;font-size:0.88rem">50 MCQs per chapter · All topics · Medium–Difficult</p>
+    <div class="pdf-list">${cards}</div>`;
+}
+
+function openChapterMCQs(chId, title) {
+  const mcqs = (typeof SCIENCE_MCQS !== 'undefined' && SCIENCE_MCQS[chId]) || [];
+  if (!mcqs.length) return;
+  const letters = ['A', 'B', 'C', 'D'];
+
+  let modal = document.getElementById('mcqModal');
+  if (!modal) {
+    modal = document.createElement('div');
+    modal.id = 'mcqModal';
+    modal.innerHTML = `
+      <div class="mcq-modal-box">
+        <div class="mcq-modal-hdr">
+          <div class="mcq-modal-title-wrap">
+            <span class="mcq-modal-title" id="mcqModalTitle"></span>
+            <span class="mcq-modal-meta" id="mcqModalMeta"></span>
+          </div>
+          <div style="display:flex;align-items:center;gap:0.6rem">
+            <span class="mcq-score-pill" id="mcqScorePill">0 / 0</span>
+            <button class="mcq-modal-close" onclick="closeMCQModal()">✕</button>
+          </div>
+        </div>
+        <div class="mcq-modal-body" id="mcqModalBody"></div>
+      </div>`;
+    document.body.appendChild(modal);
+  }
+
+  document.getElementById('mcqModalTitle').textContent = `Ch ${chId}: ${title}`;
+  document.getElementById('mcqModalMeta').textContent = `${mcqs.length} MCQs`;
+  document.getElementById('mcqScorePill').textContent = '0 / 0';
+
+  const body = document.getElementById('mcqModalBody');
+  body.innerHTML = `<div class="mcq-grid">
+    ${mcqs.map((q, qi) => `
+      <div class="mcq-card reveal" data-correct="${q.ans}" data-exp="${escH(q.exp || '')}" data-explbl="${escH(q.opts[q.ans])}">
+        <div class="mcq-q">Q${qi + 1}. ${q.q}</div>
+        <div class="mcq-opts">
+          ${q.opts.map((opt, i) => `
+            <button class="mcq-opt" data-idx="${i}">
+              <span class="opt-letter">${letters[i]}</span>${escH(opt)}
+            </button>`).join('')}
+        </div>
+        <div class="mcq-feedback"></div>
+      </div>`).join('')}
+  </div>`;
+
+  body.addEventListener('click', function handler(e) {
+    const btn = e.target.closest('.mcq-opt:not(.disabled)');
+    if (!btn) return;
+    const card = btn.closest('.mcq-card');
+    const chosen = parseInt(btn.dataset.idx);
+    const correct = parseInt(card.dataset.correct);
+    card.querySelectorAll('.mcq-opt').forEach((b, i) => {
+      b.classList.add('disabled');
+      if (i === correct) b.classList.add('correct');
+      else if (i === chosen) b.classList.add('wrong');
+    });
+    const fb = card.querySelector('.mcq-feedback');
+    if (fb) {
+      fb.classList.add('show', chosen === correct ? 'correct' : 'wrong');
+      fb.innerHTML = chosen === correct
+        ? `✅ <strong>Correct!</strong> ${escH(card.dataset.exp)}`
+        : `❌ <strong>Wrong.</strong> Correct answer: <strong>${escH(card.dataset.explbl)}</strong>. ${escH(card.dataset.exp)}`;
+    }
+    // update score pill
+    const answered = body.querySelectorAll('.mcq-feedback.show').length;
+    const correct2 = body.querySelectorAll('.mcq-feedback.correct').length;
+    document.getElementById('mcqScorePill').textContent = `${correct2} / ${answered}`;
+  });
+
+  modal.classList.add('open');
+  body.scrollTop = 0;
+  document.body.style.overflow = 'hidden';
+}
+
+function closeMCQModal() {
+  const modal = document.getElementById('mcqModal');
+  if (modal) {
+    modal.classList.remove('open');
+    // clear body to free memory
+    const b = document.getElementById('mcqModalBody');
+    if (b) b.innerHTML = '';
+  }
+  document.body.style.overflow = '';
+}
+
+// Escape key closes MCQ modal (in addition to existing PDF modal handler)
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape') closeMCQModal();
+});
 
 /* ══════════════════════════════════════
    PYQs PLACEHOLDER
