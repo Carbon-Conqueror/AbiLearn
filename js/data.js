@@ -400,14 +400,26 @@ const DATA = {
       chapters: [
         { id: 1,  title: 'The Rise of Nationalism in Europe',      subtitle: 'History Ch.1 | French Revolution, Romanticism, Revolutions of 1830/1848' },
         { id: 2,  title: 'Nationalism in India',                   subtitle: 'History Ch.2 | Non-Cooperation, Civil Disobedience, Quit India' },
+        { id: 11, title: 'The Making of a Global World',           subtitle: 'History Ch.3 | Trade, Colonialism, Great Depression, Bretton Woods' },
+        { id: 12, title: 'The Age of Industrialisation',           subtitle: 'History Ch.4 | Proto-Industrialisation, Factories, Labour, Manchester' },
+        { id: 13, title: 'Print Culture and the Modern World',     subtitle: 'History Ch.5 | Gutenberg, Printing Press, Books, Newspapers, Censorship' },
         { id: 3,  title: 'Resources and Development',              subtitle: 'Geography Ch.1 | Types of Resources, Land Use, Soil Erosion' },
-        { id: 4,  title: 'Power Sharing',                          subtitle: 'Civics Ch.1 | Why Power Sharing is Important, Forms of Power Sharing' },
-        { id: 5,  title: 'Development',                            subtitle: 'Economics Ch.1 | What is Development, HDI, Per Capita Income' },
-        { id: 6,  title: 'Money and Credit',                       subtitle: 'Economics Ch.3 | Forms of Credit, Banks, Formal vs Informal' },
-        { id: 7,  title: 'Agriculture in India',                   subtitle: 'Geography Ch.4 | Types of Farming, Crops, Green Revolution' },
+        { id: 14, title: 'Forest and Wildlife Resources',          subtitle: 'Geography Ch.2 | Flora, Fauna, Conservation, Biosphere Reserves, JFM' },
+        { id: 15, title: 'Water Resources',                        subtitle: 'Geography Ch.3 | Dams, Multipurpose Projects, Rainwater Harvesting' },
+        { id: 7,  title: 'Agriculture',                            subtitle: 'Geography Ch.4 | Types of Farming, Crops, Green Revolution' },
+        { id: 16, title: 'Minerals and Energy Resources',          subtitle: 'Geography Ch.5 | Metallic, Non-Metallic, Conventional, Non-Conventional Energy' },
         { id: 8,  title: 'Manufacturing Industries',               subtitle: 'Geography Ch.6 | Textile, Steel, Cement, Software Industries' },
-        { id: 9,  title: 'Political Parties',                      subtitle: 'Civics Ch.6 | Functions, Types, Challenges, Reform' },
-        { id: 10, title: 'Globalisation and the Indian Economy',   subtitle: 'Economics Ch.4 | MNCs, Foreign Trade, Liberalisation' }
+        { id: 17, title: 'Lifelines of National Economy',          subtitle: 'Geography Ch.7 | Transport, Communication, Trade, Tourism' },
+        { id: 4,  title: 'Power Sharing',                          subtitle: 'Civics Ch.1 | Why Power Sharing is Important, Forms of Power Sharing' },
+        { id: 18, title: 'Federalism',                             subtitle: 'Civics Ch.2 | Federal vs Unitary, Decentralisation, Panchayati Raj' },
+        { id: 19, title: 'Gender, Religion and Caste',             subtitle: 'Civics Ch.3 | Sexual Division of Labour, Communalism, Caste Politics' },
+        { id: 9,  title: 'Political Parties',                      subtitle: 'Civics Ch.4 | Functions, National Parties, State Parties, Reforms' },
+        { id: 20, title: 'Outcomes of Democracy',                  subtitle: 'Civics Ch.5 | Accountability, Dignity, Equality, Economic Outcomes' },
+        { id: 5,  title: 'Development',                            subtitle: 'Economics Ch.1 | What is Development, HDI, Per Capita Income' },
+        { id: 21, title: 'Sectors of the Indian Economy',          subtitle: 'Economics Ch.2 | Primary, Secondary, Tertiary, Employment, Organised vs Unorganised' },
+        { id: 6,  title: 'Money and Credit',                       subtitle: 'Economics Ch.3 | Forms of Credit, Banks, Formal vs Informal' },
+        { id: 10, title: 'Globalisation and the Indian Economy',   subtitle: 'Economics Ch.4 | MNCs, Foreign Trade, Liberalisation, WTO' },
+        { id: 22, title: 'Consumer Rights',                        subtitle: 'Economics Ch.5 | COPRA, Consumer Forums, Rights, NCDRC' }
       ]
     }
   ]

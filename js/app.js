@@ -50,7 +50,7 @@ const SUBJECT_TABS = {
   ],
   social: [
     { id: 'social-notes',       label: '📖 Notes' },
-    { id: 'practice-questions', label: '✏️ Practice Questions' },
+    { id: 'practice-questions', label: '🧠 MCQs' },
     { id: 'social-qbank',       label: '📝 Question Bank' },
     { id: 'maps',               label: '🗺️ Maps' },
     { id: 'pyqs',               label: '📋 PYQs' },
@@ -333,6 +333,8 @@ function renderTabContent(subject, tabId) {
       case 'practice-questions':
         if (subject && subject.id === 'science' && typeof SCIENCE_MCQS !== 'undefined') {
           el.innerHTML = buildScienceMCQCards(subject);
+        } else if (subject && subject.id === 'social') {
+          el.innerHTML = buildSocialMCQCards(subject);
         } else {
           el.innerHTML = buildPracticeQuestions(subject); initMCQHandlers(el);
         }
@@ -930,17 +932,65 @@ function buildScienceMCQCards(subject) {
           <div class="pdf-card-title">Ch ${ch.id}: ${escH(ch.title)}</div>
           <div class="pdf-card-desc">${count} MCQs · Medium–Difficult</div>
         </div>
-        <button class="pdf-open-btn" onclick="openChapterMCQs(${ch.id}, '${escH(ch.title)}')">Open</button>
+        <button class="pdf-open-btn" onclick="openChapterMCQs(${ch.id}, '${escH(ch.title)}', 'science')">Open</button>
       </div>`;
   }).join('');
   return `
     <h2 class="section-title" style="margin-bottom:0.3rem">🧠 Chapter MCQs</h2>
-    <p style="color:var(--muted);margin-bottom:1.5rem;font-size:0.88rem">50 MCQs per chapter · All topics · Medium–Difficult</p>
+    <p style="color:var(--muted);margin-bottom:1.5rem;font-size:0.88rem">100 MCQs per chapter · All topics · High Difficulty</p>
     <div class="pdf-list">${cards}</div>`;
 }
 
-function openChapterMCQs(chId, title) {
-  const mcqs = (typeof SCIENCE_MCQS !== 'undefined' && SCIENCE_MCQS[chId]) || [];
+/* ══════════════════════════════════════
+   SOCIAL SCIENCE MCQ CHAPTER CARDS
+══════════════════════════════════════ */
+const SOCIAL_SUBJECTS = [
+  { key: 'History',   icon: '📜', color: '#EF4444', ids: [1, 2, 11, 12, 13] },
+  { key: 'Geography', icon: '🌍', color: '#10B981', ids: [3, 14, 15, 7, 16, 8, 17] },
+  { key: 'Civics',    icon: '🏛️', color: '#3B82F6', ids: [4, 18, 19, 9, 20] },
+  { key: 'Economics', icon: '💰', color: '#F59E0B', ids: [5, 21, 6, 10, 22] }
+];
+
+function buildSocialMCQCards(subject) {
+  if (typeof SOCIAL_MCQS === 'undefined') return buildComingSoon('MCQs', 'Social Science MCQs loading...');
+  const chMap = {};
+  (subject.chapters || []).forEach(ch => chMap[ch.id] = ch);
+  const sections = SOCIAL_SUBJECTS.map(s => {
+    const cards = s.ids.map(id => {
+      const ch = chMap[id]; if (!ch) return '';
+      const count = (SOCIAL_MCQS[id] || []).length;
+      if (!count) return '';
+      return `
+        <div class="pdf-card">
+          <div class="pdf-card-icon">${s.icon}</div>
+          <div class="pdf-card-info">
+            <div class="pdf-card-title">${escH(ch.title)}</div>
+            <div class="pdf-card-desc">${count} MCQs · ${s.key}</div>
+          </div>
+          <button class="pdf-open-btn" onclick="openChapterMCQs(${id}, '${escH(ch.title)}', 'social')">Open</button>
+        </div>`;
+    }).join('');
+    if (!cards.trim()) return '';
+    return `
+      <div style="margin-bottom:1.5rem">
+        <div style="display:flex;align-items:center;gap:0.5rem;margin-bottom:0.75rem">
+          <span style="font-size:1.2rem">${s.icon}</span>
+          <h3 style="margin:0;font-size:0.95rem;font-weight:800;color:${s.color}">${s.key}</h3>
+        </div>
+        <div class="pdf-list">${cards}</div>
+      </div>`;
+  }).join('');
+  return `
+    <h2 class="section-title" style="margin-bottom:0.3rem">🧠 Chapter MCQs</h2>
+    <p style="color:var(--muted);margin-bottom:1.5rem;font-size:0.88rem">50 MCQs per chapter · History, Geography, Civics, Economics</p>
+    ${sections}`;
+}
+
+function openChapterMCQs(chId, title, subject) {
+  const bank = subject === 'social'
+    ? (typeof SOCIAL_MCQS !== 'undefined' && SOCIAL_MCQS[chId])
+    : (typeof SCIENCE_MCQS !== 'undefined' && SCIENCE_MCQS[chId]);
+  const mcqs = bank || [];
   if (!mcqs.length) return;
   const letters = ['A', 'B', 'C', 'D'];
 
