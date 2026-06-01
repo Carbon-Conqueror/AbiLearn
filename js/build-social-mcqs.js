@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-/* Build script: merges all social MCQ sources into social-mcqs-final.js (50 per chapter) */
+/* Build script: merges all social MCQ sources into social-mcqs-final.js (100 per chapter) */
 const vm = require('vm');
 const fs = require('fs');
 const path = require('path');
@@ -16,6 +16,7 @@ function loadVar(filename, varName) {
 }
 
 function take(arr, n) { return arr ? arr.slice(0, n) : []; }
+function merge(base, extra, n) { return take([...(base||[]), ...(extra||[])], n); }
 
 function mcqLine(m) {
   const opts = m.opts.map(o => JSON.stringify(o)).join(', ');
@@ -35,8 +36,8 @@ function chapterBlock(id, name, subject, mcqs) {
   return lines.join('\n');
 }
 
-// Load all source files
-const src = {
+// Load base files
+const base = {
   ch1:  loadVar('social-ch1-ch2-ch3.js', 'SOCIAL_CH1'),
   ch2:  loadVar('social-ch1-ch2-ch3.js', 'SOCIAL_CH2'),
   ch3:  loadVar('social-ch1-ch2-ch3.js', 'SOCIAL_CH3'),
@@ -50,10 +51,6 @@ const src = {
   ch11: loadVar('social-ch11-ch12-ch13.js', 'SOCIAL_CH11'),
   ch12: loadVar('social-ch11-ch12-ch13.js', 'SOCIAL_CH12'),
   ch13: loadVar('social-ch11-ch12-ch13.js', 'SOCIAL_CH13'),
-  ch14: loadVar('social-ch14-ch15-ch16-ch17.js', 'SOCIAL_CH14'),
-  ch15: loadVar('social-ch14-ch15-ch16-ch17.js', 'SOCIAL_CH15'),
-  ch16: loadVar('social-ch14-ch15-ch16-ch17.js', 'SOCIAL_CH16'),
-  ch17: loadVar('social-ch14-ch15-ch16-ch17.js', 'SOCIAL_CH17'),
   ch18: loadVar('social-ch18-ch19-ch20.js', 'SOCIAL_CH18'),
   ch19: loadVar('social-ch18-ch19-ch20.js', 'SOCIAL_CH19'),
   ch20: loadVar('social-ch18-ch19-ch20.js', 'SOCIAL_CH20'),
@@ -61,40 +58,76 @@ const src = {
   ch22: loadVar('social-ch21-ch22.js', 'SOCIAL_CH22'),
 };
 
+// Load extra files (50 harder MCQs per chapter)
+const extra = {
+  ch1:  loadVar('social-ch1-ch2-ch3-extra.js', 'SOCIAL_CH1_EXTRA') || loadVar('social-ch1-ch2-ch3-extra.js', 'CH1_EXTRA'),
+  ch2:  loadVar('social-ch1-ch2-ch3-extra.js', 'SOCIAL_CH2_EXTRA') || loadVar('social-ch1-ch2-ch3-extra.js', 'CH2_EXTRA'),
+  ch3:  loadVar('social-ch1-ch2-ch3-extra.js', 'SOCIAL_CH3_EXTRA') || loadVar('social-ch1-ch2-ch3-extra.js', 'CH3_EXTRA'),
+  ch4:  loadVar('social-ch4-ch7-ch8-extra.js', 'SOCIAL_CH4_EXTRA') || loadVar('social-ch4-ch7-ch8-extra.js', 'CH4_EXTRA'),
+  ch5:  loadVar('social-ch5-ch6-ch9-ch10-extra.js', 'SOCIAL_CH5_EXTRA') || loadVar('social-ch5-ch6-ch9-ch10-extra.js', 'CH5_EXTRA'),
+  ch6:  loadVar('social-ch5-ch6-ch9-ch10-extra.js', 'SOCIAL_CH6_EXTRA') || loadVar('social-ch5-ch6-ch9-ch10-extra.js', 'CH6_EXTRA'),
+  ch7:  loadVar('social-ch4-ch7-ch8-extra.js', 'SOCIAL_CH7_EXTRA') || loadVar('social-ch4-ch7-ch8-extra.js', 'CH7_EXTRA'),
+  ch8:  loadVar('social-ch4-ch7-ch8-extra.js', 'SOCIAL_CH8_EXTRA') || loadVar('social-ch4-ch7-ch8-extra.js', 'CH8_EXTRA'),
+  ch9:  loadVar('social-ch5-ch6-ch9-ch10-extra.js', 'SOCIAL_CH9_EXTRA') || loadVar('social-ch5-ch6-ch9-ch10-extra.js', 'CH9_EXTRA'),
+  ch10: loadVar('social-ch5-ch6-ch9-ch10-extra.js', 'SOCIAL_CH10_EXTRA') || loadVar('social-ch5-ch6-ch9-ch10-extra.js', 'CH10_EXTRA'),
+  ch11: loadVar('social-ch11-ch12-ch13-extra.js', 'SOCIAL_CH11_EXTRA') || loadVar('social-ch11-ch12-ch13-extra.js', 'CH11_EXTRA'),
+  ch12: loadVar('social-ch11-ch12-ch13-extra.js', 'SOCIAL_CH12_EXTRA') || loadVar('social-ch11-ch12-ch13-extra.js', 'CH12_EXTRA'),
+  ch13: loadVar('social-ch11-ch12-ch13-extra.js', 'SOCIAL_CH13_EXTRA') || loadVar('social-ch11-ch12-ch13-extra.js', 'CH13_EXTRA'),
+  // Ch14-17 are brand new (no base) — loaded from dedicated files
+  ch18: loadVar('social-ch18-ch22-extra.js', 'SOCIAL_CH18_EXTRA') || loadVar('social-ch18-ch22-extra.js', 'CH18_EXTRA'),
+  ch19: loadVar('social-ch18-ch22-extra.js', 'SOCIAL_CH19_EXTRA') || loadVar('social-ch18-ch22-extra.js', 'CH19_EXTRA'),
+  ch20: loadVar('social-ch18-ch22-extra.js', 'SOCIAL_CH20_EXTRA') || loadVar('social-ch18-ch22-extra.js', 'CH20_EXTRA'),
+  ch21: loadVar('social-ch18-ch22-extra.js', 'SOCIAL_CH21_EXTRA') || loadVar('social-ch18-ch22-extra.js', 'CH21_EXTRA'),
+  ch22: loadVar('social-ch18-ch22-extra.js', 'SOCIAL_CH22_EXTRA') || loadVar('social-ch18-ch22-extra.js', 'CH22_EXTRA'),
+};
+
+// Ch14-17: load from dedicated new files (these are entirely new chapters)
+const ch14 = loadVar('social-ch14-ch15-ch16-ch17.js', 'SOCIAL_CH14') ||
+             loadVar('social-ch14-ch15.js', 'SOCIAL_CH14') ||
+             loadVar('social-ch14-ch15.js', 'CH14_SOCIAL');
+const ch15 = loadVar('social-ch14-ch15-ch16-ch17.js', 'SOCIAL_CH15') ||
+             loadVar('social-ch14-ch15.js', 'SOCIAL_CH15') ||
+             loadVar('social-ch14-ch15.js', 'CH15_SOCIAL');
+const ch16 = loadVar('social-ch14-ch15-ch16-ch17.js', 'SOCIAL_CH16') ||
+             loadVar('social-ch16-ch17.js', 'SOCIAL_CH16') ||
+             loadVar('social-ch16-ch17.js', 'CH16_SOCIAL');
+const ch17 = loadVar('social-ch14-ch15-ch16-ch17.js', 'SOCIAL_CH17') ||
+             loadVar('social-ch16-ch17.js', 'SOCIAL_CH17') ||
+             loadVar('social-ch16-ch17.js', 'CH17_SOCIAL');
+
 const chapters = [
-  { id: 1,  name: 'The Rise of Nationalism in Europe',    subj: 'History',   data: src.ch1  },
-  { id: 2,  name: 'Nationalism in India',                 subj: 'History',   data: src.ch2  },
-  { id: 11, name: 'The Making of a Global World',         subj: 'History',   data: src.ch11 },
-  { id: 12, name: 'The Age of Industrialisation',         subj: 'History',   data: src.ch12 },
-  { id: 13, name: 'Print Culture and the Modern World',   subj: 'History',   data: src.ch13 },
-  { id: 3,  name: 'Resources and Development',            subj: 'Geography', data: src.ch3  },
-  { id: 14, name: 'Forest and Wildlife Resources',        subj: 'Geography', data: src.ch14 },
-  { id: 15, name: 'Water Resources',                      subj: 'Geography', data: src.ch15 },
-  { id: 7,  name: 'Agriculture',                          subj: 'Geography', data: src.ch7  },
-  { id: 16, name: 'Minerals and Energy Resources',        subj: 'Geography', data: src.ch16 },
-  { id: 8,  name: 'Manufacturing Industries',             subj: 'Geography', data: src.ch8  },
-  { id: 17, name: 'Lifelines of National Economy',        subj: 'Geography', data: src.ch17 },
-  { id: 4,  name: 'Power Sharing',                        subj: 'Civics',    data: src.ch4  },
-  { id: 18, name: 'Federalism',                           subj: 'Civics',    data: src.ch18 },
-  { id: 19, name: 'Gender, Religion and Caste',           subj: 'Civics',    data: src.ch19 },
-  { id: 9,  name: 'Political Parties',                    subj: 'Civics',    data: src.ch9  },
-  { id: 20, name: 'Outcomes of Democracy',                subj: 'Civics',    data: src.ch20 },
-  { id: 5,  name: 'Development',                          subj: 'Economics', data: src.ch5  },
-  { id: 21, name: 'Sectors of the Indian Economy',        subj: 'Economics', data: src.ch21 },
-  { id: 6,  name: 'Money and Credit',                     subj: 'Economics', data: src.ch6  },
-  { id: 10, name: 'Globalisation and the Indian Economy', subj: 'Economics', data: src.ch10 },
-  { id: 22, name: 'Consumer Rights',                      subj: 'Economics', data: src.ch22 },
+  { id: 1,  name: 'The Rise of Nationalism in Europe',    subj: 'History',   data: merge(base.ch1,  extra.ch1,  100) },
+  { id: 2,  name: 'Nationalism in India',                 subj: 'History',   data: merge(base.ch2,  extra.ch2,  100) },
+  { id: 11, name: 'The Making of a Global World',         subj: 'History',   data: merge(base.ch11, extra.ch11, 100) },
+  { id: 12, name: 'The Age of Industrialisation',         subj: 'History',   data: merge(base.ch12, extra.ch12, 100) },
+  { id: 13, name: 'Print Culture and the Modern World',   subj: 'History',   data: merge(base.ch13, extra.ch13, 100) },
+  { id: 3,  name: 'Resources and Development',            subj: 'Geography', data: merge(base.ch3,  extra.ch3,  100) },
+  { id: 14, name: 'Forest and Wildlife Resources',        subj: 'Geography', data: take(ch14, 100) },
+  { id: 15, name: 'Water Resources',                      subj: 'Geography', data: take(ch15, 100) },
+  { id: 7,  name: 'Agriculture',                          subj: 'Geography', data: merge(base.ch7,  extra.ch7,  100) },
+  { id: 16, name: 'Minerals and Energy Resources',        subj: 'Geography', data: take(ch16, 100) },
+  { id: 8,  name: 'Manufacturing Industries',             subj: 'Geography', data: merge(base.ch8,  extra.ch8,  100) },
+  { id: 17, name: 'Lifelines of National Economy',        subj: 'Geography', data: take(ch17, 100) },
+  { id: 4,  name: 'Power Sharing',                        subj: 'Civics',    data: merge(base.ch4,  extra.ch4,  100) },
+  { id: 18, name: 'Federalism',                           subj: 'Civics',    data: merge(base.ch18, extra.ch18, 100) },
+  { id: 19, name: 'Gender, Religion and Caste',           subj: 'Civics',    data: merge(base.ch19, extra.ch19, 100) },
+  { id: 9,  name: 'Political Parties',                    subj: 'Civics',    data: merge(base.ch9,  extra.ch9,  100) },
+  { id: 20, name: 'Outcomes of Democracy',                subj: 'Civics',    data: merge(base.ch20, extra.ch20, 100) },
+  { id: 5,  name: 'Development',                          subj: 'Economics', data: merge(base.ch5,  extra.ch5,  100) },
+  { id: 21, name: 'Sectors of the Indian Economy',        subj: 'Economics', data: merge(base.ch21, extra.ch21, 100) },
+  { id: 6,  name: 'Money and Credit',                     subj: 'Economics', data: merge(base.ch6,  extra.ch6,  100) },
+  { id: 10, name: 'Globalisation and the Indian Economy', subj: 'Economics', data: merge(base.ch10, extra.ch10, 100) },
+  { id: 22, name: 'Consumer Rights',                      subj: 'Economics', data: merge(base.ch22, extra.ch22, 100) },
 ];
 
 // Build output
-const lines = [`/* AbiLearn — Social Science MCQ Bank — ${chapters.length * 50} Questions (50 per chapter) */`, 'const SOCIAL_MCQS = {'];
+const lines = [`/* AbiLearn — Social Science MCQ Bank — ${chapters.length * 100} Questions (100 per chapter) */`, 'const SOCIAL_MCQS = {'];
 
 let missingAny = false;
 chapters.forEach((ch, idx) => {
-  const mcqs = take(ch.data, 50);
-  if (!mcqs.length) { console.warn(`⚠ Ch ${ch.id} (${ch.name}): NO DATA`); missingAny = true; }
-  else console.log(`✓ Ch ${ch.id}: ${mcqs.length} MCQs`);
-  lines.push(chapterBlock(ch.id, ch.name, ch.subj, mcqs) + (idx < chapters.length - 1 ? ',' : ''));
+  if (!ch.data.length) { console.warn(`⚠ Ch ${ch.id} (${ch.name}): NO DATA`); missingAny = true; }
+  else console.log(`✓ Ch ${ch.id}: ${ch.data.length} MCQs`);
+  lines.push(chapterBlock(ch.id, ch.name, ch.subj, ch.data) + (idx < chapters.length - 1 ? ',' : ''));
 });
 
 lines.push('};');
