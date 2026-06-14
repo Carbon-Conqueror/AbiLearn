@@ -982,7 +982,7 @@ function buildSocialMCQCards(subject) {
   }).join('');
   return `
     <h2 class="section-title" style="margin-bottom:0.3rem">🧠 Chapter MCQs</h2>
-    <p style="color:var(--muted);margin-bottom:1.5rem;font-size:0.88rem">50 MCQs per chapter · History, Geography, Civics, Economics</p>
+    <p style="color:var(--muted);margin-bottom:1.5rem;font-size:0.88rem">100 MCQs per chapter · History, Geography, Civics, Economics · High Difficulty</p>
     ${sections}`;
 }
 
