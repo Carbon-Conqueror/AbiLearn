@@ -81,19 +81,23 @@ const extra = {
   ch22: loadVar('social-ch18-ch22-extra.js', 'SOCIAL_CH22_EXTRA') || loadVar('social-ch18-ch22-extra.js', 'CH22_EXTRA'),
 };
 
-// Ch14-17: load from dedicated new files (these are entirely new chapters)
-const ch14 = loadVar('social-ch14-ch15-ch16-ch17.js', 'SOCIAL_CH14') ||
-             loadVar('social-ch14-ch15.js', 'SOCIAL_CH14') ||
-             loadVar('social-ch14-ch15.js', 'CH14_SOCIAL');
-const ch15 = loadVar('social-ch14-ch15-ch16-ch17.js', 'SOCIAL_CH15') ||
-             loadVar('social-ch14-ch15.js', 'SOCIAL_CH15') ||
-             loadVar('social-ch14-ch15.js', 'CH15_SOCIAL');
-const ch16 = loadVar('social-ch14-ch15-ch16-ch17.js', 'SOCIAL_CH16') ||
-             loadVar('social-ch16-ch17.js', 'SOCIAL_CH16') ||
-             loadVar('social-ch16-ch17.js', 'CH16_SOCIAL');
-const ch17 = loadVar('social-ch14-ch15-ch16-ch17.js', 'SOCIAL_CH17') ||
-             loadVar('social-ch16-ch17.js', 'SOCIAL_CH17') ||
-             loadVar('social-ch16-ch17.js', 'CH17_SOCIAL');
+// Ch14-17: load base from dedicated files, extras from social-ch14-ch17-extra.js
+const ch14base = loadVar('social-ch14-ch15-ch16-ch17.js', 'SOCIAL_CH14') ||
+                 loadVar('social-ch14-ch15.js', 'SOCIAL_CH14') ||
+                 loadVar('social-ch14-ch15.js', 'CH14_SOCIAL');
+const ch15base = loadVar('social-ch14-ch15-ch16-ch17.js', 'SOCIAL_CH15') ||
+                 loadVar('social-ch14-ch15.js', 'SOCIAL_CH15') ||
+                 loadVar('social-ch14-ch15.js', 'CH15_SOCIAL');
+const ch16base = loadVar('social-ch14-ch15-ch16-ch17.js', 'SOCIAL_CH16') ||
+                 loadVar('social-ch16-ch17.js', 'SOCIAL_CH16') ||
+                 loadVar('social-ch16-ch17.js', 'CH16_SOCIAL');
+const ch17base = loadVar('social-ch14-ch15-ch16-ch17.js', 'SOCIAL_CH17') ||
+                 loadVar('social-ch16-ch17.js', 'SOCIAL_CH17') ||
+                 loadVar('social-ch16-ch17.js', 'CH17_SOCIAL');
+const ch14extra = loadVar('social-ch14-ch17-extra.js', 'SOCIAL_CH14_EXTRA') || loadVar('social-ch14-ch17-extra.js', 'CH14_EXTRA');
+const ch15extra = loadVar('social-ch14-ch17-extra.js', 'SOCIAL_CH15_EXTRA') || loadVar('social-ch14-ch17-extra.js', 'CH15_EXTRA');
+const ch16extra = loadVar('social-ch14-ch17-extra.js', 'SOCIAL_CH16_EXTRA') || loadVar('social-ch14-ch17-extra.js', 'CH16_EXTRA');
+const ch17extra = loadVar('social-ch14-ch17-extra.js', 'SOCIAL_CH17_EXTRA') || loadVar('social-ch14-ch17-extra.js', 'CH17_EXTRA');
 
 const chapters = [
   { id: 1,  name: 'The Rise of Nationalism in Europe',    subj: 'History',   data: merge(base.ch1,  extra.ch1,  100) },
@@ -102,12 +106,12 @@ const chapters = [
   { id: 12, name: 'The Age of Industrialisation',         subj: 'History',   data: merge(base.ch12, extra.ch12, 100) },
   { id: 13, name: 'Print Culture and the Modern World',   subj: 'History',   data: merge(base.ch13, extra.ch13, 100) },
   { id: 3,  name: 'Resources and Development',            subj: 'Geography', data: merge(base.ch3,  extra.ch3,  100) },
-  { id: 14, name: 'Forest and Wildlife Resources',        subj: 'Geography', data: take(ch14, 100) },
-  { id: 15, name: 'Water Resources',                      subj: 'Geography', data: take(ch15, 100) },
+  { id: 14, name: 'Forest and Wildlife Resources',        subj: 'Geography', data: merge(ch14base, ch14extra, 100) },
+  { id: 15, name: 'Water Resources',                      subj: 'Geography', data: merge(ch15base, ch15extra, 100) },
   { id: 7,  name: 'Agriculture',                          subj: 'Geography', data: merge(base.ch7,  extra.ch7,  100) },
-  { id: 16, name: 'Minerals and Energy Resources',        subj: 'Geography', data: take(ch16, 100) },
+  { id: 16, name: 'Minerals and Energy Resources',        subj: 'Geography', data: merge(ch16base, ch16extra, 100) },
   { id: 8,  name: 'Manufacturing Industries',             subj: 'Geography', data: merge(base.ch8,  extra.ch8,  100) },
-  { id: 17, name: 'Lifelines of National Economy',        subj: 'Geography', data: take(ch17, 100) },
+  { id: 17, name: 'Lifelines of National Economy',        subj: 'Geography', data: merge(ch17base, ch17extra, 100) },
   { id: 4,  name: 'Power Sharing',                        subj: 'Civics',    data: merge(base.ch4,  extra.ch4,  100) },
   { id: 18, name: 'Federalism',                           subj: 'Civics',    data: merge(base.ch18, extra.ch18, 100) },
   { id: 19, name: 'Gender, Religion and Caste',           subj: 'Civics',    data: merge(base.ch19, extra.ch19, 100) },
