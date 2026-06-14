@@ -17,6 +17,7 @@ function loadVar(filename, varName) {
 
 function take(arr, n) { return arr ? arr.slice(0, n) : []; }
 function merge(base, extra, n) { return take([...(base||[]), ...(extra||[])], n); }
+function merge3(a, b, c, n) { return take([...(a||[]), ...(b||[]), ...(c||[])], n); }
 
 function mcqLine(m) {
   const opts = m.opts.map(o => JSON.stringify(o)).join(', ');
@@ -99,29 +100,45 @@ const ch15extra = loadVar('social-ch14-ch17-extra.js', 'SOCIAL_CH15_EXTRA') || l
 const ch16extra = loadVar('social-ch14-ch17-extra.js', 'SOCIAL_CH16_EXTRA') || loadVar('social-ch14-ch17-extra.js', 'CH16_EXTRA');
 const ch17extra = loadVar('social-ch14-ch17-extra.js', 'SOCIAL_CH17_EXTRA') || loadVar('social-ch14-ch17-extra.js', 'CH17_EXTRA');
 
+// Top-up MCQs to bring short chapters to 100
+const topup = {
+  ch2:  loadVar('social-topup.js', 'TOPUP_CH2'),
+  ch3:  loadVar('social-topup.js', 'TOPUP_CH3'),
+  ch6:  loadVar('social-topup.js', 'TOPUP_CH6'),
+  ch9:  loadVar('social-topup.js', 'TOPUP_CH9'),
+  ch10: loadVar('social-topup.js', 'TOPUP_CH10'),
+  ch12: loadVar('social-topup.js', 'TOPUP_CH12'),
+  ch13: loadVar('social-topup.js', 'TOPUP_CH13'),
+  ch15: loadVar('social-topup.js', 'TOPUP_CH15'),
+  ch19: loadVar('social-topup.js', 'TOPUP_CH19'),
+  ch20: loadVar('social-topup.js', 'TOPUP_CH20'),
+  ch21: loadVar('social-topup.js', 'TOPUP_CH21'),
+  ch22: loadVar('social-topup.js', 'TOPUP_CH22'),
+};
+
 const chapters = [
   { id: 1,  name: 'The Rise of Nationalism in Europe',    subj: 'History',   data: merge(base.ch1,  extra.ch1,  100) },
-  { id: 2,  name: 'Nationalism in India',                 subj: 'History',   data: merge(base.ch2,  extra.ch2,  100) },
+  { id: 2,  name: 'Nationalism in India',                 subj: 'History',   data: merge3(base.ch2,  extra.ch2,  topup.ch2,  100) },
   { id: 11, name: 'The Making of a Global World',         subj: 'History',   data: merge(base.ch11, extra.ch11, 100) },
-  { id: 12, name: 'The Age of Industrialisation',         subj: 'History',   data: merge(base.ch12, extra.ch12, 100) },
-  { id: 13, name: 'Print Culture and the Modern World',   subj: 'History',   data: merge(base.ch13, extra.ch13, 100) },
-  { id: 3,  name: 'Resources and Development',            subj: 'Geography', data: merge(base.ch3,  extra.ch3,  100) },
+  { id: 12, name: 'The Age of Industrialisation',         subj: 'History',   data: merge3(base.ch12, extra.ch12, topup.ch12, 100) },
+  { id: 13, name: 'Print Culture and the Modern World',   subj: 'History',   data: merge3(base.ch13, extra.ch13, topup.ch13, 100) },
+  { id: 3,  name: 'Resources and Development',            subj: 'Geography', data: merge3(base.ch3,  extra.ch3,  topup.ch3,  100) },
   { id: 14, name: 'Forest and Wildlife Resources',        subj: 'Geography', data: merge(ch14base, ch14extra, 100) },
-  { id: 15, name: 'Water Resources',                      subj: 'Geography', data: merge(ch15base, ch15extra, 100) },
+  { id: 15, name: 'Water Resources',                      subj: 'Geography', data: merge3(ch15base, ch15extra, topup.ch15, 100) },
   { id: 7,  name: 'Agriculture',                          subj: 'Geography', data: merge(base.ch7,  extra.ch7,  100) },
   { id: 16, name: 'Minerals and Energy Resources',        subj: 'Geography', data: merge(ch16base, ch16extra, 100) },
   { id: 8,  name: 'Manufacturing Industries',             subj: 'Geography', data: merge(base.ch8,  extra.ch8,  100) },
   { id: 17, name: 'Lifelines of National Economy',        subj: 'Geography', data: merge(ch17base, ch17extra, 100) },
   { id: 4,  name: 'Power Sharing',                        subj: 'Civics',    data: merge(base.ch4,  extra.ch4,  100) },
   { id: 18, name: 'Federalism',                           subj: 'Civics',    data: merge(base.ch18, extra.ch18, 100) },
-  { id: 19, name: 'Gender, Religion and Caste',           subj: 'Civics',    data: merge(base.ch19, extra.ch19, 100) },
-  { id: 9,  name: 'Political Parties',                    subj: 'Civics',    data: merge(base.ch9,  extra.ch9,  100) },
-  { id: 20, name: 'Outcomes of Democracy',                subj: 'Civics',    data: merge(base.ch20, extra.ch20, 100) },
+  { id: 19, name: 'Gender, Religion and Caste',           subj: 'Civics',    data: merge3(base.ch19, extra.ch19, topup.ch19, 100) },
+  { id: 9,  name: 'Political Parties',                    subj: 'Civics',    data: merge3(base.ch9,  extra.ch9,  topup.ch9,  100) },
+  { id: 20, name: 'Outcomes of Democracy',                subj: 'Civics',    data: merge3(base.ch20, extra.ch20, topup.ch20, 100) },
   { id: 5,  name: 'Development',                          subj: 'Economics', data: merge(base.ch5,  extra.ch5,  100) },
-  { id: 21, name: 'Sectors of the Indian Economy',        subj: 'Economics', data: merge(base.ch21, extra.ch21, 100) },
-  { id: 6,  name: 'Money and Credit',                     subj: 'Economics', data: merge(base.ch6,  extra.ch6,  100) },
-  { id: 10, name: 'Globalisation and the Indian Economy', subj: 'Economics', data: merge(base.ch10, extra.ch10, 100) },
-  { id: 22, name: 'Consumer Rights',                      subj: 'Economics', data: merge(base.ch22, extra.ch22, 100) },
+  { id: 21, name: 'Sectors of the Indian Economy',        subj: 'Economics', data: merge3(base.ch21, extra.ch21, topup.ch21, 100) },
+  { id: 6,  name: 'Money and Credit',                     subj: 'Economics', data: merge3(base.ch6,  extra.ch6,  topup.ch6,  100) },
+  { id: 10, name: 'Globalisation and the Indian Economy', subj: 'Economics', data: merge3(base.ch10, extra.ch10, topup.ch10, 100) },
+  { id: 22, name: 'Consumer Rights',                      subj: 'Economics', data: merge3(base.ch22, extra.ch22, topup.ch22, 100) },
 ];
 
 // Build output
