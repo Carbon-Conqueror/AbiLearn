@@ -1290,27 +1290,89 @@ function buildWriting() {
 /* ══════════════════════════════════════
    SOCIAL SCIENCE QUESTION BANK
 ══════════════════════════════════════ */
-function buildScienceQBank(subject) {
-  const list = PDFS.science.qbank || [];
+function buildScienceQBank() {
+  const chapters = [
+    { id: 1,  label: 'Ch 1 — Chemical Reactions and Equations' },
+    { id: 2,  label: 'Ch 2 — Acids, Bases and Salts' },
+    { id: 3,  label: 'Ch 3 — Metals and Non-Metals' },
+    { id: 4,  label: 'Ch 4 — Carbon and Its Compounds' },
+    { id: 5,  label: 'Ch 5 — Life Processes' },
+    { id: 6,  label: 'Ch 6 — Control and Coordination' },
+    { id: 7,  label: 'Ch 7 — How do Organisms Reproduce?' },
+    { id: 8,  label: 'Ch 8 — Heredity' },
+    { id: 9,  label: 'Ch 9 — Light: Reflection and Refraction' },
+    { id: 10, label: 'Ch 10 — The Human Eye and the Colourful World' },
+    { id: 11, label: 'Ch 11 — Electricity' },
+    { id: 12, label: 'Ch 12 — Magnetic Effects of Electric Current' },
+    { id: 13, label: 'Ch 13 — Our Environment' },
+  ];
+  const cards = chapters.map(ch => {
+    const d = (typeof SCIENCE_QBANK !== 'undefined') ? SCIENCE_QBANK[ch.id] : null;
+    const n2 = d ? d.q2m.length : 0, n3 = d ? d.q3m.length : 0, n5 = d ? d.q5m.length : 0;
+    return `
+    <div class="pdf-card" style="cursor:pointer" onclick="openScienceQBank(${ch.id})">
+      <div class="pdf-card-icon">📝</div>
+      <div class="pdf-card-info">
+        <div class="pdf-card-title">${escH(ch.label)}</div>
+        <div class="pdf-card-desc">${n2} × 2M &nbsp;·&nbsp; ${n3} × 3M &nbsp;·&nbsp; ${n5} × 5M</div>
+      </div>
+      <button class="pdf-open-btn" onclick="event.stopPropagation();openScienceQBank(${ch.id})">View</button>
+    </div>`;
+  }).join('');
   return `
     <div>
       <h2 class="section-title" style="margin-bottom:1.5rem">📝 Question Bank — 2M · 3M · 5M</h2>
-      <div class="pdf-cards-grid">
-        ${list.map(p => {
-          const done = getPDFDone(p.url);
-          return `
-          <div class="pdf-card">
-            <div class="pdf-card-icon">📄</div>
-            <div class="pdf-card-info">
-              <div class="pdf-card-title">${escH(p.title)}</div>
-              <div class="pdf-card-desc">${escH(p.desc)}</div>
-            </div>
-            <button class="pdf-done-circle ${done ? 'done' : ''}" onclick="togglePDFDone(this,'${escH(p.url)}')" title="${done ? 'Mark as unread' : 'Mark as read'}">✓</button>
-            <button class="pdf-open-btn" onclick="openPDF('${escH(p.url)}','${escH(p.title)}')">Open</button>
-          </div>`;
-        }).join('')}
-      </div>
+      <div class="pdf-cards-grid">${cards}</div>
     </div>`;
+}
+
+function openScienceQBank(chId) {
+  const d = (typeof SCIENCE_QBANK !== 'undefined') ? SCIENCE_QBANK[chId] : null;
+  if (!d) return;
+  let modal = document.getElementById('qbankModal');
+  if (!modal) {
+    modal = document.createElement('div');
+    modal.id = 'qbankModal';
+    modal.innerHTML = `
+      <div class="mcq-modal-box">
+        <div class="mcq-modal-hdr">
+          <div class="mcq-modal-title-wrap">
+            <span class="mcq-modal-title" id="qbankModalTitle"></span>
+            <span class="mcq-modal-meta" id="qbankModalMeta"></span>
+          </div>
+          <button class="mcq-modal-close" onclick="closeQBankModal()">✕</button>
+        </div>
+        <div class="mcq-modal-body" id="qbankModalBody"></div>
+      </div>`;
+    document.body.appendChild(modal);
+    modal.addEventListener('click', e => { if (e.target === modal) closeQBankModal(); });
+  }
+  document.getElementById('qbankModalTitle').textContent = d.title;
+  document.getElementById('qbankModalMeta').textContent =
+    `${d.q2m.length} × 2M · ${d.q3m.length} × 3M · ${d.q5m.length} × 5M`;
+
+  const sect = (qs, cls, label) => !qs.length ? '' : `
+    <div class="qbank-section">
+      <div class="qbank-section-hdr">
+        <span class="qbank-badge ${cls}">${label}</span>
+        <span class="qbank-count">${qs.length} questions</span>
+      </div>
+      <ol class="qbank-list">${qs.map(q => `<li>${escH(q)}</li>`).join('')}</ol>
+    </div>`;
+
+  document.getElementById('qbankModalBody').innerHTML =
+    sect(d.q2m, 'qbank-badge-2m', '2 Marks') +
+    sect(d.q3m, 'qbank-badge-3m', '3 Marks') +
+    sect(d.q5m, 'qbank-badge-5m', '5 Marks');
+
+  modal.classList.add('open');
+  document.getElementById('qbankModalBody').scrollTop = 0;
+  document.body.style.overflow = 'hidden';
+}
+
+function closeQBankModal() {
+  const modal = document.getElementById('qbankModal');
+  if (modal) { modal.classList.remove('open'); document.body.style.overflow = ''; }
 }
 
 function buildMathsQBank(subject) {
