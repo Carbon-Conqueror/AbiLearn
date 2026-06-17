@@ -1264,6 +1264,33 @@ footer {
 [data-theme="dark"] .qbank-badge-3m { background:#451a03;color:#fde68a; }
 [data-theme="dark"] .qbank-badge-5m { background:#450a0a;color:#fca5a5; }
 
+/* Qbank mark-picker cards */
+.qbank-pick-grid { display:grid;grid-template-columns:1fr;gap:1rem;padding:0.5rem 0; }
+.qbank-pick-card {
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  gap:0.4rem;padding:2rem 1rem;border-radius:14px;border:2px solid transparent;
+  cursor:pointer;font-family:inherit;transition:transform .15s,box-shadow .15s;
+}
+.qbank-pick-card:hover { transform:translateY(-2px);box-shadow:0 6px 20px rgba(0,0,0,.1); }
+.qbank-pick-label { font-size:1.4rem;font-weight:800;letter-spacing:.01em; }
+.qbank-pick-count { font-size:0.85rem;font-weight:600;opacity:.75; }
+.qbank-pick-2m { background:#dcfce7;color:#15803d;border-color:#bbf7d0; }
+.qbank-pick-3m { background:#fef3c7;color:#b45309;border-color:#fde68a; }
+.qbank-pick-5m { background:#fee2e2;color:#b91c1c;border-color:#fecaca; }
+[data-theme="dark"] .qbank-pick-2m { background:#14532d;color:#86efac;border-color:#166534; }
+[data-theme="dark"] .qbank-pick-3m { background:#451a03;color:#fde68a;border-color:#78350f; }
+[data-theme="dark"] .qbank-pick-5m { background:#450a0a;color:#fca5a5;border-color:#7f1d1d; }
+
+/* Qbank back button */
+.qbank-back-btn {
+  display:inline-flex;align-items:center;gap:0.3rem;
+  background:none;border:1px solid var(--border);border-radius:8px;
+  padding:0.4rem 0.9rem;margin-bottom:1.25rem;
+  font-size:0.85rem;font-weight:600;color:var(--muted);cursor:pointer;
+  transition:background .15s,color .15s;
+}
+.qbank-back-btn:hover { background:var(--card-bg);color:var(--text); }
+
 /* PDF Modal Popup — fullscreen, no header */
 #pdfModal {
   display:none;position:fixed;inset:0;z-index:9999;

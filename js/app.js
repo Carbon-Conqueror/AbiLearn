@@ -1348,10 +1348,41 @@ function openScienceQBank(chId) {
     modal.addEventListener('click', e => { if (e.target === modal) closeQBankModal(); });
   }
   document.getElementById('qbankModalTitle').textContent = d.title;
-  document.getElementById('qbankModalMeta').textContent =
-    `${d.q2m.length} × 2M · ${d.q3m.length} × 3M · ${d.q5m.length} × 5M`;
+  document.getElementById('qbankModalMeta').textContent = 'Choose a section to study';
 
-  const sect = (qs, cls, label) => !qs.length ? '' : `
+  document.getElementById('qbankModalBody').innerHTML = `
+    <div class="qbank-pick-grid">
+      <button class="qbank-pick-card qbank-pick-2m" onclick="openScienceQBankSection(${chId},'2m')">
+        <span class="qbank-pick-label">2 Marks</span>
+        <span class="qbank-pick-count">${d.q2m.length} questions</span>
+      </button>
+      <button class="qbank-pick-card qbank-pick-3m" onclick="openScienceQBankSection(${chId},'3m')">
+        <span class="qbank-pick-label">3 Marks</span>
+        <span class="qbank-pick-count">${d.q3m.length} questions</span>
+      </button>
+      <button class="qbank-pick-card qbank-pick-5m" onclick="openScienceQBankSection(${chId},'5m')">
+        <span class="qbank-pick-label">5 Marks</span>
+        <span class="qbank-pick-count">${d.q5m.length} questions</span>
+      </button>
+    </div>`;
+
+  modal.classList.add('open');
+  document.getElementById('qbankModalBody').scrollTop = 0;
+  document.body.style.overflow = 'hidden';
+}
+
+function openScienceQBankSection(chId, marks) {
+  const d = (typeof SCIENCE_QBANK !== 'undefined') ? SCIENCE_QBANK[chId] : null;
+  if (!d) return;
+  const cfg = {
+    '2m': { qs: d.q2m, cls: 'qbank-badge-2m', label: '2 Marks' },
+    '3m': { qs: d.q3m, cls: 'qbank-badge-3m', label: '3 Marks' },
+    '5m': { qs: d.q5m, cls: 'qbank-badge-5m', label: '5 Marks' },
+  };
+  const { qs, cls, label } = cfg[marks];
+  document.getElementById('qbankModalMeta').textContent = `${qs.length} questions`;
+  document.getElementById('qbankModalBody').innerHTML = `
+    <button class="qbank-back-btn" onclick="openScienceQBank(${chId})">← Back</button>
     <div class="qbank-section">
       <div class="qbank-section-hdr">
         <span class="qbank-badge ${cls}">${label}</span>
@@ -1359,15 +1390,7 @@ function openScienceQBank(chId) {
       </div>
       <ol class="qbank-list">${qs.map(q => `<li>${escH(q)}</li>`).join('')}</ol>
     </div>`;
-
-  document.getElementById('qbankModalBody').innerHTML =
-    sect(d.q2m, 'qbank-badge-2m', '2 Marks') +
-    sect(d.q3m, 'qbank-badge-3m', '3 Marks') +
-    sect(d.q5m, 'qbank-badge-5m', '5 Marks');
-
-  modal.classList.add('open');
   document.getElementById('qbankModalBody').scrollTop = 0;
-  document.body.style.overflow = 'hidden';
 }
 
 function closeQBankModal() {
