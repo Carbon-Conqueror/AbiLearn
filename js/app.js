@@ -1398,27 +1398,111 @@ function closeQBankModal() {
   if (modal) { modal.classList.remove('open'); document.body.style.overflow = ''; }
 }
 
-function buildMathsQBank(subject) {
-  const list = PDFS.maths.qbank || [];
+function buildMathsQBank() {
+  const chapters = [
+    { id: 1,  label: 'Ch 1 — Real Numbers' },
+    { id: 2,  label: 'Ch 2 — Polynomials' },
+    { id: 3,  label: 'Ch 3 — Pair of Linear Equations in Two Variables' },
+    { id: 4,  label: 'Ch 4 — Quadratic Equations' },
+    { id: 5,  label: 'Ch 5 — Arithmetic Progressions' },
+    { id: 7,  label: 'Ch 7 — Coordinate Geometry' },
+    { id: 8,  label: 'Ch 8 — Introduction to Trigonometry' },
+    { id: 9,  label: 'Ch 9 — Some Applications of Trigonometry' },
+    { id: 11, label: 'Ch 11 — Areas Related to Circles' },
+    { id: 12, label: 'Ch 12 — Surface Areas and Volumes' },
+    { id: 13, label: 'Ch 13 — Statistics' },
+    { id: 14, label: 'Ch 14 — Probability' },
+  ];
+  const cards = chapters.map(ch => {
+    const d = (typeof MATHS_QBANK_CH !== 'undefined') ? MATHS_QBANK_CH[ch.id] : null;
+    const n2 = d ? d.q2m.length : 0, n3 = d ? d.q3m.length : 0, n5 = d ? d.q5m.length : 0;
+    return `
+    <div class="pdf-card" style="cursor:pointer" onclick="openMathsQBank(${ch.id})">
+      <div class="pdf-card-icon">📝</div>
+      <div class="pdf-card-info">
+        <div class="pdf-card-title">${escH(ch.label)}</div>
+        <div class="pdf-card-desc">${n2} × 2M &nbsp;·&nbsp; ${n3} × 3M &nbsp;·&nbsp; ${n5} × 5M</div>
+      </div>
+      <button class="pdf-open-btn" onclick="event.stopPropagation();openMathsQBank(${ch.id})">View</button>
+    </div>`;
+  }).join('');
   return `
     <div>
       <h2 class="section-title" style="margin-bottom:1.5rem">📝 Question Bank — 2M · 3M · 5M</h2>
-      <div class="pdf-cards-grid">
-        ${list.map(p => {
-          const done = getPDFDone(p.url);
-          return `
-          <div class="pdf-card">
-            <div class="pdf-card-icon">📄</div>
-            <div class="pdf-card-info">
-              <div class="pdf-card-title">${escH(p.title)}</div>
-              <div class="pdf-card-desc">${escH(p.desc)}</div>
-            </div>
-            <button class="pdf-done-circle ${done ? 'done' : ''}" onclick="togglePDFDone(this,'${escH(p.url)}')" title="${done ? 'Mark as unread' : 'Mark as read'}">✓</button>
-            <button class="pdf-open-btn" onclick="openPDF('${escH(p.url)}','${escH(p.title)}')">Open</button>
-          </div>`;
-        }).join('')}
-      </div>
+      <div class="pdf-cards-grid">${cards}</div>
     </div>`;
+}
+
+function openMathsQBank(chId) {
+  const d = (typeof MATHS_QBANK_CH !== 'undefined') ? MATHS_QBANK_CH[chId] : null;
+  if (!d) return;
+  let modal = document.getElementById('mathsQBankModal');
+  if (!modal) {
+    modal = document.createElement('div');
+    modal.id = 'mathsQBankModal';
+    modal.innerHTML = `
+      <div class="mcq-modal-box">
+        <div class="mcq-modal-hdr">
+          <div class="mcq-modal-title-wrap">
+            <span class="mcq-modal-title" id="mathsQBankModalTitle"></span>
+            <span class="mcq-modal-meta" id="mathsQBankModalMeta"></span>
+          </div>
+          <button class="mcq-modal-close" onclick="closeMathsQBankModal()">✕</button>
+        </div>
+        <div class="mcq-modal-body" id="mathsQBankModalBody"></div>
+      </div>`;
+    document.body.appendChild(modal);
+    modal.addEventListener('click', e => { if (e.target === modal) closeMathsQBankModal(); });
+  }
+  document.getElementById('mathsQBankModalTitle').textContent = d.title;
+  document.getElementById('mathsQBankModalMeta').textContent = 'Choose a section to study';
+
+  document.getElementById('mathsQBankModalBody').innerHTML = `
+    <div class="qbank-pick-grid">
+      <button class="qbank-pick-card qbank-pick-2m" onclick="openMathsQBankSection(${chId},'2m')">
+        <span class="qbank-pick-label">2 Marks</span>
+        <span class="qbank-pick-count">${d.q2m.length} questions</span>
+      </button>
+      <button class="qbank-pick-card qbank-pick-3m" onclick="openMathsQBankSection(${chId},'3m')">
+        <span class="qbank-pick-label">3 Marks</span>
+        <span class="qbank-pick-count">${d.q3m.length} questions</span>
+      </button>
+      <button class="qbank-pick-card qbank-pick-5m" onclick="openMathsQBankSection(${chId},'5m')">
+        <span class="qbank-pick-label">5 Marks</span>
+        <span class="qbank-pick-count">${d.q5m.length} questions</span>
+      </button>
+    </div>`;
+
+  modal.classList.add('open');
+  document.getElementById('mathsQBankModalBody').scrollTop = 0;
+  document.body.style.overflow = 'hidden';
+}
+
+function openMathsQBankSection(chId, marks) {
+  const d = (typeof MATHS_QBANK_CH !== 'undefined') ? MATHS_QBANK_CH[chId] : null;
+  if (!d) return;
+  const cfg = {
+    '2m': { qs: d.q2m, cls: 'qbank-badge-2m', label: '2 Marks' },
+    '3m': { qs: d.q3m, cls: 'qbank-badge-3m', label: '3 Marks' },
+    '5m': { qs: d.q5m, cls: 'qbank-badge-5m', label: '5 Marks' },
+  };
+  const { qs, cls, label } = cfg[marks];
+  document.getElementById('mathsQBankModalMeta').textContent = `${qs.length} questions`;
+  document.getElementById('mathsQBankModalBody').innerHTML = `
+    <button class="qbank-back-btn" onclick="openMathsQBank(${chId})">← Back</button>
+    <div class="qbank-section">
+      <div class="qbank-section-hdr">
+        <span class="qbank-badge ${cls}">${label}</span>
+        <span class="qbank-count">${qs.length} questions</span>
+      </div>
+      <ol class="qbank-list">${qs.map(q => `<li>${escH(q)}</li>`).join('')}</ol>
+    </div>`;
+  document.getElementById('mathsQBankModalBody').scrollTop = 0;
+}
+
+function closeMathsQBankModal() {
+  const modal = document.getElementById('mathsQBankModal');
+  if (modal) { modal.classList.remove('open'); document.body.style.overflow = ''; }
 }
 
 function buildSocialNotes(subject) {
