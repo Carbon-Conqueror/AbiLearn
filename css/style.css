@@ -1231,8 +1231,8 @@ footer {
 }
 
 /* Question Bank Modal */
-#qbankModal,#mathsQBankModal { display:none;position:fixed;inset:0;z-index:9998; }
-#qbankModal.open,#mathsQBankModal.open { display:block; }
+#qbankModal,#mathsQBankModal,#socialQBankModal { display:none;position:fixed;inset:0;z-index:9998; }
+#qbankModal.open,#mathsQBankModal.open,#socialQBankModal.open { display:block; }
 .qbank-section { margin-bottom:1.75rem; }
 .qbank-section-hdr {
   display:flex;align-items:center;gap:0.6rem;

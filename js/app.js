@@ -1546,8 +1546,8 @@ function buildSocialNotes(subject) {
     </div>`;
 }
 
-function buildSocialQBank(subject) {
-  const pdfs = PDFS.social;
+function buildSocialQBank() {
+  const db = (typeof SOCIAL_QBANK_CH !== 'undefined') ? SOCIAL_QBANK_CH : null;
   const sections = [
     { key: 'history',   icon: '📜', label: 'History',   color: '#EF4444' },
     { key: 'geography', icon: '🌍', label: 'Geography',  color: '#10B981' },
@@ -1558,33 +1558,104 @@ function buildSocialQBank(subject) {
     <div>
       <h2 class="section-title" style="margin-bottom:1.5rem">📝 Question Bank — 2M · 3M · 5M</h2>
       ${sections.map(s => {
-        const list = pdfs[s.key] || [];
-        if (!list.length) return '';
+        const subj = db ? db[s.key] : null;
+        if (!subj) return '';
+        const chEntries = Object.entries(subj);
         return `
         <div style="margin-bottom:2rem">
           <div style="display:flex;align-items:center;gap:0.6rem;margin-bottom:0.9rem">
             <span style="font-size:1.3rem">${s.icon}</span>
             <h3 style="margin:0;font-size:1rem;font-weight:800;color:${s.color}">${s.label}</h3>
-            <span style="font-size:0.75rem;color:var(--muted);background:var(--surface);padding:0.15rem 0.55rem;border-radius:20px;border:1px solid var(--border)">${list.length} chapters</span>
+            <span style="font-size:0.75rem;color:var(--muted);background:var(--surface);padding:0.15rem 0.55rem;border-radius:20px;border:1px solid var(--border)">${chEntries.length} chapters</span>
           </div>
           <div class="pdf-cards-grid">
-            ${list.map(p => {
-              const done = getPDFDone(p.url);
-              return `
-              <div class="pdf-card">
-                <div class="pdf-card-icon">📄</div>
+            ${chEntries.map(([chKey, d]) => `
+              <div class="pdf-card" style="cursor:pointer" onclick="openSocialQBank('${s.key}','${chKey}')">
+                <div class="pdf-card-icon">📝</div>
                 <div class="pdf-card-info">
-                  <div class="pdf-card-title">${escH(p.title)}</div>
-                  <div class="pdf-card-desc">${escH(p.desc)}</div>
+                  <div class="pdf-card-title">${escH(d.title)}</div>
+                  <div class="pdf-card-desc">${d.q2m.length} × 2M &nbsp;·&nbsp; ${d.q3m.length} × 3M &nbsp;·&nbsp; ${d.q5m.length} × 5M</div>
                 </div>
-                <button class="pdf-done-circle ${done ? 'done' : ''}" onclick="togglePDFDone(this,'${escH(p.url)}')" title="${done ? 'Mark as unread' : 'Mark as read'}">✓</button>
-                <button class="pdf-open-btn" onclick="openPDF('${escH(p.url)}','${escH(p.title)}')">Open</button>
-              </div>`;
-            }).join('')}
+                <button class="pdf-open-btn" onclick="event.stopPropagation();openSocialQBank('${s.key}','${chKey}')">View</button>
+              </div>`).join('')}
           </div>
         </div>`;
       }).join('')}
     </div>`;
+}
+
+function openSocialQBank(subj, chKey) {
+  const db = (typeof SOCIAL_QBANK_CH !== 'undefined') ? SOCIAL_QBANK_CH : null;
+  const d = db && db[subj] ? db[subj][chKey] : null;
+  if (!d) return;
+  let modal = document.getElementById('socialQBankModal');
+  if (!modal) {
+    modal = document.createElement('div');
+    modal.id = 'socialQBankModal';
+    modal.innerHTML = `
+      <div class="mcq-modal-box">
+        <div class="mcq-modal-hdr">
+          <div class="mcq-modal-title-wrap">
+            <span class="mcq-modal-title" id="socialQBankModalTitle"></span>
+            <span class="mcq-modal-meta" id="socialQBankModalMeta"></span>
+          </div>
+          <button class="mcq-modal-close" onclick="closeSocialQBankModal()">✕</button>
+        </div>
+        <div class="mcq-modal-body" id="socialQBankModalBody"></div>
+      </div>`;
+    document.body.appendChild(modal);
+    modal.addEventListener('click', e => { if (e.target === modal) closeSocialQBankModal(); });
+  }
+  document.getElementById('socialQBankModalTitle').textContent = d.title;
+  document.getElementById('socialQBankModalMeta').textContent = 'Choose a section to study';
+
+  document.getElementById('socialQBankModalBody').innerHTML = `
+    <div class="qbank-pick-grid">
+      <button class="qbank-pick-card qbank-pick-2m" onclick="openSocialQBankSection('${subj}','${chKey}','2m')">
+        <span class="qbank-pick-label">2 Marks</span>
+        <span class="qbank-pick-count">${d.q2m.length} questions</span>
+      </button>
+      <button class="qbank-pick-card qbank-pick-3m" onclick="openSocialQBankSection('${subj}','${chKey}','3m')">
+        <span class="qbank-pick-label">3 Marks</span>
+        <span class="qbank-pick-count">${d.q3m.length} questions</span>
+      </button>
+      <button class="qbank-pick-card qbank-pick-5m" onclick="openSocialQBankSection('${subj}','${chKey}','5m')">
+        <span class="qbank-pick-label">5 Marks</span>
+        <span class="qbank-pick-count">${d.q5m.length} questions</span>
+      </button>
+    </div>`;
+
+  modal.classList.add('open');
+  document.getElementById('socialQBankModalBody').scrollTop = 0;
+  document.body.style.overflow = 'hidden';
+}
+
+function openSocialQBankSection(subj, chKey, marks) {
+  const db = (typeof SOCIAL_QBANK_CH !== 'undefined') ? SOCIAL_QBANK_CH : null;
+  const d = db && db[subj] ? db[subj][chKey] : null;
+  if (!d) return;
+  const cfg = {
+    '2m': { qs: d.q2m, cls: 'qbank-badge-2m', label: '2 Marks' },
+    '3m': { qs: d.q3m, cls: 'qbank-badge-3m', label: '3 Marks' },
+    '5m': { qs: d.q5m, cls: 'qbank-badge-5m', label: '5 Marks' },
+  };
+  const { qs, cls, label } = cfg[marks];
+  document.getElementById('socialQBankModalMeta').textContent = `${qs.length} questions`;
+  document.getElementById('socialQBankModalBody').innerHTML = `
+    <button class="qbank-back-btn" onclick="openSocialQBank('${subj}','${chKey}')">← Back</button>
+    <div class="qbank-section">
+      <div class="qbank-section-hdr">
+        <span class="qbank-badge ${cls}">${label}</span>
+        <span class="qbank-count">${qs.length} questions</span>
+      </div>
+      <ol class="qbank-list">${qs.map(q => `<li>${escH(q)}</li>`).join('')}</ol>
+    </div>`;
+  document.getElementById('socialQBankModalBody').scrollTop = 0;
+}
+
+function closeSocialQBankModal() {
+  const modal = document.getElementById('socialQBankModal');
+  if (modal) { modal.classList.remove('open'); document.body.style.overflow = ''; }
 }
 
 /* ══════════════════════════════════════
