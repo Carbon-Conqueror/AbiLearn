@@ -1199,7 +1199,7 @@ footer {
   border-left:3px solid transparent;
 }
 .pdf-card:hover { border-color:var(--border);border-left-color:var(--purple-400);box-shadow:0 2px 8px rgba(0,0,0,0.06); }
-.pdf-card-icon { font-size:1.5rem;flex-shrink:0;opacity:0.8; }
+.pdf-card-icon { display:none; }
 .pdf-card-info { flex:1;min-width:0; }
 .pdf-card-title { font-weight:600;font-size:0.92rem;color:var(--text);margin-bottom:0.12rem; }
 .pdf-card-desc { font-size:0.76rem;color:var(--muted); }

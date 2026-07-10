@@ -618,7 +618,7 @@ function pdfCards(subject, tab) {
       const isImg = _isImageUrl(p.url);
       return `
       <div class="pdf-card">
-        <div class="pdf-card-icon">${isImg ? '🖼️' : '📄'}</div>
+        
         <div class="pdf-card-info">
           <div class="pdf-card-title">${escH(p.title)}</div>
           <div class="pdf-card-desc">${escH(p.desc || '')}</div>
@@ -1070,7 +1070,7 @@ function buildPYQs(subject) {
   return `
     <div>
       <div style="display:flex;align-items:center;gap:0.75rem;margin-bottom:1.5rem;flex-wrap:wrap">
-        <h2 class="section-title" style="margin:0">📋 Previous Year Question Papers</h2>
+        <h2 class="section-title" style="margin:0">Previous Year Question Papers</h2>
         <span style="font-size:0.78rem;color:var(--muted);background:var(--surface);padding:0.2rem 0.65rem;border-radius:20px">2022 · 2023 · 2024 · 2025</span>
       </div>
       ${cards}
@@ -1341,7 +1341,7 @@ function buildGrammar() {
     { title: 'Clauses', desc: 'Noun clause, Adjective clause, Adverb clause identification and usage in sentences.' },
     { title: 'Editing / Omission / Gap Filling', desc: 'Board exam question types spotting errors, filling blanks with correct forms.' }
   ];
-  return `<h2 class="section-title" style="margin-bottom:0.5rem">📝 Grammar</h2>
+  return `<h2 class="section-title" style="margin-bottom:0.5rem">Grammar</h2>
     <p style="color:var(--muted);margin-bottom:1.5rem;font-size:0.88rem">CBSE Class 10 English Grammar Topics</p>
     <div style="display:grid;gap:1rem">
       ${topics.map(t => `
@@ -1370,7 +1370,7 @@ function buildReading() {
         6. Check spelling and grammar in your answers.</p>
       </div>
       <div class="skill-card reveal reveal-d2">
-        <h3>📋 Types of Questions in CBSE Board</h3>
+        <h3>Types of Questions in CBSE Board</h3>
         <p>• <strong>Factual questions</strong> directly from the passage<br>
         • <strong>Inferential questions</strong> reading between the lines<br>
         • <strong>Vocabulary questions</strong> find word similar in meaning<br>
@@ -1387,21 +1387,21 @@ function buildReading() {
 
 function buildWriting() {
   const types = [
-    { title: '📝 Formal Letter', desc: 'Letter to editor, principal, authority. Format: Sender → Date → Receiver → Subject → Body → Closing.' },
-    { title: '📰 Article Writing', desc: 'Format: Title → By (name) → Introduction → Body paragraphs → Conclusion. Use subheadings.' },
-    { title: '📣 Notice Writing', desc: 'Short, formal announcement. Format: Organization Name → NOTICE → Date → Title → Body → Name/Designation.' },
-    { title: '✉️ Informal Letter', desc: 'Letter to friend/relative. Casual tone, sharing news/experiences. No strict format needed.' },
-    { title: '🗣️ Speech Writing', desc: 'Respectful opening → Main points → Examples → Conclusion. Engaging, persuasive language.' },
-    { title: '📖 Story Writing', desc: 'Plot (beginning-middle-end), character development, moral. Use vivid language and dialogue.' }
+    { title: 'Formal Letter', desc: 'Letter to editor, principal, authority. Format: Sender → Date → Receiver → Subject → Body → Closing.' },
+    { title: 'Article Writing', desc: 'Format: Title → By (name) → Introduction → Body paragraphs → Conclusion. Use subheadings.' },
+    { title: 'Notice Writing', desc: 'Short, formal announcement. Format: Organization Name → NOTICE → Date → Title → Body → Name/Designation.' },
+    { title: 'Informal Letter', desc: 'Letter to friend/relative. Casual tone, sharing news/experiences. No strict format needed.' },
+    { title: 'Speech Writing', desc: 'Respectful opening → Main points → Examples → Conclusion. Engaging, persuasive language.' },
+    { title: 'Story Writing', desc: 'Plot (beginning-middle-end), character development, moral. Use vivid language and dialogue.' }
   ];
-  return `<h2 class="section-title" style="margin-bottom:0.5rem">✍️ Writing Skills</h2>
+  return `<h2 class="section-title" style="margin-bottom:0.5rem">Writing Skills</h2>
     <p style="color:var(--muted);margin-bottom:1.5rem;font-size:0.88rem">CBSE Board exam writing formats and tips</p>
     <div style="display:grid;gap:1rem">
       ${types.map(t => `
         <div class="skill-card reveal">
           <h3>${t.title}</h3>
           <p>${t.desc}</p>
-          <button onclick="sendOwlixMessage('How to write a ${t.title.replace(/[📝📰📣✉️🗣️📖]/g,'').trim()} for CBSE boards?')" class="btn btn-outline-purple btn-sm" style="margin-top:0.75rem">Get tips from Owlix →</button>
+          <button onclick="sendOwlixMessage('How to write a ${t.title} for CBSE boards?')" class="btn btn-outline-purple btn-sm" style="margin-top:0.75rem">Get tips from Owlix →</button>
         </div>`).join('')}
     </div>`;
 }
@@ -1430,7 +1430,7 @@ function buildScienceQBank() {
     const n2 = d ? d.q2m.length : 0, n3 = d ? d.q3m.length : 0, n5 = d ? d.q5m.length : 0;
     return `
     <div class="pdf-card" style="cursor:pointer" onclick="openScienceQBank(${ch.id})">
-      <div class="pdf-card-icon">📝</div>
+      
       <div class="pdf-card-info">
         <div class="pdf-card-title">${escH(ch.label)}</div>
         <div class="pdf-card-desc">${n2} short &nbsp;·&nbsp; ${n3} medium &nbsp;·&nbsp; ${n5} long</div>
@@ -1537,7 +1537,7 @@ function buildMathsQBank() {
     const n2 = d ? d.q2m.length : 0, n3 = d ? d.q3m.length : 0, n5 = d ? d.q5m.length : 0;
     return `
     <div class="pdf-card" style="cursor:pointer" onclick="openMathsQBank(${ch.id})">
-      <div class="pdf-card-icon">📝</div>
+      
       <div class="pdf-card-info">
         <div class="pdf-card-title">${escH(ch.label)}</div>
         <div class="pdf-card-desc">${n2} short &nbsp;·&nbsp; ${n3} medium &nbsp;·&nbsp; ${n5} long</div>
@@ -1650,7 +1650,7 @@ function buildSocialNotes(subject) {
               const done = getPDFDone(p.url);
               return `
               <div class="pdf-card">
-                <div class="pdf-card-icon">📄</div>
+                
                 <div class="pdf-card-info">
                   <div class="pdf-card-title">${escH(p.title)}</div>
                   <div class="pdf-card-desc">${escH(p.desc)}</div>
@@ -1690,7 +1690,7 @@ function buildSocialQBank() {
           <div class="pdf-cards-grid">
             ${chEntries.map(([chKey, d]) => `
               <div class="pdf-card" style="cursor:pointer" onclick="openSocialQBank('${s.key}','${chKey}')">
-                <div class="pdf-card-icon">📝</div>
+                
                 <div class="pdf-card-info">
                   <div class="pdf-card-title">${escH(d.title)}</div>
                   <div class="pdf-card-desc">${d.q2m.length} × 2M &nbsp;·&nbsp; ${d.q3m.length} × 3M &nbsp;·&nbsp; ${d.q5m.length} × 5M</div>
