@@ -1081,25 +1081,164 @@ function buildPYQs(subject) {
    MOST IMPORTANT TOPICS (Science)
 ══════════════════════════════════════ */
 function buildMostImportant(subject) {
-  const topics = [
-    { badge: '⚡ Physics', text: 'Ohm\'s Law, Series & Parallel Circuits, Electric Power — appear in every board exam' },
-    { badge: '🔭 Optics', text: 'Mirror formula (1/v + 1/u = 1/f), Lens formula, Power of lens — numericals always asked' },
-    { badge: '🌱 Biology', text: 'Photosynthesis equation, Reflex arc, Mendel\'s laws — 3-5 marks in boards' },
-    { badge: '⚗️ Chemistry', text: 'Types of chemical reactions with examples — definition + example questions common' },
-    { badge: '🧪 Acids & Bases', text: 'pH scale, neutralisation, indicators, baking soda vs washing soda' },
-    { badge: '🌍 Environment', text: '10% energy law, ozone depletion (CFCs), biodegradable vs non-biodegradable' },
-    { badge: '⚙️ Electricity', text: 'Joule\'s law of heating (H = I²Rt), numerical on power and energy consumption' },
-    { badge: '🔬 Heredity', text: 'Monohybrid cross ratio (3:1), dihybrid (9:3:3:1), Mendel\'s laws — must know' },
-    { badge: '💡 Magnetism', text: 'Fleming\'s Left-hand Rule (motor) vs Right-hand Rule (generator) — always confused' },
-    { badge: '🧬 Reproduction', text: 'Difference between asexual and sexual reproduction with examples' }
+  const chapters = [
+    {
+      id: 1, title: 'Chemical Reactions and Equations',
+      items: [
+        { tag: 'must know', text: 'Types of reactions — Combination, Decomposition, Displacement, Double Displacement, Oxidation-Reduction. Write one balanced equation for each.' },
+        { tag: 'concept', text: 'Oxidation = loss of electrons / gain of oxygen. Reduction = gain of electrons / loss of oxygen. OIL RIG — remember this.' },
+        { tag: 'formula', text: 'Balancing equations: atoms of each element must be equal on both sides. Check H and O last.' },
+        { tag: 'definition', text: 'Corrosion — metals reacting with air/moisture (rust = Fe₂O₃·xH₂O). Rancidity — oxidation of fats/oils in food.' },
+        { tag: 'must know', text: 'Exothermic reactions release heat (combustion, respiration). Endothermic reactions absorb heat (photosynthesis, decomposition of CaCO₃).' }
+      ]
+    },
+    {
+      id: 2, title: 'Acids, Bases and Salts',
+      items: [
+        { tag: 'must know', text: 'pH scale: acids < 7, neutral = 7, bases > 7. Universal indicator colour sequence: red → orange → yellow → green → blue → violet.' },
+        { tag: 'formula', text: 'Neutralisation: HCl + NaOH → NaCl + H₂O. Acid + Base → Salt + Water. Always remember this.' },
+        { tag: 'must know', text: 'Baking soda = NaHCO₃ (used in cooking, antacid). Washing soda = Na₂CO₃·10H₂O (cleaning). Bleaching powder = CaOCl₂. Plaster of Paris = CaSO₄·½H₂O.' },
+        { tag: 'concept', text: 'Dry HCl gas does not turn moist litmus red — H⁺ ions only form when dissolved in water. Common board question.' },
+        { tag: 'definition', text: 'Dilute acid ≠ weak acid. Concentration refers to amount dissolved. Strength refers to degree of ionisation.' }
+      ]
+    },
+    {
+      id: 3, title: 'Metals and Non-Metals',
+      items: [
+        { tag: 'must know', text: 'Reactivity series (high to low): K > Na > Ca > Mg > Al > Zn > Fe > Pb > H > Cu > Hg > Ag > Au. Metals above H displace H from dilute acids.' },
+        { tag: 'concept', text: 'Ionic bond: metal loses electrons → cation; non-metal gains electrons → anion. Example: Na → Na⁺, Cl → Cl⁻ → NaCl.' },
+        { tag: 'must know', text: 'Corrosion of iron: 4Fe + 3O₂ + xH₂O → 2Fe₂O₃·xH₂O. Prevention: painting, galvanising, alloying, oil/grease.' },
+        { tag: 'definition', text: 'Alloys: Brass = Cu + Zn. Bronze = Cu + Sn. Solder = Pb + Sn. Stainless steel = Fe + Cr + Ni.' },
+        { tag: 'concept', text: 'Amphoteric metals (Al, Zn) react with both acids and bases. Al + NaOH → NaAlO₂ + H₂.' }
+      ]
+    },
+    {
+      id: 4, title: 'Carbon and Its Compounds',
+      items: [
+        { tag: 'concept', text: 'Carbon has 4 valence electrons → forms 4 covalent bonds → chains, rings, branches. Catenation + tetravalency = huge diversity of compounds.' },
+        { tag: 'must know', text: 'Allotropes: Diamond (hard, tetrahedral, non-conductor). Graphite (soft, layered, conducts electricity). Fullerene (C₆₀, ball shape).' },
+        { tag: 'must know', text: 'Functional groups: −OH (alcohol), −CHO (aldehyde), −COOH (carboxylic acid), −CO− (ketone), −Cl/−Br (halogens).' },
+        { tag: 'formula', text: 'Ethanol oxidised to Ethanoic acid: CH₃CH₂OH → CH₃COOH. Ethanoic acid is vinegar (acetic acid, smells sour, MP 17°C — glacial acetic acid).' },
+        { tag: 'must know', text: 'Soaps vs Detergents: both have hydrophilic head + hydrophobic tail (micelle). Soaps fail in hard water (Ca²⁺/Mg²⁺ form scum). Detergents work in hard water.' }
+      ]
+    },
+    {
+      id: 5, title: 'Life Processes',
+      items: [
+        { tag: 'formula', text: 'Photosynthesis: 6CO₂ + 6H₂O → C₆H₁₂O₆ + 6O₂ (sunlight + chlorophyll). Light reaction in thylakoid; dark reaction in stroma.' },
+        { tag: 'formula', text: 'Aerobic respiration: C₆H₁₂O₆ + 6O₂ → 6CO₂ + 6H₂O + ATP (38 ATP). Anaerobic in yeast: glucose → ethanol + CO₂. In muscles: glucose → lactic acid.' },
+        { tag: 'diagram', text: 'Human digestive system: mouth (salivary amylase) → oesophagus → stomach (HCl + pepsin) → small intestine (bile + pancreatic juice) → villi (absorption) → large intestine.' },
+        { tag: 'diagram', text: 'Human heart: 4 chambers. Right side → deoxygenated blood → lungs. Left side → oxygenated blood → body. Double circulation. SA node = pacemaker.' },
+        { tag: 'must know', text: 'Nephron: filtration in glomerulus (Bowman\'s capsule) → reabsorption in tubule → urine. Kidney function: filter 180L/day, produce ~1.5L urine.' }
+      ]
+    },
+    {
+      id: 6, title: 'Control and Coordination',
+      items: [
+        { tag: 'diagram', text: 'Neuron: dendrite → cell body → axon → nerve ending (synapse). Impulse travels as electrical signal; crosses synapse via chemical neurotransmitters.' },
+        { tag: 'must know', text: 'Reflex arc: receptor → sensory neuron → spinal cord (relay neuron) → motor neuron → effector. Bypasses brain — faster response.' },
+        { tag: 'must know', text: 'Endocrine glands: Pituitary (master gland, GH), Thyroid (thyroxin — metabolism), Adrenal (adrenaline — fight/flight), Pancreas (insulin — lowers glucose; glucagon — raises glucose).' },
+        { tag: 'must know', text: 'Plant hormones: Auxin (promotes elongation on shaded side → bending toward light). Gibberellin (stem growth). Cytokinin (cell division). Abscisic acid (inhibits growth, causes wilting).' },
+        { tag: 'concept', text: 'Tropic movements: Phototropism (towards light), Geotropism (root down, stem up), Hydrotropism (roots towards water), Thigmotropism (touch — tendrils).' }
+      ]
+    },
+    {
+      id: 7, title: 'How do Organisms Reproduce?',
+      items: [
+        { tag: 'must know', text: 'Asexual reproduction: Binary fission (Amoeba, Paramecium), Budding (Hydra, Yeast), Fragmentation (Spirogyra), Regeneration (Planaria), Spore formation (Rhizopus), Vegetative propagation (plants).' },
+        { tag: 'diagram', text: 'Male reproductive system: testes (in scrotum, 2–3°C below body, produce sperm + testosterone) → epididymis → vas deferens → urethra. Accessory glands: seminal vesicle, prostate, Cowper\'s.' },
+        { tag: 'diagram', text: 'Female reproductive system: ovaries (produce eggs + oestrogen/progesterone) → fallopian tube (fertilisation here) → uterus (implantation) → vagina.' },
+        { tag: 'concept', text: 'Placenta: exchange of nutrients, O₂, CO₂ between mother and foetus. Also secretes hormones. Umbilical cord connects foetus to placenta.' },
+        { tag: 'must know', text: 'Contraception: Barrier (condom, diaphragm), Chemical (pills — prevent ovulation), IUCD (copper-T), Surgical (vasectomy, tubectomy — permanent). All prevent fertilisation or implantation.' }
+      ]
+    },
+    {
+      id: 8, title: 'Heredity',
+      items: [
+        { tag: 'must know', text: 'Mendel\'s Laws: (1) Law of Dominance — dominant trait expressed when both alleles present. (2) Law of Segregation — alleles separate during gamete formation. (3) Law of Independent Assortment — genes on different chromosomes assort independently.' },
+        { tag: 'must know', text: 'Monohybrid cross: Tt × Tt → TT : Tt : tt = 1:2:1. Phenotype ratio = 3 Tall : 1 Short. F₁ all Tt (tall); F₂ = 3:1.' },
+        { tag: 'must know', text: 'Dihybrid cross: RrYy × RrYy → 9 Round Yellow : 3 Round Green : 3 Wrinkled Yellow : 1 Wrinkled Green (9:3:3:1).' },
+        { tag: 'must know', text: 'Sex determination: Female = XX, Male = XY. Father determines sex — 50% chance of XX or XY. In grasshopper: XO (male), XX (female).' },
+        { tag: 'concept', text: 'Acquired traits NOT inherited (cutting a dog\'s tail doesn\'t make offspring born tailless). Inherited traits are present in DNA from birth.' }
+      ]
+    },
+    {
+      id: 9, title: 'Light — Reflection and Refraction',
+      items: [
+        { tag: 'formula', text: 'Mirror formula: 1/v + 1/u = 1/f; focal length f = R/2. Magnification m = −v/u = h′/h. Negative m → inverted image. |m| > 1 → magnified.' },
+        { tag: 'formula', text: 'Lens formula: 1/v − 1/u = 1/f. Power: P = 1/f (f in metres), unit = dioptre (D). Convex lens: +P. Concave lens: −P.' },
+        { tag: 'must know', text: 'Sign convention: all distances from pole (mirror) / optical centre (lens). Incident light goes left to right. Distances in direction of light are positive (+); opposite are negative (−).' },
+        { tag: 'must know', text: 'Numericals are guaranteed — practise mirror and lens problems. u is always negative for real objects. Always write formula, substitute, and calculate step by step.' },
+        { tag: 'concept', text: 'Refractive index: n = c/v = sin i / sin r. Denser medium → lower speed → bends towards normal. n_glass ≈ 1.5, n_water ≈ 1.33.' }
+      ]
+    },
+    {
+      id: 10, title: 'The Human Eye and the Colourful World',
+      items: [
+        { tag: 'must know', text: 'Myopia (near-sightedness): image forms in front of retina, see near objects. Corrected by concave (diverging) lens. Hypermetropia (far-sightedness): image behind retina. Corrected by convex (converging) lens.' },
+        { tag: 'diagram', text: 'Human eye parts: Cornea (main refraction), Iris (controls pupil size), Lens (fine focusing — power of accommodation), Retina (image formed), Optic nerve (to brain). Ciliary muscles adjust lens shape.' },
+        { tag: 'must know', text: 'Dispersion through prism: white light splits into VIBGYOR. Violet bends most (shortest wavelength), Red bends least (longest wavelength). Rainbow is natural dispersion.' },
+        { tag: 'concept', text: 'Tyndall effect: scattering of light by colloidal particles. Explains why headlights are visible in fog, why milk looks white.' },
+        { tag: 'must know', text: 'Sky is blue: air molecules scatter blue light (short wavelength) more. Sunrise/sunset is red/orange: longer path → blue scattered away, only red/orange reaches eyes.' }
+      ]
+    },
+    {
+      id: 11, title: 'Electricity',
+      items: [
+        { tag: 'formula', text: 'Ohm\'s Law: V = IR. Resistance: R = ρl/A (ρ = resistivity). Series: R = R₁ + R₂ + R₃. Parallel: 1/R = 1/R₁ + 1/R₂ + 1/R₃.' },
+        { tag: 'formula', text: 'Electric power: P = VI = I²R = V²/R. Joule\'s heating: H = I²Rt (joules). Electric energy: E = Pt. 1 kWh = 1 unit = 3.6 × 10⁶ J. Electricity bill = units × rate.' },
+        { tag: 'must know', text: 'Numericals are always in the paper — resistors in series/parallel, current through each, power consumed, electricity bill calculation. Practise all types.' },
+        { tag: 'concept', text: 'Why parallel connection in homes: every device gets full 220V; devices work independently; total resistance decreases so more current can flow; failure of one doesn\'t affect others.' },
+        { tag: 'must know', text: 'Potential difference (V) = work done per unit charge = W/Q. Current (I) = charge per second = Q/t. Ampere (A), Ohm (Ω), Volt (V), Watt (W) — know all units.' }
+      ]
+    },
+    {
+      id: 12, title: 'Magnetic Effects of Electric Current',
+      items: [
+        { tag: 'must know', text: 'Right-hand thumb rule: if thumb points in direction of current, curled fingers show direction of magnetic field around the wire.' },
+        { tag: 'must know', text: 'Fleming\'s Left-hand Rule (motor effect): stretch thumb, index finger, middle finger mutually perpendicular. Index = magnetic field (B), Middle = current (I), Thumb = force/motion (F).' },
+        { tag: 'must know', text: 'Fleming\'s Right-hand Rule (generator): same hand setup but for induced current. Thumb = motion of conductor, Index = magnetic field, Middle = induced current direction.' },
+        { tag: 'concept', text: 'Electric motor: converts electrical energy → mechanical energy. Uses: fans, mixers, washing machines. Generator (dynamo): mechanical → electrical (Faraday\'s electromagnetic induction).' },
+        { tag: 'diagram', text: 'Solenoid: coil of wire → acts as bar magnet when current flows. Used in electromagnets. A fuse wire melts when current exceeds safe limit — safety device in circuits.' }
+      ]
+    },
+    {
+      id: 13, title: 'Our Environment',
+      items: [
+        { tag: 'must know', text: '10% law (Lindemann): only 10% of energy at one trophic level passes to the next. 90% lost as heat. This limits food chains to 4–5 trophic levels.' },
+        { tag: 'must know', text: 'Food chain example: Grass → Grasshopper → Frog → Snake → Hawk. Producer → Primary consumer → Secondary → Tertiary → Quaternary. Energy decreases at each level.' },
+        { tag: 'must know', text: 'Ozone depletion: CFCs (chlorofluorocarbons from ACs/refrigerators) rise to stratosphere → UV breaks them → Cl radicals catalytically destroy O₃. UV radiation reaches earth → skin cancer, cataracts.' },
+        { tag: 'must know', text: 'Biodegradable waste: food waste, paper, cotton — broken down by microorganisms. Non-biodegradable: plastic, DDT, glass — persist in environment, cause biomagnification.' },
+        { tag: 'concept', text: 'Ecosystem components: Biotic (producers → consumers → decomposers) + Abiotic (temperature, water, soil, light). Decomposers (bacteria, fungi) recycle nutrients back to soil.' }
+      ]
+    }
   ];
-  return `<h2 class="section-title" style="margin-bottom:0.5rem">🎯 Most Important Topics</h2>
-    <p style="color:var(--muted);margin-bottom:1.5rem;font-size:0.88rem">High-probability topics for CBSE Board Exam</p>
-    <div class="important-topics">
-      ${topics.map((t, i) => `
-        <div class="topic-card reveal reveal-d${(i % 4) + 1}">
-          <div class="topic-badge">${t.badge}</div>
-          <div class="topic-text">${t.text}</div>
+
+  const tagColor = {
+    'must know': '#EF4444',
+    'formula':   '#0EA5E9',
+    'concept':   '#7C3AED',
+    'diagram':   '#F59E0B',
+    'definition':'#10B981'
+  };
+
+  return `
+    <h2 class="section-title" style="margin-bottom:0.4rem">Most Important</h2>
+    <p style="color:var(--muted);margin-bottom:1.75rem;font-size:0.85rem;padding-left:0.9rem">High-probability topics for every chapter — board exam focus</p>
+    <div style="display:flex;flex-direction:column;gap:1.1rem">
+      ${chapters.map(ch => `
+        <div class="mi-chapter-block">
+          <div class="mi-chapter-hdr">
+            <span class="mi-ch-num">${ch.id}</span>
+            <span class="mi-ch-title">${ch.title}</span>
+          </div>
+          <div class="mi-items">
+            ${ch.items.map(item => `
+              <div class="mi-item">
+                <span class="mi-tag" style="background:${tagColor[item.tag] || '#6B7280'}20;color:${tagColor[item.tag] || '#6B7280'};border:1px solid ${tagColor[item.tag] || '#6B7280'}40">${item.tag}</span>
+                <span class="mi-text">${escH(item.text)}</span>
+              </div>`).join('')}
+          </div>
         </div>`).join('')}
     </div>`;
 }
