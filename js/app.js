@@ -22,39 +22,32 @@
 /* ── SUBJECT TAB CONFIGS ── */
 const SUBJECT_TABS = {
   maths: [
-    { id: 'formula-sheet', label: '📐 Formula Sheet' },
-    { id: 'question-gen',  label: '🎲 Question Generator' },
-    { id: 'maths-qbank',   label: '📝 Question Bank' },
-    { id: 'questions',     label: '✏️ Questions' },
-    { id: 'pyqs',          label: '📋 PYQs' },
-    { id: 'summary',       label: '📖 Summary' }
+    { id: 'formula-sheet', label: 'Formulas' },
+    { id: 'maths-qbank',   label: 'Question Bank' },
+    { id: 'pyqs',          label: 'PYQ Papers' }
   ],
   science: [
-    { id: 'formula-sheet',     label: '⚗️ Formula Sheet' },
-    { id: 'science-qbank',     label: '📝 Question Bank' },
-    { id: 'important-notes',   label: '📌 Important Notes' },
-    { id: 'practice-questions',label: '🧠 MCQs' },
-    { id: 'pyqs',              label: '📋 PYQs' },
-    { id: 'most-important',    label: '🎯 Most Important' },
-    { id: 'ncert-solutions',   label: '📗 NCERT Solutions' },
-    { id: 'summary',           label: '📖 Summary' }
+    { id: 'science-qbank',     label: 'Question Bank' },
+    { id: 'important-notes',   label: 'Study Notes' },
+    { id: 'practice-questions',label: 'MCQ Practice' },
+    { id: 'pyqs',              label: 'PYQ Papers' },
+    { id: 'most-important',    label: 'Most Important' },
+    { id: 'ncert-solutions',   label: 'NCERT Solutions' }
   ],
   english: [
-    { id: 'first-flight', label: '✈️ First Flight' },
-    { id: 'footprints',   label: '👣 Footprints Without Feet' },
-    { id: 'grammar',      label: '📝 Grammar' },
-    { id: 'reading',      label: '📖 Reading' },
-    { id: 'writing',      label: '✍️ Writing' },
-    { id: 'pyqs',         label: '📋 PYQs' },
-    { id: 'summary',      label: '📑 Summary' }
+    { id: 'first-flight', label: 'First Flight' },
+    { id: 'footprints',   label: 'Footprints' },
+    { id: 'grammar',      label: 'Grammar' },
+    { id: 'reading',      label: 'Reading' },
+    { id: 'writing',      label: 'Writing' },
+    { id: 'pyqs',         label: 'PYQ Papers' }
   ],
   social: [
-    { id: 'social-notes',       label: '📖 Notes' },
-    { id: 'practice-questions', label: '🧠 MCQs' },
-    { id: 'social-qbank',       label: '📝 Question Bank' },
-    { id: 'maps',               label: '🗺️ Maps' },
-    { id: 'pyqs',               label: '📋 PYQs' },
-    { id: 'summary',            label: '📑 Summary' }
+    { id: 'social-notes',       label: 'Notes' },
+    { id: 'practice-questions', label: 'MCQ Practice' },
+    { id: 'social-qbank',       label: 'Question Bank' },
+    { id: 'maps',               label: 'Map Work' },
+    { id: 'pyqs',               label: 'PYQ Papers' }
   ]
 };
 
@@ -290,10 +283,10 @@ function renderSubjectShell(subject) {
         <div class="subject-header-icon">${subject.icon}</div>
         <div>
           <div class="subject-breadcrumb">
-            <a href="index.html">🏠 Home</a> › ${subject.name}
+            <a href="index.html">Home</a> / ${subject.name}
           </div>
           <h1>${subject.name}</h1>
-          <p>${subject.description} &nbsp;·&nbsp; ${subject.chapters.length} Chapters</p>
+          <p>${subject.description} &nbsp;—&nbsp; ${subject.chapters.length} chapters</p>
         </div>
       </div>
     </div>
@@ -842,30 +835,11 @@ function buildFormulaSheet(subject) {
    IMPORTANT NOTES
 ══════════════════════════════════════ */
 function buildImportantNotes(subject) {
-  const colorMap = { maths:'var(--maths)', science:'var(--science)', english:'var(--english)', social:'var(--social)' };
-  const color = colorMap[subject.id] || 'var(--purple-600)';
   const cards = pdfCards(subject, 'notes');
-  const chapters = subject.chapters.filter(c => c.keyPoints && c.keyPoints.length);
-
-  if (!cards && !chapters.length) return buildComingSoon('Important Notes', 'Notes for all chapters will be added here soon.');
-
+  if (!cards) return buildComingSoon('Study Notes', 'Chapter PDFs will be added here soon.');
   return `
-    ${cards ? `<h2 class="section-title" style="margin-bottom:1rem">📂 Study PDFs</h2>${cards}` : ''}
-    ${chapters.length ? `
-      <h2 class="section-title" style="margin-bottom:1.5rem;margin-top:${cards ? '2rem' : '0'}">📌 Important Notes — ${subject.name}</h2>
-      <div class="notes-grid">
-        ${chapters.map(ch => `
-          <div class="notes-block reveal">
-            <div class="notes-chapter-title">
-              <span class="formula-num" style="background:${color};min-width:28px">${ch.id}</span>
-              ${ch.title}
-              <span style="font-size:0.72rem;color:var(--muted);font-weight:400;margin-left:auto">${ch.subtitle}</span>
-            </div>
-            <ul class="notes-list">
-              ${(ch.keyPoints || []).map(kp => `<li>${escH(kp)}</li>`).join('')}
-            </ul>
-          </div>`).join('')}
-      </div>` : ''}`;
+    <h2 class="section-title" style="margin-bottom:1rem">Study PDFs</h2>
+    ${cards}`;
 }
 
 /* ══════════════════════════════════════
@@ -1314,14 +1288,14 @@ function buildScienceQBank() {
       <div class="pdf-card-icon">📝</div>
       <div class="pdf-card-info">
         <div class="pdf-card-title">${escH(ch.label)}</div>
-        <div class="pdf-card-desc">${n2} × 2M &nbsp;·&nbsp; ${n3} × 3M &nbsp;·&nbsp; ${n5} × 5M</div>
+        <div class="pdf-card-desc">${n2} short &nbsp;·&nbsp; ${n3} medium &nbsp;·&nbsp; ${n5} long</div>
       </div>
       <button class="pdf-open-btn" onclick="event.stopPropagation();openScienceQBank(${ch.id})">View</button>
     </div>`;
   }).join('');
   return `
     <div>
-      <h2 class="section-title" style="margin-bottom:1.5rem">📝 Question Bank — 2M · 3M · 5M</h2>
+      <h2 class="section-title" style="margin-bottom:1.5rem">Question Bank</h2>
       <div class="pdf-cards-grid">${cards}</div>
     </div>`;
 }
@@ -1348,7 +1322,7 @@ function openScienceQBank(chId) {
     modal.addEventListener('click', e => { if (e.target === modal) closeQBankModal(); });
   }
   document.getElementById('qbankModalTitle').textContent = d.title;
-  document.getElementById('qbankModalMeta').textContent = 'Choose a section to study';
+  document.getElementById('qbankModalMeta').textContent = 'Pick a section';
 
   document.getElementById('qbankModalBody').innerHTML = `
     <div class="qbank-pick-grid">
@@ -1421,14 +1395,14 @@ function buildMathsQBank() {
       <div class="pdf-card-icon">📝</div>
       <div class="pdf-card-info">
         <div class="pdf-card-title">${escH(ch.label)}</div>
-        <div class="pdf-card-desc">${n2} × 2M &nbsp;·&nbsp; ${n3} × 3M &nbsp;·&nbsp; ${n5} × 5M</div>
+        <div class="pdf-card-desc">${n2} short &nbsp;·&nbsp; ${n3} medium &nbsp;·&nbsp; ${n5} long</div>
       </div>
       <button class="pdf-open-btn" onclick="event.stopPropagation();openMathsQBank(${ch.id})">View</button>
     </div>`;
   }).join('');
   return `
     <div>
-      <h2 class="section-title" style="margin-bottom:1.5rem">📝 Question Bank — 2M · 3M · 5M</h2>
+      <h2 class="section-title" style="margin-bottom:1.5rem">Question Bank</h2>
       <div class="pdf-cards-grid">${cards}</div>
     </div>`;
 }
@@ -1515,7 +1489,7 @@ function buildSocialNotes(subject) {
   ];
   return `
     <div>
-      <h2 class="section-title" style="margin-bottom:1.5rem">📖 Chapter Notes</h2>
+      <h2 class="section-title" style="margin-bottom:1.5rem">Chapter Notes</h2>
       ${sections.map(s => {
         const list = pdfs[s.key] || [];
         if (!list.length) return '';
@@ -1556,7 +1530,7 @@ function buildSocialQBank() {
   ];
   return `
     <div>
-      <h2 class="section-title" style="margin-bottom:1.5rem">📝 Question Bank — 2M · 3M · 5M</h2>
+      <h2 class="section-title" style="margin-bottom:1.5rem">Question Bank</h2>
       ${sections.map(s => {
         const subj = db ? db[s.key] : null;
         if (!subj) return '';
@@ -1607,7 +1581,7 @@ function openSocialQBank(subj, chKey) {
     modal.addEventListener('click', e => { if (e.target === modal) closeSocialQBankModal(); });
   }
   document.getElementById('socialQBankModalTitle').textContent = d.title;
-  document.getElementById('socialQBankModalMeta').textContent = 'Choose a section to study';
+  document.getElementById('socialQBankModalMeta').textContent = 'Pick a section';
 
   document.getElementById('socialQBankModalBody').innerHTML = `
     <div class="qbank-pick-grid">

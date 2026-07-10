@@ -489,7 +489,12 @@ button { font-family:inherit;cursor:pointer; }
   font-size:0.75rem;font-weight:700;text-transform:uppercase;
   letter-spacing:1px;color:var(--purple-600);margin-bottom:0.4rem;
 }
-.section-title { font-size:2rem;font-weight:800;color:var(--text);letter-spacing:-0.5px; }
+.section-title {
+  font-size:1.55rem;font-weight:800;color:var(--text);letter-spacing:-0.3px;
+  padding-left:0.85rem;
+  border-left:4px solid var(--purple-500);
+  line-height:1.25;
+}
 .section-sub { color:var(--muted);margin-top:0.4rem;font-size:0.92rem; }
 
 /* ══════════════════════════════════════════
@@ -701,15 +706,15 @@ button { font-family:inherit;cursor:pointer; }
 
 .tab-btn {
   background:none;border:none;
-  padding:1rem 1.2rem;
-  font-size:0.83rem;font-weight:600;
+  padding:0.9rem 1.1rem;
+  font-size:0.85rem;font-weight:600;
   color:var(--muted);
   cursor:pointer;
-  border-bottom:3px solid transparent;
-  transition:var(--transition);
+  border-bottom:2px solid transparent;
+  transition:color 0.2s,border-color 0.2s;
   white-space:nowrap;
   font-family:inherit;
-  display:flex;align-items:center;gap:0.35rem;
+  letter-spacing:0.01em;
 }
 .tab-btn:hover { color:var(--text); }
 .tab-btn.active { color:var(--purple-700);border-bottom-color:var(--purple-600); }
@@ -1176,21 +1181,23 @@ footer {
 /* PDF Cards */
 .pdf-cards-grid { display:flex;flex-direction:column;gap:0.75rem;margin-bottom:2rem; }
 .pdf-card {
-  display:flex;align-items:center;gap:1rem;
-  background:white;border:1px solid var(--border);border-radius:12px;
-  padding:0.9rem 1rem;transition:var(--transition);
+  display:flex;align-items:center;gap:0.85rem;
+  background:white;border:1px solid var(--border);border-radius:10px;
+  padding:0.85rem 1rem;transition:border-color 0.2s,box-shadow 0.2s;
+  border-left:3px solid transparent;
 }
-.pdf-card:hover { border-color:var(--purple-400);box-shadow:0 2px 12px rgba(124,58,237,0.1); }
-.pdf-card-icon { font-size:1.75rem;flex-shrink:0; }
+.pdf-card:hover { border-color:var(--border);border-left-color:var(--purple-400);box-shadow:0 2px 8px rgba(0,0,0,0.06); }
+.pdf-card-icon { font-size:1.5rem;flex-shrink:0;opacity:0.8; }
 .pdf-card-info { flex:1;min-width:0; }
-.pdf-card-title { font-weight:700;font-size:0.95rem;color:var(--text);margin-bottom:0.15rem; }
-.pdf-card-desc { font-size:0.78rem;color:var(--muted); }
+.pdf-card-title { font-weight:600;font-size:0.92rem;color:var(--text);margin-bottom:0.12rem; }
+.pdf-card-desc { font-size:0.76rem;color:var(--muted); }
 .pdf-open-btn {
-  background:var(--purple-600);color:white;border:none;
-  padding:0.45rem 1rem;border-radius:8px;font-size:0.82rem;font-weight:600;
-  cursor:pointer;white-space:nowrap;transition:var(--transition);flex-shrink:0;
+  background:transparent;color:var(--purple-600);
+  border:1.5px solid var(--purple-400);
+  padding:0.4rem 0.9rem;border-radius:7px;font-size:0.8rem;font-weight:600;
+  cursor:pointer;white-space:nowrap;transition:background 0.15s,color 0.15s;flex-shrink:0;
 }
-.pdf-open-btn:hover { background:var(--purple-700); }
+.pdf-open-btn:hover { background:var(--purple-600);color:white; }
 .pdf-tick { font-size:0.85rem;opacity:0.85; }
 
 /* MCQ Modal Popup */
@@ -1265,15 +1272,16 @@ footer {
 [data-theme="dark"] .qbank-badge-5m { background:#450a0a;color:#fca5a5; }
 
 /* Qbank mark-picker cards */
-.qbank-pick-grid { display:grid;grid-template-columns:1fr;gap:1rem;padding:0.5rem 0; }
+.qbank-pick-grid { display:grid;grid-template-columns:1fr;gap:0.75rem;padding:0.25rem 0; }
 .qbank-pick-card {
-  display:flex;flex-direction:column;align-items:center;justify-content:center;
-  gap:0.4rem;padding:2rem 1rem;border-radius:14px;border:2px solid transparent;
-  cursor:pointer;font-family:inherit;transition:transform .15s,box-shadow .15s;
+  display:flex;align-items:center;justify-content:space-between;
+  padding:1.1rem 1.25rem;border-radius:10px;border:1.5px solid transparent;
+  cursor:pointer;font-family:inherit;transition:opacity .15s,box-shadow .15s;
+  text-align:left;
 }
-.qbank-pick-card:hover { transform:translateY(-2px);box-shadow:0 6px 20px rgba(0,0,0,.1); }
-.qbank-pick-label { font-size:1.4rem;font-weight:800;letter-spacing:.01em; }
-.qbank-pick-count { font-size:0.85rem;font-weight:600;opacity:.75; }
+.qbank-pick-card:hover { opacity:0.88;box-shadow:0 3px 10px rgba(0,0,0,.1); }
+.qbank-pick-label { font-size:1.05rem;font-weight:700; }
+.qbank-pick-count { font-size:0.8rem;font-weight:600;opacity:.7; }
 .qbank-pick-2m { background:#dcfce7;color:#15803d;border-color:#bbf7d0; }
 .qbank-pick-3m { background:#fef3c7;color:#b45309;border-color:#fde68a; }
 .qbank-pick-5m { background:#fee2e2;color:#b91c1c;border-color:#fecaca; }
