@@ -1233,11 +1233,17 @@ function buildMostImportant(subject) {
             <span class="mi-ch-title">${ch.title}</span>
           </div>
           <div class="mi-items">
-            ${ch.items.map(item => `
+            ${ch.items.map(item => {
+              const ci = item.text.indexOf(':');
+              const textHtml = ci > 0
+                ? `<strong>${escH(item.text.slice(0, ci))}</strong>${escH(item.text.slice(ci))}`
+                : escH(item.text);
+              return `
               <div class="mi-item">
                 <span class="mi-tag" style="background:${tagColor[item.tag] || '#6B7280'}20;color:${tagColor[item.tag] || '#6B7280'};border:1px solid ${tagColor[item.tag] || '#6B7280'}40">${item.tag}</span>
-                <span class="mi-text">${escH(item.text)}</span>
-              </div>`).join('')}
+                <span class="mi-text">${textHtml}</span>
+              </div>`;
+            }).join('')}
           </div>
         </div>`).join('')}
     </div>`;
