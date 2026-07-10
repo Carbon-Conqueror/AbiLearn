@@ -346,16 +346,6 @@ button { font-family:inherit;cursor:pointer; }
   gap:3rem;align-items:center;position:relative;z-index:1;
 }
 
-.hero-badge {
-  display:inline-flex;align-items:center;gap:0.5rem;
-  background:rgba(167,139,250,0.15);
-  border:1px solid rgba(167,139,250,0.3);
-  color:var(--purple-300);
-  padding:0.35rem 1rem;border-radius:50px;
-  font-size:0.8rem;font-weight:600;
-  margin-bottom:1.25rem;
-  width:fit-content;
-}
 
 .hero h1 {
   font-size:3rem;font-weight:800;line-height:1.15;
@@ -447,19 +437,6 @@ button { font-family:inherit;cursor:pointer; }
 .typing-dot:nth-child(3){animation-delay:.4s}
 @keyframes td{0%,60%,100%{transform:translateY(0)}30%{transform:translateY(-6px)}}
 
-/* ══════════════════════════════════════════
-   STATS STRIP
-══════════════════════════════════════════ */
-.stats-strip {
-  background:white;
-  border-bottom:1px solid var(--border);
-  padding:1.25rem 2rem;
-  display:flex;justify-content:center;gap:3rem;
-  flex-wrap:wrap;
-}
-.stat-item { text-align:center; }
-.stat-num { font-size:1.6rem;font-weight:800;color:var(--purple-700);display:block; }
-.stat-lbl { font-size:0.75rem;color:var(--muted);font-weight:500;margin-top:0.1rem; }
 
 /* ══════════════════════════════════════════
    CONTAINERS & SECTIONS
@@ -1500,7 +1477,6 @@ footer {
   .hero h1{font-size:1.9rem;letter-spacing:-0.5px}
   .hero p{font-size:0.9rem;margin-bottom:1.5rem}
   .hero-cta{gap:0.65rem}
-  .stats-strip{padding:1rem 1.25rem;gap:2rem}
 
   /* Sections */
   .section-title{font-size:1.55rem}
@@ -1556,8 +1532,6 @@ footer {
   .hero h1{font-size:1.65rem}
   .hero-cta{flex-direction:column}
   .hero-cta .btn{justify-content:center;text-align:center;width:100%}
-  .stats-strip{gap:1.25rem;justify-content:space-around}
-  .stat-num{font-size:1.3rem}
   .section{padding:2rem 0}
   .container{padding:0 0.85rem}
   .section-title{font-size:1.35rem}
