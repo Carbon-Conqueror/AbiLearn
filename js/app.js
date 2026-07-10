@@ -1,4 +1,4 @@
-/* AbiLearn — Main Application Logic v2 */
+/* AbiLearn Main Application Logic v2 */
 
 /* ── SCROLL-HIDE HEADER ── */
 (function() {
@@ -286,7 +286,7 @@ function renderSubjectShell(subject) {
             <a href="index.html">Home</a> / ${subject.name}
           </div>
           <h1>${subject.name}</h1>
-          <p>${subject.description} &nbsp;—&nbsp; ${subject.chapters.length} chapters</p>
+          <p>${subject.description} &nbsp;&nbsp; ${subject.chapters.length} chapters</p>
         </div>
       </div>
     </div>
@@ -364,95 +364,95 @@ function renderTabContent(subject, tabId) {
 const PDFS = {
   maths: {
     qbank: [
-      { title: 'Ch 1 — Real Numbers',                    desc: 'Question Bank · 2M + 3M + 5M', url: 'pdfs/maths/qbank/ch1-real-numbers.pdf' },
-      { title: 'Ch 2 — Polynomials',                     desc: 'Question Bank · 2M + 3M + 5M', url: 'pdfs/maths/qbank/ch2-polynomials.pdf' },
-      { title: 'Ch 3 — Pair of Linear Equations',        desc: 'Question Bank · 2M + 3M + 5M', url: 'pdfs/maths/qbank/ch3-linear-equations.pdf' },
-      { title: 'Ch 4 — Quadratic Equations',             desc: 'Question Bank · 2M + 3M + 5M', url: 'pdfs/maths/qbank/ch4-quadratic-equations.pdf' },
-      { title: 'Ch 5 — Arithmetic Progressions',         desc: 'Question Bank · 2M + 3M + 5M', url: 'pdfs/maths/qbank/ch5-arithmetic-progressions.pdf' },
-      { title: 'Ch 7 — Coordinate Geometry',             desc: 'Question Bank · 2M + 3M + 5M', url: 'pdfs/maths/qbank/ch7-coordinate-geometry.pdf' },
-      { title: 'Ch 8 — Introduction to Trigonometry',    desc: 'Question Bank · 2M + 3M + 5M', url: 'pdfs/maths/qbank/ch8-introduction-to-trigonometry.pdf' },
-      { title: 'Ch 9 — Some Applications of Trigonometry', desc: 'Question Bank · 2M + 3M + 5M', url: 'pdfs/maths/qbank/ch9-applications-of-trigonometry.pdf' },
-      { title: 'Ch 11 — Areas Related to Circles',       desc: 'Question Bank · 2M + 3M + 5M', url: 'pdfs/maths/qbank/ch11-areas-related-to-circles.pdf' },
-      { title: 'Ch 12 — Surface Areas and Volumes',      desc: 'Question Bank · 2M + 3M + 5M', url: 'pdfs/maths/qbank/ch12-surface-areas-and-volumes.pdf' },
-      { title: 'Ch 13 — Statistics',                     desc: 'Question Bank · 2M + 3M + 5M', url: 'pdfs/maths/qbank/ch13-statistics.pdf' },
-      { title: 'Ch 14 — Probability',                    desc: 'Question Bank · 2M + 3M + 5M', url: 'pdfs/maths/qbank/ch14-probability.pdf' }
+      { title: 'Ch 1 Real Numbers',                    desc: 'Question Bank · 2M + 3M + 5M', url: 'pdfs/maths/qbank/ch1-real-numbers.pdf' },
+      { title: 'Ch 2 Polynomials',                     desc: 'Question Bank · 2M + 3M + 5M', url: 'pdfs/maths/qbank/ch2-polynomials.pdf' },
+      { title: 'Ch 3 Pair of Linear Equations',        desc: 'Question Bank · 2M + 3M + 5M', url: 'pdfs/maths/qbank/ch3-linear-equations.pdf' },
+      { title: 'Ch 4 Quadratic Equations',             desc: 'Question Bank · 2M + 3M + 5M', url: 'pdfs/maths/qbank/ch4-quadratic-equations.pdf' },
+      { title: 'Ch 5 Arithmetic Progressions',         desc: 'Question Bank · 2M + 3M + 5M', url: 'pdfs/maths/qbank/ch5-arithmetic-progressions.pdf' },
+      { title: 'Ch 7 Coordinate Geometry',             desc: 'Question Bank · 2M + 3M + 5M', url: 'pdfs/maths/qbank/ch7-coordinate-geometry.pdf' },
+      { title: 'Ch 8 Introduction to Trigonometry',    desc: 'Question Bank · 2M + 3M + 5M', url: 'pdfs/maths/qbank/ch8-introduction-to-trigonometry.pdf' },
+      { title: 'Ch 9 Some Applications of Trigonometry', desc: 'Question Bank · 2M + 3M + 5M', url: 'pdfs/maths/qbank/ch9-applications-of-trigonometry.pdf' },
+      { title: 'Ch 11 Areas Related to Circles',       desc: 'Question Bank · 2M + 3M + 5M', url: 'pdfs/maths/qbank/ch11-areas-related-to-circles.pdf' },
+      { title: 'Ch 12 Surface Areas and Volumes',      desc: 'Question Bank · 2M + 3M + 5M', url: 'pdfs/maths/qbank/ch12-surface-areas-and-volumes.pdf' },
+      { title: 'Ch 13 Statistics',                     desc: 'Question Bank · 2M + 3M + 5M', url: 'pdfs/maths/qbank/ch13-statistics.pdf' },
+      { title: 'Ch 14 Probability',                    desc: 'Question Bank · 2M + 3M + 5M', url: 'pdfs/maths/qbank/ch14-probability.pdf' }
     ],
     formula: [
-      { title: 'Ch 1 — Real Numbers',                        desc: 'Number systems, HCF, LCM, Euclid\'s lemma',     url: 'assets/formula/ch01-real-numbers.png' },
-      { title: 'Ch 2 — Polynomials',                         desc: 'Zeros, factor theorem, division algorithm',      url: 'assets/formula/ch02-polynomials.png' },
-      { title: 'Ch 3 — Pair of Linear Equations',            desc: 'Methods: graphical, substitution, elimination',  url: 'assets/formula/ch03-linear-equations.png' },
-      { title: 'Ch 4 — Quadratic Equations',                 desc: 'Discriminant, quadratic formula, nature of roots',url: 'assets/formula/ch04-quadratic-equations.png' },
-      { title: 'Ch 5 — Arithmetic Progressions',             desc: 'nth term, sum of AP, key formulas',             url: 'assets/formula/ch05-arithmetic-progressions.png' },
-      { title: 'Ch 6 — Triangles',                           desc: 'Similarity, Thales theorem, Pythagoras',        url: 'assets/formula/ch06-triangles.png' },
-      { title: 'Ch 7 — Coordinate Geometry',                 desc: 'Distance, section, midpoint, area formulas',    url: 'assets/formula/ch07-coordinate-geometry.png' },
-      { title: 'Ch 8 — Introduction to Trigonometry',        desc: 'Ratios, identities, standard values',           url: 'assets/formula/ch08-trigonometry.png' },
-      { title: 'Ch 9 — Applications of Trigonometry',        desc: 'Heights & distances, angle of elevation',       url: 'assets/formula/ch09-applications-trigonometry.png' },
-      { title: 'Ch 10 — Circles',                            desc: 'Tangent, secant, arc, sector formulas',         url: 'assets/formula/ch10-circles.png' },
-      { title: 'Ch 13 — Surface Areas and Volumes',          desc: 'Cuboid, cylinder, cone, sphere formulas',       url: 'assets/formula/ch13-surface-areas-volumes.png' },
-      { title: 'Ch 14 — Statistics',                         desc: 'Mean, median, mode for grouped data',           url: 'assets/formula/ch14-statistics.png' }
+      { title: 'Ch 1 Real Numbers',                        desc: 'Number systems, HCF, LCM, Euclid\'s lemma',     url: 'assets/formula/ch01-real-numbers.png' },
+      { title: 'Ch 2 Polynomials',                         desc: 'Zeros, factor theorem, division algorithm',      url: 'assets/formula/ch02-polynomials.png' },
+      { title: 'Ch 3 Pair of Linear Equations',            desc: 'Methods: graphical, substitution, elimination',  url: 'assets/formula/ch03-linear-equations.png' },
+      { title: 'Ch 4 Quadratic Equations',                 desc: 'Discriminant, quadratic formula, nature of roots',url: 'assets/formula/ch04-quadratic-equations.png' },
+      { title: 'Ch 5 Arithmetic Progressions',             desc: 'nth term, sum of AP, key formulas',             url: 'assets/formula/ch05-arithmetic-progressions.png' },
+      { title: 'Ch 6 Triangles',                           desc: 'Similarity, Thales theorem, Pythagoras',        url: 'assets/formula/ch06-triangles.png' },
+      { title: 'Ch 7 Coordinate Geometry',                 desc: 'Distance, section, midpoint, area formulas',    url: 'assets/formula/ch07-coordinate-geometry.png' },
+      { title: 'Ch 8 Introduction to Trigonometry',        desc: 'Ratios, identities, standard values',           url: 'assets/formula/ch08-trigonometry.png' },
+      { title: 'Ch 9 Applications of Trigonometry',        desc: 'Heights & distances, angle of elevation',       url: 'assets/formula/ch09-applications-trigonometry.png' },
+      { title: 'Ch 10 Circles',                            desc: 'Tangent, secant, arc, sector formulas',         url: 'assets/formula/ch10-circles.png' },
+      { title: 'Ch 13 Surface Areas and Volumes',          desc: 'Cuboid, cylinder, cone, sphere formulas',       url: 'assets/formula/ch13-surface-areas-volumes.png' },
+      { title: 'Ch 14 Statistics',                         desc: 'Mean, median, mode for grouped data',           url: 'assets/formula/ch14-statistics.png' }
     ],
     notes: [],
     pyqs: [
       // ── 2025 ──────────────────────────────────────────────────────────
-      { title: '2025 · Set 1 (30/1/1)',  desc: 'Mathematics Standard — Theory, 80 marks, 3 hrs', url: 'pdfs/maths/pyqs/2025-qp-set1.pdf' },
-      { title: '2025 · Set 2 (30/1/2)',  desc: 'Mathematics Standard — Theory, 80 marks, 3 hrs', url: 'pdfs/maths/pyqs/2025-qp-set2.pdf' },
-      { title: '2025 · Set 3 (30/1/3)',  desc: 'Mathematics Standard — Theory, 80 marks, 3 hrs', url: 'pdfs/maths/pyqs/2025-qp-set3.pdf' },
+      { title: '2025 · Set 1 (30/1/1)',  desc: 'Mathematics Standard Theory, 80 marks, 3 hrs', url: 'pdfs/maths/pyqs/2025-qp-set1.pdf' },
+      { title: '2025 · Set 2 (30/1/2)',  desc: 'Mathematics Standard Theory, 80 marks, 3 hrs', url: 'pdfs/maths/pyqs/2025-qp-set2.pdf' },
+      { title: '2025 · Set 3 (30/1/3)',  desc: 'Mathematics Standard Theory, 80 marks, 3 hrs', url: 'pdfs/maths/pyqs/2025-qp-set3.pdf' },
       // ── 2024 ──────────────────────────────────────────────────────────
-      { title: '2024 · Set 1 (30/1/1)',  desc: 'Mathematics Standard — Theory, 80 marks, 3 hrs', url: 'pdfs/maths/pyqs/2024-qp-set1.pdf' },
-      { title: '2024 · Set 2 (30/1/2)',  desc: 'Mathematics Standard — Theory, 80 marks, 3 hrs', url: 'pdfs/maths/pyqs/2024-qp-set2.pdf' },
-      { title: '2024 · Set 3 (30/1/3)',  desc: 'Mathematics Standard — Theory, 80 marks, 3 hrs', url: 'pdfs/maths/pyqs/2024-qp-set3.pdf' },
+      { title: '2024 · Set 1 (30/1/1)',  desc: 'Mathematics Standard Theory, 80 marks, 3 hrs', url: 'pdfs/maths/pyqs/2024-qp-set1.pdf' },
+      { title: '2024 · Set 2 (30/1/2)',  desc: 'Mathematics Standard Theory, 80 marks, 3 hrs', url: 'pdfs/maths/pyqs/2024-qp-set2.pdf' },
+      { title: '2024 · Set 3 (30/1/3)',  desc: 'Mathematics Standard Theory, 80 marks, 3 hrs', url: 'pdfs/maths/pyqs/2024-qp-set3.pdf' },
       // ── 2023 ──────────────────────────────────────────────────────────
-      { title: '2023 · Set 1 (30/1/1)',  desc: 'Mathematics Standard — Theory, 80 marks, 3 hrs', url: 'pdfs/maths/pyqs/2023-qp-set1.pdf' },
-      { title: '2023 · Set 2 (30/1/2)',  desc: 'Mathematics Standard — Theory, 80 marks, 3 hrs', url: 'pdfs/maths/pyqs/2023-qp-set2.pdf' },
-      { title: '2023 · Set 3 (30/1/3)',  desc: 'Mathematics Standard — Theory, 80 marks, 3 hrs', url: 'pdfs/maths/pyqs/2023-qp-set3.pdf' },
+      { title: '2023 · Set 1 (30/1/1)',  desc: 'Mathematics Standard Theory, 80 marks, 3 hrs', url: 'pdfs/maths/pyqs/2023-qp-set1.pdf' },
+      { title: '2023 · Set 2 (30/1/2)',  desc: 'Mathematics Standard Theory, 80 marks, 3 hrs', url: 'pdfs/maths/pyqs/2023-qp-set2.pdf' },
+      { title: '2023 · Set 3 (30/1/3)',  desc: 'Mathematics Standard Theory, 80 marks, 3 hrs', url: 'pdfs/maths/pyqs/2023-qp-set3.pdf' },
       // ── 2022 ──────────────────────────────────────────────────────────
-      { title: '2022 · Set 1 (30/2/1)',  desc: 'Mathematics Standard — Term II, 40 marks, 2 hrs', url: 'pdfs/maths/pyqs/2022-qp-set1.pdf' }
+      { title: '2022 · Set 1 (30/2/1)',  desc: 'Mathematics Standard Term II, 40 marks, 2 hrs', url: 'pdfs/maths/pyqs/2022-qp-set1.pdf' }
     ]
   },
   science: {
     formula: [],
     notes: [
-      { title: 'Ch 2 — Acids, Bases and Salts',             desc: 'Complete Notes', url: 'pdfs/science/notes/ch2-acids-bases-salts.pdf' },
-      { title: 'Ch 3 — Metals and Non-Metals',              desc: 'Complete Notes', url: 'pdfs/science/notes/ch3-metals-and-non-metals.pdf' },
-      { title: 'Ch 4 — Carbon and Its Compounds',           desc: 'Complete Notes', url: 'pdfs/science/notes/ch4-carbon-and-compounds.pdf' },
-      { title: 'Ch 5 — Life Processes',                     desc: 'Complete Notes', url: 'pdfs/science/notes/ch5-life-processes.pdf' },
-      { title: 'Ch 6 — Control and Coordination',           desc: 'Complete Notes', url: 'pdfs/science/notes/ch6-control-and-coordination.pdf' },
-      { title: 'Ch 7 — How do Organisms Reproduce?',        desc: 'Complete Notes', url: 'pdfs/science/notes/ch7-how-organisms-reproduce.pdf' },
-      { title: 'Ch 8 — Heredity',                           desc: 'Complete Notes', url: 'pdfs/science/notes/ch8-heredity.pdf' },
-      { title: 'Ch 9 — Light: Reflection and Refraction',   desc: 'Complete Notes', url: 'pdfs/science/notes/ch9-light-reflection-refraction.pdf' },
-      { title: 'Ch 10 — The Human Eye and the Colourful World', desc: 'Complete Notes', url: 'pdfs/science/notes/ch10-human-eye-colourful-world.pdf' },
-      { title: 'Ch 11 — Electricity',                       desc: 'Complete Notes', url: 'pdfs/science/notes/ch11-electricity.pdf' },
-      { title: 'Ch 12 — Magnetic Effects of Electric Current', desc: 'Complete Notes', url: 'pdfs/science/notes/ch12-magnetic-effects.pdf' },
-      { title: 'Ch 13 — Our Environment',                   desc: 'Complete Notes', url: 'pdfs/science/notes/ch13-our-environment.pdf' }
+      { title: 'Ch 2 Acids, Bases and Salts',             desc: 'Complete Notes', url: 'pdfs/science/notes/ch2-acids-bases-salts.pdf' },
+      { title: 'Ch 3 Metals and Non-Metals',              desc: 'Complete Notes', url: 'pdfs/science/notes/ch3-metals-and-non-metals.pdf' },
+      { title: 'Ch 4 Carbon and Its Compounds',           desc: 'Complete Notes', url: 'pdfs/science/notes/ch4-carbon-and-compounds.pdf' },
+      { title: 'Ch 5 Life Processes',                     desc: 'Complete Notes', url: 'pdfs/science/notes/ch5-life-processes.pdf' },
+      { title: 'Ch 6 Control and Coordination',           desc: 'Complete Notes', url: 'pdfs/science/notes/ch6-control-and-coordination.pdf' },
+      { title: 'Ch 7 How do Organisms Reproduce?',        desc: 'Complete Notes', url: 'pdfs/science/notes/ch7-how-organisms-reproduce.pdf' },
+      { title: 'Ch 8 Heredity',                           desc: 'Complete Notes', url: 'pdfs/science/notes/ch8-heredity.pdf' },
+      { title: 'Ch 9 Light: Reflection and Refraction',   desc: 'Complete Notes', url: 'pdfs/science/notes/ch9-light-reflection-refraction.pdf' },
+      { title: 'Ch 10 The Human Eye and the Colourful World', desc: 'Complete Notes', url: 'pdfs/science/notes/ch10-human-eye-colourful-world.pdf' },
+      { title: 'Ch 11 Electricity',                       desc: 'Complete Notes', url: 'pdfs/science/notes/ch11-electricity.pdf' },
+      { title: 'Ch 12 Magnetic Effects of Electric Current', desc: 'Complete Notes', url: 'pdfs/science/notes/ch12-magnetic-effects.pdf' },
+      { title: 'Ch 13 Our Environment',                   desc: 'Complete Notes', url: 'pdfs/science/notes/ch13-our-environment.pdf' }
     ],
     qbank: [
-      { title: 'Ch 1 — Chemical Reactions and Equations',   desc: 'Question Bank · 2M + 3M + 5M', url: 'pdfs/science/qbank/ch1-chemical-reactions.pdf' },
-      { title: 'Ch 2 — Acids, Bases and Salts',             desc: 'Question Bank · 2M + 3M + 5M', url: 'pdfs/science/qbank/ch2-acids-bases-salts.pdf' },
-      { title: 'Ch 3 — Metals and Non-Metals',              desc: 'Question Bank · 2M + 3M + 5M', url: 'pdfs/science/qbank/ch3-metals-and-non-metals.pdf' },
-      { title: 'Ch 4 — Carbon and Its Compounds',           desc: 'Question Bank · 2M + 3M + 5M', url: 'pdfs/science/qbank/ch4-carbon-and-compounds.pdf' },
-      { title: 'Ch 5 — Life Processes',                     desc: 'Question Bank · 2M + 3M + 5M', url: 'pdfs/science/qbank/ch5-life-processes.pdf' },
-      { title: 'Ch 6 — Control and Coordination',           desc: 'Question Bank · 2M + 3M + 5M', url: 'pdfs/science/qbank/ch6-control-and-coordination.pdf' },
-      { title: 'Ch 7 — How do Organisms Reproduce?',        desc: 'Question Bank · 2M + 3M + 5M', url: 'pdfs/science/qbank/ch7-how-organisms-reproduce.pdf' },
-      { title: 'Ch 8 — Heredity',                           desc: 'Question Bank · 2M + 3M + 5M', url: 'pdfs/science/qbank/ch8-heredity.pdf' },
-      { title: 'Ch 9 — Light: Reflection and Refraction',   desc: 'Question Bank · 2M + 3M + 5M', url: 'pdfs/science/qbank/ch9-light-reflection-refraction.pdf' },
-      { title: 'Ch 10 — The Human Eye and the Colourful World', desc: 'Question Bank · 2M + 3M + 5M', url: 'pdfs/science/qbank/ch10-human-eye-colourful-world.pdf' },
-      { title: 'Ch 11 — Electricity',                       desc: 'Question Bank · 2M + 3M + 5M', url: 'pdfs/science/qbank/ch11-electricity.pdf' },
-      { title: 'Ch 12 — Magnetic Effects of Electric Current', desc: 'Question Bank · 2M + 3M + 5M', url: 'pdfs/science/qbank/ch12-magnetic-effects.pdf' },
-      { title: 'Ch 13 — Our Environment',                   desc: 'Question Bank · 2M + 3M + 5M', url: 'pdfs/science/qbank/ch13-our-environment.pdf' }
+      { title: 'Ch 1 Chemical Reactions and Equations',   desc: 'Question Bank · 2M + 3M + 5M', url: 'pdfs/science/qbank/ch1-chemical-reactions.pdf' },
+      { title: 'Ch 2 Acids, Bases and Salts',             desc: 'Question Bank · 2M + 3M + 5M', url: 'pdfs/science/qbank/ch2-acids-bases-salts.pdf' },
+      { title: 'Ch 3 Metals and Non-Metals',              desc: 'Question Bank · 2M + 3M + 5M', url: 'pdfs/science/qbank/ch3-metals-and-non-metals.pdf' },
+      { title: 'Ch 4 Carbon and Its Compounds',           desc: 'Question Bank · 2M + 3M + 5M', url: 'pdfs/science/qbank/ch4-carbon-and-compounds.pdf' },
+      { title: 'Ch 5 Life Processes',                     desc: 'Question Bank · 2M + 3M + 5M', url: 'pdfs/science/qbank/ch5-life-processes.pdf' },
+      { title: 'Ch 6 Control and Coordination',           desc: 'Question Bank · 2M + 3M + 5M', url: 'pdfs/science/qbank/ch6-control-and-coordination.pdf' },
+      { title: 'Ch 7 How do Organisms Reproduce?',        desc: 'Question Bank · 2M + 3M + 5M', url: 'pdfs/science/qbank/ch7-how-organisms-reproduce.pdf' },
+      { title: 'Ch 8 Heredity',                           desc: 'Question Bank · 2M + 3M + 5M', url: 'pdfs/science/qbank/ch8-heredity.pdf' },
+      { title: 'Ch 9 Light: Reflection and Refraction',   desc: 'Question Bank · 2M + 3M + 5M', url: 'pdfs/science/qbank/ch9-light-reflection-refraction.pdf' },
+      { title: 'Ch 10 The Human Eye and the Colourful World', desc: 'Question Bank · 2M + 3M + 5M', url: 'pdfs/science/qbank/ch10-human-eye-colourful-world.pdf' },
+      { title: 'Ch 11 Electricity',                       desc: 'Question Bank · 2M + 3M + 5M', url: 'pdfs/science/qbank/ch11-electricity.pdf' },
+      { title: 'Ch 12 Magnetic Effects of Electric Current', desc: 'Question Bank · 2M + 3M + 5M', url: 'pdfs/science/qbank/ch12-magnetic-effects.pdf' },
+      { title: 'Ch 13 Our Environment',                   desc: 'Question Bank · 2M + 3M + 5M', url: 'pdfs/science/qbank/ch13-our-environment.pdf' }
     ],
     pyqs: [
       // ── 2025 ──────────────────────────────────────────────────────────
-      { title: '2025 · Set 1 (31/1/1)', desc: 'Science — 80 marks, 3 hrs, 39 questions', url: 'pdfs/science/pyqs/2025-qp-set1.pdf' },
-      { title: '2025 · Set 2 (31/1/2)', desc: 'Science — 80 marks, 3 hrs, 39 questions', url: 'pdfs/science/pyqs/2025-qp-set2.pdf' },
-      { title: '2025 · Set 3 (31/1/3)', desc: 'Science — 80 marks, 3 hrs, 39 questions', url: 'pdfs/science/pyqs/2025-qp-set3.pdf' },
+      { title: '2025 · Set 1 (31/1/1)', desc: 'Science 80 marks, 3 hrs, 39 questions', url: 'pdfs/science/pyqs/2025-qp-set1.pdf' },
+      { title: '2025 · Set 2 (31/1/2)', desc: 'Science 80 marks, 3 hrs, 39 questions', url: 'pdfs/science/pyqs/2025-qp-set2.pdf' },
+      { title: '2025 · Set 3 (31/1/3)', desc: 'Science 80 marks, 3 hrs, 39 questions', url: 'pdfs/science/pyqs/2025-qp-set3.pdf' },
       // ── 2024 ──────────────────────────────────────────────────────────
-      { title: '2024 · Set 1 (31/1/1)', desc: 'Science — 80 marks, 3 hrs, 39 questions', url: 'pdfs/science/pyqs/2024-qp-set1.pdf' },
-      { title: '2024 · Set 2 (31/1/2)', desc: 'Science — 80 marks, 3 hrs, 39 questions', url: 'pdfs/science/pyqs/2024-qp-set2.pdf' },
-      { title: '2024 · Set 3 (31/1/3)', desc: 'Science — 80 marks, 3 hrs, 39 questions', url: 'pdfs/science/pyqs/2024-qp-set3.pdf' },
+      { title: '2024 · Set 1 (31/1/1)', desc: 'Science 80 marks, 3 hrs, 39 questions', url: 'pdfs/science/pyqs/2024-qp-set1.pdf' },
+      { title: '2024 · Set 2 (31/1/2)', desc: 'Science 80 marks, 3 hrs, 39 questions', url: 'pdfs/science/pyqs/2024-qp-set2.pdf' },
+      { title: '2024 · Set 3 (31/1/3)', desc: 'Science 80 marks, 3 hrs, 39 questions', url: 'pdfs/science/pyqs/2024-qp-set3.pdf' },
       // ── 2023 ──────────────────────────────────────────────────────────
-      { title: '2023 · Set 1 (31/1/1)', desc: 'Science — 80 marks, 3 hrs, 39 questions', url: 'pdfs/science/pyqs/2023-qp-set1.pdf' },
-      { title: '2023 · Set 2 (31/1/2)', desc: 'Science — 80 marks, 3 hrs, 39 questions', url: 'pdfs/science/pyqs/2023-qp-set2.pdf' },
-      { title: '2023 · Set 3 (31/1/3)', desc: 'Science — 80 marks, 3 hrs, 39 questions', url: 'pdfs/science/pyqs/2023-qp-set3.pdf' }
+      { title: '2023 · Set 1 (31/1/1)', desc: 'Science 80 marks, 3 hrs, 39 questions', url: 'pdfs/science/pyqs/2023-qp-set1.pdf' },
+      { title: '2023 · Set 2 (31/1/2)', desc: 'Science 80 marks, 3 hrs, 39 questions', url: 'pdfs/science/pyqs/2023-qp-set2.pdf' },
+      { title: '2023 · Set 3 (31/1/3)', desc: 'Science 80 marks, 3 hrs, 39 questions', url: 'pdfs/science/pyqs/2023-qp-set3.pdf' }
     ]
   },
   english: {
@@ -465,123 +465,123 @@ const PDFS = {
       { title: '2025 · Set 4',            desc: 'CBSE Board Question Paper',             url: 'pdfs/english/pyqs/2025-qp-set4.pdf' },
       { title: '2025 · Marking Scheme',   desc: 'Official CBSE Answer Key',              url: 'pdfs/english/pyqs/2025-marking-scheme.pdf' },
       // ── 2024 (Marking Schemes with full Q+A) ──────────────────────────
-      { title: '2024 · Answer Key 1',     desc: 'CBSE Official — Set 2/1/1',             url: 'pdfs/english/pyqs/2024-ms-set1.pdf' },
-      { title: '2024 · Answer Key 2',     desc: 'CBSE Official — Set 2/1/2',             url: 'pdfs/english/pyqs/2024-ms-set2.pdf' },
-      { title: '2024 · Answer Key 3',     desc: 'CBSE Official — Set 2/1/3',             url: 'pdfs/english/pyqs/2024-ms-set3.pdf' },
-      { title: '2024 · Answer Key 4',     desc: 'CBSE Official — Set 2/2/3',             url: 'pdfs/english/pyqs/2024-ms-set4.pdf' },
-      { title: '2024 · Answer Key 5',     desc: 'CBSE Official — Set 2/3/3',             url: 'pdfs/english/pyqs/2024-ms-set5.pdf' },
+      { title: '2024 · Answer Key 1',     desc: 'CBSE Official Set 2/1/1',             url: 'pdfs/english/pyqs/2024-ms-set1.pdf' },
+      { title: '2024 · Answer Key 2',     desc: 'CBSE Official Set 2/1/2',             url: 'pdfs/english/pyqs/2024-ms-set2.pdf' },
+      { title: '2024 · Answer Key 3',     desc: 'CBSE Official Set 2/1/3',             url: 'pdfs/english/pyqs/2024-ms-set3.pdf' },
+      { title: '2024 · Answer Key 4',     desc: 'CBSE Official Set 2/2/3',             url: 'pdfs/english/pyqs/2024-ms-set4.pdf' },
+      { title: '2024 · Answer Key 5',     desc: 'CBSE Official Set 2/3/3',             url: 'pdfs/english/pyqs/2024-ms-set5.pdf' },
       // ── 2023 ──────────────────────────────────────────────────────────
       { title: '2023 · Set 1',            desc: 'CBSE Board Question Paper',             url: 'pdfs/english/pyqs/2023-qp-set1.pdf' },
       { title: '2023 · Set 2',            desc: 'CBSE Board Question Paper',             url: 'pdfs/english/pyqs/2023-qp-set2.pdf' },
       { title: '2023 · Set 3',            desc: 'CBSE Board Question Paper',             url: 'pdfs/english/pyqs/2023-qp-set3.pdf' },
       { title: '2023 · Set 4',            desc: 'CBSE Board Question Paper',             url: 'pdfs/english/pyqs/2023-qp-set4.pdf' },
       { title: '2023 · Set 5',            desc: 'CBSE Board Question Paper',             url: 'pdfs/english/pyqs/2023-qp-set5.pdf' },
-      { title: '2023 · Marking Scheme 1', desc: 'Official CBSE Answer Key — Set 2/4/1', url: 'pdfs/english/pyqs/2023-ms-set1.pdf' },
-      { title: '2023 · Marking Scheme 2', desc: 'Official CBSE Answer Key — Set 2/4/3', url: 'pdfs/english/pyqs/2023-ms-set2.pdf' },
+      { title: '2023 · Marking Scheme 1', desc: 'Official CBSE Answer Key Set 2/4/1', url: 'pdfs/english/pyqs/2023-ms-set1.pdf' },
+      { title: '2023 · Marking Scheme 2', desc: 'Official CBSE Answer Key Set 2/4/3', url: 'pdfs/english/pyqs/2023-ms-set2.pdf' },
       // ── 2022 ──────────────────────────────────────────────────────────
       { title: '2022 · Set 1',            desc: 'CBSE Board Question Paper',             url: 'pdfs/english/pyqs/2022-qp-set1.pdf' },
       { title: '2022 · Set 2',            desc: 'CBSE Board Question Paper',             url: 'pdfs/english/pyqs/2022-qp-set2.pdf' },
       { title: '2022 · Set 3',            desc: 'CBSE Board Question Paper',             url: 'pdfs/english/pyqs/2022-qp-set3.pdf' }
     ],
     'first-flight': [
-      { title: 'Ch 1 — A Letter to God',              desc: 'Prose', url: 'pdfs/english/ch1-a-letter-to-god.pdf' },
-      { title: 'Ch 2 — Nelson Mandela',                desc: 'Prose', url: 'pdfs/english/ch2-nelson-mandela.pdf' },
-      { title: 'Ch 3 — Two Stories About Flying',      desc: 'Prose', url: 'pdfs/english/ch3-two-stories-about-flying.pdf' },
-      { title: 'Ch 4 — From the Diary of Anne Frank',  desc: 'Prose', url: 'pdfs/english/ch4-from-diary-of-anne-frank.pdf' },
-      { title: 'Ch 6 — Mijbil the Otter',              desc: 'Prose', url: 'pdfs/english/ch6-mijbil-the-otter.pdf' },
-      { title: 'Ch 9 — Madam Rides the Bus',           desc: 'Prose', url: 'pdfs/english/ch9-madam-rides-the-bus.pdf' },
-      { title: 'Ch 10 — The Sermon at Benares',        desc: 'Prose', url: 'pdfs/english/ch10-the-sermon-at-benares.pdf' },
-      { title: 'Ch 11 — The Proposal',                 desc: 'Play',  url: 'pdfs/english/ch11-the-proposal.pdf' },
-      { title: 'Poem 1 — Dust of Snow',                desc: 'Poetry', url: 'pdfs/english/poem1-dust-of-snow.pdf' },
-      { title: 'Poem 2 — Fire and Ice',                desc: 'Poetry', url: 'pdfs/english/poem2-fire-and-ice.pdf' },
-      { title: 'Poem 3 — A Tiger in the Zoo',          desc: 'Poetry', url: 'pdfs/english/poem3-a-tiger-in-the-zoo.pdf' },
-      { title: 'Poem 4 — How to Tell Wild Animals',    desc: 'Poetry', url: 'pdfs/english/poem4-how-to-tell-wild-animals.pdf' },
-      { title: 'Poem 5 — The Ball Poem',               desc: 'Poetry', url: 'pdfs/english/poem5-the-ball-poem.pdf' },
-      { title: 'Poem 6 — Amanda!',                     desc: 'Poetry', url: 'pdfs/english/poem6-amanda.pdf' },
-      { title: 'Poem 7 — The Trees',                   desc: 'Poetry', url: 'pdfs/english/poem7-the-trees.pdf' },
-      { title: 'Poem 8 — Fog',                         desc: 'Poetry', url: 'pdfs/english/poem8-fog.pdf' },
-      { title: 'Poem 9 — The Tale of Custard the Dragon', desc: 'Poetry', url: 'pdfs/english/poem9-tale-of-custard-the-dragon.pdf' },
-      { title: 'Poem 10 — For Anne Gregory',           desc: 'Poetry', url: 'pdfs/english/poem10-for-anne-gregory.pdf' }
+      { title: 'Ch 1 A Letter to God',              desc: 'Prose', url: 'pdfs/english/ch1-a-letter-to-god.pdf' },
+      { title: 'Ch 2 Nelson Mandela',                desc: 'Prose', url: 'pdfs/english/ch2-nelson-mandela.pdf' },
+      { title: 'Ch 3 Two Stories About Flying',      desc: 'Prose', url: 'pdfs/english/ch3-two-stories-about-flying.pdf' },
+      { title: 'Ch 4 From the Diary of Anne Frank',  desc: 'Prose', url: 'pdfs/english/ch4-from-diary-of-anne-frank.pdf' },
+      { title: 'Ch 6 Mijbil the Otter',              desc: 'Prose', url: 'pdfs/english/ch6-mijbil-the-otter.pdf' },
+      { title: 'Ch 9 Madam Rides the Bus',           desc: 'Prose', url: 'pdfs/english/ch9-madam-rides-the-bus.pdf' },
+      { title: 'Ch 10 The Sermon at Benares',        desc: 'Prose', url: 'pdfs/english/ch10-the-sermon-at-benares.pdf' },
+      { title: 'Ch 11 The Proposal',                 desc: 'Play',  url: 'pdfs/english/ch11-the-proposal.pdf' },
+      { title: 'Poem 1 Dust of Snow',                desc: 'Poetry', url: 'pdfs/english/poem1-dust-of-snow.pdf' },
+      { title: 'Poem 2 Fire and Ice',                desc: 'Poetry', url: 'pdfs/english/poem2-fire-and-ice.pdf' },
+      { title: 'Poem 3 A Tiger in the Zoo',          desc: 'Poetry', url: 'pdfs/english/poem3-a-tiger-in-the-zoo.pdf' },
+      { title: 'Poem 4 How to Tell Wild Animals',    desc: 'Poetry', url: 'pdfs/english/poem4-how-to-tell-wild-animals.pdf' },
+      { title: 'Poem 5 The Ball Poem',               desc: 'Poetry', url: 'pdfs/english/poem5-the-ball-poem.pdf' },
+      { title: 'Poem 6 Amanda!',                     desc: 'Poetry', url: 'pdfs/english/poem6-amanda.pdf' },
+      { title: 'Poem 7 The Trees',                   desc: 'Poetry', url: 'pdfs/english/poem7-the-trees.pdf' },
+      { title: 'Poem 8 Fog',                         desc: 'Poetry', url: 'pdfs/english/poem8-fog.pdf' },
+      { title: 'Poem 9 The Tale of Custard the Dragon', desc: 'Poetry', url: 'pdfs/english/poem9-tale-of-custard-the-dragon.pdf' },
+      { title: 'Poem 10 For Anne Gregory',           desc: 'Poetry', url: 'pdfs/english/poem10-for-anne-gregory.pdf' }
     ],
     footprints: [
-      { title: 'Ch 1 — A Triumph of Surgery',       desc: 'Prose', url: 'pdfs/english/fw-ch1-a-triumph-of-surgery.pdf' },
-      { title: 'Ch 2 — The Thief\'s Story',         desc: 'Prose', url: 'pdfs/english/fw-ch2-the-thiefs-story.pdf' },
-      { title: 'Ch 3 — The Midnight Visitor',       desc: 'Prose', url: 'pdfs/english/fw-ch3-the-midnight-visitor.pdf' },
-      { title: 'Ch 4 — A Question of Trust',        desc: 'Prose', url: 'pdfs/english/fw-ch4-a-question-of-trust.pdf' },
-      { title: 'Ch 5 — Footprints Without Feet',    desc: 'Prose', url: 'pdfs/english/fw-ch5-footprints-without-feet.pdf' },
-      { title: 'Ch 7 — The Necklace',               desc: 'Prose', url: 'pdfs/english/fw-ch7-the-necklace.pdf' },
-      { title: 'Ch 8 — Bholi',                      desc: 'Prose', url: 'pdfs/english/fw-ch8-bholi.pdf' }
+      { title: 'Ch 1 A Triumph of Surgery',       desc: 'Prose', url: 'pdfs/english/fw-ch1-a-triumph-of-surgery.pdf' },
+      { title: 'Ch 2 The Thief\'s Story',         desc: 'Prose', url: 'pdfs/english/fw-ch2-the-thiefs-story.pdf' },
+      { title: 'Ch 3 The Midnight Visitor',       desc: 'Prose', url: 'pdfs/english/fw-ch3-the-midnight-visitor.pdf' },
+      { title: 'Ch 4 A Question of Trust',        desc: 'Prose', url: 'pdfs/english/fw-ch4-a-question-of-trust.pdf' },
+      { title: 'Ch 5 Footprints Without Feet',    desc: 'Prose', url: 'pdfs/english/fw-ch5-footprints-without-feet.pdf' },
+      { title: 'Ch 7 The Necklace',               desc: 'Prose', url: 'pdfs/english/fw-ch7-the-necklace.pdf' },
+      { title: 'Ch 8 Bholi',                      desc: 'Prose', url: 'pdfs/english/fw-ch8-bholi.pdf' }
     ]
   },
   social: {
     formula: [], notes: [],
     notes_history: [
-      { title: 'Ch 1 — The Rise of Nationalism in Europe', desc: 'AbiLearn Notes · Proper Big-Font', url: 'pdfs/social/notes/history/ch1-rise-of-nationalism.pdf' },
-      { title: 'Ch 2 — Nationalism in India',              desc: 'AbiLearn Notes · Clean Structured', url: 'pdfs/social/notes/history/ch2-nationalism-in-india.pdf' },
-      { title: 'Ch 3 — The Making of a Global World',      desc: 'AbiLearn Notes · 9 Subtopics',     url: 'pdfs/social/notes/history/ch3-making-of-global-world.pdf' }
+      { title: 'Ch 1 The Rise of Nationalism in Europe', desc: 'AbiLearn Notes · Proper Big-Font', url: 'pdfs/social/notes/history/ch1-rise-of-nationalism.pdf' },
+      { title: 'Ch 2 Nationalism in India',              desc: 'AbiLearn Notes · Clean Structured', url: 'pdfs/social/notes/history/ch2-nationalism-in-india.pdf' },
+      { title: 'Ch 3 The Making of a Global World',      desc: 'AbiLearn Notes · 9 Subtopics',     url: 'pdfs/social/notes/history/ch3-making-of-global-world.pdf' }
     ],
     notes_geography: [
-      { title: 'Ch 1 — Resources and Development',         desc: 'AbiLearn Notes · Deep Structured', url: 'pdfs/social/notes/geography/ch1-resources-development.pdf' },
-      { title: 'Ch 2 — Forest and Wildlife Resources',     desc: 'AbiLearn Notes · Deep Structured', url: 'pdfs/social/notes/geography/ch2-forest-wildlife.pdf' },
-      { title: 'Ch 3 — Water Resources',                   desc: 'AbiLearn Notes · Deep Structured', url: 'pdfs/social/notes/geography/ch3-water-resources.pdf' },
-      { title: 'Ch 4 — Agriculture',                       desc: 'AbiLearn Notes · Deep Structured', url: 'pdfs/social/notes/geography/ch4-agriculture.pdf' },
-      { title: 'Ch 5 — Minerals and Energy Resources',     desc: 'AbiLearn Notes · Deep Structured', url: 'pdfs/social/notes/geography/ch5-minerals-energy.pdf' },
-      { title: 'Ch 6 — Manufacturing Industries',          desc: 'AbiLearn Notes · Deep Structured', url: 'pdfs/social/notes/geography/ch6-manufacturing-industries.pdf' }
+      { title: 'Ch 1 Resources and Development',         desc: 'AbiLearn Notes · Deep Structured', url: 'pdfs/social/notes/geography/ch1-resources-development.pdf' },
+      { title: 'Ch 2 Forest and Wildlife Resources',     desc: 'AbiLearn Notes · Deep Structured', url: 'pdfs/social/notes/geography/ch2-forest-wildlife.pdf' },
+      { title: 'Ch 3 Water Resources',                   desc: 'AbiLearn Notes · Deep Structured', url: 'pdfs/social/notes/geography/ch3-water-resources.pdf' },
+      { title: 'Ch 4 Agriculture',                       desc: 'AbiLearn Notes · Deep Structured', url: 'pdfs/social/notes/geography/ch4-agriculture.pdf' },
+      { title: 'Ch 5 Minerals and Energy Resources',     desc: 'AbiLearn Notes · Deep Structured', url: 'pdfs/social/notes/geography/ch5-minerals-energy.pdf' },
+      { title: 'Ch 6 Manufacturing Industries',          desc: 'AbiLearn Notes · Deep Structured', url: 'pdfs/social/notes/geography/ch6-manufacturing-industries.pdf' }
     ],
     notes_civics: [
-      { title: 'Ch 1 — Power-Sharing',                     desc: 'AbiLearn Notes · Deep Structured', url: 'pdfs/social/notes/civics/ch1-power-sharing.pdf' },
-      { title: 'Ch 2 — Federalism',                        desc: 'AbiLearn Notes · Deep Structured', url: 'pdfs/social/notes/civics/ch2-federalism.pdf' }
+      { title: 'Ch 1 Power-Sharing',                     desc: 'AbiLearn Notes · Deep Structured', url: 'pdfs/social/notes/civics/ch1-power-sharing.pdf' },
+      { title: 'Ch 2 Federalism',                        desc: 'AbiLearn Notes · Deep Structured', url: 'pdfs/social/notes/civics/ch2-federalism.pdf' }
     ],
     notes_economics: [
-      { title: 'Ch 1 — Development',                       desc: 'AbiLearn Notes · Deep Structured', url: 'pdfs/social/notes/economics/ch1-development.pdf' },
-      { title: 'Ch 2 — Sectors of the Indian Economy',     desc: 'AbiLearn Notes · Deep Structured', url: 'pdfs/social/notes/economics/ch2-sectors-economy.pdf' },
-      { title: 'Ch 3 — Money and Credit',                  desc: 'AbiLearn Notes · Deep Structured', url: 'pdfs/social/notes/economics/ch3-money-credit.pdf' },
-      { title: 'Ch 4 — Globalisation and the Indian Economy', desc: 'AbiLearn Notes · Deep Structured', url: 'pdfs/social/notes/economics/ch4-globalisation.pdf' }
+      { title: 'Ch 1 Development',                       desc: 'AbiLearn Notes · Deep Structured', url: 'pdfs/social/notes/economics/ch1-development.pdf' },
+      { title: 'Ch 2 Sectors of the Indian Economy',     desc: 'AbiLearn Notes · Deep Structured', url: 'pdfs/social/notes/economics/ch2-sectors-economy.pdf' },
+      { title: 'Ch 3 Money and Credit',                  desc: 'AbiLearn Notes · Deep Structured', url: 'pdfs/social/notes/economics/ch3-money-credit.pdf' },
+      { title: 'Ch 4 Globalisation and the Indian Economy', desc: 'AbiLearn Notes · Deep Structured', url: 'pdfs/social/notes/economics/ch4-globalisation.pdf' }
     ],
     history: [
-      { title: 'Ch 1 — The Rise of Nationalism in Europe', desc: 'Question Bank · 2M + 3M + 5M · PYQ-Based 2020–2024', url: 'pdfs/social/history/ch1-rise-of-nationalism.pdf' },
-      { title: 'Ch 2 — Nationalism in India',              desc: 'Question Bank · 2M + 3M + 5M · PYQ-Based 2020–2024', url: 'pdfs/social/history/ch2-nationalism-in-india.pdf' },
-      { title: 'Ch 5 — Print Culture and the Modern World',desc: 'Question Bank · 2M + 3M + 5M · PYQ-Based 2020–2024', url: 'pdfs/social/history/ch5-print-culture.pdf' }
+      { title: 'Ch 1 The Rise of Nationalism in Europe', desc: 'Question Bank · 2M + 3M + 5M · PYQ-Based 2020–2024', url: 'pdfs/social/history/ch1-rise-of-nationalism.pdf' },
+      { title: 'Ch 2 Nationalism in India',              desc: 'Question Bank · 2M + 3M + 5M · PYQ-Based 2020–2024', url: 'pdfs/social/history/ch2-nationalism-in-india.pdf' },
+      { title: 'Ch 5 Print Culture and the Modern World',desc: 'Question Bank · 2M + 3M + 5M · PYQ-Based 2020–2024', url: 'pdfs/social/history/ch5-print-culture.pdf' }
     ],
     geography: [
-      { title: 'Ch 1 — Resources and Development',   desc: 'Question Bank · 2M + 3M + 5M', url: 'pdfs/social/geography/ch1-resources-and-development.pdf' },
-      { title: 'Ch 2 — Forest and Wildlife Resources',desc: 'Question Bank · 2M + 3M + 5M', url: 'pdfs/social/geography/ch2-forest-and-wildlife.pdf' },
-      { title: 'Ch 3 — Water Resources',             desc: 'Question Bank · 2M + 3M + 5M', url: 'pdfs/social/geography/ch3-water-resources.pdf' },
-      { title: 'Ch 4 — Agriculture',                 desc: 'Question Bank · 2M + 3M + 5M', url: 'pdfs/social/geography/ch4-agriculture.pdf' },
-      { title: 'Ch 5 — Minerals and Energy Resources',desc: 'Question Bank · 2M + 3M + 5M', url: 'pdfs/social/geography/ch5-minerals-and-energy.pdf' },
-      { title: 'Ch 6 — Manufacturing Industries',    desc: 'Question Bank · 2M + 3M + 5M', url: 'pdfs/social/geography/ch6-manufacturing-industries.pdf' }
+      { title: 'Ch 1 Resources and Development',   desc: 'Question Bank · 2M + 3M + 5M', url: 'pdfs/social/geography/ch1-resources-and-development.pdf' },
+      { title: 'Ch 2 Forest and Wildlife Resources',desc: 'Question Bank · 2M + 3M + 5M', url: 'pdfs/social/geography/ch2-forest-and-wildlife.pdf' },
+      { title: 'Ch 3 Water Resources',             desc: 'Question Bank · 2M + 3M + 5M', url: 'pdfs/social/geography/ch3-water-resources.pdf' },
+      { title: 'Ch 4 Agriculture',                 desc: 'Question Bank · 2M + 3M + 5M', url: 'pdfs/social/geography/ch4-agriculture.pdf' },
+      { title: 'Ch 5 Minerals and Energy Resources',desc: 'Question Bank · 2M + 3M + 5M', url: 'pdfs/social/geography/ch5-minerals-and-energy.pdf' },
+      { title: 'Ch 6 Manufacturing Industries',    desc: 'Question Bank · 2M + 3M + 5M', url: 'pdfs/social/geography/ch6-manufacturing-industries.pdf' }
     ],
     civics: [
-      { title: 'Ch 1 — Power Sharing',            desc: 'Question Bank · 2M + 3M + 5M', url: 'pdfs/social/civics/ch1-power-sharing.pdf' },
-      { title: 'Ch 2 — Federalism',               desc: 'Question Bank · 2M + 3M + 5M', url: 'pdfs/social/civics/ch2-federalism.pdf' },
-      { title: 'Ch 3 — Gender, Religion and Caste',  desc: 'Question Bank · 2M + 3M + 5M', url: 'pdfs/social/civics/ch3-democracy-and-diversity.pdf' },
-      { title: 'Ch 4 — Political Parties',            desc: 'Question Bank · 2M + 3M + 5M', url: 'pdfs/social/civics/ch4-gender-religion-caste.pdf' },
-      { title: 'Ch 5 — Outcomes of Democracy',        desc: 'Question Bank · 2M + 3M + 5M', url: 'pdfs/social/civics/ch5-popular-struggles.pdf' }
+      { title: 'Ch 1 Power Sharing',            desc: 'Question Bank · 2M + 3M + 5M', url: 'pdfs/social/civics/ch1-power-sharing.pdf' },
+      { title: 'Ch 2 Federalism',               desc: 'Question Bank · 2M + 3M + 5M', url: 'pdfs/social/civics/ch2-federalism.pdf' },
+      { title: 'Ch 3 Gender, Religion and Caste',  desc: 'Question Bank · 2M + 3M + 5M', url: 'pdfs/social/civics/ch3-democracy-and-diversity.pdf' },
+      { title: 'Ch 4 Political Parties',            desc: 'Question Bank · 2M + 3M + 5M', url: 'pdfs/social/civics/ch4-gender-religion-caste.pdf' },
+      { title: 'Ch 5 Outcomes of Democracy',        desc: 'Question Bank · 2M + 3M + 5M', url: 'pdfs/social/civics/ch5-popular-struggles.pdf' }
     ],
     economics: [
-      { title: 'Ch 1 — Development',                      desc: 'Question Bank · 2M + 3M + 5M', url: 'pdfs/social/economics/ch1-development.pdf' },
-      { title: 'Ch 2 — Sectors of the Indian Economy',    desc: 'Question Bank · 2M + 3M + 5M', url: 'pdfs/social/economics/ch2-sectors-of-economy.pdf' },
-      { title: 'Ch 3 — Money and Credit',                 desc: 'Question Bank · 2M + 3M + 5M', url: 'pdfs/social/economics/ch3-money-and-credit.pdf' },
-      { title: 'Ch 4 — Globalisation and the Indian Economy', desc: 'Question Bank · 2M + 3M + 5M', url: 'pdfs/social/economics/ch4-globalisation.pdf' }
+      { title: 'Ch 1 Development',                      desc: 'Question Bank · 2M + 3M + 5M', url: 'pdfs/social/economics/ch1-development.pdf' },
+      { title: 'Ch 2 Sectors of the Indian Economy',    desc: 'Question Bank · 2M + 3M + 5M', url: 'pdfs/social/economics/ch2-sectors-of-economy.pdf' },
+      { title: 'Ch 3 Money and Credit',                 desc: 'Question Bank · 2M + 3M + 5M', url: 'pdfs/social/economics/ch3-money-and-credit.pdf' },
+      { title: 'Ch 4 Globalisation and the Indian Economy', desc: 'Question Bank · 2M + 3M + 5M', url: 'pdfs/social/economics/ch4-globalisation.pdf' }
     ],
     pyqs: [
       // ── 2025 ──────────────────────────────────────────────────────────
-      { title: '2025 · Set 1 (32/1/1)', desc: 'Social Science — 80 marks, 3 hrs, includes map', url: 'pdfs/social/pyqs/2025-qp-set1.pdf' },
-      { title: '2025 · Set 2 (32/1/2)', desc: 'Social Science — 80 marks, 3 hrs, includes map', url: 'pdfs/social/pyqs/2025-qp-set2.pdf' },
-      { title: '2025 · Set 3 (32/1/3)', desc: 'Social Science — 80 marks, 3 hrs, includes map', url: 'pdfs/social/pyqs/2025-qp-set3.pdf' },
+      { title: '2025 · Set 1 (32/1/1)', desc: 'Social Science 80 marks, 3 hrs, includes map', url: 'pdfs/social/pyqs/2025-qp-set1.pdf' },
+      { title: '2025 · Set 2 (32/1/2)', desc: 'Social Science 80 marks, 3 hrs, includes map', url: 'pdfs/social/pyqs/2025-qp-set2.pdf' },
+      { title: '2025 · Set 3 (32/1/3)', desc: 'Social Science 80 marks, 3 hrs, includes map', url: 'pdfs/social/pyqs/2025-qp-set3.pdf' },
       // ── 2024 ──────────────────────────────────────────────────────────
-      { title: '2024 · Set 1 (32/1/1)', desc: 'Social Science — 80 marks, 3 hrs, includes map', url: 'pdfs/social/pyqs/2024-qp-set1.pdf' },
-      { title: '2024 · Set 2 (32/1/2)', desc: 'Social Science — 80 marks, 3 hrs, includes map', url: 'pdfs/social/pyqs/2024-qp-set2.pdf' },
-      { title: '2024 · Set 3 (32/1/3)', desc: 'Social Science — 80 marks, 3 hrs, includes map', url: 'pdfs/social/pyqs/2024-qp-set3.pdf' },
+      { title: '2024 · Set 1 (32/1/1)', desc: 'Social Science 80 marks, 3 hrs, includes map', url: 'pdfs/social/pyqs/2024-qp-set1.pdf' },
+      { title: '2024 · Set 2 (32/1/2)', desc: 'Social Science 80 marks, 3 hrs, includes map', url: 'pdfs/social/pyqs/2024-qp-set2.pdf' },
+      { title: '2024 · Set 3 (32/1/3)', desc: 'Social Science 80 marks, 3 hrs, includes map', url: 'pdfs/social/pyqs/2024-qp-set3.pdf' },
       // ── 2023 ──────────────────────────────────────────────────────────
-      { title: '2023 · Set 1 (32/1/1)', desc: 'Social Science — 80 marks, 3 hrs, includes map', url: 'pdfs/social/pyqs/2023-qp-set1.pdf' },
-      { title: '2023 · Set 2 (32/1/2)', desc: 'Social Science — 80 marks, 3 hrs, includes map', url: 'pdfs/social/pyqs/2023-qp-set2.pdf' },
-      { title: '2023 · Set 3 (32/1/3)', desc: 'Social Science — 80 marks, 3 hrs, includes map', url: 'pdfs/social/pyqs/2023-qp-set3.pdf' }
+      { title: '2023 · Set 1 (32/1/1)', desc: 'Social Science 80 marks, 3 hrs, includes map', url: 'pdfs/social/pyqs/2023-qp-set1.pdf' },
+      { title: '2023 · Set 2 (32/1/2)', desc: 'Social Science 80 marks, 3 hrs, includes map', url: 'pdfs/social/pyqs/2023-qp-set2.pdf' },
+      { title: '2023 · Set 3 (32/1/3)', desc: 'Social Science 80 marks, 3 hrs, includes map', url: 'pdfs/social/pyqs/2023-qp-set3.pdf' }
     ]
   }
 };
 
-/* Resolve PDF URL for iframe — local paths pass through, Drive links convert to embed */
+/* Resolve PDF URL for iframe local paths pass through, Drive links convert to embed */
 function toDriveEmbed(url) {
   if (url.startsWith('http')) {
     const m = url.match(/drive\.google\.com\/file\/d\/([^\/\?]+)/);
@@ -630,7 +630,7 @@ function pdfCards(subject, tab) {
   </div>`;
 }
 
-/* PDF.js popup — renders PDF or image directly, no external viewer */
+/* PDF.js popup renders PDF or image directly, no external viewer */
 const PDFJS_SRC    = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js';
 const PDFJS_WORKER = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
 const PDFJS_CMAPS  = 'https://cdn.jsdelivr.net/npm/pdfjs-dist@3.11.174/cmaps/';
@@ -743,7 +743,7 @@ function renderPDF(url) {
   load.then(pdf => {
     body.innerHTML = '';
 
-    // clientWidth can be 0 on mobile before layout settles — fall back to innerWidth
+    // clientWidth can be 0 on mobile before layout settles fall back to innerWidth
     const rawW = body.clientWidth > 32 ? body.clientWidth : window.innerWidth;
     const containerW = rawW - 16;
     const dpr = window.devicePixelRatio || 1;
@@ -816,7 +816,7 @@ function buildFormulaSheet(subject) {
   return `
     ${cards ? `<h2 class="section-title" style="margin-bottom:1rem">📐 Formula Sheets</h2>${cards}` : ''}
     ${chapters.length ? `
-      <h2 class="section-title" style="margin-bottom:1.5rem;margin-top:${cards ? '2rem' : '0'}">📐 Formula Sheet — ${subject.name}</h2>
+      <h2 class="section-title" style="margin-bottom:1.5rem;margin-top:${cards ? '2rem' : '0'}">📐 Formula Sheet ${subject.name}</h2>
       <div class="formula-sheet">
         ${chapters.map(ch => `
           <div class="formula-chapter-block reveal">
@@ -1062,7 +1062,7 @@ function buildPYQs(subject) {
     return `
       <div class="coming-soon">
         <div class="cs-icon">📋</div>
-        <h3>PYQs — Coming Soon</h3>
+        <h3>PYQs Coming Soon</h3>
         <p>CBSE Board exam question papers will be added here soon.</p>
         <button onclick="document.getElementById('owlixToggle').click()" class="btn btn-primary btn-md">Ask Owlix for PYQ Help →</button>
       </div>`;
@@ -1085,10 +1085,10 @@ function buildMostImportant(subject) {
     {
       id: 1, title: 'Chemical Reactions and Equations',
       items: [
-        { tag: 'must know', text: 'Types of reactions — Combination, Decomposition, Displacement, Double Displacement, Oxidation-Reduction. Write one balanced equation for each.' },
-        { tag: 'concept', text: 'Oxidation = loss of electrons / gain of oxygen. Reduction = gain of electrons / loss of oxygen. OIL RIG — remember this.' },
+        { tag: 'must know', text: 'Types of reactions Combination, Decomposition, Displacement, Double Displacement, Oxidation-Reduction. Write one balanced equation for each.' },
+        { tag: 'concept', text: 'Oxidation = loss of electrons / gain of oxygen. Reduction = gain of electrons / loss of oxygen. OIL RIG remember this.' },
         { tag: 'formula', text: 'Balancing equations: atoms of each element must be equal on both sides. Check H and O last.' },
-        { tag: 'definition', text: 'Corrosion — metals reacting with air/moisture (rust = Fe₂O₃·xH₂O). Rancidity — oxidation of fats/oils in food.' },
+        { tag: 'definition', text: 'Corrosion metals reacting with air/moisture (rust = Fe₂O₃·xH₂O). Rancidity oxidation of fats/oils in food.' },
         { tag: 'must know', text: 'Exothermic reactions release heat (combustion, respiration). Endothermic reactions absorb heat (photosynthesis, decomposition of CaCO₃).' }
       ]
     },
@@ -1098,7 +1098,7 @@ function buildMostImportant(subject) {
         { tag: 'must know', text: 'pH scale: acids < 7, neutral = 7, bases > 7. Universal indicator colour sequence: red → orange → yellow → green → blue → violet.' },
         { tag: 'formula', text: 'Neutralisation: HCl + NaOH → NaCl + H₂O. Acid + Base → Salt + Water. Always remember this.' },
         { tag: 'must know', text: 'Baking soda = NaHCO₃ (used in cooking, antacid). Washing soda = Na₂CO₃·10H₂O (cleaning). Bleaching powder = CaOCl₂. Plaster of Paris = CaSO₄·½H₂O.' },
-        { tag: 'concept', text: 'Dry HCl gas does not turn moist litmus red — H⁺ ions only form when dissolved in water. Common board question.' },
+        { tag: 'concept', text: 'Dry HCl gas does not turn moist litmus red H⁺ ions only form when dissolved in water. Common board question.' },
         { tag: 'definition', text: 'Dilute acid ≠ weak acid. Concentration refers to amount dissolved. Strength refers to degree of ionisation.' }
       ]
     },
@@ -1118,7 +1118,7 @@ function buildMostImportant(subject) {
         { tag: 'concept', text: 'Carbon has 4 valence electrons → forms 4 covalent bonds → chains, rings, branches. Catenation + tetravalency = huge diversity of compounds.' },
         { tag: 'must know', text: 'Allotropes: Diamond (hard, tetrahedral, non-conductor). Graphite (soft, layered, conducts electricity). Fullerene (C₆₀, ball shape).' },
         { tag: 'must know', text: 'Functional groups: −OH (alcohol), −CHO (aldehyde), −COOH (carboxylic acid), −CO− (ketone), −Cl/−Br (halogens).' },
-        { tag: 'formula', text: 'Ethanol oxidised to Ethanoic acid: CH₃CH₂OH → CH₃COOH. Ethanoic acid is vinegar (acetic acid, smells sour, MP 17°C — glacial acetic acid).' },
+        { tag: 'formula', text: 'Ethanol oxidised to Ethanoic acid: CH₃CH₂OH → CH₃COOH. Ethanoic acid is vinegar (acetic acid, smells sour, MP 17°C glacial acetic acid).' },
         { tag: 'must know', text: 'Soaps vs Detergents: both have hydrophilic head + hydrophobic tail (micelle). Soaps fail in hard water (Ca²⁺/Mg²⁺ form scum). Detergents work in hard water.' }
       ]
     },
@@ -1136,10 +1136,10 @@ function buildMostImportant(subject) {
       id: 6, title: 'Control and Coordination',
       items: [
         { tag: 'diagram', text: 'Neuron: dendrite → cell body → axon → nerve ending (synapse). Impulse travels as electrical signal; crosses synapse via chemical neurotransmitters.' },
-        { tag: 'must know', text: 'Reflex arc: receptor → sensory neuron → spinal cord (relay neuron) → motor neuron → effector. Bypasses brain — faster response.' },
-        { tag: 'must know', text: 'Endocrine glands: Pituitary (master gland, GH), Thyroid (thyroxin — metabolism), Adrenal (adrenaline — fight/flight), Pancreas (insulin — lowers glucose; glucagon — raises glucose).' },
+        { tag: 'must know', text: 'Reflex arc: receptor → sensory neuron → spinal cord (relay neuron) → motor neuron → effector. Bypasses brain faster response.' },
+        { tag: 'must know', text: 'Endocrine glands: Pituitary (master gland, GH), Thyroid (thyroxin metabolism), Adrenal (adrenaline fight/flight), Pancreas (insulin lowers glucose; glucagon raises glucose).' },
         { tag: 'must know', text: 'Plant hormones: Auxin (promotes elongation on shaded side → bending toward light). Gibberellin (stem growth). Cytokinin (cell division). Abscisic acid (inhibits growth, causes wilting).' },
-        { tag: 'concept', text: 'Tropic movements: Phototropism (towards light), Geotropism (root down, stem up), Hydrotropism (roots towards water), Thigmotropism (touch — tendrils).' }
+        { tag: 'concept', text: 'Tropic movements: Phototropism (towards light), Geotropism (root down, stem up), Hydrotropism (roots towards water), Thigmotropism (touch tendrils).' }
       ]
     },
     {
@@ -1149,26 +1149,26 @@ function buildMostImportant(subject) {
         { tag: 'diagram', text: 'Male reproductive system: testes (in scrotum, 2–3°C below body, produce sperm + testosterone) → epididymis → vas deferens → urethra. Accessory glands: seminal vesicle, prostate, Cowper\'s.' },
         { tag: 'diagram', text: 'Female reproductive system: ovaries (produce eggs + oestrogen/progesterone) → fallopian tube (fertilisation here) → uterus (implantation) → vagina.' },
         { tag: 'concept', text: 'Placenta: exchange of nutrients, O₂, CO₂ between mother and foetus. Also secretes hormones. Umbilical cord connects foetus to placenta.' },
-        { tag: 'must know', text: 'Contraception: Barrier (condom, diaphragm), Chemical (pills — prevent ovulation), IUCD (copper-T), Surgical (vasectomy, tubectomy — permanent). All prevent fertilisation or implantation.' }
+        { tag: 'must know', text: 'Contraception: Barrier (condom, diaphragm), Chemical (pills prevent ovulation), IUCD (copper-T), Surgical (vasectomy, tubectomy permanent). All prevent fertilisation or implantation.' }
       ]
     },
     {
       id: 8, title: 'Heredity',
       items: [
-        { tag: 'must know', text: 'Mendel\'s Laws: (1) Law of Dominance — dominant trait expressed when both alleles present. (2) Law of Segregation — alleles separate during gamete formation. (3) Law of Independent Assortment — genes on different chromosomes assort independently.' },
+        { tag: 'must know', text: 'Mendel\'s Laws: (1) Law of Dominance dominant trait expressed when both alleles present. (2) Law of Segregation alleles separate during gamete formation. (3) Law of Independent Assortment genes on different chromosomes assort independently.' },
         { tag: 'must know', text: 'Monohybrid cross: Tt × Tt → TT : Tt : tt = 1:2:1. Phenotype ratio = 3 Tall : 1 Short. F₁ all Tt (tall); F₂ = 3:1.' },
         { tag: 'must know', text: 'Dihybrid cross: RrYy × RrYy → 9 Round Yellow : 3 Round Green : 3 Wrinkled Yellow : 1 Wrinkled Green (9:3:3:1).' },
-        { tag: 'must know', text: 'Sex determination: Female = XX, Male = XY. Father determines sex — 50% chance of XX or XY. In grasshopper: XO (male), XX (female).' },
+        { tag: 'must know', text: 'Sex determination: Female = XX, Male = XY. Father determines sex 50% chance of XX or XY. In grasshopper: XO (male), XX (female).' },
         { tag: 'concept', text: 'Acquired traits NOT inherited (cutting a dog\'s tail doesn\'t make offspring born tailless). Inherited traits are present in DNA from birth.' }
       ]
     },
     {
-      id: 9, title: 'Light — Reflection and Refraction',
+      id: 9, title: 'Light Reflection and Refraction',
       items: [
         { tag: 'formula', text: 'Mirror formula: 1/v + 1/u = 1/f; focal length f = R/2. Magnification m = −v/u = h′/h. Negative m → inverted image. |m| > 1 → magnified.' },
         { tag: 'formula', text: 'Lens formula: 1/v − 1/u = 1/f. Power: P = 1/f (f in metres), unit = dioptre (D). Convex lens: +P. Concave lens: −P.' },
         { tag: 'must know', text: 'Sign convention: all distances from pole (mirror) / optical centre (lens). Incident light goes left to right. Distances in direction of light are positive (+); opposite are negative (−).' },
-        { tag: 'must know', text: 'Numericals are guaranteed — practise mirror and lens problems. u is always negative for real objects. Always write formula, substitute, and calculate step by step.' },
+        { tag: 'must know', text: 'Numericals are guaranteed practise mirror and lens problems. u is always negative for real objects. Always write formula, substitute, and calculate step by step.' },
         { tag: 'concept', text: 'Refractive index: n = c/v = sin i / sin r. Denser medium → lower speed → bends towards normal. n_glass ≈ 1.5, n_water ≈ 1.33.' }
       ]
     },
@@ -1176,7 +1176,7 @@ function buildMostImportant(subject) {
       id: 10, title: 'The Human Eye and the Colourful World',
       items: [
         { tag: 'must know', text: 'Myopia (near-sightedness): image forms in front of retina, see near objects. Corrected by concave (diverging) lens. Hypermetropia (far-sightedness): image behind retina. Corrected by convex (converging) lens.' },
-        { tag: 'diagram', text: 'Human eye parts: Cornea (main refraction), Iris (controls pupil size), Lens (fine focusing — power of accommodation), Retina (image formed), Optic nerve (to brain). Ciliary muscles adjust lens shape.' },
+        { tag: 'diagram', text: 'Human eye parts: Cornea (main refraction), Iris (controls pupil size), Lens (fine focusing power of accommodation), Retina (image formed), Optic nerve (to brain). Ciliary muscles adjust lens shape.' },
         { tag: 'must know', text: 'Dispersion through prism: white light splits into VIBGYOR. Violet bends most (shortest wavelength), Red bends least (longest wavelength). Rainbow is natural dispersion.' },
         { tag: 'concept', text: 'Tyndall effect: scattering of light by colloidal particles. Explains why headlights are visible in fog, why milk looks white.' },
         { tag: 'must know', text: 'Sky is blue: air molecules scatter blue light (short wavelength) more. Sunrise/sunset is red/orange: longer path → blue scattered away, only red/orange reaches eyes.' }
@@ -1187,9 +1187,9 @@ function buildMostImportant(subject) {
       items: [
         { tag: 'formula', text: 'Ohm\'s Law: V = IR. Resistance: R = ρl/A (ρ = resistivity). Series: R = R₁ + R₂ + R₃. Parallel: 1/R = 1/R₁ + 1/R₂ + 1/R₃.' },
         { tag: 'formula', text: 'Electric power: P = VI = I²R = V²/R. Joule\'s heating: H = I²Rt (joules). Electric energy: E = Pt. 1 kWh = 1 unit = 3.6 × 10⁶ J. Electricity bill = units × rate.' },
-        { tag: 'must know', text: 'Numericals are always in the paper — resistors in series/parallel, current through each, power consumed, electricity bill calculation. Practise all types.' },
+        { tag: 'must know', text: 'Numericals are always in the paper resistors in series/parallel, current through each, power consumed, electricity bill calculation. Practise all types.' },
         { tag: 'concept', text: 'Why parallel connection in homes: every device gets full 220V; devices work independently; total resistance decreases so more current can flow; failure of one doesn\'t affect others.' },
-        { tag: 'must know', text: 'Potential difference (V) = work done per unit charge = W/Q. Current (I) = charge per second = Q/t. Ampere (A), Ohm (Ω), Volt (V), Watt (W) — know all units.' }
+        { tag: 'must know', text: 'Potential difference (V) = work done per unit charge = W/Q. Current (I) = charge per second = Q/t. Ampere (A), Ohm (Ω), Volt (V), Watt (W) know all units.' }
       ]
     },
     {
@@ -1199,7 +1199,7 @@ function buildMostImportant(subject) {
         { tag: 'must know', text: 'Fleming\'s Left-hand Rule (motor effect): stretch thumb, index finger, middle finger mutually perpendicular. Index = magnetic field (B), Middle = current (I), Thumb = force/motion (F).' },
         { tag: 'must know', text: 'Fleming\'s Right-hand Rule (generator): same hand setup but for induced current. Thumb = motion of conductor, Index = magnetic field, Middle = induced current direction.' },
         { tag: 'concept', text: 'Electric motor: converts electrical energy → mechanical energy. Uses: fans, mixers, washing machines. Generator (dynamo): mechanical → electrical (Faraday\'s electromagnetic induction).' },
-        { tag: 'diagram', text: 'Solenoid: coil of wire → acts as bar magnet when current flows. Used in electromagnets. A fuse wire melts when current exceeds safe limit — safety device in circuits.' }
+        { tag: 'diagram', text: 'Solenoid: coil of wire → acts as bar magnet when current flows. Used in electromagnets. A fuse wire melts when current exceeds safe limit safety device in circuits.' }
       ]
     },
     {
@@ -1208,7 +1208,7 @@ function buildMostImportant(subject) {
         { tag: 'must know', text: '10% law (Lindemann): only 10% of energy at one trophic level passes to the next. 90% lost as heat. This limits food chains to 4–5 trophic levels.' },
         { tag: 'must know', text: 'Food chain example: Grass → Grasshopper → Frog → Snake → Hawk. Producer → Primary consumer → Secondary → Tertiary → Quaternary. Energy decreases at each level.' },
         { tag: 'must know', text: 'Ozone depletion: CFCs (chlorofluorocarbons from ACs/refrigerators) rise to stratosphere → UV breaks them → Cl radicals catalytically destroy O₃. UV radiation reaches earth → skin cancer, cataracts.' },
-        { tag: 'must know', text: 'Biodegradable waste: food waste, paper, cotton — broken down by microorganisms. Non-biodegradable: plastic, DDT, glass — persist in environment, cause biomagnification.' },
+        { tag: 'must know', text: 'Biodegradable waste: food waste, paper, cotton broken down by microorganisms. Non-biodegradable: plastic, DDT, glass persist in environment, cause biomagnification.' },
         { tag: 'concept', text: 'Ecosystem components: Biotic (producers → consumers → decomposers) + Abiotic (temperature, water, soil, light). Decomposers (bacteria, fungi) recycle nutrients back to soil.' }
       ]
     }
@@ -1224,7 +1224,7 @@ function buildMostImportant(subject) {
 
   return `
     <h2 class="section-title" style="margin-bottom:0.4rem">Most Important</h2>
-    <p style="color:var(--muted);margin-bottom:1.75rem;font-size:0.85rem;padding-left:0.9rem">High-probability topics for every chapter — board exam focus</p>
+    <p style="color:var(--muted);margin-bottom:1.75rem;font-size:0.85rem;padding-left:0.9rem">High-probability topics for every chapter board exam focus</p>
     <div style="display:flex;flex-direction:column;gap:1.1rem">
       ${chapters.map(ch => `
         <div class="mi-chapter-block">
@@ -1263,7 +1263,7 @@ function buildNCERT() {
 }
 
 /* ══════════════════════════════════════
-   ENGLISH — FIRST FLIGHT & FOOTPRINTS
+   ENGLISH FIRST FLIGHT & FOOTPRINTS
 ══════════════════════════════════════ */
 function buildEnglishReader(subject, type) {
   const title = type === 'ff' ? '✈️ First Flight' : '👣 Footprints Without Feet';
@@ -1332,14 +1332,14 @@ function toggleDone(btn) {
 ══════════════════════════════════════ */
 function buildGrammar() {
   const topics = [
-    { title: 'Tenses', desc: 'Present, Past, Future — Simple, Continuous, Perfect, Perfect Continuous. Tense rules with examples.' },
-    { title: 'Determiners & Articles', desc: 'Use of a, an, the, some, any, each, every, much, many — with rules and exercises.' },
+    { title: 'Tenses', desc: 'Present, Past, Future Simple, Continuous, Perfect, Perfect Continuous. Tense rules with examples.' },
+    { title: 'Determiners & Articles', desc: 'Use of a, an, the, some, any, each, every, much, many with rules and exercises.' },
     { title: 'Modals', desc: 'Can, could, may, might, shall, should, will, would, must, need, dare, used to, ought to.' },
     { title: 'Subject-Verb Agreement', desc: 'Rules for singular and plural verbs with different subjects including collective nouns.' },
     { title: 'Active and Passive Voice', desc: 'Transformations across all tenses with rules, exceptions and practice sentences.' },
     { title: 'Direct & Indirect Speech', desc: 'Reporting statements, questions, commands. Changes in pronouns and tenses.' },
-    { title: 'Clauses', desc: 'Noun clause, Adjective clause, Adverb clause — identification and usage in sentences.' },
-    { title: 'Editing / Omission / Gap Filling', desc: 'Board exam question types — spotting errors, filling blanks with correct forms.' }
+    { title: 'Clauses', desc: 'Noun clause, Adjective clause, Adverb clause identification and usage in sentences.' },
+    { title: 'Editing / Omission / Gap Filling', desc: 'Board exam question types spotting errors, filling blanks with correct forms.' }
   ];
   return `<h2 class="section-title" style="margin-bottom:0.5rem">📝 Grammar</h2>
     <p style="color:var(--muted);margin-bottom:1.5rem;font-size:0.88rem">CBSE Class 10 English Grammar Topics</p>
@@ -1365,17 +1365,17 @@ function buildReading() {
         <p>1. Read the questions FIRST before reading the passage.<br>
         2. Skim the passage to understand the main idea (30 seconds).<br>
         3. Read carefully, underlining key information related to questions.<br>
-        4. Answers are ALWAYS in the passage — never guess from outside knowledge.<br>
+        4. Answers are ALWAYS in the passage never guess from outside knowledge.<br>
         5. Use your own words for "In your own words" questions.<br>
         6. Check spelling and grammar in your answers.</p>
       </div>
       <div class="skill-card reveal reveal-d2">
         <h3>📋 Types of Questions in CBSE Board</h3>
-        <p>• <strong>Factual questions</strong> — directly from the passage<br>
-        • <strong>Inferential questions</strong> — reading between the lines<br>
-        • <strong>Vocabulary questions</strong> — find word similar in meaning<br>
-        • <strong>Title/Heading</strong> — summarize in a few words<br>
-        • <strong>Note-making</strong> — organized point format</p>
+        <p>• <strong>Factual questions</strong> directly from the passage<br>
+        • <strong>Inferential questions</strong> reading between the lines<br>
+        • <strong>Vocabulary questions</strong> find word similar in meaning<br>
+        • <strong>Title/Heading</strong> summarize in a few words<br>
+        • <strong>Note-making</strong> organized point format</p>
       </div>
       <div class="coming-soon" style="margin-top:0.5rem">
         <div class="cs-icon">📄</div>
@@ -1411,19 +1411,19 @@ function buildWriting() {
 ══════════════════════════════════════ */
 function buildScienceQBank() {
   const chapters = [
-    { id: 1,  label: 'Ch 1 — Chemical Reactions and Equations' },
-    { id: 2,  label: 'Ch 2 — Acids, Bases and Salts' },
-    { id: 3,  label: 'Ch 3 — Metals and Non-Metals' },
-    { id: 4,  label: 'Ch 4 — Carbon and Its Compounds' },
-    { id: 5,  label: 'Ch 5 — Life Processes' },
-    { id: 6,  label: 'Ch 6 — Control and Coordination' },
-    { id: 7,  label: 'Ch 7 — How do Organisms Reproduce?' },
-    { id: 8,  label: 'Ch 8 — Heredity' },
-    { id: 9,  label: 'Ch 9 — Light: Reflection and Refraction' },
-    { id: 10, label: 'Ch 10 — The Human Eye and the Colourful World' },
-    { id: 11, label: 'Ch 11 — Electricity' },
-    { id: 12, label: 'Ch 12 — Magnetic Effects of Electric Current' },
-    { id: 13, label: 'Ch 13 — Our Environment' },
+    { id: 1,  label: 'Ch 1 Chemical Reactions and Equations' },
+    { id: 2,  label: 'Ch 2 Acids, Bases and Salts' },
+    { id: 3,  label: 'Ch 3 Metals and Non-Metals' },
+    { id: 4,  label: 'Ch 4 Carbon and Its Compounds' },
+    { id: 5,  label: 'Ch 5 Life Processes' },
+    { id: 6,  label: 'Ch 6 Control and Coordination' },
+    { id: 7,  label: 'Ch 7 How do Organisms Reproduce?' },
+    { id: 8,  label: 'Ch 8 Heredity' },
+    { id: 9,  label: 'Ch 9 Light: Reflection and Refraction' },
+    { id: 10, label: 'Ch 10 The Human Eye and the Colourful World' },
+    { id: 11, label: 'Ch 11 Electricity' },
+    { id: 12, label: 'Ch 12 Magnetic Effects of Electric Current' },
+    { id: 13, label: 'Ch 13 Our Environment' },
   ];
   const cards = chapters.map(ch => {
     const d = (typeof SCIENCE_QBANK !== 'undefined') ? SCIENCE_QBANK[ch.id] : null;
@@ -1519,18 +1519,18 @@ function closeQBankModal() {
 
 function buildMathsQBank() {
   const chapters = [
-    { id: 1,  label: 'Ch 1 — Real Numbers' },
-    { id: 2,  label: 'Ch 2 — Polynomials' },
-    { id: 3,  label: 'Ch 3 — Pair of Linear Equations in Two Variables' },
-    { id: 4,  label: 'Ch 4 — Quadratic Equations' },
-    { id: 5,  label: 'Ch 5 — Arithmetic Progressions' },
-    { id: 7,  label: 'Ch 7 — Coordinate Geometry' },
-    { id: 8,  label: 'Ch 8 — Introduction to Trigonometry' },
-    { id: 9,  label: 'Ch 9 — Some Applications of Trigonometry' },
-    { id: 11, label: 'Ch 11 — Areas Related to Circles' },
-    { id: 12, label: 'Ch 12 — Surface Areas and Volumes' },
-    { id: 13, label: 'Ch 13 — Statistics' },
-    { id: 14, label: 'Ch 14 — Probability' },
+    { id: 1,  label: 'Ch 1 Real Numbers' },
+    { id: 2,  label: 'Ch 2 Polynomials' },
+    { id: 3,  label: 'Ch 3 Pair of Linear Equations in Two Variables' },
+    { id: 4,  label: 'Ch 4 Quadratic Equations' },
+    { id: 5,  label: 'Ch 5 Arithmetic Progressions' },
+    { id: 7,  label: 'Ch 7 Coordinate Geometry' },
+    { id: 8,  label: 'Ch 8 Introduction to Trigonometry' },
+    { id: 9,  label: 'Ch 9 Some Applications of Trigonometry' },
+    { id: 11, label: 'Ch 11 Areas Related to Circles' },
+    { id: 12, label: 'Ch 12 Surface Areas and Volumes' },
+    { id: 13, label: 'Ch 13 Statistics' },
+    { id: 14, label: 'Ch 14 Probability' },
   ];
   const cards = chapters.map(ch => {
     const d = (typeof MATHS_QBANK_CH !== 'undefined') ? MATHS_QBANK_CH[ch.id] : null;
@@ -1782,18 +1782,18 @@ function closeSocialQBankModal() {
 ══════════════════════════════════════ */
 function buildMaps() {
   const maps = [
-    { icon: '🗺️', name: 'Historical Maps — Nationalism in India', sub: 'Salt March route, Non-Cooperation centres, Partition maps' },
+    { icon: '🗺️', name: 'Historical Maps Nationalism in India', sub: 'Salt March route, Non-Cooperation centres, Partition maps' },
     { icon: '🌾', name: 'Agricultural Map of India', sub: 'Kharif/Rabi crop distribution, Green Revolution states' },
     { icon: '⛏️', name: 'Minerals & Resources Map', sub: 'Iron ore, coal, bauxite, mica, petroleum locations' },
     { icon: '🏭', name: 'Industrial Map of India', sub: 'Cotton, steel, IT, cement, automobile industries' },
     { icon: '🌊', name: 'Water Resources Map', sub: 'Major rivers, dams, multipurpose river projects (Bhakra, Hirakud)' },
     { icon: '🚂', name: 'Lifelines of the Economy', sub: 'National highways, railway zones, major ports and airports' },
-    { icon: '🌍', name: 'Europe — Rise of Nationalism', sub: 'Map-based questions on unification of Germany & Italy' }
+    { icon: '🌍', name: 'Europe Rise of Nationalism', sub: 'Map-based questions on unification of Germany & Italy' }
   ];
   return `
     <div class="maps-section">
       <div class="maps-header">
-        <h3>🗺️ Map Work — Social Science</h3>
+        <h3>🗺️ Map Work Social Science</h3>
         <p>Important maps for CBSE Class 10 Board Exam</p>
       </div>
       <div class="maps-list">
@@ -1822,7 +1822,7 @@ function buildSummary(subject) {
 
   if (!chapters.length) return buildComingSoon('Chapter Summaries', 'Summaries for all chapters will be added here soon.');
 
-  return `<h2 class="section-title" style="margin-bottom:1.5rem">📖 Chapter Summaries — ${subject.name}</h2>
+  return `<h2 class="section-title" style="margin-bottom:1.5rem">📖 Chapter Summaries ${subject.name}</h2>
     <div class="summary-grid">
       ${chapters.map(ch => `
         <div class="summary-card reveal">
@@ -1982,7 +1982,7 @@ function buildComingSoon(name, msg) {
   return `
     <div class="coming-soon">
       <div class="cs-icon">🚀</div>
-      <h3>${name} — Coming Soon</h3>
+      <h3>${name} Coming Soon</h3>
       <p>${msg}</p>
       <button onclick="document.getElementById('owlixToggle').click()" class="btn btn-primary btn-md">Ask Owlix Instead →</button>
     </div>`;
