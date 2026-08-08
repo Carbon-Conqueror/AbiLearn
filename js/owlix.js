@@ -1,4 +1,4 @@
-/* Owlix AI — AbiLearn Independent Edition v11
+/* Owlix AI — Master Intelligence System v12
    100% built-in — no API key, no internet needed */
 'use strict';
 
@@ -1472,50 +1472,51 @@ High Yielding Variety (HYV) seeds + irrigation + fertilisers → huge increase i
 
   {
     keys: ['hello', 'hi ', 'hey ', 'hii', 'helo', 'good morning', 'good evening', 'good afternoon', 'how are you', 'namaste', 'sup '],
-    ans: `👋 **Hello! I'm Owlix!**
+    ans: `👋 **Hey! I'm Owlix.**
 
-Your personal study buddy for CBSE Class 10 board exams!
+Your AI on AbiLearn — built for CBSE Class 10, but here for whatever you need.
 
-I can answer questions on:
-- 📐 **Maths** — all formulas, theorems, solved steps
-- 🔬 **Science** — Physics, Chemistry, Biology concepts
-- 📖 **English** — chapter summaries, themes, grammar
+**I can help you with:**
+- 📐 **Maths** — formulas, theorems, step-by-step solutions
+- 🔬 **Science** — Physics, Chemistry, Biology explained clearly
+- 📖 **English** — summaries, themes, grammar, writing
 - 🌍 **Social Science** — History, Geography, Civics, Economics
-- 🎯 **Study tips** and board exam strategies
+- 🧮 **Quick calculations** — just type any arithmetic expression
+- 🎯 **Exam strategy** — tips, time management, board patterns
 
-**Try asking me:**
-*"Quadratic formula"*, *"Photosynthesis equation"*, *"Nelson Mandela summary"*, *"Dandi March"*, *"Active passive voice"*
+I give direct, accurate answers. If I'm not sure, I'll tell you.
 
-What would you like to learn today? 🦉`
+**Ask me anything.** 🦉`
   },
 
   {
     keys: ['thank you', 'thanks', 'thank u', 'helpful', 'great answer', 'awesome', 'perfect', 'well done owlix'],
-    ans: `You're welcome! 😊
+    ans: `Glad I could help. 🦉
 
-Keep going — you're doing great! Every concept you learn is one step closer to your board exam success. 🌟
-
-Feel free to ask me anything else, anytime. I'm always ready! 🦉`
+Ask me anything else — I'm here.`
   },
 
   {
     keys: ['who are you', 'what are you', 'about owlix', 'tell me about yourself', 'what can you do'],
-    ans: `**🦉 I'm Owlix!**
+    ans: `**🦉 I'm Owlix — your AI on AbiLearn.**
 
-Your smart, always-available study companion on **AbiLearn**, built specifically for CBSE Class 10 students.
+I'm a high-accuracy, built-in AI assistant designed primarily for CBSE Class 10 — but capable of much more.
 
-**What I know:**
-- 📐 All 14 Maths chapters — formulas, theorems, examples
-- 🔬 All 13 Science chapters — Physics, Chemistry, Biology
-- 📖 All English chapters — First Flight, Footprints, Grammar
-- 🌍 All Social Science — History, Geography, Civics, Economics
-- 🎯 Study tips and exam strategies
+**What I'm good at:**
+- 📐 **Maths** — every chapter, formula, theorem, and proof technique
+- 🔬 **Science** — Physics, Chemistry, Biology with clear explanations
+- 📖 **English** — chapter summaries, poem analysis, grammar rules
+- 🌍 **Social Science** — History, Geography, Civics, Economics
+- 🧮 **Live calculations** — type any arithmetic and I compute it instantly
+- 🎯 **Strategy** — how to study, manage time, and score higher
 
-**I work completely independently** — no internet required, no API key, always fast.
+**How I work:**
+I run 100% offline — no internet, no API key, no wait time. I answer from a built-in knowledge base. I'll be direct about what I know and honest when something is outside my scope.
 
-I was built as part of **AbiLearn** to make your Class 10 preparation smarter and easier. 📚
+**What I'm not:**
+I'm not a general web search or live-data engine. For topics outside CBSE Class 10, my answers may be limited.
 
-Ask me anything about your syllabus!`
+Ask me something — let's see what I can do. 🦉`
   }
 ];
 
@@ -1609,7 +1610,7 @@ function getFallback(query) {
   if (/grammar|tense|voice|active|passive|direct|indirect|speech|determiner|modal|clause|article/.test(q))
     return `📝 **Grammar Question?**\n\nI can help with:\n- All 12 tenses with examples and signal words\n- Active and Passive Voice for all tenses\n- Direct and Indirect Speech with all rules\n- Modals, Articles, Determiners\n\nTry: *"active passive voice"*, *"tense chart"*, *"direct indirect speech rules"*`;
 
-  return `🦉 I'm here to help with your CBSE Class 10 studies!\n\n📐 **Maths** — Formulas, AP, Quadratic, Trig, Circles, Statistics, Probability\n🔬 **Science** — Electricity, Light, Chemical Reactions, Photosynthesis, Heredity\n📖 **English** — Chapter summaries, poem themes, grammar rules\n🌍 **Social Science** — History, Geography, Civics, Economics\n🎯 **Study tips** and board exam strategies\n\nTry asking: *"quadratic formula"*, *"photosynthesis"*, *"Nelson Mandela summary"*, *"Dandi March"*, *"active passive voice"*`;
+  return `🦉 That one's outside what I know directly — my built-in knowledge focuses on CBSE Class 10.\n\nHere's what I can answer accurately right now:\n\n📐 **Maths** — AP, Quadratic, Trigonometry, Circles, Coordinate Geometry, Statistics, Probability\n🔬 **Science** — Electricity, Light, Reactions, Acids-Bases, Photosynthesis, Heredity, Evolution\n📖 **English** — Chapter summaries, poem themes, grammar (tenses, voice, speech)\n🌍 **Social Science** — Nationalism, Resources, Agriculture, Power Sharing, Globalisation\n\nRephrase your question around these topics and I'll give you a precise answer.`;
 }
 
 /* ══════════════════════════════════════
@@ -1775,14 +1776,12 @@ function initOwlix() {
   /* Welcome message */
   setTimeout(() => {
     addOwlixMsg('bot', mdToHtml(
-      `👋 **Hi! I'm Owlix!**\n\n` +
-      `Your built-in AI for CBSE Class 10 — no internet needed!\n\n` +
-      `I know everything for your boards:\n` +
-      `- 📐 Maths — all formulas & theorems\n` +
-      `- 🔬 Science — Physics, Chemistry, Biology\n` +
-      `- 📖 English — chapters, poems & grammar\n` +
-      `- 🌍 Social Science — History, Geography, Civics, Economics\n\n` +
-      `**Ask me anything!** 🦉`
+      `👋 **Hi, I'm Owlix.**\n\n` +
+      `Your AI on AbiLearn — built for CBSE Class 10, works 100% offline.\n\n` +
+      `I give **direct, accurate answers** on:\n` +
+      `- 📐 Maths · 🔬 Science · 📖 English · 🌍 Social Science\n` +
+      `- 🧮 Instant calculations — type any expression\n\n` +
+      `I'll tell you when something's outside my scope. Ask me anything.`
     ));
   }, 350);
 

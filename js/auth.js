@@ -1,4 +1,4 @@
-/* AbiLearn — Authentication System v2 (session manager + navbar) */
+/* AbiLearn — Authentication System v3 (session manager + navbar + homepage gate) */
 
 /* ══ SESSION STATE ══ */
 function getUser() {
@@ -35,7 +35,6 @@ function clearUser() {
 function authLogout() {
   clearUser();
   restoreNavbarButtons();
-  const from = encodeURIComponent(location.href);
   showAuthToast('Logged out. See you soon!');
 }
 
@@ -166,8 +165,43 @@ function guardNav(event, url) {
   return false;
 }
 
+/* ══ HOMEPAGE GATE — intercept ALL clicks on the homepage ══ */
+function initHomePageGate() {
+  // Only active on the homepage (identified by the subjects grid)
+  if (!document.getElementById('subjectsGrid')) return;
+
+  document.addEventListener('click', function(e) {
+    if (getUser()) return; // logged in — let everything through
+
+    const anchor = e.target.closest('a[href]');
+    if (!anchor) return;
+
+    const href = anchor.getAttribute('href');
+    if (!href) return;
+
+    // Skip same-page anchors (#...) and javascript: links
+    if (href.startsWith('#') || href.startsWith('javascript')) return;
+
+    // Skip auth.html itself
+    if (href.includes('auth.html')) return;
+
+    // Only gate internal .html links (relative paths, no protocol)
+    const isInternal = !href.startsWith('http://') && !href.startsWith('https://') && !href.startsWith('//');
+    if (!isInternal) return;
+
+    e.preventDefault();
+    e.stopImmediatePropagation();
+    window.location.href = 'auth.html?from=' + encodeURIComponent(location.href);
+  }, true); // capture phase so we intercept before onclick handlers
+}
+
 /* ══ INIT ══ */
 function initAuth() {
+  // Best-effort fullscreen on page load (silent; browsers may block without gesture)
+  if (!document.fullscreenElement) {
+    document.documentElement.requestFullscreen().catch(() => {});
+  }
+
   // Redirect login/signup buttons to auth.html
   document.querySelectorAll('.btn-login').forEach(btn => {
     btn.addEventListener('click', () => {
@@ -186,7 +220,7 @@ function initAuth() {
   const user = getUser();
   if (user) updateNavbarForUser(user);
 
-  // Go fullscreen automatically on first user interaction
+  // Go fullscreen automatically on first user interaction (reliable fallback)
   function _autoFs() {
     if (!document.fullscreenElement)
       document.documentElement.requestFullscreen().catch(()=>{});
@@ -197,6 +231,9 @@ function initAuth() {
   document.addEventListener('click',     _autoFs);
   document.addEventListener('keydown',   _autoFs);
   document.addEventListener('touchstart',_autoFs, {passive:true});
+
+  // Homepage gate — must run after DOM is ready so subjectsGrid exists
+  initHomePageGate();
 }
 document.addEventListener('DOMContentLoaded', initAuth);
 
