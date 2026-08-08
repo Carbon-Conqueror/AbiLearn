@@ -193,6 +193,18 @@ function initAuth() {
   if (user) updateNavbarForUser(user);
 
   initFullscreenBtn();
+
+  // Go fullscreen automatically on first user interaction
+  function _autoFs() {
+    if (!document.fullscreenElement)
+      document.documentElement.requestFullscreen().catch(()=>{});
+    document.removeEventListener('click',     _autoFs);
+    document.removeEventListener('keydown',   _autoFs);
+    document.removeEventListener('touchstart',_autoFs);
+  }
+  document.addEventListener('click',     _autoFs);
+  document.addEventListener('keydown',   _autoFs);
+  document.addEventListener('touchstart',_autoFs, {passive:true});
 }
 document.addEventListener('DOMContentLoaded', initAuth);
 
