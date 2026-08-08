@@ -1,5 +1,5 @@
-/* Owlix AI — Master Intelligence System v12
-   100% built-in — no API key, no internet needed */
+/* Owlix AI — LLM-powered v13
+   Real AI via /api/chat · KB used for CBSE context injection */
 'use strict';
 
 /* ══════════════════════════════════════════════════════
@@ -1521,10 +1521,22 @@ Ask me something — let's see what I can do. 🦉`
 ];
 
 /* ══════════════════════════════════════
-   MEMORY
+   CONVERSATION HISTORY
+   [{role:'user'|'assistant', content:'...'}]
+   Sent to /api/chat for multi-turn context
 ══════════════════════════════════════ */
-const MEMORY = [];
-let _lastMatch = null; // last KB entry successfully answered
+const CONVERSATION = [];
+const MAX_CONV     = 20; // last 10 turns (20 messages)
+let   _streaming   = false;
+
+function _trimConv() {
+  while (CONVERSATION.length > MAX_CONV) CONVERSATION.splice(0, 2);
+}
+
+function _addConv(role, content) {
+  CONVERSATION.push({ role, content });
+  _trimConv();
+}
 
 /* ══════════════════════════════════════
    UTILITIES
@@ -1532,23 +1544,75 @@ let _lastMatch = null; // last KB entry successfully answered
 const delay = ms => new Promise(r => setTimeout(r, ms));
 
 function mdToHtml(text) {
-  return text
+  // 1. Extract fenced code blocks first (so their content isn't escaped/reformatted)
+  const blocks = [];
+  let s = text.replace(/```(\w*)\n?([\s\S]*?)```/g, (_, lang, code) => {
+    const id = 'ocb-' + Math.random().toString(36).slice(2, 9);
+    const safe = code.trim()
+      .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+    blocks.push(
+      `<div class="owlix-cb"><div class="owlix-cb-hd">` +
+      `<span class="owlix-cb-lang">${lang || 'code'}</span>` +
+      `<button class="owlix-cb-copy" onclick="owlixCopyCode('${id}')">Copy</button></div>` +
+      `<pre id="${id}" class="owlix-cb-pre">${safe}</pre></div>`
+    );
+    return `\x00BLOCK${blocks.length - 1}\x00`;
+  });
+
+  // 2. Escape HTML in the rest
+  s = s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+
+  // 3. Inline markdown
+  s = s
+    // Bold+italic
     .replace(/\*\*\*(.+?)\*\*\*/g, '<strong><em>$1</em></strong>')
+    // Bold
     .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
+    // Italic
     .replace(/\*(.+?)\*/g, '<em>$1</em>')
+    // Inline code
     .replace(/`([^`\n]+)`/g, '<code class="owlix-code">$1</code>')
-    .replace(/^#{1,3} (.+)$/gm, '<strong style="color:#5B21B6;display:block;margin:0.35rem 0 0.1rem">$1</strong>')
-    .replace(/^\|(.+)$/gm, s => {
-      if (s.includes('---|')) return ''; // skip separator rows
-      const cols = s.split('|').filter(c => c.trim());
-      return '<div style="display:flex;gap:0;margin:1px 0">' +
-        cols.map(c => `<span style="flex:1;padding:3px 6px;border:1px solid #e5e7eb;font-size:0.82em">${c.trim()}</span>`).join('') +
+    // Headers h3 → h1
+    .replace(/^### (.+)$/gm, '<strong class="owlix-h owlix-h3">$1</strong>')
+    .replace(/^## (.+)$/gm,  '<strong class="owlix-h owlix-h2">$1</strong>')
+    .replace(/^# (.+)$/gm,   '<strong class="owlix-h owlix-h1">$1</strong>')
+    // Tables (pipe rows)
+    .replace(/^\|(.+)$/gm, row => {
+      if (/^\|[\s\-:|]+\|/.test(row)) return ''; // separator row
+      const cells = row.split('|').filter(c => c.trim());
+      return '<div class="owlix-tr">' +
+        cells.map(c => `<span class="owlix-td">${c.trim()}</span>`).join('') +
         '</div>';
     })
-    .replace(/^[-*] (.+)$/gm, '<span style="display:block;padding-left:0.75rem">• $1</span>')
-    .replace(/^(\d+)\. (.+)$/gm, '<span style="display:block;padding-left:0.75rem">$1. $2</span>')
+    // Horizontal rule
+    .replace(/^---+$/gm, '<hr class="owlix-hr">')
+    // Unordered list items
+    .replace(/^[-*] (.+)$/gm, '<span class="owlix-li">• $1</span>')
+    // Ordered list items
+    .replace(/^(\d+)\. (.+)$/gm, '<span class="owlix-li">$1. $2</span>')
+    // Paragraph breaks
     .replace(/\n\n/g, '<br><br>')
     .replace(/\n/g, '<br>');
+
+  // 4. Restore code blocks
+  s = s.replace(/\x00BLOCK(\d+)\x00/g, (_, i) => blocks[+i]);
+
+  return s;
+}
+
+function owlixCopyCode(id) {
+  const el = document.getElementById(id);
+  if (!el) return;
+  const btn = el.closest('.owlix-cb')?.querySelector('.owlix-cb-copy');
+  navigator.clipboard.writeText(el.textContent).then(() => {
+    if (btn) { btn.textContent = '✓ Copied'; setTimeout(() => btn.textContent = 'Copy', 2000); }
+  }).catch(() => {
+    // fallback: select text
+    const range = document.createRange();
+    range.selectNode(el);
+    window.getSelection()?.removeAllRanges();
+    window.getSelection()?.addRange(range);
+  });
 }
 
 function escOwlix(s) {
@@ -1599,24 +1663,15 @@ function isFollowUp(q) {
   return /\b(more|explain|example|elaborate|detail|simpler|simple|again|go on|expand|tell me more|what about|and what|continue|next|show me|give me|how about|unclear|didn'?t understand|not clear|repeat|rephrase)\b/.test(q);
 }
 
+/* getFallback is kept only as an offline emergency fallback when the
+   LLM API is completely unavailable. It does NOT run as the primary
+   response engine — the real LLM handles all normal questions. */
 function getFallback(query) {
   const q = query.toLowerCase();
-  if (/\d|formula|solve|equation|calculat|find the|value of|ap |sum of|area of|volume|theorem|proof/.test(q))
-    return `📐 **Maths Question?**\n\nI can help with:\n- Quadratic equations & formula\n- Arithmetic Progressions (nth term, sum)\n- Trigonometry (ratios, identities, standard values)\n- Coordinate geometry (distance, section formula)\n- Triangles (similarity, Pythagoras, BPT)\n- Statistics (mean, median, mode) & Probability\n\nTry: *"quadratic formula"*, *"nth term AP"*, *"Pythagoras theorem"*, *"statistics median formula"*`;
+  const kbMatch = findAnswer(q);
+  if (kbMatch) return kbMatch.ans;
 
-  if (/physic|chemi|bio|react|acid|base|salt|metal|carbon|electr|light|mirror|lens|photosyn|respirat|heredit|mendel|organism|evolut|environment|ecosystem|nervous|reproduc|life process/.test(q))
-    return `🔬 **Science Question?**\n\nI can help with:\n- **Physics:** Ohm's Law, light, mirror/lens formulae, eye defects, magnetic effects\n- **Chemistry:** Reactions, acids-bases, metals, carbon compounds\n- **Biology:** Photosynthesis, respiration, life processes, heredity, evolution, environment\n\nTry: *"ohm's law"*, *"photosynthesis equation"*, *"Mendel's law"*, *"types of reactions"*`;
-
-  if (/chapter|story|poem|theme|character|summary|author|flight|mandela|lencho|anne|amanda|necklace|griffin|footprint|frost|blake/.test(q))
-    return `📖 **English Literature?**\n\nI know complete summaries & themes for:\n- **First Flight:** A Letter to God, Nelson Mandela, Anne Frank, Two Stories About Flying, Amanda!, Dust of Snow, Fire & Ice, and more\n- **Footprints:** The Necklace, Footprints Without Feet, The Book That Saved the Earth\n\nTry: *"A Letter to God summary"*, *"Amanda poem theme"*, *"The Necklace"*`;
-
-  if (/histor|geograph|civic|econom|gandhi|india|nation|europ|soil|crop|resource|power shar|globalisa|dandi|non-cooper|civil disobedience|agriculture|development|money credit/.test(q))
-    return `🌍 **Social Science?**\n\nI can help with:\n- **History:** Nationalism in Europe, Nationalism in India (Dandi March, movements)\n- **Geography:** Resources & Development, Agriculture (crops, soil types)\n- **Civics:** Power Sharing (Belgium vs Sri Lanka)\n- **Economics:** Development (HDI), Money & Credit (formal vs informal), Globalisation\n\nTry: *"Dandi March"*, *"types of soil"*, *"power sharing Belgium"*, *"globalisation"*`;
-
-  if (/grammar|tense|voice|active|passive|direct|indirect|speech|determiner|modal|clause|article/.test(q))
-    return `📝 **Grammar Question?**\n\nI can help with:\n- All 12 tenses with examples and signal words\n- Active and Passive Voice for all tenses\n- Direct and Indirect Speech with all rules\n- Modals, Articles, Determiners\n\nTry: *"active passive voice"*, *"tense chart"*, *"direct indirect speech rules"*`;
-
-  return `🦉 That one's outside what I know directly — my built-in knowledge focuses on CBSE Class 10.\n\nHere's what I can answer accurately right now:\n\n📐 **Maths** — AP, Quadratic, Trigonometry, Circles, Coordinate Geometry, Statistics, Probability\n🔬 **Science** — Electricity, Light, Reactions, Acids-Bases, Photosynthesis, Heredity, Evolution\n📖 **English** — Chapter summaries, poem themes, grammar (tenses, voice, speech)\n🌍 **Social Science** — Nationalism, Resources, Agriculture, Power Sharing, Globalisation\n\nRephrase your question around these topics and I'll give you a precise answer.`;
+  return `⚠️ **Owlix AI is temporarily unavailable.**\n\nI couldn't connect to the AI service right now. Please check your internet connection and try again in a moment.`;
 }
 
 /* ══════════════════════════════════════
@@ -1691,6 +1746,72 @@ function removeTyping() {
 }
 
 /* ══════════════════════════════════════
+   LLM STREAMING ENGINE
+══════════════════════════════════════ */
+
+/**
+ * Stream a response from /api/chat (Cloudflare Pages Function).
+ * Writes tokens directly into `bubble` as they arrive.
+ * Returns the complete text when done.
+ */
+async function _streamAPI(userMsg, history, kbContext, bubble, msgs) {
+  const resp = await fetch('/api/chat', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      message: userMsg,
+      history,
+      context: kbContext || undefined,
+    }),
+  });
+
+  if (!resp.ok) {
+    const err = await resp.json().catch(() => ({}));
+    const e   = new Error(err.error || `HTTP ${resp.status}`);
+    e.status  = resp.status;
+    throw e;
+  }
+
+  const reader = resp.body.getReader();
+  const dec    = new TextDecoder();
+  let full = '';
+  let buf  = '';
+
+  bubble.innerHTML = '<span class="owlix-cursor"></span>';
+
+  while (true) {
+    const { done, value } = await reader.read();
+    if (done) break;
+
+    buf += dec.decode(value, { stream: true });
+    const lines = buf.split('\n');
+    buf = lines.pop() ?? '';
+
+    for (const line of lines) {
+      if (!line.startsWith('data: ')) continue;
+      const d = line.slice(6).trim();
+      if (d === '[DONE]') {
+        bubble.innerHTML = mdToHtml(full);
+        msgs.scrollTop   = msgs.scrollHeight;
+        return full;
+      }
+      try {
+        const { text } = JSON.parse(d);
+        if (text) {
+          full += text;
+          bubble.innerHTML = mdToHtml(full) + '<span class="owlix-cursor"></span>';
+          msgs.scrollTop   = msgs.scrollHeight;
+        }
+      } catch { /* partial JSON — ignore */ }
+    }
+  }
+
+  bubble.innerHTML = mdToHtml(full);
+  msgs.scrollTop   = msgs.scrollHeight;
+  return full;
+}
+
+/* ══════════════════════════════════════
    MAIN SEND
 ══════════════════════════════════════ */
 async function sendOwlixMessage(text) {
@@ -1698,56 +1819,110 @@ async function sendOwlixMessage(text) {
   if (win && !win.classList.contains('open')) win.classList.add('open');
 
   const q = (text || '').trim();
-  if (!q) return;
+  if (!q || _streaming) return;
 
   addOwlixMsg('user', escOwlix(q));
-  MEMORY.push(q);
-  if (MEMORY.length > 12) MEMORY.shift();
 
-  // Instant math check
+  // Hide quick-reply chips after first real message
+  if (CONVERSATION.length > 0) {
+    const qr = document.getElementById('quickReplies');
+    if (qr) qr.style.display = 'none';
+  }
+
+  // Short query guard
+  if (q.length < 3) {
+    const r = createBotBubble();
+    if (r) r.bubble.innerHTML = mdToHtml(
+      'Can you give me a bit more detail? Try asking:\n\n' +
+      '- *"What is photosynthesis?"*\n' +
+      '- *"Explain Newton\'s laws"*\n' +
+      '- *"Write Python code to reverse a list"*\n' +
+      '- Or type a calculation: `25 × 48`'
+    );
+    return;
+  }
+
+  // Instant arithmetic — no API call needed, faster and always accurate
   const math = tryMath(q);
   if (math) {
-    await delay(250);
+    await delay(150);
     const r = createBotBubble();
-    if (r) await typeOut(r.bubble, math, r.msgs);
+    if (r) r.bubble.innerHTML = mdToHtml(math);
+    _addConv('user', q);
+    _addConv('assistant', math);
     return;
   }
 
-  // Very short / empty-meaning queries
-  if (q.length < 3) {
-    const r2 = createBotBubble();
-    if (r2) await typeOut(r2.bubble, `Can you give me a bit more detail? For example: *"quadratic formula"*, *"photosynthesis"*, *"Dandi March"*, or type a calculation like \`15 × 24\`.`, r2.msgs);
-    return;
-  }
+  // ── Real LLM call ───────────────────────────────────────────────────
+  // Build history snapshot BEFORE adding current message
+  const history = CONVERSATION.slice(-MAX_CONV);
+
+  // KB lookup — inject relevant CBSE notes as trusted context for the LLM
+  const kbMatch  = findAnswer(q);
+  const kbContext = kbMatch ? kbMatch.ans : null;
+
+  // Add user message to conversation now
+  _addConv('user', q);
+
+  // Lock UI during streaming
+  _streaming = true;
+  const inp = document.getElementById('owlixInput');
+  const snd = document.getElementById('owlixSend');
+  if (inp) inp.disabled = true;
+  if (snd) snd.disabled = true;
 
   showTyping();
-  await delay(500 + Math.random() * 500);
+  await delay(180); // brief pause so typing indicator is visible
 
-  let match = findAnswer(q);
-  let answer;
+  let reply = '';
 
-  if (match) {
-    _lastMatch = match;
-    answer = match.ans;
-  } else if (isFollowUp(q) && _lastMatch) {
-    // Follow-up to the last topic
-    answer = `Here's that topic again:\n\n` + _lastMatch.ans;
-  } else {
-    answer = getFallback(q);
+  try {
+    removeTyping();
+    const r = createBotBubble();
+    if (!r) throw new Error('ui');
+
+    reply = await _streamAPI(q, history, kbContext, r.bubble, r.msgs);
+
+  } catch (err) {
+    removeTyping();
+
+    let msg;
+    const s = err.status || 0;
+
+    if (!navigator.onLine || err.message.toLowerCase().includes('fetch') || s === 0) {
+      msg = '⚠️ **No connection.** Please check your internet and try again.';
+    } else if (s === 429) {
+      msg = '⚠️ **Too many requests.** Please wait a moment and try again.';
+    } else if (s === 503) {
+      msg = kbContext
+        ? '⚠️ **AI service unavailable.** Here\'s what I have from my notes:\n\n' + kbContext
+        : '⚠️ Owlix AI is not set up yet. Please check back soon.';
+    } else {
+      msg = kbContext
+        ? '⚠️ **Couldn\'t reach AI right now.** Here\'s what I have from my notes:\n\n' + kbContext
+        : '⚠️ Owlix couldn\'t respond. Please try again.';
+    }
+
+    const r = createBotBubble();
+    if (r) r.bubble.innerHTML = mdToHtml(msg);
+    reply = msg;
+
+  } finally {
+    _streaming = false;
+    if (inp) { inp.disabled = false; inp.focus(); }
+    if (snd) snd.disabled = false;
   }
 
-  removeTyping();
-  const r = createBotBubble();
-  if (r) await typeOut(r.bubble, answer, r.msgs);
+  if (reply) _addConv('assistant', reply);
 }
 
 /* ══════════════════════════════════════
    STYLES
 ══════════════════════════════════════ */
 function injectOwlixStyles() {
-  if (document.getElementById('owlix-v12-styles')) return;
+  if (document.getElementById('owlix-v13-styles')) return;
   const s = document.createElement('style');
-  s.id = 'owlix-v12-styles';
+  s.id = 'owlix-v13-styles';
   s.textContent = `
     .owlix-cursor {
       display:inline-block;width:2px;height:1.1em;background:#7C3AED;
@@ -1761,6 +1936,31 @@ function injectOwlixStyles() {
     }
     .msg-bbl strong { color:inherit; }
     .msg-bbl code { word-break:break-all; }
+    .owlix-cb {
+      background:#0f0d1f;border:1px solid rgba(124,58,237,0.3);
+      border-radius:8px;margin:8px 0;overflow:hidden;
+      font-family:'Courier New',Courier,monospace;
+    }
+    .owlix-cb-hd {
+      display:flex;align-items:center;justify-content:space-between;
+      padding:5px 10px;background:rgba(124,58,237,0.15);
+      border-bottom:1px solid rgba(124,58,237,0.2);
+    }
+    .owlix-cb-lang {
+      font-size:0.72em;color:#a78bfa;text-transform:uppercase;
+      letter-spacing:0.06em;font-family:inherit;
+    }
+    .owlix-cb-copy {
+      font-size:0.72em;padding:2px 8px;border-radius:4px;
+      background:rgba(124,58,237,0.25);border:1px solid rgba(124,58,237,0.4);
+      color:#c4b5fd;cursor:pointer;transition:background 0.2s;
+    }
+    .owlix-cb-copy:hover { background:rgba(124,58,237,0.45); }
+    .owlix-cb-pre {
+      margin:0;padding:10px 12px;overflow-x:auto;
+      font-size:0.82em;line-height:1.55;color:#e2e8f0;
+      white-space:pre;
+    }
   `;
   document.head.appendChild(s);
 }
@@ -1799,11 +1999,13 @@ function initOwlix() {
   setTimeout(() => {
     addOwlixMsg('bot', mdToHtml(
       `👋 **Hi, I'm Owlix.**\n\n` +
-      `Your AI on AbiLearn — built for CBSE Class 10, works 100% offline.\n\n` +
-      `I give **direct, accurate answers** on:\n` +
+      `Your AI study assistant on AbiLearn — powered by real AI, built for CBSE Class 10.\n\n` +
+      `I can help you with:\n` +
       `- 📐 Maths · 🔬 Science · 📖 English · 🌍 Social Science\n` +
-      `- 🧮 Instant calculations — type any expression\n\n` +
-      `I'll tell you when something's outside my scope. Ask me anything.`
+      `- 🧮 Step-by-step solutions and explanations\n` +
+      `- 📝 Board exam tips, mark weightage, and common mistakes\n` +
+      `- 💻 Code blocks with syntax highlighting\n\n` +
+      `Ask me anything — I give direct, accurate answers.`
     ));
   }, 350);
 

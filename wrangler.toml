@@ -1,0 +1,14 @@
+# Cloudflare Pages / Workers config for local development
+# Run:  npx wrangler pages dev . --binding AI_API_KEY=your-key
+#
+# For production: set secrets via Cloudflare Pages dashboard,
+# NOT here (this file is committed to git).
+
+name                    = "abilearn"
+compatibility_date      = "2024-09-23"
+pages_build_output_dir  = "."
+
+# Non-secret env vars (safe to commit)
+[vars]
+AI_PROVIDER = "anthropic"
+AI_MODEL    = "claude-haiku-4-5-20251001"
