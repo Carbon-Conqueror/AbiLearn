@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sign In — AbiLearn</title>
+  <meta name="description" content="Sign in or create your AbiLearn account to track your CBSE Class 10 study progress.">
+  <meta name="robots" content="noindex">
+  <link rel="icon" href="assets/logo.jpeg" type="image/jpeg">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap">
+  <link rel="stylesheet" href="css/auth-page.css?v=1">
+</head>
+<body>
+
+<div class="al-page">
+
+  <!-- ══ LEFT PANEL ══ -->
+  <aside class="al-left" aria-hidden="true">
+
+    <!-- Math symbols scattered -->
+    <div class="al-math-symbols">
+      <span class="al-math-sym" style="top:14%;left:8%">∑</span>
+      <span class="al-math-sym" style="top:22%;left:72%">π</span>
+      <span class="al-math-sym" style="top:35%;left:18%">∫</span>
+      <span class="al-math-sym" style="top:42%;left:82%">Δ</span>
+      <span class="al-math-sym" style="top:55%;left:6%">√</span>
+      <span class="al-math-sym" style="top:61%;left:60%">∞</span>
+      <span class="al-math-sym" style="top:71%;left:28%">f(x)</span>
+      <span class="al-math-sym" style="top:78%;left:76%">θ</span>
+      <span class="al-math-sym" style="top:88%;left:12%">λ</span>
+      <span class="al-math-sym" style="top:8%;left:48%">α</span>
+      <span class="al-math-sym" style="top:48%;left:44%">β</span>
+      <span class="al-math-sym" style="top:30%;left:54%">≈</span>
+      <span class="al-math-sym" style="top:65%;left:40%">μ</span>
+      <span class="al-math-sym" style="top:82%;left:52%">σ</span>
+    </div>
+
+    <!-- Brand logo -->
+    <div class="al-left-brand">
+      <img src="assets/logo.jpeg" alt="AbiLearn" class="al-left-brand-logo" onerror="this.style.display='none'">
+      <span class="al-left-brand-text">Abi<span>Learn</span></span>
+    </div>
+
+    <!-- Center tagline -->
+    <div class="al-left-center">
+      <div class="al-tagline">Built for the<br><span>Mind Ahead.</span></div>
+      <p class="al-subtitle">Learn smarter. Understand deeper. Move ahead.</p>
+    </div>
+
+    <!-- Subject chips -->
+    <div class="al-subject-chips">
+      <span class="al-chip math">Mathematics</span>
+      <span class="al-chip sci">Science</span>
+      <span class="al-chip eng">English</span>
+      <span class="al-chip soc">Social Science</span>
+      <span class="al-chip">CBSE Class 10</span>
+    </div>
+
+  </aside>
+
+  <!-- ══ RIGHT PANEL ══ -->
+  <main class="al-right">
+    <div class="al-right-inner">
+
+      <!-- Mobile logo -->
+      <div class="al-mobile-brand">
+        <img src="assets/logo.jpeg" alt="AbiLearn" class="al-mobile-brand-logo" onerror="this.style.display='none'">
+        <span class="al-mobile-brand-text">Abi<span>Learn</span></span>
+      </div>
+
+      <!-- Auth card — rendered by auth-page.js -->
+      <div id="alCard" role="main" aria-live="polite"></div>
+
+      <!-- Footer links -->
+      <div class="al-footer">
+        <a href="index.html">Home</a>
+        <span class="sep">&middot;</span>
+        <a href="#">Privacy Policy</a>
+        <span class="sep">&middot;</span>
+        <a href="#">Terms of Service</a>
+        <br>
+        &copy; 2026 AbiLearn. All rights reserved.
+      </div>
+
+    </div>
+  </main>
+
+</div>
+
+<script src="js/auth-page.js?v=1"></script>
+</body>
+</html>
