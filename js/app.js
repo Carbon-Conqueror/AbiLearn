@@ -51,15 +51,30 @@ const SUBJECT_TABS = {
   ]
 };
 
-/* ── PROGRESS ── */
+/* ── PROGRESS — per-email, invisible when logged out ── */
+function _currentEmail() {
+  try {
+    const u = JSON.parse(
+      localStorage.getItem('abilearn_user') ||
+      sessionStorage.getItem('abilearn_user') || 'null'
+    );
+    return u && u.email ? u.email : null;
+  } catch { return null; }
+}
 function getProgress() {
-  try { return JSON.parse(localStorage.getItem('abilearn_progress') || '{}'); } catch { return {}; }
+  const email = _currentEmail();
+  if (!email) return {};
+  try { return JSON.parse(localStorage.getItem('abilearn_progress_' + email) || '{}'); } catch { return {}; }
 }
 function saveProgress(p) {
-  try { localStorage.setItem('abilearn_progress', JSON.stringify(p)); } catch {}
+  const email = _currentEmail();
+  if (!email) return;
+  try { localStorage.setItem('abilearn_progress_' + email, JSON.stringify(p)); } catch {}
 }
 function getPDFStore() {
-  try { return JSON.parse(localStorage.getItem('pdf_done') || '{}'); } catch { return {}; }
+  const email = _currentEmail();
+  if (!email) return {};
+  try { return JSON.parse(localStorage.getItem('pdf_done_' + email) || '{}'); } catch { return {}; }
 }
 function getSubjectPct(subjectId) {
   // Count all PDFs configured for this subject
@@ -107,7 +122,13 @@ function initSearch() {
 
 function goTo(subjectId, chapterId) {
   const map = { maths:'maths.html', science:'science.html', english:'english.html', social:'social.html' };
-  if (map[subjectId]) { sessionStorage.setItem('openChapter', chapterId); window.location.href = map[subjectId]; }
+  if (!map[subjectId]) return;
+  if (typeof getUser === 'function' && !getUser()) {
+    window.location.href = 'auth.html?from=' + encodeURIComponent(location.href);
+    return;
+  }
+  sessionStorage.setItem('openChapter', chapterId);
+  window.location.href = map[subjectId];
 }
 
 /* ── MOBILE HAMBURGER MENU ── */
@@ -216,7 +237,7 @@ function renderSubjectCards() {
     const pct = getSubjectPct(sub.id);
     const qCount = sub.chapters.reduce((a, c) => a + (c.mcqs ? c.mcqs.length : 0), 0);
     return `
-    <a href="${map[sub.id]}" class="subject-card ${sub.id} reveal reveal-d${i + 1}">
+    <a href="${map[sub.id]}" onclick="return guardNav(event,'${map[sub.id]}')" class="subject-card ${sub.id} reveal reveal-d${i + 1}">
       <div class="card-top">
         <div class="card-icon-wrap">${sub.icon}</div>
         <div class="card-title">${sub.name}</div>
@@ -596,13 +617,15 @@ function toDriveEmbed(url) {
 
 /* PDF completion helpers */
 function getPDFDone(url) {
-  try { return !!(JSON.parse(localStorage.getItem('pdf_done') || '{}')[url]); } catch { return false; }
+  try { return !!(getPDFStore()[url]); } catch { return false; }
 }
 function togglePDFDone(btn, url) {
+  const email = _currentEmail();
+  if (!email) return;
   try {
     const store = getPDFStore();
     store[url] = !store[url];
-    localStorage.setItem('pdf_done', JSON.stringify(store));
+    localStorage.setItem('pdf_done_' + email, JSON.stringify(store));
     btn.classList.toggle('done', !!store[url]);
     btn.title = store[url] ? 'Mark as unread' : 'Mark as read';
   } catch {}

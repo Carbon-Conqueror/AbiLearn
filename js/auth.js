@@ -158,18 +158,12 @@ function updateFsIcon(isFs) {
 }
 document.addEventListener('fullscreenchange', () => updateFsIcon(!!document.fullscreenElement));
 
-function initFullscreenBtn() {
-  const navRight = document.querySelector('.nav-right');
-  if (!navRight || document.getElementById('fsBtn')) return;
-  const btn     = document.createElement('button');
-  btn.id        = 'fsBtn';
-  btn.className = 'fs-btn';
-  btn.title     = 'Enter full screen';
-  btn.onclick   = toggleFullscreen;
-  btn.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"/></svg>`;
-  const loginBtn = navRight.querySelector('.btn-login');
-  if (loginBtn) navRight.insertBefore(btn, loginBtn);
-  else navRight.appendChild(btn);
+/* guardNav — gates navigation behind authentication */
+function guardNav(event, url) {
+  if (getUser()) return true;
+  event.preventDefault();
+  window.location.href = 'auth.html?from=' + encodeURIComponent(location.href);
+  return false;
 }
 
 /* ══ INIT ══ */
@@ -192,8 +186,6 @@ function initAuth() {
   const user = getUser();
   if (user) updateNavbarForUser(user);
 
-  initFullscreenBtn();
-
   // Go fullscreen automatically on first user interaction
   function _autoFs() {
     if (!document.fullscreenElement)
@@ -213,7 +205,7 @@ function openDashboard() {
   const user = getUser();
   if (!user) return;
   const progress = (() => {
-    try { return JSON.parse(localStorage.getItem('abilearn_progress') || '{}'); } catch { return {}; }
+    try { return JSON.parse(localStorage.getItem('abilearn_progress_' + user.email) || '{}'); } catch { return {}; }
   })();
   const subjects = [
     { id: 'maths',   name: 'Mathematics',   total: 15 },
@@ -327,7 +319,11 @@ function closePanel(id) {
 
 function clearProgress() {
   if (confirm('Clear all study progress? This cannot be undone.')) {
-    localStorage.removeItem('abilearn_progress');
+    const u = getUser();
+    if (u) {
+      localStorage.removeItem('abilearn_progress_' + u.email);
+      localStorage.removeItem('pdf_done_' + u.email);
+    }
     closePanel('settingsPanel');
     showAuthToast('Study progress cleared.');
   }
