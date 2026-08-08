@@ -1524,6 +1524,7 @@ Ask me something — let's see what I can do. 🦉`
    MEMORY
 ══════════════════════════════════════ */
 const MEMORY = [];
+let _lastMatch = null; // last KB entry successfully answered
 
 /* ══════════════════════════════════════
    UTILITIES
@@ -1576,10 +1577,11 @@ function tryMath(msg) {
    MATCHING ENGINE
 ══════════════════════════════════════ */
 function scoreEntry(entry, q) {
-  let score = 0;
+  let score = 0, count = 0;
   for (const k of entry.keys) {
-    if (q.includes(k.toLowerCase())) score += k.length;
+    if (q.includes(k.toLowerCase())) { score += k.length; count++; }
   }
+  if (count > 1) score += count * 4; // bonus for multi-keyword matches
   return score;
 }
 
@@ -1591,6 +1593,10 @@ function findAnswer(query) {
     if (s > top) { top = s; best = e; }
   }
   return top >= 3 ? best : null;
+}
+
+function isFollowUp(q) {
+  return /\b(more|explain|example|elaborate|detail|simpler|simple|again|go on|expand|tell me more|what about|and what|continue|next|show me|give me|how about|unclear|didn'?t understand|not clear|repeat|rephrase)\b/.test(q);
 }
 
 function getFallback(query) {
@@ -1707,12 +1713,28 @@ async function sendOwlixMessage(text) {
     return;
   }
 
-  // Show typing indicator
+  // Very short / empty-meaning queries
+  if (q.length < 3) {
+    const r2 = createBotBubble();
+    if (r2) await typeOut(r2.bubble, `Can you give me a bit more detail? For example: *"quadratic formula"*, *"photosynthesis"*, *"Dandi March"*, or type a calculation like \`15 × 24\`.`, r2.msgs);
+    return;
+  }
+
   showTyping();
   await delay(500 + Math.random() * 500);
 
-  const match = findAnswer(q);
-  const answer = match ? match.ans : getFallback(q);
+  let match = findAnswer(q);
+  let answer;
+
+  if (match) {
+    _lastMatch = match;
+    answer = match.ans;
+  } else if (isFollowUp(q) && _lastMatch) {
+    // Follow-up to the last topic
+    answer = `Here's that topic again:\n\n` + _lastMatch.ans;
+  } else {
+    answer = getFallback(q);
+  }
 
   removeTyping();
   const r = createBotBubble();
@@ -1723,9 +1745,9 @@ async function sendOwlixMessage(text) {
    STYLES
 ══════════════════════════════════════ */
 function injectOwlixStyles() {
-  if (document.getElementById('owlix-v11-styles')) return;
+  if (document.getElementById('owlix-v12-styles')) return;
   const s = document.createElement('style');
-  s.id = 'owlix-v11-styles';
+  s.id = 'owlix-v12-styles';
   s.textContent = `
     .owlix-cursor {
       display:inline-block;width:2px;height:1.1em;background:#7C3AED;
