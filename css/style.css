@@ -45,14 +45,16 @@
 
 /* ── RESET ── */
 *,*::before,*::after { margin:0;padding:0;box-sizing:border-box; }
-html { scroll-behavior:smooth; }
+html { scroll-behavior:smooth;overflow-x:hidden; }
 body {
   font-family:'Poppins',system-ui,sans-serif;
   background:var(--bg);
   color:var(--text);
   line-height:1.65;
   min-height:100vh;
+  min-height:100dvh;
   font-size:15px;
+  overflow-x:hidden;
 }
 a { text-decoration:none; }
 img { display:block;max-width:100%; }
@@ -2072,4 +2074,42 @@ footer {
   }
   html { scroll-behavior:auto; }
   .reveal { opacity:1;transform:none; }
+}
+
+/* ══════════════════════════════════════════
+   PWA / FULLSCREEN / SAFE AREA
+   viewport-fit=cover + env(safe-area-inset-*)
+   for devices with notches and home indicators
+══════════════════════════════════════════ */
+
+/* Notch / status bar: navbar absorbs the top safe area */
+@supports (padding-top: env(safe-area-inset-top)) {
+  .navbar {
+    padding-top: env(safe-area-inset-top, 0px);
+    height: calc(72px + env(safe-area-inset-top, 0px));
+  }
+  /* Owlix floating elements clear the bottom home indicator */
+  .owlix-toggle {
+    bottom: calc(2rem + env(safe-area-inset-bottom, 0px));
+  }
+  .owlix-window {
+    bottom: calc(6.5rem + env(safe-area-inset-bottom, 0px));
+  }
+  /* Footer clears the bottom safe area */
+  footer {
+    padding-bottom: calc(4rem + env(safe-area-inset-bottom, 0px));
+  }
+  /* Left/right edges on landscape notch devices */
+  .navbar {
+    padding-left: calc(2rem + env(safe-area-inset-left, 0px));
+    padding-right: calc(2rem + env(safe-area-inset-right, 0px));
+  }
+}
+
+/* PWA standalone: no browser chrome, use full height */
+@media all and (display-mode: standalone) {
+  body { min-height: 100vh; min-height: 100dvh; }
+}
+@media all and (display-mode: fullscreen) {
+  body { min-height: 100vh; min-height: 100dvh; }
 }

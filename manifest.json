@@ -1,0 +1,27 @@
+{
+  "name": "AbiLearn — CBSE Class 10",
+  "short_name": "AbiLearn",
+  "description": "CBSE Class 10 study platform — Maths, Science, English, Social Science with Owlix AI",
+  "start_url": "./index.html",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "any",
+  "background_color": "#0D0B21",
+  "theme_color": "#7C3AED",
+  "icons": [
+    {
+      "src": "assets/logo.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    },
+    {
+      "src": "assets/logo.jpeg",
+      "sizes": "512x512",
+      "type": "image/jpeg",
+      "purpose": "any maskable"
+    }
+  ],
+  "categories": ["education"],
+  "prefer_related_applications": false
+}

@@ -399,6 +399,7 @@ const PDFS = {
       { title: 'Ch 14 Probability',                    desc: 'Question Bank · 2M + 3M + 5M', url: 'pdfs/maths/qbank/ch14-probability.pdf' }
     ],
     formula: [
+      { title: '📄 Complete Formula Sheet',                desc: 'All chapters · CBSE Class 10 Maths · PDF',       url: 'pdfs/maths/complete-formula-sheet.pdf' },
       { title: 'Ch 1 Real Numbers',                        desc: 'Number systems, HCF, LCM, Euclid\'s lemma',     url: 'assets/formula/ch01-real-numbers.png' },
       { title: 'Ch 2 Polynomials',                         desc: 'Zeros, factor theorem, division algorithm',      url: 'assets/formula/ch02-polynomials.png' },
       { title: 'Ch 3 Pair of Linear Equations',            desc: 'Methods: graphical, substitution, elimination',  url: 'assets/formula/ch03-linear-equations.png' },

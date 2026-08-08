@@ -1,4 +1,4 @@
-/* AbiLearn — Authentication System v3 (session manager + navbar + homepage gate) */
+/* AbiLearn — Authentication System v4 (session manager + navbar + homepage gate + PWA fullscreen) */
 
 /* ══ SESSION STATE ══ */
 function getUser() {
@@ -139,23 +139,33 @@ function showAuthToast(msg) {
 }
 
 /* ══ FULLSCREEN ══ */
-function toggleFullscreen() {
-  if (!document.fullscreenElement) {
-    document.documentElement.requestFullscreen().then(() => updateFsIcon(true)).catch(() => {});
-  } else {
-    document.exitFullscreen().then(() => updateFsIcon(false)).catch(() => {});
-  }
+
+/* True when running as an installed PWA — already app-like, no fullscreen needed */
+function _isPWA() {
+  return window.matchMedia('(display-mode: standalone)').matches ||
+         window.matchMedia('(display-mode: fullscreen)').matches ||
+         (typeof window.navigator.standalone === 'boolean' && window.navigator.standalone);
 }
 
-function updateFsIcon(isFs) {
-  const btn = document.getElementById('fsBtn');
-  if (!btn) return;
-  btn.title   = isFs ? 'Exit full screen' : 'Enter full screen';
-  btn.innerHTML = isFs
-    ? `<svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M8 3v3a2 2 0 0 1-2 2H3m18 0h-3a2 2 0 0 1-2-2V3m0 18v-3a2 2 0 0 1 2-2h3M3 16h3a2 2 0 0 1 2 2v3"/></svg>`
-    : `<svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"/></svg>`;
+/* Track whether the user voluntarily exited fullscreen this session.
+   Do NOT re-request fullscreen after an intentional exit. */
+let _wasFullscreen = false;
+let _userExitedFs  = false;
+document.addEventListener('fullscreenchange', () => {
+  if (document.fullscreenElement) {
+    _wasFullscreen = true;
+  } else if (_wasFullscreen) {
+    _userExitedFs = true; // user pressed Esc or used browser controls to exit
+  }
+});
+
+function toggleFullscreen() {
+  if (!document.fullscreenElement) {
+    document.documentElement.requestFullscreen().catch(() => {});
+  } else {
+    document.exitFullscreen().catch(() => {});
+  }
 }
-document.addEventListener('fullscreenchange', () => updateFsIcon(!!document.fullscreenElement));
 
 /* guardNav — gates navigation behind authentication */
 function guardNav(event, url) {
@@ -197,9 +207,26 @@ function initHomePageGate() {
 
 /* ══ INIT ══ */
 function initAuth() {
-  // Best-effort fullscreen on page load (silent; browsers may block without gesture)
-  if (!document.fullscreenElement) {
-    document.documentElement.requestFullscreen().catch(() => {});
+  // Fullscreen — skip entirely in PWA standalone (already immersive)
+  if (!_isPWA()) {
+    // Best-effort on page load — browsers may block without a prior gesture
+    // but this succeeds on some platforms (Android Chrome, when reloading, etc.)
+    if (!_userExitedFs) {
+      document.documentElement.requestFullscreen().catch(() => {});
+    }
+
+    // Reliable fallback: go fullscreen on the very first user interaction.
+    // Fires only once and only if the user has not already exited fullscreen.
+    function _autoFs() {
+      if (!document.fullscreenElement && !_userExitedFs)
+        document.documentElement.requestFullscreen().catch(() => {});
+      document.removeEventListener('click',      _autoFs);
+      document.removeEventListener('keydown',    _autoFs);
+      document.removeEventListener('touchstart', _autoFs);
+    }
+    document.addEventListener('click',      _autoFs);
+    document.addEventListener('keydown',    _autoFs);
+    document.addEventListener('touchstart', _autoFs, { passive: true });
   }
 
   // Redirect login/signup buttons to auth.html
@@ -219,18 +246,6 @@ function initAuth() {
   // Restore session
   const user = getUser();
   if (user) updateNavbarForUser(user);
-
-  // Go fullscreen automatically on first user interaction (reliable fallback)
-  function _autoFs() {
-    if (!document.fullscreenElement)
-      document.documentElement.requestFullscreen().catch(()=>{});
-    document.removeEventListener('click',     _autoFs);
-    document.removeEventListener('keydown',   _autoFs);
-    document.removeEventListener('touchstart',_autoFs);
-  }
-  document.addEventListener('click',     _autoFs);
-  document.addEventListener('keydown',   _autoFs);
-  document.addEventListener('touchstart',_autoFs, {passive:true});
 
   // Homepage gate — must run after DOM is ready so subjectsGrid exists
   initHomePageGate();
