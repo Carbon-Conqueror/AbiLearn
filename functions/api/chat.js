@@ -36,7 +36,7 @@ You are not a search engine. Do not claim to have internet access.`;
 /* ── Constants ────────────────────────────────────────────────────────────── */
 const MAX_HISTORY      = 20;   // messages (10 turns)
 const MAX_MSG_LENGTH   = 4000; // characters
-const MAX_TOKENS       = 1500;
+const MAX_TOKENS       = 2048;
 const TIMEOUT_MS       = 30_000;
 
 const RATE_LIMIT_WINDOW = 60_000; // 1 minute
@@ -155,6 +155,7 @@ async function callAnthropic({ apiKey, model, messages, system }) {
     body: JSON.stringify({
       model,
       max_tokens: MAX_TOKENS,
+      temperature: 0.3,
       system,
       messages,
       stream: true,

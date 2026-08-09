@@ -463,7 +463,7 @@ function renderSignup() {
       <div class="al-field" style="margin-bottom:1rem">
         <label class="al-check-label terms">
           <input type="checkbox" id="signupTerms">
-          <span>I agree to the <a href="#" onclick="return false">Terms of Service</a> and <a href="#" onclick="return false">Privacy Policy</a></span>
+          <span>I agree to the <a href="mailto:hello@abilearn.in">Terms of Service</a> and <a href="mailto:hello@abilearn.in">Privacy Policy</a></span>
         </label>
         <span class="al-field-err" id="signupTermsErr"></span>
       </div>
@@ -504,13 +504,6 @@ function renderForgotSent() {
         <p>If an account exists for <strong>${email}</strong>, we've sent password reset instructions. Check your inbox and spam folder.</p>
       </div>
     </div>
-    <button type="button" class="al-btn al-btn-secondary" id="resendResetBtn">Resend reset email</button>
-    <div class="al-demo-note">
-      <strong>Demo mode</strong>
-      No actual email is sent in this demo.
-      <br>
-      <button type="button" onclick="simulateReset()">Click here to simulate the reset link</button>
-    </div>
     <p class="al-switch"><button type="button" id="backToLoginFromSent">Back to sign in</button></p>`;
 }
 
@@ -525,13 +518,6 @@ function renderVerify() {
         <div class="al-email-display">${email}</div>
         <p style="margin-bottom:0">Click the link in the email to activate your account. Check your spam folder if you don't see it.</p>
       </div>
-    </div>
-    <button type="button" class="al-btn al-btn-secondary" id="resendVerifyBtn">Resend verification email</button>
-    <div class="al-demo-note">
-      <strong>Demo mode</strong>
-      No actual email is sent in this demo.
-      <br>
-      <button type="button" onclick="simulateVerify()">Click here to verify your account</button>
     </div>
     <p class="al-switch"><button type="button" id="changeEmailBtn">Change email address</button></p>`;
 }
@@ -896,13 +882,13 @@ async function handleSignup(e) {
     grade,
     joinDate: new Date().toISOString(),
     avatar: null,
-    verified: false
+    verified: true
   };
   users[email] = newUser;
   saveUsers(users);
 
   clearLoading(btn, 'Create account');
-  goTo('verify', { email });
+  goTo('login', { toast: 'Account created! You can now sign in.', toastType: 'success' });
 }
 
 async function handleForgot(e) {
@@ -917,12 +903,20 @@ async function handleForgot(e) {
   if (!email) { setFieldErr('forgotEmail', 'forgotEmailErr', 'Email is required.'); return; }
   if (!isValidEmail(email)) { setFieldErr('forgotEmail', 'forgotEmailErr', 'Enter a valid email address.'); return; }
 
-  setLoading(btn, 'Sending...');
-  await delay(800);
+  setLoading(btn, 'Verifying...');
+  await delay(600);
 
-  // Always show the sent screen regardless of whether email exists (privacy)
+  const users = getUsers();
+  if (!users[email]) {
+    clearLoading(btn, 'Send reset link');
+    setFieldErr('forgotEmail', 'forgotEmailErr', 'No account found with this email.');
+    return;
+  }
+
+  const token = generateToken(32);
+  storeResetToken(email, token);
   clearLoading(btn, 'Send reset link');
-  goTo('forgot-sent', { email });
+  goTo('reset', { token, email });
 }
 
 async function handleReset(e, email, token) {
@@ -988,9 +982,6 @@ function init() {
   render();
 }
 
-// Expose globals needed by inline demo buttons
-window.simulateReset    = simulateReset;
-window.simulateVerify   = simulateVerify;
 window.resendVerification = resendVerification;
 
 document.addEventListener('DOMContentLoaded', init);

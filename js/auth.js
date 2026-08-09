@@ -260,7 +260,7 @@ function openDashboard() {
     try { return JSON.parse(localStorage.getItem('abilearn_progress_' + user.email) || '{}'); } catch { return {}; }
   })();
   const subjects = [
-    { id: 'maths',   name: 'Mathematics',   total: 15 },
+    { id: 'maths',   name: 'Mathematics',   total: 14 },
     { id: 'science', name: 'Science',        total: 15 },
     { id: 'english', name: 'English',        total: 10 },
     { id: 'social',  name: 'Social Science', total: 12 }

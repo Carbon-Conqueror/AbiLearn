@@ -410,6 +410,7 @@ const PDFS = {
       { title: 'Ch 8 Introduction to Trigonometry',        desc: 'Ratios, identities, standard values',           url: 'assets/formula/ch08-trigonometry.png' },
       { title: 'Ch 9 Applications of Trigonometry',        desc: 'Heights & distances, angle of elevation',       url: 'assets/formula/ch09-applications-trigonometry.png' },
       { title: 'Ch 10 Circles',                            desc: 'Tangent, secant, arc, sector formulas',         url: 'assets/formula/ch10-circles.png' },
+      { title: 'Ch 11 Areas Related to Circles',           desc: 'Area of sector, segment, ring formulas',        url: 'assets/formula/ch11-areas-related-to-circles.png' },
       { title: 'Ch 13 Surface Areas and Volumes',          desc: 'Cuboid, cylinder, cone, sphere formulas',       url: 'assets/formula/ch13-surface-areas-volumes.png' },
       { title: 'Ch 14 Statistics',                         desc: 'Mean, median, mode for grouped data',           url: 'assets/formula/ch14-statistics.png' }
     ],
@@ -576,9 +577,9 @@ const PDFS = {
     civics: [
       { title: 'Ch 1 Power Sharing',            desc: 'Question Bank · 2M + 3M + 5M', url: 'pdfs/social/civics/ch1-power-sharing.pdf' },
       { title: 'Ch 2 Federalism',               desc: 'Question Bank · 2M + 3M + 5M', url: 'pdfs/social/civics/ch2-federalism.pdf' },
-      { title: 'Ch 3 Gender, Religion and Caste',  desc: 'Question Bank · 2M + 3M + 5M', url: 'pdfs/social/civics/ch3-democracy-and-diversity.pdf' },
-      { title: 'Ch 4 Political Parties',            desc: 'Question Bank · 2M + 3M + 5M', url: 'pdfs/social/civics/ch4-gender-religion-caste.pdf' },
-      { title: 'Ch 5 Outcomes of Democracy',        desc: 'Question Bank · 2M + 3M + 5M', url: 'pdfs/social/civics/ch5-popular-struggles.pdf' }
+      { title: 'Ch 3 Democracy and Diversity',      desc: 'Question Bank · 2M + 3M + 5M', url: 'pdfs/social/civics/ch3-democracy-and-diversity.pdf' },
+      { title: 'Ch 4 Gender, Religion and Caste',   desc: 'Question Bank · 2M + 3M + 5M', url: 'pdfs/social/civics/ch4-gender-religion-caste.pdf' },
+      { title: 'Ch 5 Popular Struggles',            desc: 'Question Bank · 2M + 3M + 5M', url: 'pdfs/social/civics/ch5-popular-struggles.pdf' }
     ],
     economics: [
       { title: 'Ch 1 Development',                      desc: 'Question Bank · 2M + 3M + 5M', url: 'pdfs/social/economics/ch1-development.pdf' },
@@ -1032,7 +1033,8 @@ function openChapterMCQs(chId, title, subject) {
       </div>`).join('')}
   </div>`;
 
-  body.addEventListener('click', function handler(e) {
+  if (body._mcqHandler) body.removeEventListener('click', body._mcqHandler);
+  body._mcqHandler = function handler(e) {
     const btn = e.target.closest('.mcq-opt:not(.disabled)');
     if (!btn) return;
     const card = btn.closest('.mcq-card');
@@ -1054,7 +1056,8 @@ function openChapterMCQs(chId, title, subject) {
     const answered = body.querySelectorAll('.mcq-feedback.show').length;
     const correct2 = body.querySelectorAll('.mcq-feedback.correct').length;
     document.getElementById('mcqScorePill').textContent = `${correct2} / ${answered}`;
-  });
+  };
+  body.addEventListener('click', body._mcqHandler);
 
   modal.classList.add('open');
   body.scrollTop = 0;
