@@ -155,7 +155,6 @@ function initMobileNav() {
       <a href="science.html" class="mobile-nav-link mobile-sub-link">🔬 Science</a>
       <a href="english.html" class="mobile-nav-link mobile-sub-link">📖 English</a>
       <a href="social.html" class="mobile-nav-link mobile-sub-link">🌍 Social Science</a>
-      <button class="mobile-nav-link" onclick="closeMobileMenu();setTimeout(()=>document.getElementById('owlixToggle').click(),150)">🦉 Ask Owlix AI</button>
       <div class="mobile-menu-actions">
         <button class="btn-login">Log In</button>
         <button class="btn-signup">Sign Up Free</button>
@@ -1091,7 +1090,6 @@ function buildPYQs(subject) {
         <div class="cs-icon">📋</div>
         <h3>PYQs Coming Soon</h3>
         <p>CBSE Board exam question papers will be added here soon.</p>
-        <button onclick="document.getElementById('owlixToggle').click()" class="btn btn-primary btn-md">Ask Owlix for PYQ Help →</button>
       </div>`;
   }
   return `
@@ -1285,7 +1283,6 @@ function buildNCERT() {
       <div class="cs-icon">📗</div>
       <h3>NCERT Solutions</h3>
       <p>Step-by-step NCERT textbook solutions for all chapters are being prepared. Your teacher's notes will also be added here.</p>
-      <button onclick="document.getElementById('owlixToggle').click()" class="btn btn-primary btn-md">Ask Owlix for Help →</button>
     </div>`;
 }
 
@@ -1376,7 +1373,6 @@ function buildGrammar() {
           <h3>${t.title}</h3>
           <p>${t.desc}</p>
           <div style="margin-top:1rem">
-            <button onclick="sendOwlixMessage('Explain ${t.title} in English grammar with examples')" class="btn btn-outline-purple btn-sm">Ask Owlix →</button>
           </div>
         </div>`).join('')}
     </div>`;
@@ -1428,7 +1424,6 @@ function buildWriting() {
         <div class="skill-card reveal">
           <h3>${t.title}</h3>
           <p>${t.desc}</p>
-          <button onclick="sendOwlixMessage('How to write a ${t.title} for CBSE boards?')" class="btn btn-outline-purple btn-sm" style="margin-top:0.75rem">Get tips from Owlix →</button>
         </div>`).join('')}
     </div>`;
 }
@@ -2011,7 +2006,6 @@ function buildComingSoon(name, msg) {
       <div class="cs-icon">🚀</div>
       <h3>${name} Coming Soon</h3>
       <p>${msg}</p>
-      <button onclick="document.getElementById('owlixToggle').click()" class="btn btn-primary btn-md">Ask Owlix Instead →</button>
     </div>`;
 }
 
