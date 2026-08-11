@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>Mistake Bank — AbiLearn CBSE Class 10</title>
+  <meta name="description" content="Review and correct your wrong answers to strengthen weak areas.">
+  <meta name="theme-color" content="#7C3AED">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="AbiLearn">
+  <link rel="manifest" href="manifest.json">
+  <link rel="apple-touch-icon" href="assets/logo.jpeg">
+  <link rel="stylesheet" href="css/style.css?v=43">
+  <link rel="icon" href="assets/logo.jpeg" type="image/jpeg">
+</head>
+<body>
+
+<nav class="navbar">
+  <a href="index.html" class="logo">
+    <img src="assets/logo.jpeg" alt="AbiLearn" class="logo-img">
+    <span class="logo-text">Abi<span>Learn</span></span>
+  </a>
+  <ul class="nav-links" id="navLinks">
+    <li><a href="index.html">Home</a></li>
+    <li class="nav-dropdown">
+      <button class="nav-dropdown-toggle">Subjects <span class="dropdown-arrow">▾</span></button>
+      <div class="dropdown-menu">
+        <a href="maths.html"><div class="sub-icon maths">📐</div><div><div style="font-weight:800;color:#EF4444;font-size:0.95rem">Mathematics</div><div style="font-size:0.72rem;color:rgba(255,255,255,0.55)">Algebra, Geometry, Statistics</div></div></a>
+        <a href="science.html"><div class="sub-icon science">🔬</div><div><div style="font-weight:800;color:#38BDF8;font-size:0.95rem">Science</div><div style="font-size:0.72rem;color:rgba(255,255,255,0.55)">Physics, Chemistry, Biology</div></div></a>
+        <a href="english.html"><div class="sub-icon english">📖</div><div><div style="font-weight:800;color:#FBBF24;font-size:0.95rem">English</div><div style="font-size:0.72rem;color:rgba(255,255,255,0.55)">First Flight, Grammar, Writing</div></div></a>
+        <a href="social.html"><div class="sub-icon social">🌍</div><div><div style="font-weight:800;color:#34D399;font-size:0.95rem">Social Science</div><div style="font-size:0.72rem;color:rgba(255,255,255,0.55)">History, Geography, Civics</div></div></a>
+      </div>
+    </li>
+  </ul>
+  <div class="nav-right">
+    <button class="btn-login">Log In</button>
+    <button class="btn-signup">Sign Up Free</button>
+  </div>
+</nav>
+
+<div class="container" style="padding-top:2rem;padding-bottom:4rem">
+  <div style="margin-bottom:1.75rem">
+    <div style="display:flex;align-items:center;gap:0.75rem;flex-wrap:wrap">
+      <a href="index.html" style="color:var(--muted);font-size:0.82rem">Home</a>
+      <span style="color:var(--muted)">›</span>
+      <span style="font-size:0.82rem;color:var(--text);font-weight:600">Mistake Bank</span>
+    </div>
+    <h1 style="margin:0.6rem 0 0.3rem;font-size:1.65rem;font-weight:900">📋 Mistake Bank</h1>
+    <p style="color:var(--muted);font-size:0.9rem">Questions you got wrong — review and resolve them to build mastery.</p>
+  </div>
+  <div id="mistakesContent">
+    <div style="text-align:center;padding:3rem;color:var(--muted)">Loading…</div>
+  </div>
+</div>
+
+<footer>
+  <div class="footer-grid">
+    <div class="footer-brand">
+      <div class="logo" style="margin-bottom:0.75rem">
+        <img src="assets/logo.jpeg" alt="AbiLearn" class="logo-img">
+        <span class="logo-text">Abi<span>Learn</span></span>
+      </div>
+      <p>The smartest way to prepare for CBSE Class 10 Board Exams.</p>
+    </div>
+    <div class="footer-col"><h4>Subjects</h4><ul>
+      <li><a href="maths.html">Mathematics</a></li>
+      <li><a href="science.html">Science</a></li>
+      <li><a href="english.html">English</a></li>
+      <li><a href="social.html">Social Science</a></li>
+    </ul></div>
+    <div class="footer-col"><h4>Quick Links</h4><ul>
+      <li><a href="mistakes.html">Mistake Bank</a></li>
+      <li><a href="science.html">Science MCQs</a></li>
+      <li><a href="social.html">Social MCQs</a></li>
+    </ul></div>
+    <div class="footer-col"><h4>Support</h4><ul>
+      <li><a href="mailto:hello@abilearn.in">Contact Us</a></li>
+      <li><a href="mailto:hello@abilearn.in">hello@abilearn.in</a></li>
+    </ul></div>
+  </div>
+  <div class="footer-bottom">
+    <span>© 2026 AbiLearn. All rights reserved.</span>
+    <div class="footer-badge">🏫 CBSE Aligned</div>
+    <span>Made with ❤️ for Class 10 students</span>
+  </div>
+</footer>
+
+<script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore-compat.js"></script>
+<script src="js/firebase-config.js"></script>
+<script src="js/db.js?v=1"></script>
+<script src="js/data.js?v=1"></script>
+<script src="js/app.js?v=65"></script>
+<script src="js/auth.js?v=27"></script>
+<script src="js/mistakes-page.js?v=1"></script>
+</body>
+</html>

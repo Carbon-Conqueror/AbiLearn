@@ -1782,3 +1782,141 @@ footer {
 @media all and (display-mode: fullscreen) {
   body { min-height: 100vh; min-height: 100dvh; }
 }
+
+/* ══════════════════════════════════════════
+   PHASE 2 — KNOWLEDGE MAP & MASTERY UI
+══════════════════════════════════════════ */
+
+/* Mastery badges */
+.mastery-badge {
+  display:inline-flex;align-items:center;
+  font-size:0.68rem;font-weight:700;
+  padding:0.18rem 0.6rem;border-radius:50px;
+  text-transform:uppercase;letter-spacing:0.04em;white-space:nowrap;
+}
+.mastery-badge.not_started { background:#F3F4F6;color:#6B7280; }
+.mastery-badge.learning    { background:#FEF3C7;color:#D97706; }
+.mastery-badge.developing  { background:#DBEAFE;color:#1D4ED8; }
+.mastery-badge.proficient  { background:#D1FAE5;color:#059669; }
+.mastery-badge.mastered    { background:linear-gradient(135deg,#7C3AED,#8B5CF6);color:#fff; }
+
+/* Chapter header mastery badge */
+.chapter-mastery-badge { flex-shrink:0; }
+
+/* Progress tab layout */
+.progress-summary-strip {
+  display:flex;justify-content:space-around;
+  background:var(--card);border:1px solid var(--border);
+  border-radius:var(--radius);padding:1.1rem 0.5rem;
+  margin-bottom:1.25rem;flex-wrap:wrap;gap:0.5rem;
+}
+.progress-summary-stat { text-align:center;min-width:60px; }
+.pss-num { font-size:1.6rem;font-weight:900;line-height:1; }
+.pss-lbl { font-size:0.72rem;color:var(--muted);margin-top:0.2rem;font-weight:600; }
+
+.progress-overall {
+  background:var(--surface);border-radius:var(--radius);
+  padding:1rem 1.25rem;margin-bottom:1.25rem;
+}
+.progress-overall-label { font-size:0.88rem;color:var(--text); }
+
+.progress-grid {
+  display:grid;
+  grid-template-columns:repeat(auto-fill,minmax(270px,1fr));
+  gap:0.85rem;
+}
+.progress-chapter-card {
+  background:var(--card);border:1.5px solid var(--border);
+  border-radius:var(--radius);padding:1rem 1.15rem;
+  transition:var(--transition);
+}
+.progress-chapter-card:hover { border-color:var(--purple-400);box-shadow:var(--shadow-sm); }
+.progress-chapter-card.due-for-revision { border-color:#F59E0B; }
+.progress-ch-header { display:flex;align-items:center;justify-content:space-between;gap:0.5rem;margin-bottom:0.5rem; }
+.progress-ch-name { font-size:0.85rem;font-weight:700;color:var(--text);flex:1;min-width:0; }
+.revision-due-badge { font-size:0.72rem;color:#B45309;background:#FEF3C7;border-radius:50px;padding:0.15rem 0.55rem;margin-bottom:0.4rem;display:inline-block; }
+.progress-bar-wrap { height:6px;background:var(--border);border-radius:3px;overflow:hidden;margin-bottom:0.5rem; }
+.progress-bar-fill { height:100%;border-radius:3px;transition:width 0.6s ease; }
+.progress-ch-stats { font-size:0.75rem;color:var(--muted);display:flex;gap:0.5rem;flex-wrap:wrap; }
+
+/* Session summary (shown after completing all MCQs) */
+.mcq-session-summary {
+  background:linear-gradient(135deg,rgba(124,58,237,0.07),rgba(167,139,250,0.05));
+  border:1.5px solid var(--purple-400);border-radius:var(--radius-lg);
+  padding:2rem 1.5rem;margin-top:1.5rem;text-align:center;
+}
+.summary-score-big { font-size:2.8rem;font-weight:900;color:var(--purple-600);line-height:1; }
+.summary-accuracy  { font-size:0.92rem;color:var(--muted);margin:0.4rem 0 0; }
+.summary-message   { font-size:0.95rem;font-weight:600;color:var(--text);margin-top:0.25rem; }
+
+/* Test mode timer */
+.test-timer {
+  font-size:1rem;font-weight:800;color:var(--purple-600);
+  padding:0.25rem 0.75rem;background:var(--surface);
+  border-radius:8px;font-variant-numeric:tabular-nums;white-space:nowrap;
+}
+.test-timer.warning { color:#DC2626;background:#FEF2F2; }
+
+/* Test button (alongside Open button on chapter cards) */
+.pdf-test-btn {
+  background:transparent;border:1.5px solid var(--purple-400);
+  color:var(--purple-600);padding:0.35rem 0.85rem;
+  border-radius:8px;font-size:0.82rem;font-weight:700;
+  cursor:pointer;transition:var(--transition);white-space:nowrap;flex-shrink:0;
+}
+.pdf-test-btn:hover { background:var(--purple-600);border-color:var(--purple-600);color:white; }
+
+/* Test modal — same positioning as MCQ modal */
+#testModal { display:none;position:fixed;inset:0;z-index:9998; }
+#testModal.open { display:block; }
+
+/* Mistake bank cards */
+.mistake-card {
+  background:var(--card);border:1.5px solid #FCA5A5;
+  border-radius:var(--radius);padding:1.1rem 1.25rem;
+  margin-bottom:0.85rem;
+}
+.mistake-card-header {
+  display:flex;align-items:center;justify-content:space-between;
+  gap:0.5rem;margin-bottom:0.6rem;flex-wrap:wrap;
+}
+.mistake-subject-tag {
+  font-size:0.7rem;font-weight:800;padding:0.2rem 0.65rem;
+  border-radius:50px;text-transform:uppercase;letter-spacing:0.04em;
+}
+.mistake-count { font-size:0.78rem;color:var(--muted); }
+.mistake-q  { font-size:0.9rem;font-weight:600;color:var(--text);margin-bottom:0.6rem;line-height:1.55; }
+.mistake-answers { display:flex;gap:0.6rem;flex-wrap:wrap;margin-bottom:0.75rem; }
+.mistake-wrong   { background:#FEF2F2;color:#DC2626;padding:0.3rem 0.75rem;border-radius:8px;font-size:0.82rem;font-weight:600; }
+.mistake-correct { background:#ECFDF5;color:#059669;padding:0.3rem 0.75rem;border-radius:8px;font-size:0.82rem;font-weight:600; }
+.mistake-resolve-btn {
+  background:transparent;border:1.5px solid var(--border);
+  color:var(--muted);padding:0.3rem 0.9rem;border-radius:8px;
+  font-size:0.82rem;font-weight:600;cursor:pointer;transition:var(--transition);
+}
+.mistake-resolve-btn:hover { border-color:#059669;color:#059669;background:#ECFDF5; }
+.mistake-subject-section { margin-bottom:2rem; }
+.mistake-subject-heading {
+  font-size:0.95rem;font-weight:800;margin-bottom:0.85rem;
+  display:flex;align-items:center;gap:0.5rem;
+}
+.mistakes-empty {
+  text-align:center;padding:3rem 1rem;color:var(--muted);
+}
+.mistakes-empty-icon { font-size:3rem;margin-bottom:0.75rem; }
+
+.dash-action-link {
+  display:flex;align-items:center;gap:0.65rem;
+  background:var(--surface);border:1px solid var(--border);
+  border-radius:10px;padding:0.75rem 1rem;
+  color:var(--text);font-size:0.85rem;font-weight:600;
+  text-decoration:none;transition:var(--transition);
+}
+.dash-action-link:hover { border-color:var(--purple-400);background:var(--purple-50); }
+
+@media (max-width:640px) {
+  .progress-summary-strip { gap:0.75rem; }
+  .pss-num { font-size:1.3rem; }
+  .progress-grid { grid-template-columns:1fr; }
+  .summary-score-big { font-size:2.2rem; }
+}

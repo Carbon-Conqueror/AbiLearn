@@ -24,7 +24,8 @@ const SUBJECT_TABS = {
   maths: [
     { id: 'formula-sheet', label: 'Formulas' },
     { id: 'maths-qbank',   label: 'Question Bank' },
-    { id: 'pyqs',          label: 'PYQ Papers' }
+    { id: 'pyqs',          label: 'PYQ Papers' },
+    { id: 'my-progress',   label: 'My Progress' }
   ],
   science: [
     { id: 'science-qbank',     label: 'Question Bank' },
@@ -32,7 +33,8 @@ const SUBJECT_TABS = {
     { id: 'practice-questions',label: 'MCQ Practice' },
     { id: 'pyqs',              label: 'PYQ Papers' },
     { id: 'most-important',    label: 'Most Important' },
-    { id: 'ncert-solutions',   label: 'NCERT Solutions' }
+    { id: 'ncert-solutions',   label: 'NCERT Solutions' },
+    { id: 'my-progress',       label: 'My Progress' }
   ],
   english: [
     { id: 'first-flight', label: 'First Flight' },
@@ -40,14 +42,16 @@ const SUBJECT_TABS = {
     { id: 'grammar',      label: 'Grammar' },
     { id: 'reading',      label: 'Reading' },
     { id: 'writing',      label: 'Writing' },
-    { id: 'pyqs',         label: 'PYQ Papers' }
+    { id: 'pyqs',         label: 'PYQ Papers' },
+    { id: 'my-progress',  label: 'My Progress' }
   ],
   social: [
     { id: 'social-notes',       label: 'Notes' },
     { id: 'practice-questions', label: 'MCQ Practice' },
     { id: 'social-qbank',       label: 'Question Bank' },
     { id: 'maps',               label: 'Map Work' },
-    { id: 'pyqs',               label: 'PYQ Papers' }
+    { id: 'pyqs',               label: 'PYQ Papers' },
+    { id: 'my-progress',        label: 'My Progress' }
   ]
 };
 
@@ -107,6 +111,19 @@ async function loadUserDataFromFirestore(uid) {
     // Re-render subject cards on home page with real mastery data
     if (document.getElementById('subjectsGrid')) renderSubjectCards();
   } catch (e) { console.warn('loadUserDataFromFirestore', e); }
+}
+
+/* ── MASTERY DISPLAY HELPERS ── */
+var _testTimer = null;
+
+function renderMasteryBadge(mastery) {
+  var labels = { mastered: 'Mastered', proficient: 'Proficient', developing: 'Developing', learning: 'Learning', not_started: 'Not Started' };
+  var m = mastery || 'not_started';
+  return '<span class="mastery-badge ' + m + '">' + (labels[m] || m) + '</span>';
+}
+
+function getMasteryColor(mastery) {
+  return { mastered: '#059669', proficient: '#2563EB', developing: '#D97706', learning: '#EF4444', not_started: '#D1D5DB' }[mastery] || '#D1D5DB';
 }
 
 /* ── SEARCH ── */
@@ -384,6 +401,7 @@ function renderTabContent(subject, tabId) {
       case 'social-qbank':      el.innerHTML = buildSocialQBank(subject); break;
       case 'maps':              el.innerHTML = buildMaps(); break;
       case 'summary':           el.innerHTML = buildSummary(subject); break;
+      case 'my-progress':       el.innerHTML = buildProgressTab(subject); break;
       default:                  el.innerHTML = buildComingSoon('This section', 'Content coming soon!'); break;
     }
     initReveal();
@@ -944,10 +962,15 @@ function initMCQHandlers(container, subjectId) {
         if (m) { var k = subId + '_' + chId; _cachedKnowledgeMap[k] = Object.assign(_cachedKnowledgeMap[k] || {}, { mastery: m }); }
       });
       if (!isCorrect && chId && subId) {
+        var optTexts = Array.from(card.querySelectorAll('.mcq-opt')).map(function(b) {
+          var sp = b.querySelector('.opt-letter');
+          return sp ? b.textContent.slice(sp.textContent.length).trim() : b.textContent.trim();
+        });
         DB.recordMistake(subId + '_' + chId + '_' + qIdx, {
           subjectId: subId, chapterId: chId, questionIdx: qIdx,
           question: (card.querySelector('.mcq-q') || {}).textContent || '',
-          correct: correct, chosen: chosen
+          correct: correct, chosen: chosen,
+          correctText: optTexts[correct] || '', chosenText: optTexts[chosen] || ''
         }, user.uid);
       }
     }
@@ -961,13 +984,15 @@ function buildScienceMCQCards(subject) {
   const chapters = subject.chapters || [];
   const cards = chapters.map(ch => {
     const count = (SCIENCE_MCQS[ch.id] || []).length;
+    const mastery = (_cachedKnowledgeMap['science_' + ch.id] || {}).mastery || 'not_started';
     return `
       <div class="pdf-card">
         <div class="pdf-card-icon">🧪</div>
         <div class="pdf-card-info">
           <div class="pdf-card-title">Ch ${ch.id}: ${escH(ch.title)}</div>
-          <div class="pdf-card-desc">${count} MCQs · Medium–Difficult</div>
+          <div class="pdf-card-desc">${count} MCQs &nbsp;${renderMasteryBadge(mastery)}</div>
         </div>
+        <button class="pdf-test-btn" onclick="openTestMode(${ch.id}, '${escH(ch.title)}', 'science')">Test</button>
         <button class="pdf-open-btn" onclick="openChapterMCQs(${ch.id}, '${escH(ch.title)}', 'science')">Open</button>
       </div>`;
   }).join('');
@@ -996,13 +1021,15 @@ function buildSocialMCQCards(subject) {
       const ch = chMap[id]; if (!ch) return '';
       const count = (SOCIAL_MCQS[id] || []).length;
       if (!count) return '';
+      const mastery = (_cachedKnowledgeMap['social_' + id] || {}).mastery || 'not_started';
       return `
         <div class="pdf-card">
           <div class="pdf-card-icon">${s.icon}</div>
           <div class="pdf-card-info">
             <div class="pdf-card-title">${escH(ch.title)}</div>
-            <div class="pdf-card-desc">${count} MCQs · ${s.key}</div>
+            <div class="pdf-card-desc">${count} MCQs · ${s.key} &nbsp;${renderMasteryBadge(mastery)}</div>
           </div>
+          <button class="pdf-test-btn" onclick="openTestMode(${id}, '${escH(ch.title)}', 'social')">Test</button>
           <button class="pdf-open-btn" onclick="openChapterMCQs(${id}, '${escH(ch.title)}', 'social')">Open</button>
         </div>`;
     }).join('');
@@ -1099,9 +1126,15 @@ function openChapterMCQs(chId, title, subject) {
         if (m) { var k = subject + '_' + chId; _cachedKnowledgeMap[k] = Object.assign(_cachedKnowledgeMap[k] || {}, { mastery: m }); }
       });
       if (!isCorr) {
+        var optTxts = Array.from(card.querySelectorAll('.mcq-opt')).map(function(b) {
+          var sp = b.querySelector('.opt-letter');
+          return sp ? b.textContent.slice(sp.textContent.length).trim() : b.textContent.trim();
+        });
         DB.recordMistake(subject + '_' + chId + '_' + qi, {
           subjectId: subject, chapterId: String(chId), questionIdx: qi,
-          question: (card.querySelector('.mcq-q') || {}).textContent || '', correct: correct, chosen: chosen
+          question: (card.querySelector('.mcq-q') || {}).textContent || '',
+          correct: correct, chosen: chosen,
+          correctText: optTxts[correct] || '', chosenText: optTxts[chosen] || ''
         }, user.uid);
       }
     }
@@ -1109,6 +1142,23 @@ function openChapterMCQs(chId, title, subject) {
     const answered = body.querySelectorAll('.mcq-feedback.show').length;
     const correct2 = body.querySelectorAll('.mcq-feedback.correct').length;
     document.getElementById('mcqScorePill').textContent = `${correct2} / ${answered}`;
+    // show session summary when all questions answered
+    if (answered === mcqs.length && !body.querySelector('.mcq-session-summary')) {
+      const accuracy = Math.round((correct2 / mcqs.length) * 100);
+      const sm = (accuracy >= 85 && mcqs.length >= 10) ? 'mastered' : accuracy >= 70 ? 'proficient' : accuracy >= 50 ? 'developing' : 'learning';
+      const msgs = { mastered: '🏆 Chapter mastered!', proficient: '👍 Great performance!', developing: '📚 Keep practicing.', learning: '🔄 Review and retry.' };
+      const summEl = document.createElement('div');
+      summEl.className = 'mcq-session-summary';
+      summEl.innerHTML =
+        '<div class="summary-score-big">' + correct2 + ' / ' + mcqs.length + '</div>' +
+        '<div class="summary-accuracy">' + accuracy + '% accuracy</div>' +
+        '<div style="margin:0.75rem 0">' + renderMasteryBadge(sm) + '</div>' +
+        '<div class="summary-message">' + escH(msgs[sm]) + '</div>' +
+        (correct2 < mcqs.length ? '<a href="mistakes.html" class="btn btn-secondary" style="margin-top:1rem;display:inline-block;margin-right:0.5rem">Review Mistakes</a>' : '') +
+        '<button class="btn btn-primary" style="margin-top:1rem" onclick="closeMCQModal()">Done</button>';
+      body.appendChild(summEl);
+      summEl.scrollIntoView({ behavior: 'smooth', block: 'end' });
+    }
   };
   body.addEventListener('click', body._mcqHandler);
 
@@ -1128,9 +1178,9 @@ function closeMCQModal() {
   document.body.style.overflow = '';
 }
 
-// Escape key closes MCQ modal (in addition to existing PDF modal handler)
+// Escape key closes MCQ and Test modals
 document.addEventListener('keydown', e => {
-  if (e.key === 'Escape') closeMCQModal();
+  if (e.key === 'Escape') { closeMCQModal(); if (typeof closeTestModal === 'function') closeTestModal(); }
 });
 
 /* ══════════════════════════════════════
@@ -1374,6 +1424,7 @@ function buildChapterAccordionHTML(ch, subjectId, numClass) {
           <div class="chapter-title">${ch.title}</div>
           <div class="chapter-sub">${ch.subtitle}</div>
         </div>
+        <span class="chapter-mastery-badge">${renderMasteryBadge((_cachedKnowledgeMap[subjectId + '_' + ch.id] || {}).mastery || 'not_started')}</span>
         <button class="chapter-done-btn ${done ? 'done' : ''}" data-subject="${subjectId}" data-cid="${ch.id}" title="Mark done" onclick="event.stopPropagation();toggleDone(this)">✓</button>
         <span class="chapter-toggle">▼</span>
       </div>
@@ -2061,6 +2112,221 @@ function buildComingSoon(name, msg) {
       <h3>${name} Coming Soon</h3>
       <p>${msg}</p>
     </div>`;
+}
+
+/* ══════════════════════════════════════
+   MY PROGRESS TAB
+══════════════════════════════════════ */
+function buildProgressTab(subject) {
+  if (!subject) return buildComingSoon('Progress', 'No subject data.');
+  var km = _cachedKnowledgeMap;
+  var user = (typeof getUser === 'function') ? getUser() : null;
+  if (!user) return '<div class="coming-soon"><div class="cs-icon">🔒</div><h3>Login Required</h3><p>Log in to see your progress tracking.</p></div>';
+
+  var counts = { mastered: 0, proficient: 0, developing: 0, learning: 0, not_started: 0 };
+  var cardsHTML = subject.chapters.map(function(ch) {
+    var key = subject.id + '_' + ch.id;
+    var entry = km[key] || {};
+    var mastery = entry.mastery || 'not_started';
+    var total = entry.totalAttempts || 0;
+    var correct = entry.correctAttempts || 0;
+    var acc = total ? Math.round((correct / total) * 100) : 0;
+    counts[mastery] = (counts[mastery] || 0) + 1;
+    var fillPct = { mastered: 100, proficient: 75, developing: 50, learning: 25, not_started: 0 }[mastery] || 0;
+    var dueEntry = entry.nextRevisionDue;
+    var isDue = dueEntry && (function() {
+      var d = dueEntry.toDate ? dueEntry.toDate() : new Date(dueEntry);
+      return d.getTime() < Date.now() && mastery !== 'not_started';
+    })();
+    return '<div class="progress-chapter-card' + (isDue ? ' due-for-revision' : '') + '">' +
+      '<div class="progress-ch-header">' +
+        '<div class="progress-ch-name">Ch ' + ch.id + ': ' + escH(ch.title) + '</div>' +
+        renderMasteryBadge(mastery) +
+      '</div>' +
+      (isDue ? '<div class="revision-due-badge">⏰ Due for revision</div>' : '') +
+      '<div class="progress-bar-wrap"><div class="progress-bar-fill" style="width:' + fillPct + '%;background:' + getMasteryColor(mastery) + '"></div></div>' +
+      '<div class="progress-ch-stats">' +
+        (total ? '<span>' + total + ' attempts · </span><span>' + acc + '% accuracy</span>' : '<span>Not attempted yet</span>') +
+      '</div>' +
+    '</div>';
+  }).join('');
+
+  var total = subject.chapters.length;
+  var advCount = counts.mastered + counts.proficient;
+  var overallPct = total ? Math.round((advCount / total) * 100) : 0;
+
+  return '<div class="progress-summary-strip">' +
+    '<div class="progress-summary-stat"><div class="pss-num" style="color:#059669">' + counts.mastered + '</div><div class="pss-lbl">Mastered</div></div>' +
+    '<div class="progress-summary-stat"><div class="pss-num" style="color:#2563EB">' + counts.proficient + '</div><div class="pss-lbl">Proficient</div></div>' +
+    '<div class="progress-summary-stat"><div class="pss-num" style="color:#D97706">' + counts.developing + '</div><div class="pss-lbl">Developing</div></div>' +
+    '<div class="progress-summary-stat"><div class="pss-num" style="color:#EF4444">' + counts.learning + '</div><div class="pss-lbl">Learning</div></div>' +
+    '<div class="progress-summary-stat"><div class="pss-num" style="color:var(--muted)">' + counts.not_started + '</div><div class="pss-lbl">Not Started</div></div>' +
+  '</div>' +
+  '<div class="progress-overall">' +
+    '<div class="progress-overall-label">Overall — <strong>' + overallPct + '%</strong> chapters proficient or above</div>' +
+    '<div class="progress-bar-wrap" style="height:10px;margin-top:0.5rem">' +
+      '<div class="progress-bar-fill" style="width:' + overallPct + '%;background:linear-gradient(90deg,#7C3AED,#8B5CF6);transition:width 0.8s ease"></div>' +
+    '</div>' +
+  '</div>' +
+  '<div style="display:flex;align-items:center;justify-content:space-between;margin:1.5rem 0 0.75rem;flex-wrap:wrap;gap:0.5rem">' +
+    '<h3 style="margin:0;font-size:1rem;font-weight:800">Chapter Breakdown</h3>' +
+    '<a href="mistakes.html" class="btn btn-secondary" style="font-size:0.82rem;padding:0.35rem 0.9rem">📋 Mistake Bank</a>' +
+  '</div>' +
+  '<div class="progress-grid">' + cardsHTML + '</div>';
+}
+
+/* ══════════════════════════════════════
+   TEST MODE (10 random Q + timer)
+══════════════════════════════════════ */
+function openTestMode(chId, title, subject) {
+  var bank = subject === 'social'
+    ? (typeof SOCIAL_MCQS !== 'undefined' && SOCIAL_MCQS[chId])
+    : (typeof SCIENCE_MCQS !== 'undefined' && SCIENCE_MCQS[chId]);
+  var allMCQs = (bank || []);
+  if (!allMCQs.length) { alert('No MCQs available for this chapter.'); return; }
+
+  // Shuffle and pick up to 10
+  var shuffled = allMCQs.slice().sort(function() { return 0.5 - Math.random(); });
+  var testMCQs = shuffled.slice(0, Math.min(10, shuffled.length));
+  var letters = ['A', 'B', 'C', 'D'];
+
+  var modal = document.getElementById('testModal');
+  if (!modal) {
+    modal = document.createElement('div');
+    modal.id = 'testModal';
+    modal.innerHTML =
+      '<div class="mcq-modal-box">' +
+        '<div class="mcq-modal-hdr">' +
+          '<div class="mcq-modal-title-wrap">' +
+            '<span class="mcq-modal-title" id="testModalTitle"></span>' +
+            '<span class="mcq-modal-meta" id="testModalMeta"></span>' +
+          '</div>' +
+          '<div style="display:flex;align-items:center;gap:0.6rem">' +
+            '<span class="test-timer" id="testTimer">10:00</span>' +
+            '<span class="mcq-score-pill" id="testScorePill">0 / 0</span>' +
+            '<button class="mcq-modal-close" onclick="closeTestModal()">✕</button>' +
+          '</div>' +
+        '</div>' +
+        '<div class="mcq-modal-body" id="testModalBody"></div>' +
+      '</div>';
+    document.body.appendChild(modal);
+  }
+
+  document.getElementById('testModalTitle').textContent = 'Test: Ch ' + chId + ' — ' + title;
+  document.getElementById('testModalMeta').textContent = testMCQs.length + ' Questions · 10 min';
+  document.getElementById('testScorePill').textContent = '0 / 0';
+  var timerEl = document.getElementById('testTimer');
+  if (timerEl) { timerEl.textContent = '10:00'; timerEl.classList.remove('warning'); }
+
+  var body = document.getElementById('testModalBody');
+  body.innerHTML = '<div class="mcq-grid">' +
+    testMCQs.map(function(q, qi) {
+      return '<div class="mcq-card" data-correct="' + q.ans + '" data-exp="' + escH(q.exp || '') + '" data-explbl="' + escH(q.opts[q.ans]) + '" data-q-idx="' + qi + '">' +
+        '<div class="mcq-q">Q' + (qi + 1) + '. ' + q.q + '</div>' +
+        '<div class="mcq-opts">' +
+          q.opts.map(function(opt, i) {
+            return '<button class="mcq-opt" data-idx="' + i + '"><span class="opt-letter">' + letters[i] + '</span>' + escH(opt) + '</button>';
+          }).join('') +
+        '</div>' +
+        '<div class="mcq-feedback"></div>' +
+      '</div>';
+    }).join('') + '</div>';
+
+  // 10-minute countdown
+  if (_testTimer) { clearInterval(_testTimer); _testTimer = null; }
+  var endTime = Date.now() + 10 * 60 * 1000;
+  _testTimer = setInterval(function() {
+    var rem = Math.max(0, endTime - Date.now());
+    var m = Math.floor(rem / 60000), s = Math.floor((rem % 60000) / 1000);
+    var te = document.getElementById('testTimer');
+    if (te) { te.textContent = m + ':' + (s < 10 ? '0' : '') + s; if (rem < 60000) te.classList.add('warning'); }
+    if (!rem) {
+      clearInterval(_testTimer); _testTimer = null;
+      var tb = document.getElementById('testModalBody');
+      if (tb) tb.querySelectorAll('.mcq-opt:not(.disabled)').forEach(function(b) {
+        b.classList.add('disabled');
+        if (parseInt(b.dataset.idx) === parseInt(b.closest('.mcq-card').dataset.correct)) b.classList.add('correct');
+      });
+      showAuthToast('Time up! Test submitted.');
+    }
+  }, 1000);
+
+  if (body._testHandler) body.removeEventListener('click', body._testHandler);
+  body._testHandler = function(e) {
+    var btn = e.target.closest('.mcq-opt:not(.disabled)');
+    if (!btn) return;
+    var card = btn.closest('.mcq-card');
+    var chosen = parseInt(btn.dataset.idx), correct = parseInt(card.dataset.correct);
+    card.querySelectorAll('.mcq-opt').forEach(function(b, i) {
+      b.classList.add('disabled');
+      if (i === correct) b.classList.add('correct'); else if (i === chosen) b.classList.add('wrong');
+    });
+    var fb = card.querySelector('.mcq-feedback');
+    if (fb) {
+      fb.classList.add('show', chosen === correct ? 'correct' : 'wrong');
+      fb.innerHTML = chosen === correct
+        ? '✅ <strong>Correct!</strong> ' + escH(card.dataset.exp)
+        : '❌ <strong>Wrong.</strong> Correct answer: <strong>' + escH(card.dataset.explbl) + '</strong>. ' + escH(card.dataset.exp);
+    }
+    // Record to Firestore
+    var user = (typeof getUser === 'function') ? getUser() : null;
+    if (user && typeof DB !== 'undefined') {
+      var isCorr = chosen === correct, qi = parseInt(card.dataset.qIdx) || 0;
+      DB.recordAttempt({ subjectId: subject, chapterId: String(chId), questionIdx: qi, chosen: chosen, correct: correct, isCorrect: isCorr }, user.uid);
+      DB.updateMasteryAfterAttempt(subject, String(chId), isCorr, user.uid).then(function(m) {
+        if (m) { var k = subject + '_' + chId; _cachedKnowledgeMap[k] = Object.assign(_cachedKnowledgeMap[k] || {}, { mastery: m }); }
+      });
+      if (!isCorr) {
+        var optTxts2 = Array.from(card.querySelectorAll('.mcq-opt')).map(function(b) {
+          var sp = b.querySelector('.opt-letter');
+          return sp ? b.textContent.slice(sp.textContent.length).trim() : b.textContent.trim();
+        });
+        DB.recordMistake(subject + '_' + chId + '_' + qi, {
+          subjectId: subject, chapterId: String(chId), questionIdx: qi,
+          question: (card.querySelector('.mcq-q') || {}).textContent || '',
+          correct: correct, chosen: chosen,
+          correctText: optTxts2[correct] || '', chosenText: optTxts2[chosen] || ''
+        }, user.uid);
+      }
+    }
+    // Score
+    var answered = body.querySelectorAll('.mcq-feedback.show').length;
+    var correct2 = body.querySelectorAll('.mcq-feedback.correct').length;
+    document.getElementById('testScorePill').textContent = correct2 + ' / ' + answered;
+    // Completion summary
+    if (answered === testMCQs.length && !body.querySelector('.mcq-session-summary')) {
+      if (_testTimer) { clearInterval(_testTimer); _testTimer = null; }
+      var accuracy = Math.round((correct2 / testMCQs.length) * 100);
+      var sm = (accuracy >= 85 && testMCQs.length >= 10) ? 'mastered' : accuracy >= 70 ? 'proficient' : accuracy >= 50 ? 'developing' : 'learning';
+      var msgs = { mastered: '🏆 Test passed! Chapter mastered.', proficient: '👍 Solid performance!', developing: '📚 Review weak areas and retest.', learning: '🔄 More practice needed.' };
+      var summEl = document.createElement('div');
+      summEl.className = 'mcq-session-summary';
+      summEl.innerHTML =
+        '<div class="summary-score-big">' + correct2 + ' / ' + testMCQs.length + '</div>' +
+        '<div class="summary-accuracy">' + accuracy + '% accuracy</div>' +
+        '<div style="margin:0.75rem 0">' + renderMasteryBadge(sm) + '</div>' +
+        '<div class="summary-message">' + escH(msgs[sm]) + '</div>' +
+        (correct2 < testMCQs.length ? '<a href="mistakes.html" class="btn btn-secondary" style="margin-top:1rem;display:inline-block;margin-right:0.5rem">Review Mistakes</a>' : '') +
+        '<button class="btn btn-primary" style="margin-top:1rem" onclick="closeTestModal()">Done</button>';
+      body.appendChild(summEl);
+      summEl.scrollIntoView({ behavior: 'smooth', block: 'end' });
+    }
+  };
+  body.addEventListener('click', body._testHandler);
+  modal.classList.add('open');
+  body.scrollTop = 0;
+  document.body.style.overflow = 'hidden';
+}
+
+function closeTestModal() {
+  if (_testTimer) { clearInterval(_testTimer); _testTimer = null; }
+  var modal = document.getElementById('testModal');
+  if (modal) {
+    modal.classList.remove('open');
+    var b = document.getElementById('testModalBody');
+    if (b) b.innerHTML = '';
+  }
+  document.body.style.overflow = '';
 }
 
 /* ══════════════════════════════════════
