@@ -759,9 +759,12 @@ function openPDF(url, title) {
   if (!modal) {
     modal = document.createElement('div');
     modal.id = 'pdfModal';
+    modal.setAttribute('role', 'dialog');
+    modal.setAttribute('aria-modal', 'true');
+    modal.setAttribute('aria-label', 'Document viewer');
     modal.innerHTML = `
       <div class="pdf-modal-box">
-        <button class="pdf-float-close" onclick="closePDF()">✕</button>
+        <button class="pdf-float-close" aria-label="Close document" onclick="closePDF()">✕</button>
         <div class="pdf-float-zoom">
           <button class="pdf-zoom-btn" onclick="zoomPDF(-0.25)">−</button>
           <span id="pdfZoomLevel">100%</span>
@@ -775,7 +778,13 @@ function openPDF(url, title) {
   const body = document.getElementById('pdfModalBody');
   body.innerHTML = '<div class="pdf-loading">Loading…</div>';
   body.style.padding = _isImage ? '0.5rem' : '0';
+  _lastModalTrigger = _lastModalTrigger || document.activeElement;
   modal.classList.add('open');
+  _installFocusTrap(modal);
+  requestAnimationFrame(function() {
+    var closeBtn = modal.querySelector('.pdf-float-close');
+    if (closeBtn) closeBtn.focus();
+  });
   document.body.style.overflow = 'hidden';
 
   if (_isImage) { renderImage(url); return; }
@@ -900,8 +909,9 @@ function renderPDF(url) {
 function closePDF() {
   if (_pdfObserver) { _pdfObserver.disconnect(); _pdfObserver = null; }
   const m = document.getElementById('pdfModal');
-  if (m) m.classList.remove('open');
+  if (m) { _removeFocusTrap(m); m.classList.remove('open'); }
   document.body.style.overflow = '';
+  if (_lastModalTrigger) { try { _lastModalTrigger.focus(); } catch(e) {} _lastModalTrigger = null; }
 }
 document.addEventListener('keydown', e => { if (e.key === 'Escape') closePDF(); });
 
@@ -1633,6 +1643,9 @@ function openScienceQBank(chId) {
   if (!modal) {
     modal = document.createElement('div');
     modal.id = 'qbankModal';
+    modal.setAttribute('role', 'dialog');
+    modal.setAttribute('aria-modal', 'true');
+    modal.setAttribute('aria-labelledby', 'qbankModalTitle');
     modal.innerHTML = `
       <div class="mcq-modal-box">
         <div class="mcq-modal-hdr">
@@ -1640,7 +1653,7 @@ function openScienceQBank(chId) {
             <span class="mcq-modal-title" id="qbankModalTitle"></span>
             <span class="mcq-modal-meta" id="qbankModalMeta"></span>
           </div>
-          <button class="mcq-modal-close" onclick="closeQBankModal()">✕</button>
+          <button class="mcq-modal-close" aria-label="Close" onclick="closeQBankModal()">✕</button>
         </div>
         <div class="mcq-modal-body" id="qbankModalBody"></div>
       </div>`;
@@ -1666,7 +1679,13 @@ function openScienceQBank(chId) {
       </button>
     </div>`;
 
+  _lastModalTrigger = _lastModalTrigger || document.activeElement;
   modal.classList.add('open');
+  _installFocusTrap(modal);
+  requestAnimationFrame(function() {
+    var closeBtn = modal.querySelector('.mcq-modal-close');
+    if (closeBtn) closeBtn.focus();
+  });
   document.getElementById('qbankModalBody').scrollTop = 0;
   document.body.style.overflow = 'hidden';
 }
@@ -1695,7 +1714,8 @@ function openScienceQBankSection(chId, marks) {
 
 function closeQBankModal() {
   const modal = document.getElementById('qbankModal');
-  if (modal) { modal.classList.remove('open'); document.body.style.overflow = ''; }
+  if (modal) { _removeFocusTrap(modal); modal.classList.remove('open'); document.body.style.overflow = ''; }
+  if (_lastModalTrigger) { try { _lastModalTrigger.focus(); } catch(e) {} _lastModalTrigger = null; }
 }
 
 function buildMathsQBank() {
@@ -1740,6 +1760,9 @@ function openMathsQBank(chId) {
   if (!modal) {
     modal = document.createElement('div');
     modal.id = 'mathsQBankModal';
+    modal.setAttribute('role', 'dialog');
+    modal.setAttribute('aria-modal', 'true');
+    modal.setAttribute('aria-labelledby', 'mathsQBankModalTitle');
     modal.innerHTML = `
       <div class="mcq-modal-box">
         <div class="mcq-modal-hdr">
@@ -1747,7 +1770,7 @@ function openMathsQBank(chId) {
             <span class="mcq-modal-title" id="mathsQBankModalTitle"></span>
             <span class="mcq-modal-meta" id="mathsQBankModalMeta"></span>
           </div>
-          <button class="mcq-modal-close" onclick="closeMathsQBankModal()">✕</button>
+          <button class="mcq-modal-close" aria-label="Close" onclick="closeMathsQBankModal()">✕</button>
         </div>
         <div class="mcq-modal-body" id="mathsQBankModalBody"></div>
       </div>`;
@@ -1773,7 +1796,13 @@ function openMathsQBank(chId) {
       </button>
     </div>`;
 
+  _lastModalTrigger = _lastModalTrigger || document.activeElement;
   modal.classList.add('open');
+  _installFocusTrap(modal);
+  requestAnimationFrame(function() {
+    var closeBtn = modal.querySelector('.mcq-modal-close');
+    if (closeBtn) closeBtn.focus();
+  });
   document.getElementById('mathsQBankModalBody').scrollTop = 0;
   document.body.style.overflow = 'hidden';
 }
@@ -1802,7 +1831,8 @@ function openMathsQBankSection(chId, marks) {
 
 function closeMathsQBankModal() {
   const modal = document.getElementById('mathsQBankModal');
-  if (modal) { modal.classList.remove('open'); document.body.style.overflow = ''; }
+  if (modal) { _removeFocusTrap(modal); modal.classList.remove('open'); document.body.style.overflow = ''; }
+  if (_lastModalTrigger) { try { _lastModalTrigger.focus(); } catch(e) {} _lastModalTrigger = null; }
 }
 
 function buildSocialNotes(subject) {
@@ -1892,6 +1922,9 @@ function openSocialQBank(subj, chKey) {
   if (!modal) {
     modal = document.createElement('div');
     modal.id = 'socialQBankModal';
+    modal.setAttribute('role', 'dialog');
+    modal.setAttribute('aria-modal', 'true');
+    modal.setAttribute('aria-labelledby', 'socialQBankModalTitle');
     modal.innerHTML = `
       <div class="mcq-modal-box">
         <div class="mcq-modal-hdr">
@@ -1899,7 +1932,7 @@ function openSocialQBank(subj, chKey) {
             <span class="mcq-modal-title" id="socialQBankModalTitle"></span>
             <span class="mcq-modal-meta" id="socialQBankModalMeta"></span>
           </div>
-          <button class="mcq-modal-close" onclick="closeSocialQBankModal()">✕</button>
+          <button class="mcq-modal-close" aria-label="Close" onclick="closeSocialQBankModal()">✕</button>
         </div>
         <div class="mcq-modal-body" id="socialQBankModalBody"></div>
       </div>`;
@@ -1925,7 +1958,13 @@ function openSocialQBank(subj, chKey) {
       </button>
     </div>`;
 
+  _lastModalTrigger = _lastModalTrigger || document.activeElement;
   modal.classList.add('open');
+  _installFocusTrap(modal);
+  requestAnimationFrame(function() {
+    var closeBtn = modal.querySelector('.mcq-modal-close');
+    if (closeBtn) closeBtn.focus();
+  });
   document.getElementById('socialQBankModalBody').scrollTop = 0;
   document.body.style.overflow = 'hidden';
 }
@@ -1955,7 +1994,8 @@ function openSocialQBankSection(subj, chKey, marks) {
 
 function closeSocialQBankModal() {
   const modal = document.getElementById('socialQBankModal');
-  if (modal) { modal.classList.remove('open'); document.body.style.overflow = ''; }
+  if (modal) { _removeFocusTrap(modal); modal.classList.remove('open'); document.body.style.overflow = ''; }
+  if (_lastModalTrigger) { try { _lastModalTrigger.focus(); } catch(e) {} _lastModalTrigger = null; }
 }
 
 /* ══════════════════════════════════════
