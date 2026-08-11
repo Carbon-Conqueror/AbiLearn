@@ -126,6 +126,31 @@ function getMasteryColor(mastery) {
   return { mastered: '#059669', proficient: '#2563EB', developing: '#D97706', learning: '#EF4444', not_started: '#D1D5DB' }[mastery] || '#D1D5DB';
 }
 
+/* ── Focus trap utility (used by modals and slide-in panels) ── */
+var _lastModalTrigger = null;
+
+function _installFocusTrap(el) {
+  function handler(e) {
+    if (e.key !== 'Tab') return;
+    var focusable = Array.from(el.querySelectorAll(
+      'button:not([disabled]),[href],input:not([disabled]),select:not([disabled]),textarea:not([disabled]),[tabindex]:not([tabindex="-1"])'
+    )).filter(function(n) { return n.offsetParent !== null; });
+    if (!focusable.length) { e.preventDefault(); return; }
+    var first = focusable[0], last = focusable[focusable.length - 1];
+    if (e.shiftKey) { if (document.activeElement === first) { e.preventDefault(); last.focus(); } }
+    else            { if (document.activeElement === last)  { e.preventDefault(); first.focus(); } }
+  }
+  el._focusTrapHandler = handler;
+  el.addEventListener('keydown', handler);
+}
+
+function _removeFocusTrap(el) {
+  if (el && el._focusTrapHandler) {
+    el.removeEventListener('keydown', el._focusTrapHandler);
+    delete el._focusTrapHandler;
+  }
+}
+
 /* 0-100 readiness score derived from knowledge-map mastery levels */
 function computeReadinessScore(km) {
   if (typeof DATA === 'undefined') return 0;
@@ -187,7 +212,9 @@ function initMobileNav() {
   const ham = document.createElement('button');
   ham.className = 'hamburger';
   ham.id = 'hamburgerBtn';
-  ham.setAttribute('aria-label', 'Menu');
+  ham.setAttribute('aria-label', 'Toggle navigation menu');
+  ham.setAttribute('aria-expanded', 'false');
+  ham.setAttribute('aria-controls', 'mobileMenu');
   ham.innerHTML = '<span></span><span></span><span></span>';
   nav.appendChild(ham);
 
@@ -212,6 +239,7 @@ function initMobileNav() {
   ham.addEventListener('click', () => {
     const open = menu.classList.toggle('open');
     ham.classList.toggle('open', open);
+    ham.setAttribute('aria-expanded', String(open));
     document.body.style.overflow = open ? 'hidden' : '';
   });
   menu.addEventListener('click', e => {
@@ -1076,6 +1104,9 @@ function openChapterMCQs(chId, title, subject) {
   if (!modal) {
     modal = document.createElement('div');
     modal.id = 'mcqModal';
+    modal.setAttribute('role', 'dialog');
+    modal.setAttribute('aria-modal', 'true');
+    modal.setAttribute('aria-labelledby', 'mcqModalTitle');
     modal.innerHTML = `
       <div class="mcq-modal-box">
         <div class="mcq-modal-hdr">
@@ -1085,7 +1116,7 @@ function openChapterMCQs(chId, title, subject) {
           </div>
           <div style="display:flex;align-items:center;gap:0.6rem">
             <span class="mcq-score-pill" id="mcqScorePill">0 / 0</span>
-            <button class="mcq-modal-close" onclick="closeMCQModal()">✕</button>
+            <button class="mcq-modal-close" aria-label="Close" onclick="closeMCQModal()">✕</button>
           </div>
         </div>
         <div class="mcq-modal-body" id="mcqModalBody"></div>
@@ -1178,7 +1209,13 @@ function openChapterMCQs(chId, title, subject) {
   };
   body.addEventListener('click', body._mcqHandler);
 
+  _lastModalTrigger = _lastModalTrigger || document.activeElement;
   modal.classList.add('open');
+  _installFocusTrap(modal);
+  requestAnimationFrame(function() {
+    var closeBtn = modal.querySelector('.mcq-modal-close');
+    if (closeBtn) closeBtn.focus();
+  });
   body.scrollTop = 0;
   document.body.style.overflow = 'hidden';
 }
@@ -1187,11 +1224,12 @@ function closeMCQModal() {
   const modal = document.getElementById('mcqModal');
   if (modal) {
     modal.classList.remove('open');
-    // clear body to free memory
+    _removeFocusTrap(modal);
     const b = document.getElementById('mcqModalBody');
     if (b) b.innerHTML = '';
   }
   document.body.style.overflow = '';
+  if (_lastModalTrigger) { try { _lastModalTrigger.focus(); } catch(e) {} _lastModalTrigger = null; }
 }
 
 // Escape key closes MCQ and Test modals
@@ -2210,6 +2248,9 @@ function openTestMode(chId, title, subject) {
   if (!modal) {
     modal = document.createElement('div');
     modal.id = 'testModal';
+    modal.setAttribute('role', 'dialog');
+    modal.setAttribute('aria-modal', 'true');
+    modal.setAttribute('aria-labelledby', 'testModalTitle');
     modal.innerHTML =
       '<div class="mcq-modal-box">' +
         '<div class="mcq-modal-hdr">' +
@@ -2220,7 +2261,7 @@ function openTestMode(chId, title, subject) {
           '<div style="display:flex;align-items:center;gap:0.6rem">' +
             '<span class="test-timer" id="testTimer">10:00</span>' +
             '<span class="mcq-score-pill" id="testScorePill">0 / 0</span>' +
-            '<button class="mcq-modal-close" onclick="closeTestModal()">✕</button>' +
+            '<button class="mcq-modal-close" aria-label="Close" onclick="closeTestModal()">✕</button>' +
           '</div>' +
         '</div>' +
         '<div class="mcq-modal-body" id="testModalBody"></div>' +
@@ -2330,7 +2371,13 @@ function openTestMode(chId, title, subject) {
     }
   };
   body.addEventListener('click', body._testHandler);
+  _lastModalTrigger = _lastModalTrigger || document.activeElement;
   modal.classList.add('open');
+  _installFocusTrap(modal);
+  requestAnimationFrame(function() {
+    var closeBtn = modal.querySelector('.mcq-modal-close');
+    if (closeBtn) closeBtn.focus();
+  });
   body.scrollTop = 0;
   document.body.style.overflow = 'hidden';
 }
@@ -2340,15 +2387,17 @@ function closeTestModal() {
   var modal = document.getElementById('testModal');
   if (modal) {
     modal.classList.remove('open');
+    _removeFocusTrap(modal);
     var b = document.getElementById('testModalBody');
     if (b) b.innerHTML = '';
   }
   document.body.style.overflow = '';
+  if (_lastModalTrigger) { try { _lastModalTrigger.focus(); } catch(e) {} _lastModalTrigger = null; }
 }
 
 /* ══════════════════════════════════════
    HELPERS
 ══════════════════════════════════════ */
 function escH(s) {
-  return String(s || '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+  return String(s || '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;');
 }

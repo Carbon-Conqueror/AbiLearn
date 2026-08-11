@@ -16,7 +16,7 @@
   var PLAN_TYPE_COLOR = { revise: '#F59E0B', practice: '#3B82F6', start: '#10B981' };
 
   function escH(s) {
-    return String(s || '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+    return String(s || '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;');
   }
 
   function getChapterTitle(subjectId, chapterId) {

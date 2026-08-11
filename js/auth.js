@@ -277,11 +277,14 @@ function openDashboard() {
     ? new Date(user.joinDate).toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' })
     : '';
 
+  panel.setAttribute('role', 'dialog');
+  panel.setAttribute('aria-modal', 'true');
+  panel.setAttribute('aria-labelledby', 'dashPanelTitle');
   panel.innerHTML =
     '<div class="panel-box">' +
       '<div class="panel-top">' +
-        '<span class="panel-title">Dashboard</span>' +
-        '<button class="panel-close" onclick="closePanel(\'dashPanel\')">' +
+        '<span class="panel-title" id="dashPanelTitle">Dashboard</span>' +
+        '<button class="panel-close" aria-label="Close dashboard panel" onclick="closePanel(\'dashPanel\')">' +
           '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>' +
         '</button>' +
       '</div>' +
@@ -318,10 +321,15 @@ function openDashboard() {
   panel.addEventListener('click', function (e) {
     if (e.target === panel) closePanel('dashPanel');
   });
+  var _dashTrigger = document.activeElement;
   requestAnimationFrame(function () {
     panel.classList.add('open');
     document.body.style.overflow = 'hidden';
+    if (typeof _installFocusTrap === 'function') _installFocusTrap(panel);
+    var closeBtn = panel.querySelector('.panel-close');
+    if (closeBtn) closeBtn.focus();
   });
+  panel._trigger = _dashTrigger;
 
   var dd = document.getElementById('userDropdown');
   if (dd) dd.classList.remove('open');
@@ -412,11 +420,14 @@ function openSettings() {
     ? '<span style="color:#10B981;font-size:0.8rem">✓ Verified</span>'
     : '<span style="color:#F59E0B;font-size:0.8rem">⚠ Not verified &nbsp;<button class="settings-btn" onclick="sendVerificationEmail()" style="font-size:0.75rem;padding:0.2rem 0.6rem">Verify</button></span>';
 
+  panel.setAttribute('role', 'dialog');
+  panel.setAttribute('aria-modal', 'true');
+  panel.setAttribute('aria-labelledby', 'settingsPanelTitle');
   panel.innerHTML =
     '<div class="panel-box">' +
       '<div class="panel-top">' +
-        '<span class="panel-title">Settings</span>' +
-        '<button class="panel-close" onclick="closePanel(\'settingsPanel\')">' +
+        '<span class="panel-title" id="settingsPanelTitle">Settings</span>' +
+        '<button class="panel-close" aria-label="Close settings panel" onclick="closePanel(\'settingsPanel\')">' +
           '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>' +
         '</button>' +
       '</div>' +
@@ -450,10 +461,15 @@ function openSettings() {
   panel.addEventListener('click', function (e) {
     if (e.target === panel) closePanel('settingsPanel');
   });
+  var _settingsTrigger = document.activeElement;
   requestAnimationFrame(function () {
     panel.classList.add('open');
     document.body.style.overflow = 'hidden';
+    if (typeof _installFocusTrap === 'function') _installFocusTrap(panel);
+    var closeBtn = panel.querySelector('.panel-close');
+    if (closeBtn) closeBtn.focus();
   });
+  panel._trigger = _settingsTrigger;
   var dd = document.getElementById('userDropdown');
   if (dd) dd.classList.remove('open');
 }
@@ -480,5 +496,9 @@ function sendPasswordResetFromSettings() {
 
 function closePanel(id) {
   var p = document.getElementById(id);
-  if (p) { p.classList.remove('open'); document.body.style.overflow = ''; }
+  if (!p) return;
+  if (typeof _removeFocusTrap === 'function') _removeFocusTrap(p);
+  p.classList.remove('open');
+  document.body.style.overflow = '';
+  if (p._trigger) { try { p._trigger.focus(); } catch(e) {} p._trigger = null; }
 }

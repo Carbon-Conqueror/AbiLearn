@@ -1922,6 +1922,39 @@ footer {
 }
 
 /* ══════════════════════════════════════════
+   PHASE 4 — ACCESSIBILITY & POLISH
+══════════════════════════════════════════ */
+
+/* Skip-to-main-content link — visually hidden until focused */
+.skip-nav {
+  position: absolute;
+  top: -100%;
+  left: 1rem;
+  z-index: 10001;
+  background: var(--purple-600);
+  color: #fff;
+  padding: 0.55rem 1.25rem;
+  border-radius: 0 0 10px 10px;
+  font-size: 0.9rem;
+  font-weight: 700;
+  text-decoration: none;
+  transition: top 0.18s ease;
+  white-space: nowrap;
+}
+.skip-nav:focus, .skip-nav:focus-visible {
+  top: 0;
+  outline: 3px solid #fff;
+  outline-offset: 2px;
+}
+
+/* Keyboard focus ring — visible for keyboard nav, suppressed for mouse */
+:focus-visible {
+  outline: 2px solid var(--purple-500);
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+/* ══════════════════════════════════════════
    PHASE 3 — EXAM DASHBOARD
 ══════════════════════════════════════════ */
 
