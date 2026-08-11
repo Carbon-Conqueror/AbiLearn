@@ -107,6 +107,10 @@ function updateNavbarForUser(user) {
           '<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>' +
           'Mistake Bank' +
         '</a>' +
+        '<a href="dashboard.html">' +
+          '<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>' +
+          'Exam Dashboard' +
+        '</a>' +
         '<div class="ud-divider"></div>' +
         '<a href="#" onclick="authLogout();return false" class="ud-logout">' +
           '<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>' +
@@ -299,6 +303,10 @@ function openDashboard() {
         '</div>' +
         '<div class="panel-section">' +
           '<div class="panel-section-title">Quick Actions</div>' +
+          '<a href="dashboard.html" class="dash-action-link" style="margin-bottom:0.5rem">' +
+            '<span style="font-size:1.1rem">📊</span>' +
+            '<span>Exam Dashboard — readiness &amp; study plan</span>' +
+          '</a>' +
           '<a href="mistakes.html" class="dash-action-link">' +
             '<span style="font-size:1.1rem">📋</span>' +
             '<span>Mistake Bank — review wrong answers</span>' +

@@ -126,6 +126,20 @@ function getMasteryColor(mastery) {
   return { mastered: '#059669', proficient: '#2563EB', developing: '#D97706', learning: '#EF4444', not_started: '#D1D5DB' }[mastery] || '#D1D5DB';
 }
 
+/* 0-100 readiness score derived from knowledge-map mastery levels */
+function computeReadinessScore(km) {
+  if (typeof DATA === 'undefined') return 0;
+  var scoreMap = { mastered: 100, proficient: 75, developing: 50, learning: 25, not_started: 0 };
+  var total = 0, sum = 0;
+  DATA.subjects.forEach(function(sub) {
+    sub.chapters.forEach(function(ch) {
+      sum += scoreMap[( (km[sub.id + '_' + ch.id] || {}).mastery ) || 'not_started'];
+      total++;
+    });
+  });
+  return total ? Math.round(sum / total) : 0;
+}
+
 /* ── SEARCH ── */
 function initSearch() {
   const inp = document.getElementById('searchInput');
@@ -958,6 +972,7 @@ function initMCQHandlers(container, subjectId) {
       var qIdx     = card.dataset.qIdx !== undefined ? parseInt(card.dataset.qIdx) : -1;
       var isCorrect = chosen === correct;
       DB.recordAttempt({ subjectId: subId, chapterId: chId, questionIdx: qIdx, chosen: chosen, correct: correct, isCorrect: isCorrect }, user.uid);
+      DB.recordStudyActivity(user.uid);
       DB.updateMasteryAfterAttempt(subId, chId, isCorrect, user.uid).then(function(m) {
         if (m) { var k = subId + '_' + chId; _cachedKnowledgeMap[k] = Object.assign(_cachedKnowledgeMap[k] || {}, { mastery: m }); }
       });
@@ -1122,6 +1137,7 @@ function openChapterMCQs(chId, title, subject) {
       var isCorr = chosen === correct;
       var qi = card.dataset.qIdx !== undefined ? parseInt(card.dataset.qIdx) : -1;
       DB.recordAttempt({ subjectId: subject, chapterId: String(chId), questionIdx: qi, chosen: chosen, correct: correct, isCorrect: isCorr }, user.uid);
+      DB.recordStudyActivity(user.uid);
       DB.updateMasteryAfterAttempt(subject, String(chId), isCorr, user.uid).then(function(m) {
         if (m) { var k = subject + '_' + chId; _cachedKnowledgeMap[k] = Object.assign(_cachedKnowledgeMap[k] || {}, { mastery: m }); }
       });
@@ -2273,6 +2289,7 @@ function openTestMode(chId, title, subject) {
     if (user && typeof DB !== 'undefined') {
       var isCorr = chosen === correct, qi = parseInt(card.dataset.qIdx) || 0;
       DB.recordAttempt({ subjectId: subject, chapterId: String(chId), questionIdx: qi, chosen: chosen, correct: correct, isCorrect: isCorr }, user.uid);
+      DB.recordStudyActivity(user.uid);
       DB.updateMasteryAfterAttempt(subject, String(chId), isCorr, user.uid).then(function(m) {
         if (m) { var k = subject + '_' + chId; _cachedKnowledgeMap[k] = Object.assign(_cachedKnowledgeMap[k] || {}, { mastery: m }); }
       });

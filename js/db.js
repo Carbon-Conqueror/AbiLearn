@@ -256,6 +256,22 @@ var DB = (function () {
     } catch (e) { return { total: 0, correct: 0, accuracy: 0 }; }
   }
 
+  /* ══ STUDY STREAK ══
+   * Idempotent per-day: first attempt of each day updates studyStreak / lastStudyDate.
+   */
+  async function recordStudyActivity(id) {
+    if (!fs() || !id) return;
+    try {
+      var today = new Date().toISOString().slice(0, 10);
+      var profile = await getProfile(id);
+      if (profile && profile.lastStudyDate === today) return;
+      var yesterday = new Date(Date.now() - 86400000).toISOString().slice(0, 10);
+      var streak = (profile && profile.studyStreak) || 0;
+      var newStreak = (profile && profile.lastStudyDate === yesterday) ? streak + 1 : 1;
+      await setProfile({ lastStudyDate: today, studyStreak: newStreak }, id);
+    } catch (e) { console.warn('DB.recordStudyActivity', e); }
+  }
+
   /* ══ LEGACY MIGRATION ══
    * One-time: copies pdf_done_<email> from localStorage to Firestore.
    */
@@ -311,6 +327,7 @@ var DB = (function () {
     setPdfDone:                setPdfDone,
     getStudyPlan:              getStudyPlan,
     setStudyPlan:              setStudyPlan,
+    recordStudyActivity:       recordStudyActivity,
     migrateLegacyProgress:     migrateLegacyProgress
   };
 })();
