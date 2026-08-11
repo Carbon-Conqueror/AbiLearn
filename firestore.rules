@@ -1,0 +1,37 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // A user may only read or write their own document tree.
+    match /users/{userId} {
+      allow read, write: if request.auth != null && request.auth.uid == userId;
+
+      match /knowledgeMap/{key} {
+        allow read, write: if request.auth != null && request.auth.uid == userId;
+      }
+
+      match /questionAttempts/{attemptId} {
+        allow read:   if request.auth != null && request.auth.uid == userId;
+        allow create: if request.auth != null && request.auth.uid == userId;
+        // Attempts are immutable once written — no update/delete
+      }
+
+      match /mistakes/{key} {
+        allow read, write: if request.auth != null && request.auth.uid == userId;
+      }
+
+      match /studyPlans/{date} {
+        allow read, write: if request.auth != null && request.auth.uid == userId;
+      }
+
+      match /pdfProgress/{key} {
+        allow read, write: if request.auth != null && request.auth.uid == userId;
+      }
+    }
+
+    // Deny everything else
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}

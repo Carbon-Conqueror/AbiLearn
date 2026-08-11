@@ -51,15 +51,15 @@ const SUBJECT_TABS = {
   ]
 };
 
-/* ── PROGRESS — per-email, invisible when logged out ── */
+/* ── FIRESTORE PROGRESS CACHE — populated after login by loadUserDataFromFirestore ── */
+var _cachedPdfProgress  = {};
+var _cachedKnowledgeMap = {};
+
 function _currentEmail() {
   try {
-    const u = JSON.parse(
-      localStorage.getItem('abilearn_user') ||
-      sessionStorage.getItem('abilearn_user') || 'null'
-    );
+    var u = (typeof getUser === 'function') ? getUser() : null;
     return u && u.email ? u.email : null;
-  } catch { return null; }
+  } catch (e) { return null; }
 }
 function getProgress() {
   const email = _currentEmail();
@@ -72,25 +72,41 @@ function saveProgress(p) {
   try { localStorage.setItem('abilearn_progress_' + email, JSON.stringify(p)); } catch {}
 }
 function getPDFStore() {
-  const email = _currentEmail();
-  if (!email) return {};
-  try { return JSON.parse(localStorage.getItem('pdf_done_' + email) || '{}'); } catch { return {}; }
+  return _cachedPdfProgress;
 }
 function getSubjectPct(subjectId) {
-  // Count all PDFs configured for this subject
+  // Prefer Firestore knowledge map mastery
+  if (typeof DB !== 'undefined' && Object.keys(_cachedKnowledgeMap).length) {
+    return DB.computeSubjectPct(subjectId, _cachedKnowledgeMap);
+  }
+  // Fallback: PDF completion count from Firestore cache
   const subPdfs = PDFS[subjectId] || {};
   const allPdfs = Object.values(subPdfs).flat();
   if (allPdfs.length) {
-    const store = getPDFStore();
-    const done = allPdfs.filter(p => store[p.url]).length;
+    const done = allPdfs.filter(p => _cachedPdfProgress[p.url] && _cachedPdfProgress[p.url].completed).length;
     return Math.round((done / allPdfs.length) * 100);
   }
-  // Fallback: chapter-based (for subjects with no PDFs uploaded yet)
+  // Fallback: chapter-based localStorage progress
   const sub = DATA.subjects.find(s => s.id === subjectId);
   if (!sub || !sub.chapters.length) return 0;
-  const p = getProgress();
-  const done = sub.chapters.filter(c => p[subjectId + '_' + c.id]).length;
+  const pr = getProgress();
+  const done = sub.chapters.filter(c => pr[subjectId + '_' + c.id]).length;
   return Math.round((done / sub.chapters.length) * 100);
+}
+
+/* Called by auth.js onAuthStateChanged after Firebase auth resolves */
+async function loadUserDataFromFirestore(uid) {
+  if (typeof DB === 'undefined' || !uid) return;
+  try {
+    const [pdfProg, km] = await Promise.all([
+      DB.getPdfProgress(uid),
+      DB.getKnowledgeMap(uid)
+    ]);
+    _cachedPdfProgress  = pdfProg || {};
+    _cachedKnowledgeMap = km      || {};
+    // Re-render subject cards on home page with real mastery data
+    if (document.getElementById('subjectsGrid')) renderSubjectCards();
+  } catch (e) { console.warn('loadUserDataFromFirestore', e); }
 }
 
 /* ── SEARCH ── */
@@ -349,11 +365,11 @@ function renderTabContent(subject, tabId) {
         } else if (subject && subject.id === 'social') {
           el.innerHTML = buildSocialMCQCards(subject);
         } else {
-          el.innerHTML = buildPracticeQuestions(subject); initMCQHandlers(el);
+          el.innerHTML = buildPracticeQuestions(subject); initMCQHandlers(el, subject && subject.id);
         }
         break;
       case 'question-gen':      el.innerHTML = buildQuestionGenerator(subject); break;
-      case 'questions':         el.innerHTML = buildPracticeQuestions(subject); initMCQHandlers(el); break;
+      case 'questions':         el.innerHTML = buildPracticeQuestions(subject); initMCQHandlers(el, subject && subject.id); break;
       case 'pyqs':              el.innerHTML = buildPYQs(subject); break;
       case 'most-important':    el.innerHTML = buildMostImportant(subject); break;
       case 'ncert-solutions':   el.innerHTML = buildNCERT(); break;
@@ -618,18 +634,21 @@ function toDriveEmbed(url) {
 
 /* PDF completion helpers */
 function getPDFDone(url) {
-  try { return !!(getPDFStore()[url]); } catch { return false; }
+  var entry = _cachedPdfProgress[url];
+  return !!(entry && entry.completed);
 }
 function togglePDFDone(btn, url) {
-  const email = _currentEmail();
-  if (!email) return;
-  try {
-    const store = getPDFStore();
-    store[url] = !store[url];
-    localStorage.setItem('pdf_done_' + email, JSON.stringify(store));
-    btn.classList.toggle('done', !!store[url]);
-    btn.title = store[url] ? 'Mark as unread' : 'Mark as read';
-  } catch {}
+  var user = (typeof getUser === 'function') ? getUser() : null;
+  if (!user) return;
+  var nowDone = !getPDFDone(url);
+  _cachedPdfProgress[url] = { url: url, completed: nowDone };
+  btn.classList.toggle('done', nowDone);
+  btn.title = nowDone ? 'Mark as unread' : 'Mark as read';
+  if (typeof DB !== 'undefined') {
+    var titleEl = btn.closest('.pdf-card') && btn.closest('.pdf-card').querySelector('.pdf-card-title');
+    var title = titleEl ? titleEl.textContent.trim() : url;
+    DB.setPdfDone(url, title, nowDone, user.uid);
+  }
 }
 
 /* PDF/image cards with completion circle + Open button */
@@ -880,7 +899,7 @@ function buildPracticeQuestions(subject) {
     <p style="color:var(--muted);margin-bottom:1.5rem;font-size:0.88rem">Tap an option to check your answer</p>
     <div class="mcq-grid">
       ${allMCQs.map((q, qi) => `
-        <div class="mcq-card reveal" data-correct="${q.ans}" data-exp="${escH(q.exp || '')}" data-explbl="${escH(q.opts[q.ans])}">
+        <div class="mcq-card reveal" data-correct="${q.ans}" data-exp="${escH(q.exp || '')}" data-explbl="${escH(q.opts[q.ans])}" data-subject-id="${subject.id}" data-chapter-id="${q.chId}" data-q-idx="${qi}">
           <div class="mcq-chapter-label">Ch ${q.chId} · ${q.chapter}</div>
           <div class="mcq-q">Q${qi + 1}. ${q.q}</div>
           <div class="mcq-opts">
@@ -894,7 +913,7 @@ function buildPracticeQuestions(subject) {
     </div>`;
 }
 
-function initMCQHandlers(container) {
+function initMCQHandlers(container, subjectId) {
   container.addEventListener('click', e => {
     const btn = e.target.closest('.mcq-opt:not(.disabled)');
     if (!btn) return;
@@ -912,6 +931,25 @@ function initMCQHandlers(container) {
       fb.innerHTML = chosen === correct
         ? `✅ <strong>Correct!</strong> ${escH(card.dataset.exp)}`
         : `❌ <strong>Wrong.</strong> Correct answer: <strong>${escH(card.dataset.explbl)}</strong>. ${escH(card.dataset.exp)}`;
+    }
+    // Record attempt in Firestore
+    var user = (typeof getUser === 'function') ? getUser() : null;
+    if (user && typeof DB !== 'undefined') {
+      var subId    = card.dataset.subjectId || subjectId || '';
+      var chId     = card.dataset.chapterId || '';
+      var qIdx     = card.dataset.qIdx !== undefined ? parseInt(card.dataset.qIdx) : -1;
+      var isCorrect = chosen === correct;
+      DB.recordAttempt({ subjectId: subId, chapterId: chId, questionIdx: qIdx, chosen: chosen, correct: correct, isCorrect: isCorrect }, user.uid);
+      DB.updateMasteryAfterAttempt(subId, chId, isCorrect, user.uid).then(function(m) {
+        if (m) { var k = subId + '_' + chId; _cachedKnowledgeMap[k] = Object.assign(_cachedKnowledgeMap[k] || {}, { mastery: m }); }
+      });
+      if (!isCorrect && chId && subId) {
+        DB.recordMistake(subId + '_' + chId + '_' + qIdx, {
+          subjectId: subId, chapterId: chId, questionIdx: qIdx,
+          question: (card.querySelector('.mcq-q') || {}).textContent || '',
+          correct: correct, chosen: chosen
+        }, user.uid);
+      }
     }
   });
 }
@@ -1020,7 +1058,7 @@ function openChapterMCQs(chId, title, subject) {
   const body = document.getElementById('mcqModalBody');
   body.innerHTML = `<div class="mcq-grid">
     ${mcqs.map((q, qi) => `
-      <div class="mcq-card" data-correct="${q.ans}" data-exp="${escH(q.exp || '')}" data-explbl="${escH(q.opts[q.ans])}">
+      <div class="mcq-card" data-correct="${q.ans}" data-exp="${escH(q.exp || '')}" data-explbl="${escH(q.opts[q.ans])}" data-q-idx="${qi}">
         <div class="mcq-q">Q${qi + 1}. ${q.q}</div>
         <div class="mcq-opts">
           ${q.opts.map((opt, i) => `
@@ -1050,6 +1088,22 @@ function openChapterMCQs(chId, title, subject) {
       fb.innerHTML = chosen === correct
         ? `✅ <strong>Correct!</strong> ${escH(card.dataset.exp)}`
         : `❌ <strong>Wrong.</strong> Correct answer: <strong>${escH(card.dataset.explbl)}</strong>. ${escH(card.dataset.exp)}`;
+    }
+    // Record attempt in Firestore
+    var user = (typeof getUser === 'function') ? getUser() : null;
+    if (user && typeof DB !== 'undefined') {
+      var isCorr = chosen === correct;
+      var qi = card.dataset.qIdx !== undefined ? parseInt(card.dataset.qIdx) : -1;
+      DB.recordAttempt({ subjectId: subject, chapterId: String(chId), questionIdx: qi, chosen: chosen, correct: correct, isCorrect: isCorr }, user.uid);
+      DB.updateMasteryAfterAttempt(subject, String(chId), isCorr, user.uid).then(function(m) {
+        if (m) { var k = subject + '_' + chId; _cachedKnowledgeMap[k] = Object.assign(_cachedKnowledgeMap[k] || {}, { mastery: m }); }
+      });
+      if (!isCorr) {
+        DB.recordMistake(subject + '_' + chId + '_' + qi, {
+          subjectId: subject, chapterId: String(chId), questionIdx: qi,
+          question: (card.querySelector('.mcq-q') || {}).textContent || '', correct: correct, chosen: chosen
+        }, user.uid);
+      }
     }
     // update score pill
     const answered = body.querySelectorAll('.mcq-feedback.show').length;
@@ -1307,7 +1361,7 @@ function buildChapterAccordionHTML(ch, subjectId, numClass) {
     ? `<div class="fm-section"><h4>📌 Key Info</h4>${ch.formulas.map(f => `<div class="fm-pill">${escH(f)}</div>`).join('')}</div>` : '';
   const mcqHTML = ch.mcqs?.length
     ? `<div class="mcq-section"><h4>✏️ Practice MCQs</h4>${ch.mcqs.map((q, qi) => `
-        <div class="mcq-card" style="margin-bottom:0.75rem" data-correct="${q.ans}" data-exp="${escH(q.exp||'')}" data-explbl="${escH(q.opts[q.ans])}">
+        <div class="mcq-card" style="margin-bottom:0.75rem" data-correct="${q.ans}" data-exp="${escH(q.exp||'')}" data-explbl="${escH(q.opts[q.ans])}" data-subject-id="${subjectId}" data-chapter-id="${ch.id}" data-q-idx="${qi}">
           <div class="mcq-q">${qi + 1}. ${q.q}</div>
           <div class="mcq-opts">${q.opts.map((o, i) => `<button class="mcq-opt" data-idx="${i}"><span class="opt-letter">${letters[i]}</span>${escH(o)}</button>`).join('')}</div>
           <div class="mcq-feedback"></div>
@@ -1340,7 +1394,7 @@ function initChapterAccordion(container, subjectId) {
     container.querySelectorAll('.chapter-item.open').forEach(i => i.classList.remove('open'));
     if (!isOpen) item.classList.add('open');
   });
-  initMCQHandlers(container);
+  initMCQHandlers(container, subjectId);
 }
 
 function toggleDone(btn) {

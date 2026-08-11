@@ -1,111 +1,127 @@
-/* AbiLearn — Authentication System v4 (session manager + navbar + homepage gate + PWA fullscreen) */
+/* AbiLearn — Authentication System v5 (Firebase Auth)
+ *
+ * Public API (same surface as before so existing code still works):
+ *   getUser()            → cached user object | null
+ *   guardNav(event, url) → gates navigation behind login
+ *   authLogout()         → signs out
+ *   showAuthToast(msg)   → toast notification
+ *   openDashboard()      → slide-in dashboard panel
+ *   openSettings()       → slide-in settings panel
+ *   closePanel(id)       → closes any panel
+ */
 
-/* ══ SESSION STATE ══ */
-function getUser() {
-  try {
-    return JSON.parse(
-      localStorage.getItem('abilearn_user') ||
-      sessionStorage.getItem('abilearn_user') ||
-      'null'
-    );
-  } catch { return null; }
-}
+/* ══ CACHED SESSION STATE ══
+ * onAuthStateChanged fires asynchronously; we keep a synchronous cache so
+ * existing code calling getUser() never blocks.
+ */
+var _cachedUser = null;
 
-function saveUser(u, remember) {
-  const s = JSON.stringify(u);
-  try {
-    if (remember) {
-      localStorage.setItem('abilearn_user', s);
-      sessionStorage.removeItem('abilearn_user');
+function getUser() { return _cachedUser; }
+
+/* ══ FIREBASE AUTH STATE LISTENER ══ */
+document.addEventListener('DOMContentLoaded', function () {
+  if (!window._fauth) return; // Firebase not configured yet
+
+  window._fauth.onAuthStateChanged(async function (fbUser) {
+    if (fbUser) {
+      var profile = await DB.getProfile(fbUser.uid);
+      _cachedUser = {
+        uid:      fbUser.uid,
+        name:     (profile && profile.name)     || fbUser.displayName || 'Student',
+        email:    fbUser.email,
+        grade:    (profile && profile.grade)    || 'Class 10',
+        avatar:   (profile && profile.avatar)   || fbUser.photoURL || null,
+        joinDate: (profile && profile.joinDate) || fbUser.metadata.creationTime || null
+      };
+      updateNavbarForUser(_cachedUser);
+      // One-time migration of legacy localStorage PDF progress
+      DB.migrateLegacyProgress(fbUser.email, fbUser.uid);
+      // Load user data into app caches (PDF progress + knowledge map)
+      if (typeof loadUserDataFromFirestore === 'function') {
+        loadUserDataFromFirestore(fbUser.uid);
+      }
     } else {
-      sessionStorage.setItem('abilearn_user', s);
-      localStorage.removeItem('abilearn_user');
+      _cachedUser = null;
+      restoreNavbarButtons();
     }
-  } catch {}
-}
-
-function clearUser() {
-  try {
-    localStorage.removeItem('abilearn_user');
-    sessionStorage.removeItem('abilearn_user');
-  } catch {}
-}
+  });
+});
 
 /* ══ LOGOUT ══ */
 function authLogout() {
-  clearUser();
-  restoreNavbarButtons();
-  showAuthToast('Logged out. See you soon!');
-}
-
-/* ══ NAVBAR UPDATE ══ */
-function updateNavbarForUser(user) {
-  const navRight = document.querySelector('.nav-right');
-  if (!navRight) return;
-  document.querySelectorAll('.btn-login,.btn-signup').forEach(b => b.style.display = 'none');
-  const old = document.getElementById('navUserWidget');
-  if (old) old.remove();
-
-  const initials  = user.name.split(' ').map(w => w[0]).join('').toUpperCase().slice(0, 2);
-  const firstName = user.name.split(' ')[0];
-  const widget    = document.createElement('div');
-  widget.id        = 'navUserWidget';
-  widget.className = 'nav-user-widget';
-  widget.innerHTML = `
-    <button class="nav-user-btn" id="navAvatar" onclick="toggleUserDropdown()" aria-label="Account menu">
-      <div class="nav-avatar">
-        ${user.avatar
-          ? `<img src="${user.avatar}" alt="${user.name}" onerror="this.style.display='none';this.nextSibling.style.display='flex'"><span class="nav-avatar-initials" style="display:none">${initials}</span>`
-          : `<span class="nav-avatar-initials">${initials}</span>`}
-      </div>
-      <span class="nav-user-name">${firstName}</span>
-      <svg class="nav-user-chevron" xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg>
-    </button>
-    <div class="user-dropdown" id="userDropdown">
-      <div class="user-dropdown-header">
-        <div class="ud-avatar">${initials}</div>
-        <div class="ud-details">
-          <div class="ud-name">${user.name}</div>
-          <div class="ud-email">${user.email}</div>
-          <div class="ud-grade-badge">${user.grade}</div>
-        </div>
-      </div>
-      <div class="user-dropdown-links">
-        <a href="#" onclick="openDashboard();return false">
-          <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
-          Dashboard
-        </a>
-        <a href="#" onclick="openSettings();return false">
-          <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
-          Settings
-        </a>
-        <div class="ud-divider"></div>
-        <a href="#" onclick="authLogout();return false" class="ud-logout">
-          <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
-          Log Out
-        </a>
-      </div>
-    </div>`;
-
-  const hamburger = navRight.querySelector('.hamburger');
-  if (hamburger) navRight.insertBefore(widget, hamburger);
-  else navRight.appendChild(widget);
-
-  document.addEventListener('click', function handler(e) {
-    if (!e.target.closest('#navUserWidget')) {
-      const dd = document.getElementById('userDropdown');
-      if (dd) dd.classList.remove('open');
-      document.removeEventListener('click', handler);
-    }
+  if (!window._fauth) return;
+  window._fauth.signOut().then(function () {
+    _cachedUser = null;
+    restoreNavbarButtons();
+    showAuthToast('Logged out. See you soon!');
+  }).catch(function () {
+    showAuthToast('Error signing out. Please try again.');
   });
 }
 
+/* ══ NAVBAR — logged-in state ══ */
+function updateNavbarForUser(user) {
+  var navRight = document.querySelector('.nav-right');
+  if (!navRight) return;
+  document.querySelectorAll('.btn-login,.btn-signup').forEach(function (b) {
+    b.style.display = 'none';
+  });
+  var old = document.getElementById('navUserWidget');
+  if (old) old.remove();
+
+  var initials  = user.name.split(' ').map(function (w) { return w[0]; }).join('').toUpperCase().slice(0, 2);
+  var firstName = user.name.split(' ')[0];
+
+  var widget = document.createElement('div');
+  widget.id        = 'navUserWidget';
+  widget.className = 'nav-user-widget';
+  widget.innerHTML =
+    '<button class="nav-user-btn" id="navAvatar" onclick="toggleUserDropdown()" aria-label="Account menu">' +
+      '<div class="nav-avatar">' +
+        (user.avatar
+          ? '<img src="' + escSafe(user.avatar) + '" alt="' + escSafe(user.name) + '" onerror="this.style.display=\'none\';this.nextSibling.style.display=\'flex\'"><span class="nav-avatar-initials" style="display:none">' + initials + '</span>'
+          : '<span class="nav-avatar-initials">' + initials + '</span>') +
+      '</div>' +
+      '<span class="nav-user-name">' + escSafe(firstName) + '</span>' +
+      '<svg class="nav-user-chevron" xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg>' +
+    '</button>' +
+    '<div class="user-dropdown" id="userDropdown">' +
+      '<div class="user-dropdown-header">' +
+        '<div class="ud-avatar">' + initials + '</div>' +
+        '<div class="ud-details">' +
+          '<div class="ud-name">' + escSafe(user.name) + '</div>' +
+          '<div class="ud-email">' + escSafe(user.email) + '</div>' +
+          '<div class="ud-grade-badge">' + escSafe(user.grade) + '</div>' +
+        '</div>' +
+      '</div>' +
+      '<div class="user-dropdown-links">' +
+        '<a href="#" onclick="openDashboard();return false">' +
+          '<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>' +
+          'Dashboard' +
+        '</a>' +
+        '<a href="#" onclick="openSettings();return false">' +
+          '<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>' +
+          'Settings' +
+        '</a>' +
+        '<div class="ud-divider"></div>' +
+        '<a href="#" onclick="authLogout();return false" class="ud-logout">' +
+          '<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>' +
+          'Log Out' +
+        '</a>' +
+      '</div>' +
+    '</div>';
+
+  var hamburger = navRight.querySelector('.hamburger');
+  if (hamburger) navRight.insertBefore(widget, hamburger);
+  else navRight.appendChild(widget);
+}
+
 function toggleUserDropdown() {
-  const dd = document.getElementById('userDropdown');
+  var dd = document.getElementById('userDropdown');
   if (!dd) return;
-  const isOpen = dd.classList.toggle('open');
+  var isOpen = dd.classList.toggle('open');
   if (isOpen) {
-    setTimeout(() => {
+    setTimeout(function () {
       document.addEventListener('click', function handler(e) {
         if (!e.target.closest('#navUserWidget')) {
           dd.classList.remove('open');
@@ -117,57 +133,65 @@ function toggleUserDropdown() {
 }
 
 function restoreNavbarButtons() {
-  document.querySelectorAll('.btn-login,.btn-signup').forEach(b => b.style.display = '');
-  const widget = document.getElementById('navUserWidget');
+  document.querySelectorAll('.btn-login,.btn-signup').forEach(function (b) {
+    b.style.display = '';
+  });
+  var widget = document.getElementById('navUserWidget');
   if (widget) widget.remove();
+}
+
+/* ══ SAFE HTML ESCAPE (for inline usage) ══ */
+function escSafe(s) {
+  return String(s || '')
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#39;');
 }
 
 /* ══ TOAST ══ */
 function showAuthToast(msg) {
-  const existing = document.getElementById('authToast');
+  var existing = document.getElementById('authToast');
   if (existing) existing.remove();
-  const toast = document.createElement('div');
+  var toast = document.createElement('div');
   toast.id        = 'authToast';
   toast.className = 'auth-toast';
   toast.textContent = msg;
   document.body.appendChild(toast);
-  requestAnimationFrame(() => toast.classList.add('show'));
-  setTimeout(() => {
+  requestAnimationFrame(function () { toast.classList.add('show'); });
+  setTimeout(function () {
     toast.classList.remove('show');
-    setTimeout(() => toast.remove(), 400);
+    setTimeout(function () { toast.remove(); }, 400);
   }, 3500);
 }
 
 /* ══ FULLSCREEN ══ */
-
-/* True when running as an installed PWA — already app-like, no fullscreen needed */
 function _isPWA() {
   return window.matchMedia('(display-mode: standalone)').matches ||
          window.matchMedia('(display-mode: fullscreen)').matches ||
          (typeof window.navigator.standalone === 'boolean' && window.navigator.standalone);
 }
 
-/* Track whether the user voluntarily exited fullscreen this session.
-   Do NOT re-request fullscreen after an intentional exit. */
-let _wasFullscreen = false;
-let _userExitedFs  = false;
-document.addEventListener('fullscreenchange', () => {
+var _wasFullscreen = false;
+var _userExitedFs  = false;
+document.addEventListener('fullscreenchange', function () {
   if (document.fullscreenElement) {
     _wasFullscreen = true;
   } else if (_wasFullscreen) {
-    _userExitedFs = true; // user pressed Esc or used browser controls to exit
+    _userExitedFs = true;
   }
 });
 
 function toggleFullscreen() {
   if (!document.fullscreenElement) {
-    document.documentElement.requestFullscreen().catch(() => {});
+    document.documentElement.requestFullscreen().catch(function () {});
   } else {
-    document.exitFullscreen().catch(() => {});
+    document.exitFullscreen().catch(function () {});
   }
 }
 
-/* guardNav — gates navigation behind authentication */
+/* ══ NAV GUARDS ══ */
 function guardNav(event, url) {
   if (getUser()) return true;
   event.preventDefault();
@@ -175,51 +199,34 @@ function guardNav(event, url) {
   return false;
 }
 
-/* ══ HOMEPAGE GATE — intercept ALL clicks on the homepage ══ */
 function initHomePageGate() {
-  // Only active on the homepage (identified by the subjects grid)
   if (!document.getElementById('subjectsGrid')) return;
-
-  document.addEventListener('click', function(e) {
-    if (getUser()) return; // logged in — let everything through
-
-    const anchor = e.target.closest('a[href]');
+  document.addEventListener('click', function (e) {
+    if (getUser()) return;
+    var anchor = e.target.closest('a[href]');
     if (!anchor) return;
-
-    const href = anchor.getAttribute('href');
+    var href = anchor.getAttribute('href');
     if (!href) return;
-
-    // Skip same-page anchors (#...) and javascript: links
     if (href.startsWith('#') || href.startsWith('javascript')) return;
-
-    // Skip auth.html itself
     if (href.includes('auth.html')) return;
-
-    // Only gate internal .html links (relative paths, no protocol)
-    const isInternal = !href.startsWith('http://') && !href.startsWith('https://') && !href.startsWith('//');
+    var isInternal = !href.startsWith('http://') && !href.startsWith('https://') && !href.startsWith('//');
     if (!isInternal) return;
-
     e.preventDefault();
     e.stopImmediatePropagation();
     window.location.href = 'auth.html?from=' + encodeURIComponent(location.href);
-  }, true); // capture phase so we intercept before onclick handlers
+  }, true);
 }
 
-/* ══ INIT ══ */
+/* ══ AUTH INIT ══ */
 function initAuth() {
-  // Fullscreen — skip entirely in PWA standalone (already immersive)
   if (!_isPWA()) {
-    // Best-effort on page load — browsers may block without a prior gesture
-    // but this succeeds on some platforms (Android Chrome, when reloading, etc.)
     if (!_userExitedFs) {
-      document.documentElement.requestFullscreen().catch(() => {});
+      document.documentElement.requestFullscreen().catch(function () {});
     }
-
-    // Reliable fallback: go fullscreen on the very first user interaction.
-    // Fires only once and only if the user has not already exited fullscreen.
     function _autoFs() {
-      if (!document.fullscreenElement && !_userExitedFs)
-        document.documentElement.requestFullscreen().catch(() => {});
+      if (!document.fullscreenElement && !_userExitedFs) {
+        document.documentElement.requestFullscreen().catch(function () {});
+      }
       document.removeEventListener('click',      _autoFs);
       document.removeEventListener('keydown',    _autoFs);
       document.removeEventListener('touchstart', _autoFs);
@@ -229,154 +236,230 @@ function initAuth() {
     document.addEventListener('touchstart', _autoFs, { passive: true });
   }
 
-  // Redirect login/signup buttons to auth.html
-  document.querySelectorAll('.btn-login').forEach(btn => {
-    btn.addEventListener('click', () => {
-      const from = encodeURIComponent(location.href);
-      window.location.href = `auth.html?from=${from}`;
+  document.querySelectorAll('.btn-login').forEach(function (btn) {
+    btn.addEventListener('click', function () {
+      window.location.href = 'auth.html?from=' + encodeURIComponent(location.href);
     });
   });
-  document.querySelectorAll('.btn-signup').forEach(btn => {
-    btn.addEventListener('click', () => {
-      const from = encodeURIComponent(location.href);
-      window.location.href = `auth.html?tab=signup&from=${from}`;
+  document.querySelectorAll('.btn-signup').forEach(function (btn) {
+    btn.addEventListener('click', function () {
+      window.location.href = 'auth.html?tab=signup&from=' + encodeURIComponent(location.href);
     });
   });
 
-  // Restore session
-  const user = getUser();
-  if (user) updateNavbarForUser(user);
-
-  // Homepage gate — must run after DOM is ready so subjectsGrid exists
   initHomePageGate();
 }
 document.addEventListener('DOMContentLoaded', initAuth);
 
 /* ══ DASHBOARD ══ */
 function openDashboard() {
-  const user = getUser();
+  var user = getUser();
   if (!user) return;
-  const progress = (() => {
-    try { return JSON.parse(localStorage.getItem('abilearn_progress_' + user.email) || '{}'); } catch { return {}; }
-  })();
-  const subjects = [
-    { id: 'maths',   name: 'Mathematics',   total: 14 },
-    { id: 'science', name: 'Science',        total: 15 },
-    { id: 'english', name: 'English',        total: 10 },
-    { id: 'social',  name: 'Social Science', total: 12 }
-  ];
-  const initials  = user.name.split(' ').map(w => w[0]).join('').toUpperCase().slice(0, 2);
-  const joinDate  = user.joinDate
-    ? new Date(user.joinDate).toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' })
-    : '';
-  const rows = subjects.map(s => {
-    const done = Object.keys(progress).filter(k => k.startsWith(s.id + '_') && progress[k]).length;
-    const pct  = Math.round((done / s.total) * 100);
-    return `<div class="dash-progress-row">
-      <span class="dash-subject-name">${s.name}</span>
-      <div class="dash-bar-wrap"><div class="dash-bar-fill" style="width:${pct}%"></div></div>
-      <span class="dash-count">${done}/${s.total}</span>
-    </div>`;
-  }).join('');
 
-  let panel = document.getElementById('dashPanel');
+  var panel = document.getElementById('dashPanel');
   if (!panel) {
     panel = document.createElement('div');
     panel.id        = 'dashPanel';
     panel.className = 'panel-overlay';
     document.body.appendChild(panel);
   }
-  panel.innerHTML = `
-    <div class="panel-box">
-      <div class="panel-top">
-        <span class="panel-title">Dashboard</span>
-        <button class="panel-close" onclick="closePanel('dashPanel')">
-          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
-        </button>
-      </div>
-      <div class="panel-body">
-        <div class="dash-user-row">
-          <div class="dash-avatar">${initials}</div>
-          <div class="dash-user-info">
-            <div class="dash-name">${user.name}</div>
-            <div class="dash-grade">${user.grade}${joinDate ? ' · Joined ' + joinDate : ''}</div>
-          </div>
-        </div>
-        <div class="panel-section">
-          <div class="panel-section-title">Study Progress</div>
-          ${rows}
-        </div>
-      </div>
-    </div>`;
-  panel.addEventListener('click', e => { if (e.target === panel) closePanel('dashPanel'); });
-  requestAnimationFrame(() => { panel.classList.add('open'); document.body.style.overflow = 'hidden'; });
-  const dd = document.getElementById('userDropdown');
+
+  var initials = user.name.split(' ').map(function (w) { return w[0]; }).join('').toUpperCase().slice(0, 2);
+  var joinDate  = user.joinDate
+    ? new Date(user.joinDate).toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' })
+    : '';
+
+  panel.innerHTML =
+    '<div class="panel-box">' +
+      '<div class="panel-top">' +
+        '<span class="panel-title">Dashboard</span>' +
+        '<button class="panel-close" onclick="closePanel(\'dashPanel\')">' +
+          '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>' +
+        '</button>' +
+      '</div>' +
+      '<div class="panel-body">' +
+        '<div class="dash-user-row">' +
+          '<div class="dash-avatar">' + initials + '</div>' +
+          '<div class="dash-user-info">' +
+            '<div class="dash-name">' + escSafe(user.name) + '</div>' +
+            '<div class="dash-grade">' + escSafe(user.grade) + (joinDate ? ' · Joined ' + joinDate : '') + '</div>' +
+          '</div>' +
+        '</div>' +
+        '<div class="panel-section" id="dashProgressSection">' +
+          '<div class="panel-section-title">Study Progress</div>' +
+          '<div id="dashProgressRows"><div style="color:var(--muted);font-size:0.85rem;padding:0.5rem 0">Loading progress…</div></div>' +
+        '</div>' +
+        '<div class="panel-section" id="dashStatsSection">' +
+          '<div class="panel-section-title">Overall Stats</div>' +
+          '<div id="dashStatsRows"><div style="color:var(--muted);font-size:0.85rem;padding:0.5rem 0">Loading stats…</div></div>' +
+        '</div>' +
+      '</div>' +
+    '</div>';
+
+  panel.addEventListener('click', function (e) {
+    if (e.target === panel) closePanel('dashPanel');
+  });
+  requestAnimationFrame(function () {
+    panel.classList.add('open');
+    document.body.style.overflow = 'hidden';
+  });
+
+  var dd = document.getElementById('userDropdown');
   if (dd) dd.classList.remove('open');
+
+  // Load real data from Firestore
+  _loadDashboardData(user.uid);
+}
+
+async function _loadDashboardData(uid) {
+  try {
+    var knowledgeMap = await DB.getKnowledgeMap(uid);
+    var stats        = await DB.getOverallStats(uid);
+
+    var subjects = [
+      { id: 'maths',   name: 'Mathematics',   chapters: 14 },
+      { id: 'science', name: 'Science',        chapters: 13 },
+      { id: 'english', name: 'English',        chapters: 11 },
+      { id: 'social',  name: 'Social Science', chapters: 22 }
+    ];
+
+    var MASTERY_LABEL = {
+      not_started: 'Not started',
+      learning:    'Learning',
+      developing:  'Developing',
+      proficient:  'Proficient',
+      mastered:    'Mastered'
+    };
+
+    var rows = subjects.map(function (s) {
+      var pct = DB.computeSubjectPct(s.id, knowledgeMap);
+      var chapterEntries = Object.values(knowledgeMap).filter(function (e) { return e.subjectId === s.id; });
+      var masteredCount  = chapterEntries.filter(function (e) { return e.mastery === 'mastered' || e.mastery === 'proficient'; }).length;
+      return '<div class="dash-progress-row">' +
+        '<span class="dash-subject-name">' + escSafe(s.name) + '</span>' +
+        '<div class="dash-bar-wrap"><div class="dash-bar-fill" style="width:' + pct + '%"></div></div>' +
+        '<span class="dash-count">' + masteredCount + '/' + s.chapters + '</span>' +
+      '</div>';
+    }).join('');
+
+    var dueCount = DB.getDueForRevision(knowledgeMap).length;
+    var dueNote  = dueCount > 0
+      ? '<div style="color:#F59E0B;font-size:0.82rem;margin-top:0.4rem">⏰ ' + dueCount + ' chapter' + (dueCount === 1 ? '' : 's') + ' due for revision</div>'
+      : '';
+
+    var progressEl = document.getElementById('dashProgressRows');
+    if (progressEl) progressEl.innerHTML = rows + dueNote;
+
+    var statsHTML =
+      '<div style="display:grid;grid-template-columns:1fr 1fr;gap:0.75rem;margin-top:0.25rem">' +
+        _statTile('Questions Attempted', stats.total) +
+        _statTile('Correct Answers', stats.correct) +
+        _statTile('Overall Accuracy', stats.accuracy + '%') +
+        _statTile('Due for Revision', dueCount) +
+      '</div>';
+
+    var statsEl = document.getElementById('dashStatsRows');
+    if (statsEl) statsEl.innerHTML = statsHTML;
+
+  } catch (e) {
+    var progressEl2 = document.getElementById('dashProgressRows');
+    if (progressEl2) progressEl2.innerHTML = '<div style="color:var(--muted);font-size:0.85rem">Could not load progress data.</div>';
+  }
+}
+
+function _statTile(label, value) {
+  return '<div style="background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:0.75rem;text-align:center">' +
+    '<div style="font-size:1.35rem;font-weight:800;color:var(--text)">' + escSafe(String(value)) + '</div>' +
+    '<div style="font-size:0.75rem;color:var(--muted);margin-top:0.15rem">' + escSafe(label) + '</div>' +
+  '</div>';
 }
 
 /* ══ SETTINGS ══ */
 function openSettings() {
-  const user = getUser();
+  var user = getUser();
   if (!user) return;
-  let panel = document.getElementById('settingsPanel');
+
+  var panel = document.getElementById('settingsPanel');
   if (!panel) {
     panel = document.createElement('div');
     panel.id        = 'settingsPanel';
     panel.className = 'panel-overlay';
     document.body.appendChild(panel);
   }
-  panel.innerHTML = `
-    <div class="panel-box">
-      <div class="panel-top">
-        <span class="panel-title">Settings</span>
-        <button class="panel-close" onclick="closePanel('settingsPanel')">
-          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
-        </button>
-      </div>
-      <div class="panel-body">
-        <div class="panel-section">
-          <div class="panel-section-title">Profile</div>
-          <div class="settings-row"><span class="settings-row-label">Name</span><span class="settings-row-value">${user.name}</span></div>
-          <div class="settings-row"><span class="settings-row-label">Email</span><span class="settings-row-value">${user.email}</span></div>
-          <div class="settings-row"><span class="settings-row-label">Class</span><span class="settings-row-value">${user.grade}</span></div>
-        </div>
-        <div class="panel-section">
-          <div class="panel-section-title">Data</div>
-          <div class="settings-row">
-            <span class="settings-row-label">Clear Study Progress</span>
-            <button class="settings-btn danger" onclick="clearProgress()">Clear</button>
-          </div>
-          <div class="settings-row">
-            <span class="settings-row-label">Log Out</span>
-            <button class="settings-btn" onclick="closePanel('settingsPanel');authLogout()">Log Out</button>
-          </div>
-        </div>
-        <div class="panel-section">
-          <div class="panel-section-title">About</div>
-          <div class="settings-row"><span class="settings-row-label">Version</span><span class="settings-row-value">AbiLearn v1.0</span></div>
-          <div class="settings-row"><span class="settings-row-label">Platform</span><span class="settings-row-value">CBSE Class 10</span></div>
-        </div>
-      </div>
-    </div>`;
-  panel.addEventListener('click', e => { if (e.target === panel) closePanel('settingsPanel'); });
-  requestAnimationFrame(() => { panel.classList.add('open'); document.body.style.overflow = 'hidden'; });
-  const dd = document.getElementById('userDropdown');
+
+  var fbUser = window._fauth && window._fauth.currentUser;
+  var verified = fbUser ? fbUser.emailVerified : true;
+  var verifiedBadge = verified
+    ? '<span style="color:#10B981;font-size:0.8rem">✓ Verified</span>'
+    : '<span style="color:#F59E0B;font-size:0.8rem">⚠ Not verified &nbsp;<button class="settings-btn" onclick="sendVerificationEmail()" style="font-size:0.75rem;padding:0.2rem 0.6rem">Verify</button></span>';
+
+  panel.innerHTML =
+    '<div class="panel-box">' +
+      '<div class="panel-top">' +
+        '<span class="panel-title">Settings</span>' +
+        '<button class="panel-close" onclick="closePanel(\'settingsPanel\')">' +
+          '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>' +
+        '</button>' +
+      '</div>' +
+      '<div class="panel-body">' +
+        '<div class="panel-section">' +
+          '<div class="panel-section-title">Profile</div>' +
+          '<div class="settings-row"><span class="settings-row-label">Name</span><span class="settings-row-value">' + escSafe(user.name) + '</span></div>' +
+          '<div class="settings-row"><span class="settings-row-label">Email</span><span class="settings-row-value">' + escSafe(user.email) + '</span></div>' +
+          '<div class="settings-row"><span class="settings-row-label">Class</span><span class="settings-row-value">' + escSafe(user.grade) + '</span></div>' +
+          '<div class="settings-row"><span class="settings-row-label">Email status</span><span class="settings-row-value">' + verifiedBadge + '</span></div>' +
+        '</div>' +
+        '<div class="panel-section">' +
+          '<div class="panel-section-title">Account</div>' +
+          '<div class="settings-row">' +
+            '<span class="settings-row-label">Change Password</span>' +
+            '<button class="settings-btn" onclick="sendPasswordResetFromSettings()">Send email</button>' +
+          '</div>' +
+          '<div class="settings-row">' +
+            '<span class="settings-row-label">Log Out</span>' +
+            '<button class="settings-btn" onclick="closePanel(\'settingsPanel\');authLogout()">Log Out</button>' +
+          '</div>' +
+        '</div>' +
+        '<div class="panel-section">' +
+          '<div class="panel-section-title">About</div>' +
+          '<div class="settings-row"><span class="settings-row-label">Version</span><span class="settings-row-value">AbiLearn V2</span></div>' +
+          '<div class="settings-row"><span class="settings-row-label">Platform</span><span class="settings-row-value">CBSE Class 10</span></div>' +
+        '</div>' +
+      '</div>' +
+    '</div>';
+
+  panel.addEventListener('click', function (e) {
+    if (e.target === panel) closePanel('settingsPanel');
+  });
+  requestAnimationFrame(function () {
+    panel.classList.add('open');
+    document.body.style.overflow = 'hidden';
+  });
+  var dd = document.getElementById('userDropdown');
   if (dd) dd.classList.remove('open');
 }
 
-function closePanel(id) {
-  const p = document.getElementById(id);
-  if (p) { p.classList.remove('open'); document.body.style.overflow = ''; }
+function sendVerificationEmail() {
+  var fbUser = window._fauth && window._fauth.currentUser;
+  if (!fbUser) return;
+  fbUser.sendEmailVerification().then(function () {
+    showAuthToast('Verification email sent! Check your inbox.');
+  }).catch(function () {
+    showAuthToast('Could not send email. Try again shortly.');
+  });
 }
 
-function clearProgress() {
-  if (confirm('Clear all study progress? This cannot be undone.')) {
-    const u = getUser();
-    if (u) {
-      localStorage.removeItem('abilearn_progress_' + u.email);
-      localStorage.removeItem('pdf_done_' + u.email);
-    }
-    closePanel('settingsPanel');
-    showAuthToast('Study progress cleared.');
-  }
+function sendPasswordResetFromSettings() {
+  var user = getUser();
+  if (!user) return;
+  window._fauth.sendPasswordResetEmail(user.email).then(function () {
+    showAuthToast('Password reset email sent to ' + user.email);
+  }).catch(function () {
+    showAuthToast('Could not send reset email. Try again shortly.');
+  });
+}
+
+function closePanel(id) {
+  var p = document.getElementById(id);
+  if (p) { p.classList.remove('open'); document.body.style.overflow = ''; }
 }
