@@ -1,4 +1,4 @@
-/* AbiLearn — Authentication System v5 (Firebase Auth)
+/* AbiLearn — Authentication System v6 (Firebase Auth)
  *
  * Public API (same surface as before so existing code still works):
  *   getUser()            → cached user object | null
@@ -18,19 +18,34 @@ var _cachedUser = null;
 
 function getUser() { return _cachedUser; }
 
-/* ══ INSTANT NAVBAR FROM SESSION HINT ══
- * auth-page.js writes al_session_hint to sessionStorage right after login.
- * We read it immediately so the navbar shows the logged-in state without
- * waiting for the async onAuthStateChanged callback.
+/* ══ INSTANT NAVBAR — PERSISTENT USER CACHE ══
+ * auth-page.js writes al_user_cache to localStorage right after login/signup.
+ * onAuthStateChanged keeps it updated and deletes it on logout.
+ * Reading localStorage is synchronous, so ALL pages show the logged-in navbar
+ * instantly — no waiting for Firebase's async onAuthStateChanged.
+ *
+ * Fallback: al_session_hint in sessionStorage (written by auth-page.js) covers
+ * the first navigation after login before the localStorage cache is confirmed.
  */
-(function applySessionHint() {
+(function applyUserCache() {
   try {
-    var raw = sessionStorage.getItem('al_session_hint');
+    var raw = null;
+    // Session hint takes priority (freshest data, written right after login)
+    var hint = sessionStorage.getItem('al_session_hint');
+    if (hint) { raw = hint; sessionStorage.removeItem('al_session_hint'); }
+    // Fall back to localStorage cache (persists across ALL pages and sessions)
+    if (!raw) raw = localStorage.getItem('al_user_cache');
     if (!raw) return;
-    var hint = JSON.parse(raw);
-    sessionStorage.removeItem('al_session_hint');
-    if (hint && hint.uid) {
-      _cachedUser = { uid: hint.uid, name: hint.name || 'Student', email: hint.email, grade: 'Class 10', avatar: null, joinDate: null };
+    var data = JSON.parse(raw);
+    if (data && data.uid) {
+      _cachedUser = {
+        uid:      data.uid,
+        name:     data.name     || 'Student',
+        email:    data.email    || '',
+        grade:    data.grade    || 'Class 10',
+        avatar:   data.avatar   || null,
+        joinDate: data.joinDate || null
+      };
       document.addEventListener('DOMContentLoaded', function () { updateNavbarForUser(_cachedUser); });
     }
   } catch(e) {}
@@ -51,6 +66,8 @@ document.addEventListener('DOMContentLoaded', function () {
         avatar:   (profile && profile.avatar)   || fbUser.photoURL || null,
         joinDate: (profile && profile.joinDate) || fbUser.metadata.creationTime || null
       };
+      // Persist to localStorage so every subsequent page shows navbar instantly
+      try { localStorage.setItem('al_user_cache', JSON.stringify(_cachedUser)); } catch(e) {}
       updateNavbarForUser(_cachedUser);
       DB.migrateLegacyProgress(fbUser.email, fbUser.uid);
       if (typeof loadUserDataFromFirestore === 'function') {
@@ -58,6 +75,8 @@ document.addEventListener('DOMContentLoaded', function () {
       }
     } else {
       _cachedUser = null;
+      // Clear cache so pages don't show stale logged-in state after logout
+      try { localStorage.removeItem('al_user_cache'); } catch(e) {}
       restoreNavbarButtons();
     }
   });
@@ -66,6 +85,7 @@ document.addEventListener('DOMContentLoaded', function () {
 /* ══ LOGOUT ══ */
 function authLogout() {
   if (!window._fauth) return;
+  try { localStorage.removeItem('al_user_cache'); } catch(e) {}
   window._fauth.signOut().then(function () {
     _cachedUser = null;
     restoreNavbarButtons();

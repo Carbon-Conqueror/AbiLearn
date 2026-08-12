@@ -1,4 +1,4 @@
-/* AbiLearn — Auth Page v3 (Firebase Authentication)
+/* AbiLearn — Auth Page v4 (Firebase Authentication)
  * Standalone: no dependency on auth.js.
  * Handles: login, signup, forgot password, email verification notice.
  */
@@ -460,14 +460,17 @@ async function handleLogin(e) {
     var cred = await window._fauth.signInWithEmailAndPassword(email, password);
     var fbUser = cred.user;
 
-    // Store a session hint in sessionStorage so the destination page can
-    // show the logged-in navbar instantly, without waiting for onAuthStateChanged.
+    // Write to both sessionStorage (one-time hint for immediate next page) and
+    // localStorage (persistent cache for all subsequent pages).
     try {
-      sessionStorage.setItem('al_session_hint', JSON.stringify({
+      var cacheEntry = JSON.stringify({
         uid:   fbUser.uid,
         name:  fbUser.displayName || 'Student',
-        email: fbUser.email
-      }));
+        email: fbUser.email,
+        grade: 'Class 10'
+      });
+      sessionStorage.setItem('al_session_hint', cacheEntry);
+      localStorage.setItem('al_user_cache', cacheEntry);
     } catch(e) {}
 
     clearLoading(btn, 'Sign in');
@@ -545,7 +548,9 @@ async function handleSignup(e) {
     try { await fbUser.sendEmailVerification(); } catch(e) {}
 
     try {
-      sessionStorage.setItem('al_session_hint', JSON.stringify({ uid: fbUser.uid, name: name, email: email }));
+      var signupCache = JSON.stringify({ uid: fbUser.uid, name: name, email: email, grade: grade });
+      sessionStorage.setItem('al_session_hint', signupCache);
+      localStorage.setItem('al_user_cache', signupCache);
     } catch(e) {}
 
     clearLoading(btn, 'Create account');
