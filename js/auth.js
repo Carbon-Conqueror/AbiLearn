@@ -18,9 +18,27 @@ var _cachedUser = null;
 
 function getUser() { return _cachedUser; }
 
+/* ══ INSTANT NAVBAR FROM SESSION HINT ══
+ * auth-page.js writes al_session_hint to sessionStorage right after login.
+ * We read it immediately so the navbar shows the logged-in state without
+ * waiting for the async onAuthStateChanged callback.
+ */
+(function applySessionHint() {
+  try {
+    var raw = sessionStorage.getItem('al_session_hint');
+    if (!raw) return;
+    var hint = JSON.parse(raw);
+    sessionStorage.removeItem('al_session_hint');
+    if (hint && hint.uid) {
+      _cachedUser = { uid: hint.uid, name: hint.name || 'Student', email: hint.email, grade: 'Class 10', avatar: null, joinDate: null };
+      document.addEventListener('DOMContentLoaded', function () { updateNavbarForUser(_cachedUser); });
+    }
+  } catch(e) {}
+})();
+
 /* ══ FIREBASE AUTH STATE LISTENER ══ */
 document.addEventListener('DOMContentLoaded', function () {
-  if (!window._fauth) return; // Firebase not configured yet
+  if (!window._fauth) return;
 
   window._fauth.onAuthStateChanged(async function (fbUser) {
     if (fbUser) {
@@ -34,15 +52,13 @@ document.addEventListener('DOMContentLoaded', function () {
         joinDate: (profile && profile.joinDate) || fbUser.metadata.creationTime || null
       };
       updateNavbarForUser(_cachedUser);
-      // One-time migration of legacy localStorage PDF progress
       DB.migrateLegacyProgress(fbUser.email, fbUser.uid);
-      // Load user data into app caches (PDF progress + knowledge map)
       if (typeof loadUserDataFromFirestore === 'function') {
         loadUserDataFromFirestore(fbUser.uid);
       }
     } else {
-      _cachedUser = null;
-      restoreNavbarButtons();
+      // Only restore logged-out buttons if we have NO cached user from the hint.
+      if (!_cachedUser) restoreNavbarButtons();
     }
   });
 });

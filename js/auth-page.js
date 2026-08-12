@@ -454,15 +454,18 @@ async function handleLogin(e) {
     try { await window._fauth.setPersistence(remember ? 'local' : 'session'); }
     catch (pe) { console.warn('[AbiLearn] setPersistence:', pe); }
 
-    await window._fauth.signInWithEmailAndPassword(email, password);
+    var cred = await window._fauth.signInWithEmailAndPassword(email, password);
+    var fbUser = cred.user;
 
-    // Wait for onAuthStateChanged to confirm the session is live before navigating.
-    // This prevents the race where location.href fires before the session is stored.
-    await new Promise(function (resolve) {
-      var unsub = window._fauth.onAuthStateChanged(function (u) {
-        if (u) { unsub(); resolve(); }
-      });
-    });
+    // Store a session hint in sessionStorage so the destination page can
+    // show the logged-in navbar instantly, without waiting for onAuthStateChanged.
+    try {
+      sessionStorage.setItem('al_session_hint', JSON.stringify({
+        uid:   fbUser.uid,
+        name:  fbUser.displayName || 'Student',
+        email: fbUser.email
+      }));
+    } catch(e) {}
 
     clearLoading(btn, 'Sign in');
     showToast('Welcome back!', 'success');
