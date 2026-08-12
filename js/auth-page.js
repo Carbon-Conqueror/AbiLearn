@@ -605,14 +605,19 @@ function init() {
   }
 
   if (window._fauth) {
-    var params = new URLSearchParams(location.search);
-    var hasFrom = params.has('from') || params.get('expired') === '1';
-    window._fauth.onAuthStateChanged(function (fbUser) {
-      // Only auto-redirect if the user came here from a protected page.
-      // If they navigated here directly, show the form so they can
-      // sign in as a different account or the redirect is a stale session.
-      if (fbUser && hasFrom) { redirectAfterLogin(); }
-    });
+    var urlParams = new URLSearchParams(location.search);
+    var isExpired = urlParams.get('expired') === '1';
+
+    if (isExpired) {
+      // Session genuinely expired — if still logged in, redirect away.
+      window._fauth.onAuthStateChanged(function (fbUser) {
+        if (fbUser) { redirectAfterLogin(); }
+      });
+    } else {
+      // User navigated to login intentionally (Log In button, direct URL, etc.)
+      // Sign out any stale session so the form is always usable.
+      window._fauth.signOut().catch(function () {});
+    }
   }
   parseUrlState();
   render();
