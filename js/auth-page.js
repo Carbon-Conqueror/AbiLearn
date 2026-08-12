@@ -587,13 +587,26 @@ function parseUrlState() {
 
 /* ══ INIT ══ */
 function init() {
-  // If already logged in redirect away from auth page
+  if (window._firebaseConfigMissing) {
+    var card = document.getElementById('alCard');
+    if (card) {
+      card.innerHTML =
+        '<div style="text-align:center;padding:2rem 1rem">' +
+          '<div style="font-size:2.5rem;margin-bottom:1rem">⚙️</div>' +
+          '<h2 style="margin:0 0 0.5rem;font-size:1.2rem">Firebase not configured</h2>' +
+          '<p style="color:#6B7280;font-size:0.875rem;margin:0 0 1.25rem">Set your Firebase credentials in<br>' +
+          '<strong>Cloudflare Pages → Settings → Environment variables</strong>.</p>' +
+          '<a href="https://console.firebase.google.com" target="_blank" rel="noopener noreferrer" ' +
+          'style="display:inline-block;background:#6D28D9;color:#fff;padding:0.6rem 1.25rem;border-radius:8px;font-size:0.875rem;text-decoration:none;font-weight:600">' +
+          'Open Firebase Console</a>' +
+        '</div>';
+    }
+    return;
+  }
+
   if (window._fauth) {
     window._fauth.onAuthStateChanged(function (fbUser) {
-      if (fbUser) {
-        // Already authenticated — go to the intended destination
-        redirectAfterLogin();
-      }
+      if (fbUser) { redirectAfterLogin(); }
     });
   }
   parseUrlState();
