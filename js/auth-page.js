@@ -587,19 +587,8 @@ function parseUrlState() {
 
 /* ══ INIT ══ */
 function init() {
-  if (window._fauth) {
-    var urlParams = new URLSearchParams(location.search);
-    var isExpired = urlParams.get('expired') === '1';
-
-    if (isExpired) {
-      window._fauth.onAuthStateChanged(function (fbUser) {
-        if (fbUser) { redirectAfterLogin(); }
-      });
-    } else {
-      // Always sign out stale sessions when visiting the login page directly.
-      window._fauth.signOut().catch(function () {});
-    }
-  }
+  // Never auto-redirect based on cached session — always show the form.
+  // Redirect only happens after the user explicitly submits credentials (handleLogin/handleSignup).
   parseUrlState();
   render();
 }
