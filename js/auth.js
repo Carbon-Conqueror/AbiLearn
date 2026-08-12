@@ -42,7 +42,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
   window._fauth.onAuthStateChanged(async function (fbUser) {
     if (fbUser) {
-      var profile = await DB.getProfile(fbUser.uid);
+      var profile = (typeof DB !== 'undefined') ? await DB.getProfile(fbUser.uid) : null;
       _cachedUser = {
         uid:      fbUser.uid,
         name:     (profile && profile.name)     || fbUser.displayName || 'Student',
@@ -57,8 +57,8 @@ document.addEventListener('DOMContentLoaded', function () {
         loadUserDataFromFirestore(fbUser.uid);
       }
     } else {
-      // Only restore logged-out buttons if we have NO cached user from the hint.
-      if (!_cachedUser) restoreNavbarButtons();
+      _cachedUser = null;
+      restoreNavbarButtons();
     }
   });
 });
@@ -95,15 +95,15 @@ function updateNavbarForUser(user) {
     '<button class="nav-user-btn" id="navAvatar" onclick="toggleUserDropdown()" aria-label="Account menu">' +
       '<div class="nav-avatar">' +
         (user.avatar
-          ? '<img src="' + escSafe(user.avatar) + '" alt="' + escSafe(user.name) + '" onerror="this.style.display=\'none\';this.nextSibling.style.display=\'flex\'"><span class="nav-avatar-initials" style="display:none">' + initials + '</span>'
-          : '<span class="nav-avatar-initials">' + initials + '</span>') +
+          ? '<img src="' + escSafe(user.avatar) + '" alt="' + escSafe(user.name) + '" onerror="this.style.display=\'none\';this.nextSibling.style.display=\'flex\'"><span class="nav-avatar-initials" style="display:none">' + escSafe(initials) + '</span>'
+          : '<span class="nav-avatar-initials">' + escSafe(initials) + '</span>') +
       '</div>' +
       '<span class="nav-user-name">' + escSafe(firstName) + '</span>' +
       '<svg class="nav-user-chevron" xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg>' +
     '</button>' +
     '<div class="user-dropdown" id="userDropdown">' +
       '<div class="user-dropdown-header">' +
-        '<div class="ud-avatar">' + initials + '</div>' +
+        '<div class="ud-avatar">' + escSafe(initials) + '</div>' +
         '<div class="ud-details">' +
           '<div class="ud-name">' + escSafe(user.name) + '</div>' +
           '<div class="ud-email">' + escSafe(user.email) + '</div>' +
@@ -138,6 +138,13 @@ function updateNavbarForUser(user) {
   var hamburger = navRight.querySelector('.hamburger');
   if (hamburger) navRight.insertBefore(widget, hamburger);
   else navRight.appendChild(widget);
+
+  var mobileActions = document.querySelector('#mobileMenu .mobile-menu-actions');
+  if (mobileActions) {
+    mobileActions.innerHTML =
+      '<div class="mobile-user-name">' + escSafe(user.name) + '</div>' +
+      '<button class="btn-mobile-logout" onclick="authLogout()">Log Out</button>';
+  }
 }
 
 function toggleUserDropdown() {
@@ -145,14 +152,17 @@ function toggleUserDropdown() {
   if (!dd) return;
   var isOpen = dd.classList.toggle('open');
   if (isOpen) {
-    setTimeout(function () {
-      document.addEventListener('click', function handler(e) {
-        if (!e.target.closest('#navUserWidget')) {
-          dd.classList.remove('open');
-          document.removeEventListener('click', handler);
-        }
-      });
-    }, 10);
+    if (dd._outsideHandler) document.removeEventListener('click', dd._outsideHandler);
+    dd._outsideHandler = function(e) {
+      if (!e.target.closest('#navUserWidget')) {
+        dd.classList.remove('open');
+        document.removeEventListener('click', dd._outsideHandler);
+        dd._outsideHandler = null;
+      }
+    };
+    setTimeout(function() { document.addEventListener('click', dd._outsideHandler); }, 10);
+  } else {
+    if (dd._outsideHandler) { document.removeEventListener('click', dd._outsideHandler); dd._outsideHandler = null; }
   }
 }
 
@@ -162,6 +172,17 @@ function restoreNavbarButtons() {
   });
   var widget = document.getElementById('navUserWidget');
   if (widget) widget.remove();
+
+  var mobileActions = document.querySelector('#mobileMenu .mobile-menu-actions');
+  if (mobileActions) {
+    mobileActions.innerHTML =
+      '<button class="btn-login">Log In</button>' +
+      '<button class="btn-signup">Sign Up Free</button>';
+    var mb = mobileActions.querySelector('.btn-login');
+    var ms = mobileActions.querySelector('.btn-signup');
+    if (mb) mb.addEventListener('click', function() { window.location.href = 'auth.html?from=' + encodeURIComponent(location.href); });
+    if (ms) ms.addEventListener('click', function() { window.location.href = 'auth.html?tab=signup&from=' + encodeURIComponent(location.href); });
+  }
 }
 
 /* ══ SAFE HTML ESCAPE (for inline usage) ══ */
@@ -285,6 +306,9 @@ function openDashboard() {
     panel = document.createElement('div');
     panel.id        = 'dashPanel';
     panel.className = 'panel-overlay';
+    panel.addEventListener('click', function (e) {
+      if (e.target === panel) closePanel('dashPanel');
+    });
     document.body.appendChild(panel);
   }
 
@@ -306,7 +330,7 @@ function openDashboard() {
       '</div>' +
       '<div class="panel-body">' +
         '<div class="dash-user-row">' +
-          '<div class="dash-avatar">' + initials + '</div>' +
+          '<div class="dash-avatar">' + escSafe(initials) + '</div>' +
           '<div class="dash-user-info">' +
             '<div class="dash-name">' + escSafe(user.name) + '</div>' +
             '<div class="dash-grade">' + escSafe(user.grade) + (joinDate ? ' · Joined ' + joinDate : '') + '</div>' +
@@ -334,9 +358,6 @@ function openDashboard() {
       '</div>' +
     '</div>';
 
-  panel.addEventListener('click', function (e) {
-    if (e.target === panel) closePanel('dashPanel');
-  });
   var _dashTrigger = document.activeElement;
   requestAnimationFrame(function () {
     panel.classList.add('open');
@@ -405,8 +426,8 @@ async function _loadDashboardData(uid) {
     if (statsEl) statsEl.innerHTML = statsHTML;
 
   } catch (e) {
-    var progressEl2 = document.getElementById('dashProgressRows');
-    if (progressEl2) progressEl2.innerHTML = '<div style="color:var(--muted);font-size:0.85rem">Could not load progress data.</div>';
+    var errEl = document.getElementById('dashProgressRows');
+    if (errEl) errEl.innerHTML = '<div style="color:var(--muted);font-size:0.85rem">Could not load progress data.</div>';
   }
 }
 
@@ -427,6 +448,9 @@ function openSettings() {
     panel = document.createElement('div');
     panel.id        = 'settingsPanel';
     panel.className = 'panel-overlay';
+    panel.addEventListener('click', function (e) {
+      if (e.target === panel) closePanel('settingsPanel');
+    });
     document.body.appendChild(panel);
   }
 
@@ -474,9 +498,6 @@ function openSettings() {
       '</div>' +
     '</div>';
 
-  panel.addEventListener('click', function (e) {
-    if (e.target === panel) closePanel('settingsPanel');
-  });
   var _settingsTrigger = document.activeElement;
   requestAnimationFrame(function () {
     panel.classList.add('open');

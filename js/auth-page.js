@@ -189,7 +189,7 @@ function fbErrorMsg(code) {
 function redirectAfterLogin() {
   var params = new URLSearchParams(location.search);
   var from   = params.get('from');
-  var dest   = from ? decodeURIComponent(from) : 'index.html';
+  var dest = from || 'index.html';
   try {
     var u = new URL(dest, location.origin);
     if (u.origin === location.origin) { location.href = u.href; return; }
@@ -418,6 +418,9 @@ function afterRender() {
         }).catch(function () {
           showToast('Could not resend email. Try again in a minute.', 'error');
         });
+      } else {
+        showToast('Session expired. Please sign in again.', 'error');
+        setTimeout(function() { goTo('login'); }, 1500);
       }
     });
 
@@ -496,6 +499,8 @@ async function handleSignup(e) {
   ['signupName','signupEmail','signupPassword','signupConfirm'].forEach(function (id) {
     clearFieldErr(id, id + 'Err');
   });
+  var termsErr = document.getElementById('signupTermsErr');
+  if (termsErr) { termsErr.textContent = ''; termsErr.classList.remove('show'); }
   hideFormErr('signupFormErr');
 
   var hasErr = false;
@@ -533,21 +538,15 @@ async function handleSignup(e) {
     var cred = await window._fauth.createUserWithEmailAndPassword(email, pw);
     var fbUser = cred.user;
 
-    // Update Firebase display name
-    await fbUser.updateProfile({ displayName: name });
+    try { await fbUser.updateProfile({ displayName: name }); } catch(e) {}
+    try {
+      await DB.setProfile({ name: name, email: email, grade: grade, joinDate: new Date().toISOString(), avatar: null }, fbUser.uid);
+    } catch(e) {}
+    try { await fbUser.sendEmailVerification(); } catch(e) {}
 
-    // Create Firestore profile
-    var joinDate = new Date().toISOString();
-    await DB.setProfile({
-      name:     name,
-      email:    email,
-      grade:    grade,
-      joinDate: joinDate,
-      avatar:   null
-    }, fbUser.uid);
-
-    // Send email verification
-    await fbUser.sendEmailVerification();
+    try {
+      sessionStorage.setItem('al_session_hint', JSON.stringify({ uid: fbUser.uid, name: name, email: email }));
+    } catch(e) {}
 
     clearLoading(btn, 'Create account');
     goTo('verify', { email: email });

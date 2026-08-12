@@ -221,7 +221,7 @@ var DB = (function () {
   function computeSubjectPct(subjectId, knowledgeMap) {
     if (typeof DATA === 'undefined') return 0;
     var sub = DATA.subjects.find(function(s) { return s.id === subjectId; });
-    if (!sub || !sub.chapters.length) return 0;
+    if (!sub || !sub.chapters || !sub.chapters.length) return 0;
     var advanced = sub.chapters.filter(function(ch) {
       var entry = knowledgeMap[subjectId + '_' + ch.id];
       return entry && (entry.mastery === 'proficient' || entry.mastery === 'mastered');
