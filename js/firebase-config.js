@@ -13,12 +13,12 @@
  */
 (function () {
   var firebaseConfig = {
-    apiKey:            "REPLACE_WITH_YOUR_API_KEY",
-    authDomain:        "REPLACE_WITH_YOUR_AUTH_DOMAIN",
-    projectId:         "REPLACE_WITH_YOUR_PROJECT_ID",
-    storageBucket:     "REPLACE_WITH_YOUR_STORAGE_BUCKET",
-    messagingSenderId: "REPLACE_WITH_YOUR_MESSAGING_SENDER_ID",
-    appId:             "REPLACE_WITH_YOUR_APP_ID"
+    apiKey:            "AIzaSyD7WkQpQia10Ukjg58Jwf_3mQ6SJyvfkNQ",
+    authDomain:        "abilearn-89c92.firebaseapp.com",
+    projectId:         "abilearn-89c92",
+    storageBucket:     "abilearn-89c92.firebasestorage.app",
+    messagingSenderId: "969943670968",
+    appId:             "1:969943670968:web:d93dd9c9a7be91435a144d"
   };
 
   if (!firebase.apps.length) {
