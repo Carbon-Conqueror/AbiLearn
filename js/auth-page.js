@@ -605,8 +605,13 @@ function init() {
   }
 
   if (window._fauth) {
+    var params = new URLSearchParams(location.search);
+    var hasFrom = params.has('from') || params.get('expired') === '1';
     window._fauth.onAuthStateChanged(function (fbUser) {
-      if (fbUser) { redirectAfterLogin(); }
+      // Only auto-redirect if the user came here from a protected page.
+      // If they navigated here directly, show the form so they can
+      // sign in as a different account or the redirect is a stale session.
+      if (fbUser && hasFrom) { redirectAfterLogin(); }
     });
   }
   parseUrlState();
