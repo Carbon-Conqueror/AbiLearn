@@ -89,9 +89,26 @@ function clearFieldErr(inputId, errId) {
   if (inp) inp.classList.remove('has-err');
   if (err) { err.textContent = ''; err.classList.remove('show'); }
 }
-function showFormErr(id, msg) {
+function showFormErr(id, msg, actions) {
   var el = document.getElementById(id);
-  if (el) { el.innerHTML = ICONS.alertCircle + ' ' + escHtml(msg); el.classList.add('show'); }
+  if (!el) return;
+  var actionsHtml = '';
+  if (actions) {
+    actionsHtml = '<div class="al-err-actions">';
+    if (actions.reset)  actionsHtml += '<button type="button" class="al-err-action" id="errActionReset">Reset password</button>';
+    if (actions.signup) actionsHtml += '<button type="button" class="al-err-action" id="errActionSignup">Create an account</button>';
+    actionsHtml += '</div>';
+  }
+  el.innerHTML = ICONS.alertCircle + ' ' + escHtml(msg) + actionsHtml;
+  el.classList.add('show');
+  if (actions && actions.reset) {
+    var rb = document.getElementById('errActionReset');
+    if (rb) rb.addEventListener('click', function () { goTo('forgot'); });
+  }
+  if (actions && actions.signup) {
+    var sb = document.getElementById('errActionSignup');
+    if (sb) sb.addEventListener('click', function () { goTo('signup'); });
+  }
 }
 function hideFormErr(id) {
   var el = document.getElementById(id);
@@ -444,7 +461,13 @@ async function handleLogin(e) {
     redirectAfterLogin();
   } catch (err) {
     clearLoading(btn, 'Sign in');
-    showFormErr('loginFormErr', fbErrorMsg(err.code));
+    var credErr = err.code === 'auth/invalid-login-credentials' ||
+                  err.code === 'auth/invalid-credential' ||
+                  err.code === 'auth/wrong-password' ||
+                  err.code === 'auth/user-not-found';
+    var noAcct  = err.code === 'auth/user-not-found';
+    showFormErr('loginFormErr', fbErrorMsg(err.code),
+      credErr ? { reset: true, signup: noAcct } : null);
   }
 }
 

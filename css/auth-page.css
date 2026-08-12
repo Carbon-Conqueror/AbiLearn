@@ -402,8 +402,28 @@ img { display: block; max-width: 100%; }
   margin-bottom: 0.85rem;
   line-height: 1.45;
 }
-.al-form-err.show { display: flex; }
-.al-form-err svg { flex-shrink: 0; }
+.al-form-err.show { display: flex; flex-direction: column; align-items: flex-start; }
+.al-form-err > svg { flex-shrink: 0; }
+.al-form-err.show > svg { display: inline; margin-right: 0.35rem; }
+
+.al-err-actions {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+  margin-top: 0.55rem;
+}
+.al-err-action {
+  background: none;
+  border: 1px solid #FECACA;
+  border-radius: 6px;
+  color: #991B1B;
+  font-size: 0.78rem;
+  font-weight: 600;
+  padding: 0.3rem 0.7rem;
+  cursor: pointer;
+  transition: background 0.15s, border-color 0.15s;
+}
+.al-err-action:hover { background: #FECACA; border-color: #FCA5A5; }
 
 /* Remember row */
 .al-remember-row {
