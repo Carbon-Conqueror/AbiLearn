@@ -587,35 +587,16 @@ function parseUrlState() {
 
 /* ══ INIT ══ */
 function init() {
-  if (window._firebaseConfigMissing) {
-    var card = document.getElementById('alCard');
-    if (card) {
-      card.innerHTML =
-        '<div style="text-align:center;padding:2rem 1rem">' +
-          '<div style="font-size:2.5rem;margin-bottom:1rem">⚙️</div>' +
-          '<h2 style="margin:0 0 0.5rem;font-size:1.2rem">Firebase not configured</h2>' +
-          '<p style="color:#6B7280;font-size:0.875rem;margin:0 0 1.25rem">Set your Firebase credentials in<br>' +
-          '<strong>Cloudflare Pages → Settings → Environment variables</strong>.</p>' +
-          '<a href="https://console.firebase.google.com" target="_blank" rel="noopener noreferrer" ' +
-          'style="display:inline-block;background:#6D28D9;color:#fff;padding:0.6rem 1.25rem;border-radius:8px;font-size:0.875rem;text-decoration:none;font-weight:600">' +
-          'Open Firebase Console</a>' +
-        '</div>';
-    }
-    return;
-  }
-
   if (window._fauth) {
     var urlParams = new URLSearchParams(location.search);
     var isExpired = urlParams.get('expired') === '1';
 
     if (isExpired) {
-      // Session genuinely expired — if still logged in, redirect away.
       window._fauth.onAuthStateChanged(function (fbUser) {
         if (fbUser) { redirectAfterLogin(); }
       });
     } else {
-      // User navigated to login intentionally (Log In button, direct URL, etc.)
-      // Sign out any stale session so the form is always usable.
+      // Always sign out stale sessions when visiting the login page directly.
       window._fauth.signOut().catch(function () {});
     }
   }
