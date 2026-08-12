@@ -432,12 +432,12 @@ async function handleLogin(e) {
 
   setLoading(btn, 'Signing in…');
   try {
-    var persistence = document.getElementById('loginRemember') && document.getElementById('loginRemember').checked
-      ? firebase.auth.Auth.Persistence.LOCAL
-      : firebase.auth.Auth.Persistence.SESSION;
-    await window._fauth.setPersistence(persistence);
+    var remember = document.getElementById('loginRemember') && document.getElementById('loginRemember').checked;
+    try {
+      var Persistence = firebase.auth.Auth.Persistence;
+      await window._fauth.setPersistence(remember ? Persistence.LOCAL : Persistence.SESSION);
+    } catch (pe) { console.warn('[AbiLearn] setPersistence failed, continuing:', pe); }
     await window._fauth.signInWithEmailAndPassword(email, password);
-    // onAuthStateChanged in auth.js will pick up the session
     clearLoading(btn, 'Sign in');
     showToast('Welcome back!', 'success');
     await delay(600);
