@@ -149,17 +149,22 @@ function setupPwStrength(inputId, barsId, labelId) {
 /* ══ FIREBASE ERROR → USER MESSAGE ══ */
 function fbErrorMsg(code) {
   var map = {
-    'auth/user-not-found':        'No account found with this email address.',
-    'auth/wrong-password':        'The password is incorrect. Please try again.',
-    'auth/invalid-credential':    'The email or password is incorrect.',
-    'auth/email-already-in-use':  'An account with this email already exists.',
-    'auth/weak-password':         'Password must be at least 8 characters.',
-    'auth/invalid-email':         'Please enter a valid email address.',
-    'auth/too-many-requests':     'Too many attempts. Please wait a few minutes before trying again.',
-    'auth/network-request-failed':'Network error. Check your connection and try again.',
-    'auth/user-disabled':         'This account has been disabled. Contact support.',
-    'auth/popup-closed-by-user':  'Sign-in popup was closed. Please try again.'
+    'auth/user-not-found':              'No account found with this email address.',
+    'auth/wrong-password':              'The password is incorrect. Please try again.',
+    'auth/invalid-credential':          'The email or password is incorrect.',
+    'auth/invalid-login-credentials':   'The email or password is incorrect.',
+    'auth/email-already-in-use':        'An account with this email already exists.',
+    'auth/weak-password':               'Password must be at least 8 characters.',
+    'auth/invalid-email':               'Please enter a valid email address.',
+    'auth/too-many-requests':           'Too many attempts. Please wait a few minutes before trying again.',
+    'auth/network-request-failed':      'Network error. Check your connection and try again.',
+    'auth/user-disabled':               'This account has been disabled. Contact support.',
+    'auth/popup-closed-by-user':        'Sign-in popup was closed. Please try again.',
+    'auth/operation-not-allowed':       'Email sign-in is not enabled. Contact support.',
+    'auth/requires-recent-login':       'Please sign in again to continue.',
+    'auth/account-exists-with-different-credential': 'An account already exists with a different sign-in method.'
   };
+  if (!map[code]) console.warn('[AbiLearn] Unhandled Firebase auth error:', code);
   return map[code] || 'An error occurred. Please try again.';
 }
 
