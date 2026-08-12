@@ -450,14 +450,23 @@ async function handleLogin(e) {
   setLoading(btn, 'Signing in…');
   try {
     var remember = document.getElementById('loginRemember') && document.getElementById('loginRemember').checked;
-    try {
-      var Persistence = firebase.auth.Auth.Persistence;
-      await window._fauth.setPersistence(remember ? Persistence.LOCAL : Persistence.SESSION);
-    } catch (pe) { console.warn('[AbiLearn] setPersistence failed, continuing:', pe); }
+    // Use string literals — safer than firebase.auth.Auth.Persistence enum access
+    try { await window._fauth.setPersistence(remember ? 'local' : 'session'); }
+    catch (pe) { console.warn('[AbiLearn] setPersistence:', pe); }
+
     await window._fauth.signInWithEmailAndPassword(email, password);
+
+    // Wait for onAuthStateChanged to confirm the session is live before navigating.
+    // This prevents the race where location.href fires before the session is stored.
+    await new Promise(function (resolve) {
+      var unsub = window._fauth.onAuthStateChanged(function (u) {
+        if (u) { unsub(); resolve(); }
+      });
+    });
+
     clearLoading(btn, 'Sign in');
     showToast('Welcome back!', 'success');
-    await delay(600);
+    await delay(500);
     redirectAfterLogin();
   } catch (err) {
     clearLoading(btn, 'Sign in');
