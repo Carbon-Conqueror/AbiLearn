@@ -729,13 +729,13 @@ input:focus-visible,select:focus-visible,textarea:focus-visible { outline:none; 
 ══════════════════════════════════════════ */
 .formula-sheet { display:flex;flex-direction:column;gap:1.5rem; }
 .formula-chapter-block {
-  background:var(--surface);border-radius:var(--radius-lg);
+  background:white;border-radius:var(--radius-lg);
   padding:1.5rem;box-shadow:var(--shadow-sm);
   border:1px solid var(--border);
 }
 .formula-chapter-title {
   font-size:1rem;font-weight:700;color:var(--text);
-  margin-bottom:1rem;display:flex;align-items:center;justify-content:space-between;gap:0.65rem;
+  margin-bottom:1rem;display:flex;align-items:center;gap:0.65rem;
 }
 .formula-num {
   width:28px;height:28px;border-radius:8px;
@@ -819,18 +819,11 @@ input:focus-visible,select:focus-visible,textarea:focus-visible { outline:none; 
 .mcq-feedback.wrong { background:#FEF2F2;color:#991B1B;border:1px solid #EF4444; }
 
 /* ══════════════════════════════════════════
-   CHAPTER ACCORDION
+   CHAPTER ACCORDION (for English tabs)
 ══════════════════════════════════════════ */
-.chapters-done-strip {
-  display:flex;align-items:center;gap:0.4rem;
-  background:var(--surface);border:1px solid var(--border);
-  border-radius:var(--radius-lg);padding:0.8rem 1.25rem;
-  margin-bottom:1.25rem;font-size:0.88rem;color:var(--muted);
-}
-.chapters-done-strip strong { color:var(--purple-600);font-size:1rem;font-weight:800;margin-right:0.15rem; }
 .chapters-list { display:flex;flex-direction:column;gap:0.85rem; }
 .chapter-item {
-  background:var(--surface);border-radius:var(--radius-lg);
+  background:white;border-radius:var(--radius-lg);
   box-shadow:var(--shadow-sm);border:1px solid var(--border);overflow:hidden;
   transition:var(--transition);
 }
