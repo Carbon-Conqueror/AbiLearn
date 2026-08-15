@@ -193,6 +193,33 @@ var DB = (function () {
     } catch (e) { console.warn('DB.setPdfDone', e); }
   }
 
+  /* ══ CHAPTER PROGRESS ══
+   * Key: "{subjectId}_{chapterId}"
+   * Fields: subjectId, chapterId, done, updatedAt
+   */
+  async function getChapterProgress(id) {
+    if (!fs()) return {};
+    try {
+      var snap = await subCol('chapterProgress', id).get();
+      var out = {};
+      snap.forEach(function(doc) { out[doc.id] = doc.data(); });
+      return out;
+    } catch (e) { console.warn('DB.getChapterProgress', e); return {}; }
+  }
+
+  async function setChapterDone(subjectId, chapterId, done, id) {
+    if (!fs()) return;
+    try {
+      var key = subjectId + '_' + chapterId;
+      await subCol('chapterProgress', id).doc(key).set({
+        subjectId: subjectId,
+        chapterId: chapterId,
+        done:      !!done,
+        updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+      }, { merge: true });
+    } catch (e) { console.warn('DB.setChapterDone', e); }
+  }
+
   /* ══ STUDY PLANS ══
    * Keyed by date string "YYYY-MM-DD"
    */
@@ -325,6 +352,8 @@ var DB = (function () {
     resolveMistake:            resolveMistake,
     getPdfProgress:            getPdfProgress,
     setPdfDone:                setPdfDone,
+    getChapterProgress:        getChapterProgress,
+    setChapterDone:            setChapterDone,
     getStudyPlan:              getStudyPlan,
     setStudyPlan:              setStudyPlan,
     recordStudyActivity:       recordStudyActivity,

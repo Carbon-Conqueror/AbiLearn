@@ -819,11 +819,18 @@ input:focus-visible,select:focus-visible,textarea:focus-visible { outline:none; 
 .mcq-feedback.wrong { background:#FEF2F2;color:#991B1B;border:1px solid #EF4444; }
 
 /* ══════════════════════════════════════════
-   CHAPTER ACCORDION (for English tabs)
+   CHAPTER ACCORDION
 ══════════════════════════════════════════ */
+.chapters-done-strip {
+  display:flex;align-items:center;gap:0.4rem;
+  background:var(--surface);border:1px solid var(--border);
+  border-radius:var(--radius-lg);padding:0.8rem 1.25rem;
+  margin-bottom:1.25rem;font-size:0.88rem;color:var(--muted);
+}
+.chapters-done-strip strong { color:var(--purple-600);font-size:1rem;font-weight:800;margin-right:0.15rem; }
 .chapters-list { display:flex;flex-direction:column;gap:0.85rem; }
 .chapter-item {
-  background:white;border-radius:var(--radius-lg);
+  background:var(--surface);border-radius:var(--radius-lg);
   box-shadow:var(--shadow-sm);border:1px solid var(--border);overflow:hidden;
   transition:var(--transition);
 }

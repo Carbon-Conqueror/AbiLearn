@@ -22,12 +22,14 @@
 /* ── SUBJECT TAB CONFIGS ── */
 const SUBJECT_TABS = {
   maths: [
+    { id: 'chapters',      label: 'Chapters' },
     { id: 'formula-sheet', label: 'Formulas' },
     { id: 'maths-qbank',   label: 'Question Bank' },
     { id: 'pyqs',          label: 'PYQ Papers' },
     { id: 'my-progress',   label: 'My Progress' }
   ],
   science: [
+    { id: 'chapters',          label: 'Chapters' },
     { id: 'science-qbank',     label: 'Question Bank' },
     { id: 'important-notes',   label: 'Study Notes' },
     { id: 'practice-questions',label: 'MCQ Practice' },
@@ -37,6 +39,7 @@ const SUBJECT_TABS = {
     { id: 'my-progress',       label: 'My Progress' }
   ],
   english: [
+    { id: 'chapters',     label: 'Chapters' },
     { id: 'first-flight', label: 'First Flight' },
     { id: 'footprints',   label: 'Footprints' },
     { id: 'grammar',      label: 'Grammar' },
@@ -46,6 +49,7 @@ const SUBJECT_TABS = {
     { id: 'my-progress',  label: 'My Progress' }
   ],
   social: [
+    { id: 'chapters',           label: 'Chapters' },
     { id: 'social-notes',       label: 'Notes' },
     { id: 'practice-questions', label: 'MCQ Practice' },
     { id: 'social-qbank',       label: 'Question Bank' },
@@ -56,8 +60,12 @@ const SUBJECT_TABS = {
 };
 
 /* ── FIRESTORE PROGRESS CACHE — populated after login by loadUserDataFromFirestore ── */
-var _cachedPdfProgress  = {};
-var _cachedKnowledgeMap = {};
+var _cachedPdfProgress     = {};
+var _cachedKnowledgeMap    = {};
+var _cachedChapterProgress = {};
+
+/* Tracks which subject page is open so loadUserDataFromFirestore can re-render */
+var _subjectPageSubject = null;
 
 function _currentEmail() {
   try {
@@ -102,14 +110,26 @@ function getSubjectPct(subjectId) {
 async function loadUserDataFromFirestore(uid) {
   if (typeof DB === 'undefined' || !uid) return;
   try {
-    const [pdfProg, km] = await Promise.all([
+    const [pdfProg, km, chProg] = await Promise.all([
       DB.getPdfProgress(uid),
-      DB.getKnowledgeMap(uid)
+      DB.getKnowledgeMap(uid),
+      DB.getChapterProgress(uid)
     ]);
-    _cachedPdfProgress  = pdfProg || {};
-    _cachedKnowledgeMap = km      || {};
+    _cachedPdfProgress     = pdfProg || {};
+    _cachedKnowledgeMap    = km      || {};
+    _cachedChapterProgress = chProg  || {};
     // Re-render subject cards on home page with real mastery data
     if (document.getElementById('subjectsGrid')) renderSubjectCards();
+    // Re-render the active tab if it's data-dependent (progress or chapters)
+    if (_subjectPageSubject) {
+      var activeBtn = document.querySelector('.tab-btn.active');
+      if (activeBtn) {
+        var tab = activeBtn.dataset.tab;
+        if (tab === 'my-progress' || tab === 'chapters') {
+          renderTabContent(_subjectPageSubject, tab);
+        }
+      }
+    }
   } catch (e) { console.warn('loadUserDataFromFirestore', e); }
 }
 
@@ -351,6 +371,7 @@ function initSubjectPage(subjectId) {
   initSearch(); initDropdowns(); initMobileNav();
   const subject = DATA.subjects.find(s => s.id === subjectId);
   if (!subject) return;
+  _subjectPageSubject = subject;
 
   renderSubjectShell(subject);
   renderTabContent(subject, SUBJECT_TABS[subjectId][0].id);
@@ -416,6 +437,11 @@ function renderTabContent(subject, tabId) {
 
   setTimeout(() => {
     switch (tabId) {
+      case 'chapters':
+        el.innerHTML = buildChaptersTab(subject);
+        var cl = document.getElementById('chaptersList');
+        if (cl) initChapterAccordion(cl, subject && subject.id);
+        break;
       case 'formula-sheet':     el.innerHTML = buildFormulaSheet(subject); break;
       case 'important-notes':   el.innerHTML = buildImportantNotes(subject); break;
       case 'practice-questions':
@@ -1466,36 +1492,42 @@ function buildEnglishReader(subject, type) {
 }
 
 function buildChapterAccordionHTML(ch, subjectId, numClass) {
-  const p = getProgress();
-  const done = !!p[subjectId + '_' + ch.id];
-  const letters = ['A','B','C','D'];
-  const kpHTML = ch.keyPoints?.length
-    ? `<div class="kp-section"><h4>🔑 Key Points</h4><ul class="kp-list">${ch.keyPoints.map(k => `<li>${escH(k)}</li>`).join('')}</ul></div>` : '';
-  const fmHTML = ch.formulas?.length
-    ? `<div class="fm-section"><h4>📌 Key Info</h4>${ch.formulas.map(f => `<div class="fm-pill">${escH(f)}</div>`).join('')}</div>` : '';
-  const mcqHTML = ch.mcqs?.length
-    ? `<div class="mcq-section"><h4>✏️ Practice MCQs</h4>${ch.mcqs.map((q, qi) => `
-        <div class="mcq-card" style="margin-bottom:0.75rem" data-correct="${q.ans}" data-exp="${escH(q.exp||'')}" data-explbl="${escH(q.opts[q.ans])}" data-subject-id="${subjectId}" data-chapter-id="${ch.id}" data-q-idx="${qi}">
-          <div class="mcq-q">${qi + 1}. ${q.q}</div>
-          <div class="mcq-opts">${q.opts.map((o, i) => `<button class="mcq-opt" data-idx="${i}"><span class="opt-letter">${letters[i]}</span>${escH(o)}</button>`).join('')}</div>
-          <div class="mcq-feedback"></div>
-        </div>`).join('')}</div>` : '';
-  return `
-    <div class="chapter-item">
-      <div class="chapter-header" data-chapter-id="${ch.id}">
-        <div class="chapter-num ${numClass}">${ch.id}</div>
-        <div class="chapter-info">
-          <div class="chapter-title">${ch.title}</div>
-          <div class="chapter-sub">${ch.subtitle}</div>
-        </div>
-        <span class="chapter-mastery-badge">${renderMasteryBadge((_cachedKnowledgeMap[subjectId + '_' + ch.id] || {}).mastery || 'not_started')}</span>
-        <button class="chapter-done-btn ${done ? 'done' : ''}" data-subject="${subjectId}" data-cid="${ch.id}" title="Mark done" onclick="event.stopPropagation();toggleDone(this)">✓</button>
-        <span class="chapter-toggle">▼</span>
-      </div>
-      <div class="chapter-body">
-        <div class="chapter-content">${kpHTML}${fmHTML}${mcqHTML}</div>
-      </div>
-    </div>`;
+  // Read done state from Firestore cache (persistent across devices)
+  var chKey = subjectId + '_' + ch.id;
+  var doneEntry = _cachedChapterProgress[chKey];
+  var done = !!(doneEntry && doneEntry.done);
+
+  var letters = ['A','B','C','D'];
+  var kpHTML = ch.keyPoints && ch.keyPoints.length
+    ? '<div class="kp-section"><h4>🔑 Key Points</h4><ul class="kp-list">' + ch.keyPoints.map(function(k){ return '<li>' + escH(k) + '</li>'; }).join('') + '</ul></div>' : '';
+  var fmHTML = ch.formulas && ch.formulas.length
+    ? '<div class="fm-section"><h4>📌 Key Info</h4>' + ch.formulas.map(function(f){ return '<div class="fm-pill">' + escH(f) + '</div>'; }).join('') + '</div>' : '';
+  var mcqHTML = ch.mcqs && ch.mcqs.length
+    ? '<div class="mcq-section"><h4>✏️ Practice MCQs</h4>' + ch.mcqs.map(function(q, qi) {
+        return '<div class="mcq-card" style="margin-bottom:0.75rem" data-correct="' + q.ans + '" data-exp="' + escH(q.exp||'') + '" data-explbl="' + escH(q.opts[q.ans]) + '" data-subject-id="' + subjectId + '" data-chapter-id="' + ch.id + '" data-q-idx="' + qi + '">' +
+          '<div class="mcq-q">' + (qi + 1) + '. ' + q.q + '</div>' +
+          '<div class="mcq-opts">' + q.opts.map(function(o, i){ return '<button class="mcq-opt" data-idx="' + i + '"><span class="opt-letter">' + letters[i] + '</span>' + escH(o) + '</button>'; }).join('') + '</div>' +
+          '<div class="mcq-feedback"></div></div>';
+      }).join('') + '</div>' : '';
+
+  var hasContent = kpHTML || fmHTML || mcqHTML;
+  var bodyContent = hasContent
+    ? kpHTML + fmHTML + mcqHTML
+    : '<div style="color:var(--muted);font-size:0.85rem;padding:0.5rem 0">Formulas and practice questions for this chapter are available in the other tabs above.</div>';
+
+  return '<div class="chapter-item' + (hasContent ? '' : ' no-expand') + '">' +
+    '<div class="chapter-header" data-chapter-id="' + ch.id + '">' +
+      '<div class="chapter-num ' + numClass + '">' + ch.id + '</div>' +
+      '<div class="chapter-info">' +
+        '<div class="chapter-title">' + escH(ch.title) + '</div>' +
+        '<div class="chapter-sub">' + escH(ch.subtitle || '') + '</div>' +
+      '</div>' +
+      '<span class="chapter-mastery-badge">' + renderMasteryBadge((_cachedKnowledgeMap[chKey] || {}).mastery || 'not_started') + '</span>' +
+      '<button class="chapter-done-btn ' + (done ? 'done' : '') + '" data-subject="' + subjectId + '" data-cid="' + ch.id + '" title="' + (done ? 'Mark as not done' : 'Mark as done') + '" onclick="event.stopPropagation();toggleDone(this)">✓</button>' +
+      (hasContent ? '<span class="chapter-toggle">▼</span>' : '') +
+    '</div>' +
+    '<div class="chapter-body"><div class="chapter-content">' + bodyContent + '</div></div>' +
+  '</div>';
 }
 
 function initChapterAccordion(container, subjectId) {
@@ -1513,11 +1545,31 @@ function initChapterAccordion(container, subjectId) {
 }
 
 function toggleDone(btn) {
-  const p = getProgress();
-  const key = btn.dataset.subject + '_' + btn.dataset.cid;
-  p[key] = !p[key];
-  saveProgress(p);
-  btn.classList.toggle('done', !!p[key]);
+  var user = (typeof getUser === 'function') ? getUser() : null;
+  if (!user) {
+    if (typeof showAuthToast === 'function') showAuthToast('Log in to track your chapter progress.');
+    return;
+  }
+  var subjectId = btn.dataset.subject;
+  var chapterId = btn.dataset.cid;
+  var key = subjectId + '_' + chapterId;
+  var nowDone = !(_cachedChapterProgress[key] && _cachedChapterProgress[key].done);
+  _cachedChapterProgress[key] = { subjectId: subjectId, chapterId: chapterId, done: nowDone };
+  btn.classList.toggle('done', nowDone);
+  btn.title = nowDone ? 'Mark as not done' : 'Mark as done';
+  if (typeof DB !== 'undefined') {
+    DB.setChapterDone(subjectId, parseInt(chapterId) || chapterId, nowDone, user.uid);
+  }
+  // Refresh done count strip if visible
+  var strip = document.getElementById('chaptersDoneStrip');
+  if (strip && _subjectPageSubject) {
+    var total = _subjectPageSubject.chapters.length;
+    var doneCount = _subjectPageSubject.chapters.filter(function(ch) {
+      var e = _cachedChapterProgress[_subjectPageSubject.id + '_' + ch.id];
+      return e && e.done;
+    }).length;
+    strip.innerHTML = '<strong>' + doneCount + ' / ' + total + '</strong> chapters marked done';
+  }
 }
 
 /* ══════════════════════════════════════
@@ -2209,6 +2261,34 @@ function buildComingSoon(name, msg) {
 }
 
 /* ══════════════════════════════════════
+   CHAPTERS TAB — chapter list with Firestore-backed tick/done
+══════════════════════════════════════ */
+function buildChaptersTab(subject) {
+  if (!subject) return buildComingSoon('Chapters', 'No subject data.');
+  var user = (typeof getUser === 'function') ? getUser() : null;
+  var numClass = 'nm-' + subject.id;
+  var total = subject.chapters.length;
+  var doneCount = subject.chapters.filter(function(ch) {
+    var e = _cachedChapterProgress[subject.id + '_' + ch.id];
+    return e && e.done;
+  }).length;
+
+  var stripHtml = '<div class="chapters-done-strip" id="chaptersDoneStrip">' +
+    '<strong>' + doneCount + ' / ' + total + '</strong> chapters marked done' +
+  '</div>';
+
+  var notLoggedIn = !user
+    ? '<div style="color:var(--muted);font-size:0.85rem;margin-bottom:1rem;padding:0.6rem 0.9rem;background:var(--surface-alt,var(--surface));border-radius:8px;border:1px solid var(--border)">Log in to save your chapter progress across devices.</div>'
+    : '';
+
+  var chapHtml = subject.chapters.map(function(ch) {
+    return buildChapterAccordionHTML(ch, subject.id, numClass);
+  }).join('');
+
+  return stripHtml + notLoggedIn + '<div class="chapters-list" id="chaptersList">' + chapHtml + '</div>';
+}
+
+/* ══════════════════════════════════════
    MY PROGRESS TAB
 ══════════════════════════════════════ */
 function buildProgressTab(subject) {
@@ -2245,16 +2325,20 @@ function buildProgressTab(subject) {
     '</div>';
   }).join('');
 
-  var total = subject.chapters.length;
-  var advCount = counts.mastered + counts.proficient;
-  var overallPct = total ? Math.round((advCount / total) * 100) : 0;
+  var chapTotal = subject.chapters.length;
+  var advCount  = counts.mastered + counts.proficient;
+  var overallPct = chapTotal ? Math.round((advCount / chapTotal) * 100) : 0;
+  var doneManual = subject.chapters.filter(function(ch) {
+    var e = _cachedChapterProgress[subject.id + '_' + ch.id];
+    return e && e.done;
+  }).length;
 
   return '<div class="progress-summary-strip">' +
     '<div class="progress-summary-stat"><div class="pss-num" style="color:#059669">' + counts.mastered + '</div><div class="pss-lbl">Mastered</div></div>' +
     '<div class="progress-summary-stat"><div class="pss-num" style="color:#2563EB">' + counts.proficient + '</div><div class="pss-lbl">Proficient</div></div>' +
     '<div class="progress-summary-stat"><div class="pss-num" style="color:#D97706">' + counts.developing + '</div><div class="pss-lbl">Developing</div></div>' +
     '<div class="progress-summary-stat"><div class="pss-num" style="color:#EF4444">' + counts.learning + '</div><div class="pss-lbl">Learning</div></div>' +
-    '<div class="progress-summary-stat"><div class="pss-num" style="color:var(--muted)">' + counts.not_started + '</div><div class="pss-lbl">Not Started</div></div>' +
+    '<div class="progress-summary-stat"><div class="pss-num" style="color:#7C3AED">' + doneManual + '/' + chapTotal + '</div><div class="pss-lbl">Done ✓</div></div>' +
   '</div>' +
   '<div class="progress-overall">' +
     '<div class="progress-overall-label">Overall — <strong>' + overallPct + '%</strong> chapters proficient or above</div>' +
