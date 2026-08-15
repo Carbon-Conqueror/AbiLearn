@@ -22,14 +22,12 @@
 /* ── SUBJECT TAB CONFIGS ── */
 const SUBJECT_TABS = {
   maths: [
-    { id: 'chapters',      label: 'Chapters' },
     { id: 'formula-sheet', label: 'Formulas' },
     { id: 'maths-qbank',   label: 'Question Bank' },
     { id: 'pyqs',          label: 'PYQ Papers' },
     { id: 'my-progress',   label: 'My Progress' }
   ],
   science: [
-    { id: 'chapters',          label: 'Chapters' },
     { id: 'science-qbank',     label: 'Question Bank' },
     { id: 'important-notes',   label: 'Study Notes' },
     { id: 'practice-questions',label: 'MCQ Practice' },
@@ -39,7 +37,6 @@ const SUBJECT_TABS = {
     { id: 'my-progress',       label: 'My Progress' }
   ],
   english: [
-    { id: 'chapters',     label: 'Chapters' },
     { id: 'first-flight', label: 'First Flight' },
     { id: 'footprints',   label: 'Footprints' },
     { id: 'grammar',      label: 'Grammar' },
@@ -49,7 +46,6 @@ const SUBJECT_TABS = {
     { id: 'my-progress',  label: 'My Progress' }
   ],
   social: [
-    { id: 'chapters',           label: 'Chapters' },
     { id: 'social-notes',       label: 'Notes' },
     { id: 'practice-questions', label: 'MCQ Practice' },
     { id: 'social-qbank',       label: 'Question Bank' },
@@ -737,26 +733,41 @@ function togglePDFDone(btn, url) {
   }
 }
 
-/* PDF/image cards with completion circle + Open button */
+/* If a PDF title starts with "Ch N" return that chapter number, else null.
+ * Used to link chapter-specific PDFs to chapter progress tracking. */
+function extractChapterId(title) {
+  var m = String(title || '').match(/^Ch\s*(\d+)/i);
+  return m ? parseInt(m[1]) : null;
+}
+
+/* PDF/image cards with completion circle + Open button.
+ * If the PDF title starts with "Ch N", the circle writes to chapter progress
+ * (feeds My Progress). Otherwise it writes to PDF progress only. */
 function pdfCards(subject, tab) {
   const list = (PDFS[subject.id] || {})[tab] || [];
   if (!list.length) return '';
-  return `<div class="pdf-cards-grid">
-    ${list.map(p => {
-      const done = getPDFDone(p.url);
-      const isImg = _isImageUrl(p.url);
-      return `
-      <div class="pdf-card">
-        
-        <div class="pdf-card-info">
-          <div class="pdf-card-title">${escH(p.title)}</div>
-          <div class="pdf-card-desc">${escH(p.desc || '')}</div>
-        </div>
-        <button class="pdf-done-circle ${done ? 'done' : ''}" onclick="togglePDFDone(this,'${escH(p.url)}')" title="${done ? 'Mark as unread' : 'Mark as read'}">✓</button>
-        <button class="pdf-open-btn" onclick="openPDF('${escH(p.url)}','${escH(p.title)}')">Open</button>
-      </div>`;
-    }).join('')}
-  </div>`;
+  return '<div class="pdf-cards-grid">' +
+    list.map(function(p) {
+      var chapterId = extractChapterId(p.title);
+      var circleBtn;
+      if (chapterId && subject) {
+        var chKey = subject.id + '_' + chapterId;
+        var isDone = (_cachedChapterProgress[chKey] || {}).done;
+        circleBtn = '<button class="pdf-done-circle ' + (isDone ? 'done' : '') + '" data-subject="' + subject.id + '" data-cid="' + chapterId + '" onclick="toggleDone(this)" title="' + (isDone ? 'Mark as not done' : 'Mark chapter done') + '">✓</button>';
+      } else {
+        var pdfDone = getPDFDone(p.url);
+        circleBtn = '<button class="pdf-done-circle ' + (pdfDone ? 'done' : '') + '" onclick="togglePDFDone(this,\'' + escH(p.url) + '\')" title="' + (pdfDone ? 'Mark as unread' : 'Mark as read') + '">✓</button>';
+      }
+      return '<div class="pdf-card">' +
+        '<div class="pdf-card-info">' +
+          '<div class="pdf-card-title">' + escH(p.title) + '</div>' +
+          '<div class="pdf-card-desc">' + escH(p.desc || '') + '</div>' +
+        '</div>' +
+        circleBtn +
+        '<button class="pdf-open-btn" onclick="openPDF(\'' + escH(p.url) + '\',\'' + escH(p.title) + '\')">Open</button>' +
+      '</div>';
+    }).join('') +
+  '</div>';
 }
 
 /* PDF.js popup renders PDF or image directly, no external viewer */
@@ -957,16 +968,23 @@ function buildFormulaSheet(subject) {
     ${chapters.length ? `
       <h2 class="section-title" style="margin-bottom:1.5rem;margin-top:${cards ? '2rem' : '0'}">📐 Formula Sheet ${subject.name}</h2>
       <div class="formula-sheet">
-        ${chapters.map(ch => `
+        ${chapters.map(ch => {
+          const chKey = subject.id + '_' + ch.id;
+          const isDone = (_cachedChapterProgress[chKey] || {}).done;
+          return `
           <div class="formula-chapter-block reveal">
             <div class="formula-chapter-title">
-              <span class="formula-num" style="background:${color}">${ch.id}</span>
-              ${ch.title}
+              <div style="display:flex;align-items:center;gap:0.6rem;flex:1">
+                <span class="formula-num" style="background:${color}">${ch.id}</span>
+                <span>${ch.title}</span>
+              </div>
+              <button class="pdf-done-circle ${isDone ? 'done' : ''}" data-subject="${subject.id}" data-cid="${ch.id}" onclick="toggleDone(this)" title="${isDone ? 'Mark as not done' : 'Mark chapter done'}" style="flex-shrink:0">✓</button>
             </div>
             <div class="formula-grid">
               ${ch.formulas.map(f => `<div class="formula-pill">${escH(f)}</div>`).join('')}
             </div>
-          </div>`).join('')}
+          </div>`;
+        }).join('')}
       </div>` : ''}`;
 }
 
@@ -1064,6 +1082,7 @@ function buildScienceMCQCards(subject) {
   const cards = chapters.map(ch => {
     const count = (SCIENCE_MCQS[ch.id] || []).length;
     const mastery = (_cachedKnowledgeMap['science_' + ch.id] || {}).mastery || 'not_started';
+    const isDone = (_cachedChapterProgress['science_' + ch.id] || {}).done;
     return `
       <div class="pdf-card">
         <div class="pdf-card-icon">🧪</div>
@@ -1071,6 +1090,7 @@ function buildScienceMCQCards(subject) {
           <div class="pdf-card-title">Ch ${ch.id}: ${escH(ch.title)}</div>
           <div class="pdf-card-desc">${count} MCQs &nbsp;${renderMasteryBadge(mastery)}</div>
         </div>
+        <button class="pdf-done-circle ${isDone ? 'done' : ''}" data-subject="science" data-cid="${ch.id}" onclick="toggleDone(this)" title="${isDone ? 'Mark as not done' : 'Mark chapter done'}">✓</button>
         <button class="pdf-test-btn" onclick="openTestMode(${ch.id}, '${escH(ch.title)}', 'science')">Test</button>
         <button class="pdf-open-btn" onclick="openChapterMCQs(${ch.id}, '${escH(ch.title)}', 'science')">Open</button>
       </div>`;
@@ -1101,6 +1121,7 @@ function buildSocialMCQCards(subject) {
       const count = (SOCIAL_MCQS[id] || []).length;
       if (!count) return '';
       const mastery = (_cachedKnowledgeMap['social_' + id] || {}).mastery || 'not_started';
+      const isDone = (_cachedChapterProgress['social_' + id] || {}).done;
       return `
         <div class="pdf-card">
           <div class="pdf-card-icon">${s.icon}</div>
@@ -1108,6 +1129,7 @@ function buildSocialMCQCards(subject) {
             <div class="pdf-card-title">${escH(ch.title)}</div>
             <div class="pdf-card-desc">${count} MCQs · ${s.key} &nbsp;${renderMasteryBadge(mastery)}</div>
           </div>
+          <button class="pdf-done-circle ${isDone ? 'done' : ''}" data-subject="social" data-cid="${id}" onclick="toggleDone(this)" title="${isDone ? 'Mark as not done' : 'Mark chapter done'}">✓</button>
           <button class="pdf-test-btn" onclick="openTestMode(${id}, '${escH(ch.title)}', 'social')">Test</button>
           <button class="pdf-open-btn" onclick="openChapterMCQs(${id}, '${escH(ch.title)}', 'social')">Open</button>
         </div>`;
@@ -1788,13 +1810,14 @@ function buildMathsQBank() {
   const cards = chapters.map(ch => {
     const d = (typeof MATHS_QBANK_CH !== 'undefined') ? MATHS_QBANK_CH[ch.id] : null;
     const n2 = d ? d.q2m.length : 0, n3 = d ? d.q3m.length : 0, n5 = d ? d.q5m.length : 0;
+    const isDone = (_cachedChapterProgress['maths_' + ch.id] || {}).done;
     return `
     <div class="pdf-card" style="cursor:pointer" onclick="openMathsQBank(${ch.id})">
-      
       <div class="pdf-card-info">
         <div class="pdf-card-title">${escH(ch.label)}</div>
         <div class="pdf-card-desc">${n2} short &nbsp;·&nbsp; ${n3} medium &nbsp;·&nbsp; ${n5} long</div>
       </div>
+      <button class="pdf-done-circle ${isDone ? 'done' : ''}" data-subject="maths" data-cid="${ch.id}" onclick="event.stopPropagation();toggleDone(this)" title="${isDone ? 'Mark as not done' : 'Mark chapter done'}">✓</button>
       <button class="pdf-open-btn" onclick="event.stopPropagation();openMathsQBank(${ch.id})">View</button>
     </div>`;
   }).join('');
