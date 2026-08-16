@@ -1,15 +1,21 @@
-/* AbiLearn — Mistake Bank Page
+/* AbiLearn — Mistake Bank Page v4
  *
  * Requires: firebase-config.js, db.js, auth.js (already loaded in mistakes.html)
- * Exported: window.resolveMistakeItem(key)
+ * Exported: window.resolveMistakeItem(key), window.resolveAllMistakes()
+ *
+ * Loading lifecycle:
+ *   1. DOMContentLoaded: show spinner, try cached user immediately
+ *   2. loadMistakes(uid): show spinner → fetch → render (success) or error+retry (failure)
+ *   3. onAuthStateChanged: redirect if signed out; refresh if different user
+ *   4. Timeout: if neither cached user nor Firebase resolves in 10s, show retry UI
  */
 (function () {
 
   var SUBJECT_META = {
-    maths:   { name: 'Mathematics',   icon: '📐', color: '#EF4444', href: 'maths.html' },
-    science: { name: 'Science',        icon: '🔬', color: '#0EA5E9', href: 'science.html' },
-    english: { name: 'English',        icon: '📖', color: '#F59E0B', href: 'english.html' },
-    social:  { name: 'Social Science', icon: '🌍', color: '#10B981', href: 'social.html' }
+    maths:   { name: 'Mathematics',   color: '#EF4444', href: 'maths.html' },
+    science: { name: 'Science',        color: '#0EA5E9', href: 'science.html' },
+    english: { name: 'English',        color: '#F59E0B', href: 'english.html' },
+    social:  { name: 'Social Science', color: '#10B981', href: 'social.html' }
   };
 
   function escH(s) {
@@ -24,8 +30,22 @@
     return ch ? ch.title : 'Chapter ' + chapterId;
   }
 
+  function showSpinner() {
+    var c = document.getElementById('mistakesContent');
+    if (c) c.innerHTML = '<div style="text-align:center;padding:3rem;color:var(--muted)">Loading your mistakes…</div>';
+  }
+
+  function showError(msg) {
+    var c = document.getElementById('mistakesContent');
+    if (c) c.innerHTML =
+      '<div style="text-align:center;padding:3rem">' +
+        '<div style="color:var(--muted);margin-bottom:1.25rem">' + escH(msg) + '</div>' +
+        '<button class="btn btn-primary" onclick="location.reload()">Retry</button>' +
+      '</div>';
+  }
+
   function renderMistakeCard(key, m) {
-    var subMeta = SUBJECT_META[m.subjectId] || { name: m.subjectId, icon: '📚', color: '#7C3AED' };
+    var subMeta = SUBJECT_META[m.subjectId] || { name: m.subjectId, color: '#7C3AED' };
     var chTitle = getChapterTitle(m.subjectId, m.chapterId);
     var wrongText   = m.chosenText  || ('Option ' + (m.chosen  !== undefined ? ['A','B','C','D'][m.chosen]  : '?'));
     var correctText = m.correctText || ('Option ' + (m.correct !== undefined ? ['A','B','C','D'][m.correct] : '?'));
@@ -33,7 +53,7 @@
 
     return '<div class="mistake-card" id="mk-' + escH(key) + '">' +
       '<div class="mistake-card-header">' +
-        '<span class="mistake-subject-tag" style="background:' + subMeta.color + '20;color:' + subMeta.color + '">' + subMeta.icon + ' ' + escH(subMeta.name) + '</span>' +
+        '<span class="mistake-subject-tag" style="background:' + subMeta.color + '20;color:' + subMeta.color + '">' + escH(subMeta.name) + '</span>' +
         '<span class="mistake-count">Ch ' + escH(String(m.chapterId)) + ': ' + escH(chTitle) + occText + '</span>' +
       '</div>' +
       '<div class="mistake-q">' + escH(m.question || 'Question not available') + '</div>' +
@@ -41,7 +61,7 @@
         '<span class="mistake-wrong">✗ Your answer: ' + escH(wrongText) + '</span>' +
         '<span class="mistake-correct">✓ Correct: ' + escH(correctText) + '</span>' +
       '</div>' +
-      '<button class="mistake-resolve-btn" onclick="resolveMistakeItem(\'' + escH(key) + '\',\'' + escH(m.subjectId) + '\')" data-key="' + escH(key) + '">Mark as Resolved ✓</button>' +
+      '<button class="mistake-resolve-btn" onclick="resolveMistakeItem(\'' + escH(key) + '\',\'' + escH(m.subjectId) + '\')" data-key="' + escH(key) + '">Mark as Resolved</button>' +
     '</div>';
   }
 
@@ -53,16 +73,13 @@
     if (!keys.length) {
       container.innerHTML =
         '<div class="mistakes-empty">' +
-          '<div class="mistakes-empty-icon">🎯</div>' +
-          '<h3 style="font-size:1.2rem;font-weight:800;margin-bottom:0.4rem">No active mistakes!</h3>' +
-          '<p>You haven\'t made any mistakes yet — or you\'ve resolved them all.</p>' +
-          '<p style="margin-top:0.5rem">Keep practicing MCQs to track wrong answers here.</p>' +
-          '<a href="science.html" class="btn btn-primary" style="margin-top:1.25rem;display:inline-block">Practice Science MCQs</a>' +
+          '<h3 style="font-size:1.2rem;font-weight:800;margin-bottom:0.4rem">No active mistakes</h3>' +
+          '<p>Questions you answer incorrectly will appear here so you can review them.</p>' +
+          '<a href="science.html" class="btn btn-primary" style="margin-top:1.25rem;display:inline-block">Practice MCQs</a>' +
         '</div>';
       return;
     }
 
-    // Group by subjectId
     var grouped = {};
     keys.forEach(function(k) {
       var m = mistakes[k];
@@ -77,17 +94,16 @@
     var totalCount = keys.length;
     var html =
       '<div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:0.5rem;margin-bottom:1.5rem">' +
-        '<div style="font-size:0.88rem;color:var(--muted)">' + totalCount + ' active mistake' + (totalCount === 1 ? '' : 's') + ' — click "Mark as Resolved" when you understand the concept</div>' +
+        '<div style="font-size:0.88rem;color:var(--muted)">' + totalCount + ' active mistake' + (totalCount === 1 ? '' : 's') + ' — click “Mark as Resolved” when you understand the concept</div>' +
         '<button class="btn btn-secondary" style="font-size:0.82rem;padding:0.35rem 0.9rem" onclick="resolveAllMistakes()">Resolve All</button>' +
       '</div>';
 
     allSubjects.forEach(function(sid) {
       var items = grouped[sid];
       if (!items || !items.length) return;
-      var subMeta = SUBJECT_META[sid] || { name: sid, icon: '📚', color: '#7C3AED' };
+      var subMeta = SUBJECT_META[sid] || { name: sid, color: '#7C3AED' };
       html += '<div class="mistake-subject-section">' +
         '<div class="mistake-subject-heading">' +
-          '<span style="font-size:1.2rem">' + subMeta.icon + '</span>' +
           '<span style="color:' + subMeta.color + '">' + escH(subMeta.name) + '</span>' +
           '<span class="mastery-badge not_started" style="margin-left:auto">' + items.length + ' mistake' + (items.length === 1 ? '' : 's') + '</span>' +
         '</div>';
@@ -101,16 +117,24 @@
   }
 
   function loadMistakes(uid) {
+    showSpinner();
+
+    // Timeout: show error + retry if Firestore takes more than 12 seconds
+    var fetchTimeout = setTimeout(function() {
+      showError('Loading took too long. Check your connection and try again.');
+    }, 12000);
+
     DB.getMistakes(uid).then(function(mistakes) {
+      clearTimeout(fetchTimeout);
       renderMistakes(mistakes);
     }).catch(function(e) {
-      console.warn('mistakes-page: loadMistakes', e);
-      var container = document.getElementById('mistakesContent');
-      if (container) container.innerHTML = '<div style="color:var(--muted);padding:2rem;text-align:center">Could not load mistakes. Please try again.</div>';
+      clearTimeout(fetchTimeout);
+      console.warn('[AbiLearn] mistakes-page loadMistakes:', e);
+      showError('Could not load your mistakes. Check your connection and try again.');
     });
   }
 
-  // Global resolve function
+  // Global resolve function — called from onclick attributes in card HTML
   window.resolveMistakeItem = function(key, subjectId) {
     var user = (typeof getUser === 'function') ? getUser() : null;
     if (!user) return;
@@ -135,10 +159,10 @@
         }, 300);
         setTimeout(function() { if (card.parentNode) card.parentNode.removeChild(card); }, 700);
       }
-      if (typeof showAuthToast === 'function') showAuthToast('Mistake marked as resolved.');
+      if (typeof showAuthToast === 'function') showAuthToast('Mistake resolved.');
     }).catch(function() {
       if (card) { card.style.opacity = ''; card.style.pointerEvents = ''; }
-      if (typeof showAuthToast === 'function') showAuthToast('Error resolving mistake. Try again.');
+      if (typeof showAuthToast === 'function') showAuthToast('Could not resolve. Try again.');
     });
   };
 
@@ -162,23 +186,46 @@
     });
   };
 
-  // Bootstrap on auth state
+  // ── Bootstrap ────────────────────────────────────────────────────────────
   document.addEventListener('DOMContentLoaded', function() {
     if (!window._fauth) {
-      document.getElementById('mistakesContent').innerHTML =
-        '<div style="text-align:center;padding:3rem;color:var(--muted)">Firebase not configured. Please set up your credentials in js/firebase-config.js.</div>';
+      var c = document.getElementById('mistakesContent');
+      if (c) c.innerHTML = '<div style="text-align:center;padding:3rem;color:var(--muted)">Firebase not configured. Please set up credentials in js/firebase-config.js.</div>';
       return;
     }
-    // Load immediately with cached user (no waiting for Firebase round-trip)
+
+    var authResolved = false;
+
+    // Auth timeout: if Firebase hasn't resolved in 10 seconds, show error + retry
+    var authTimeout = setTimeout(function() {
+      if (!authResolved) {
+        showError('Session check timed out. Please refresh the page.');
+      }
+    }, 10000);
+
+    // Try cached user immediately — avoids waiting for Firebase round-trip
     var initialUser = (typeof getUser === 'function') ? getUser() : null;
-    if (initialUser) loadMistakes(initialUser.uid);
-    // onAuthStateChanged verifies the session; redirect if signed out, reload if different user
+    if (initialUser) {
+      authResolved = true;
+      clearTimeout(authTimeout);
+      loadMistakes(initialUser.uid);
+    }
+
+    // onAuthStateChanged: authoritative check (fires ~500ms–2s after page load)
     window._fauth.onAuthStateChanged(function(fbUser) {
+      clearTimeout(authTimeout);
+      authResolved = true;
+
       if (!fbUser) {
+        // Not signed in — redirect to login
         window.location.href = 'auth.html?from=' + encodeURIComponent(location.href);
         return;
       }
-      if (!initialUser || fbUser.uid !== initialUser.uid) loadMistakes(fbUser.uid);
+
+      // If initial cached user was wrong UID (stale cache), reload with real data
+      if (!initialUser || fbUser.uid !== initialUser.uid) {
+        loadMistakes(fbUser.uid);
+      }
     });
   });
 

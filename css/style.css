@@ -1,4 +1,4 @@
-/* AbiLearn — Design System v46 */
+/* AbiLearn — Design System v47 */
 
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap');
 
@@ -1193,6 +1193,15 @@ footer {
 .progress-bar-wrap { height:4px; background:var(--border); border-radius:2px; overflow:hidden; margin-bottom:.38rem; }
 .progress-bar-fill { height:100%; border-radius:2px; transition:width .6s ease; }
 .progress-ch-stats { font-size:.72rem; color:var(--muted); display:flex; gap:.5rem; flex-wrap:wrap; }
+.progress-tick-pips { display:flex; flex-wrap:wrap; gap:.28rem; margin:.32rem 0 .1rem; }
+.progress-tick-pip {
+  font-size:.68rem; font-weight:600; padding:.1rem .44rem;
+  border-radius:4px; background:var(--surface-2); color:var(--muted);
+  border:1px solid var(--border); line-height:1.5;
+}
+.progress-tick-pip.done {
+  background:var(--badge-2m-bg); color:var(--badge-2m-txt); border-color:transparent;
+}
 
 /* MCQ session summary */
 .mcq-session-summary {

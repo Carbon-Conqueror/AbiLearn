@@ -1,4 +1,4 @@
-/* AbiLearn Main Application Logic v70 */
+/* AbiLearn Main Application Logic v71 */
 
 /* ── SCROLL-HIDE HEADER ── */
 (function() {
@@ -1507,8 +1507,8 @@ function buildEnglishReader(subject, type) {
 }
 
 function buildChapterAccordionHTML(ch, subjectId, numClass) {
-  const p = getProgress();
-  const done = !!p[subjectId + '_' + ch.id];
+  const chKey = subjectId + '_chapter_' + ch.id;
+  const done = getChapterDone(chKey) || !!(getProgress()[subjectId + '_' + ch.id]);
   const letters = ['A','B','C','D'];
   const kpHTML = ch.keyPoints?.length
     ? `<div class="kp-section"><h4>🔑 Key Points</h4><ul class="kp-list">${ch.keyPoints.map(k => `<li>${escH(k)}</li>`).join('')}</ul></div>` : '';
@@ -1530,7 +1530,7 @@ function buildChapterAccordionHTML(ch, subjectId, numClass) {
           <div class="chapter-sub">${ch.subtitle}</div>
         </div>
         <span class="chapter-mastery-badge">${renderMasteryBadge((_cachedKnowledgeMap[subjectId + '_' + ch.id] || {}).mastery || 'not_started')}</span>
-        <button class="chapter-done-btn ${done ? 'done' : ''}" data-subject="${subjectId}" data-cid="${ch.id}" title="Mark done" onclick="event.stopPropagation();toggleDone(this)">✓</button>
+        <button class="chapter-done-btn ${done ? 'done' : ''}" data-subject="${subjectId}" data-cid="${ch.id}" data-key="${subjectId}_chapter_${ch.id}" title="Mark chapter done" onclick="event.stopPropagation();toggleDone(this)">✓</button>
         <span class="chapter-toggle">▼</span>
       </div>
       <div class="chapter-body">
@@ -1554,11 +1554,28 @@ function initChapterAccordion(container, subjectId) {
 }
 
 function toggleDone(btn) {
-  const p = getProgress();
-  const key = btn.dataset.subject + '_' + btn.dataset.cid;
-  p[key] = !p[key];
+  var user = (typeof getUser === 'function') ? getUser() : null;
+  // Firestore key — namespaced so it doesn't collide with formula/qbank/mcq ticks
+  var fsKey = btn.dataset.key || (btn.dataset.subject + '_chapter_' + btn.dataset.cid);
+  var nowDone = !getChapterDone(fsKey);
+  // Update in-memory cache
+  _cachedChapterProgress[fsKey] = { done: nowDone };
+  // Legacy localStorage (backwards compat — keeps chapter accordion state on reload for non-authed state)
+  var legacyKey = btn.dataset.subject + '_' + btn.dataset.cid;
+  var p = getProgress();
+  p[legacyKey] = nowDone;
   saveProgress(p);
-  btn.classList.toggle('done', !!p[key]);
+  btn.classList.toggle('done', nowDone);
+  // Persist to Firestore
+  if (user && typeof DB !== 'undefined') {
+    DB.setChapterDone(fsKey, nowDone, user.uid);
+  }
+  // Live-refresh progress tab if currently open
+  var activeTab = document.querySelector('.tab-btn.active');
+  if (activeTab && activeTab.dataset.tab === 'my-progress' && _subjectPageSubject) {
+    var tc = document.getElementById('tabContent');
+    if (tc) tc.innerHTML = buildProgressTab(_subjectPageSubject);
+  }
 }
 
 /* ══════════════════════════════════════
@@ -2260,77 +2277,161 @@ function buildComingSoon(name, msg) {
 /* ══════════════════════════════════════
    MY PROGRESS TAB
 ══════════════════════════════════════ */
+/*
+ * buildProgressTab — comprehensive progress across ALL resource types.
+ *
+ * Data sources:
+ *   _cachedKnowledgeMap    — MCQ mastery per chapter (from answering MCQs)
+ *   _cachedChapterProgress — tick completion per section/chapter (formula, qbank, mcq, chapter)
+ *   _cachedPdfProgress     — PDF / resource completion (opened + marked done)
+ *
+ * Tick key naming convention (written by each section builder):
+ *   {subjectId}_formula_{chId}                — formula sheet chapter tick
+ *   {subjectId}_qbank_{chId}                  — question bank chapter tick
+ *   {subjectId}_mcq_{chId}                    — MCQ section chapter tick
+ *   {subjectId}_chapter_{chId}                — "Most Important" chapter tick
+ *   social_qbank_{section}_{normalizedChKey}  — social Q-Bank chapter tick
+ *
+ * Overall % = (done chapter ticks + done PDFs) / (expected ticks + total subject PDFs) × 100
+ */
 function buildProgressTab(subject) {
   if (!subject) return buildComingSoon('Progress', 'No subject data.');
-  var km = _cachedKnowledgeMap;
   var user = (typeof getUser === 'function') ? getUser() : null;
-  if (!user) return '<div class="coming-soon"><div class="cs-icon">🔒</div><h3>Login Required</h3><p>Log in to see your progress tracking.</p></div>';
+  if (!user) return '<div class="coming-soon"><div class="cs-icon"></div><h3>Login Required</h3><p>Log in to see your progress tracking.</p></div>';
 
+  var sid = subject.id;
+  var km  = _cachedKnowledgeMap;
+  var cp  = _cachedChapterProgress;
+  var pp  = _cachedPdfProgress;
+
+  // ── 1. MCQ MASTERY COUNTS ────────────────────────────────────────────────
   var counts = { mastered: 0, proficient: 0, developing: 0, learning: 0, not_started: 0 };
-  var cardsHTML = subject.chapters.map(function(ch) {
-    var key = subject.id + '_' + ch.id;
-    var entry = km[key] || {};
+  var hasMCQData = false;
+  subject.chapters.forEach(function(ch) {
+    var entry = km[sid + '_' + ch.id] || {};
     var mastery = entry.mastery || 'not_started';
-    var total = entry.totalAttempts || 0;
+    counts[mastery]++;
+    if (mastery !== 'not_started') hasMCQData = true;
+  });
+
+  // ── 2. CHAPTER TICK COMPLETIONS ──────────────────────────────────────────
+  // What tick types are available per subject (drives the per-chapter pill display)
+  var TICK_TYPES = {
+    science: [
+      { key: 'formula',  label: 'Formulas' },
+      { key: 'qbank',    label: 'Q-Bank'   },
+      { key: 'mcq',      label: 'MCQ'      },
+      { key: 'chapter',  label: 'Key Notes' }
+    ],
+    maths: [
+      { key: 'qbank',    label: 'Q-Bank'   }
+    ],
+    social: [
+      { key: 'mcq',      label: 'MCQ'      }
+    ],
+    english: []
+  };
+  var tickTypes = TICK_TYPES[sid] || [];
+
+  // Count expected vs done for chapter-level ticks
+  var expectedChTicks = tickTypes.length * subject.chapters.length;
+  var doneChTicks = 0;
+  subject.chapters.forEach(function(ch) {
+    tickTypes.forEach(function(t) {
+      var k = sid + '_' + t.key + '_' + ch.id;
+      if (cp[k] && cp[k].done) doneChTicks++;
+    });
+  });
+
+  // Also count social qbank ticks (different key scheme: social_qbank_{section}_{key})
+  if (sid === 'social') {
+    var socialQbankDone = Object.keys(cp).filter(function(k) {
+      return k.startsWith('social_qbank_') && cp[k] && cp[k].done;
+    }).length;
+    doneChTicks += socialQbankDone;
+    // For social, estimate total qbank ticks (history:5, geography:7, civics:5, economics:5 = 22)
+    expectedChTicks += 22;
+  }
+
+  // ── 3. PDF COMPLETIONS FOR THIS SUBJECT ─────────────────────────────────
+  var subjectPdfs = [];
+  var pdfsBySubject = (typeof PDFS !== 'undefined' && PDFS[sid]) ? PDFS[sid] : {};
+  Object.values(pdfsBySubject).forEach(function(list) {
+    if (Array.isArray(list)) subjectPdfs = subjectPdfs.concat(list);
+  });
+  var donePdfs = subjectPdfs.filter(function(p) {
+    return pp[p.url] && pp[p.url].completed;
+  }).length;
+
+  // ── 4. OVERALL COMPLETION % ──────────────────────────────────────────────
+  var totalResources = expectedChTicks + subjectPdfs.length;
+  var doneResources  = doneChTicks + donePdfs;
+  var overallPct     = totalResources > 0 ? Math.round((doneResources / totalResources) * 100) : 0;
+
+  // ── 5. PER-CHAPTER CARDS ─────────────────────────────────────────────────
+  var cardsHTML = subject.chapters.map(function(ch) {
+    var kmKey  = sid + '_' + ch.id;
+    var entry  = km[kmKey] || {};
+    var mastery = entry.mastery || 'not_started';
+    var total   = entry.totalAttempts || 0;
     var correct = entry.correctAttempts || 0;
-    var acc = total ? Math.round((correct / total) * 100) : 0;
-    counts[mastery] = (counts[mastery] || 0) + 1;
-    var fillPct = { mastered: 100, proficient: 75, developing: 50, learning: 25, not_started: 0 }[mastery] || 0;
+    var acc     = total ? Math.round((correct / total) * 100) : 0;
+
     var dueEntry = entry.nextRevisionDue;
     var isDue = dueEntry && (function() {
       var d = dueEntry.toDate ? dueEntry.toDate() : new Date(dueEntry);
       return d.getTime() < Date.now() && mastery !== 'not_started';
     })();
+
+    // Tick pills for this chapter
+    var pips = tickTypes.map(function(t) {
+      var k     = sid + '_' + t.key + '_' + ch.id;
+      var isDone = cp[k] && cp[k].done;
+      return '<span class="progress-tick-pip' + (isDone ? ' done' : '') + '">' + escH(t.label) + '</span>';
+    }).join('');
+
     return '<div class="progress-chapter-card' + (isDue ? ' due-for-revision' : '') + '">' +
       '<div class="progress-ch-header">' +
         '<div class="progress-ch-name">Ch ' + ch.id + ': ' + escH(ch.title) + '</div>' +
-        renderMasteryBadge(mastery) +
+        (hasMCQData ? renderMasteryBadge(mastery) : '') +
       '</div>' +
-      (isDue ? '<div class="revision-due-badge">⏰ Due for revision</div>' : '') +
-      '<div class="progress-bar-wrap"><div class="progress-bar-fill" style="width:' + fillPct + '%;background:' + getMasteryColor(mastery) + '"></div></div>' +
-      '<div class="progress-ch-stats">' +
-        (total ? '<span>' + total + ' attempts · </span><span>' + acc + '% accuracy</span>' : '<span>Not attempted yet</span>') +
-      '</div>' +
+      (isDue ? '<div class="revision-due-badge">Due for revision</div>' : '') +
+      (pips ? '<div class="progress-tick-pips">' + pips + '</div>' : '') +
+      (total ? '<div class="progress-ch-stats"><span>' + total + ' MCQ attempts · ' + acc + '% accuracy</span></div>' : '') +
     '</div>';
   }).join('');
 
-  var total = subject.chapters.length;
-  var advCount = counts.mastered + counts.proficient;
-  var overallPct = total ? Math.round((advCount / total) * 100) : 0;
-  var chProgDoneKeys = Object.keys(_cachedChapterProgress).filter(function(k) {
-    return k.startsWith(subject.id + '_') && _cachedChapterProgress[k].done;
-  });
-  var chTickCount  = chProgDoneKeys.length;
-  var formulaDone  = chProgDoneKeys.filter(function(k) { return k.indexOf('_formula_') !== -1; }).length;
-  var qbankDone    = chProgDoneKeys.filter(function(k) { return k.indexOf('_qbank_')   !== -1; }).length;
-  var mcqDone      = chProgDoneKeys.filter(function(k) { return k.indexOf('_mcq_')     !== -1; }).length;
-  var tickParts = [];
-  if (formulaDone) tickParts.push('📝 Formulas: ' + formulaDone);
-  if (qbankDone)   tickParts.push('📚 Q-Bank: '   + qbankDone);
-  if (mcqDone)     tickParts.push('🔬 MCQ: '      + mcqDone);
-  var tickBreakdownHtml = chTickCount
-    ? '<div style="margin-top:0.65rem;font-size:0.82rem;color:var(--muted)">✅ ' + chTickCount + ' resource' + (chTickCount !== 1 ? 's' : '') + ' marked as complete' + (tickParts.length ? ' · ' + tickParts.join(' · ') : '') + '</div>'
+  // ── 6. ASSEMBLE HTML ─────────────────────────────────────────────────────
+  var mcqSummaryStrip = hasMCQData
+    ? '<div class="progress-summary-strip">' +
+        '<div class="progress-summary-stat"><div class="pss-num" style="color:#059669">' + counts.mastered + '</div><div class="pss-lbl">Mastered</div></div>' +
+        '<div class="progress-summary-stat"><div class="pss-num" style="color:#2563EB">' + counts.proficient + '</div><div class="pss-lbl">Proficient</div></div>' +
+        '<div class="progress-summary-stat"><div class="pss-num" style="color:#D97706">' + counts.developing + '</div><div class="pss-lbl">Developing</div></div>' +
+        '<div class="progress-summary-stat"><div class="pss-num" style="color:#EF4444">' + counts.learning + '</div><div class="pss-lbl">Learning</div></div>' +
+        '<div class="progress-summary-stat"><div class="pss-num" style="color:var(--muted)">' + counts.not_started + '</div><div class="pss-lbl">Not Started</div></div>' +
+      '</div>'
     : '';
 
-  return '<div class="progress-summary-strip">' +
-    '<div class="progress-summary-stat"><div class="pss-num" style="color:#059669">' + counts.mastered + '</div><div class="pss-lbl">Mastered</div></div>' +
-    '<div class="progress-summary-stat"><div class="pss-num" style="color:#2563EB">' + counts.proficient + '</div><div class="pss-lbl">Proficient</div></div>' +
-    '<div class="progress-summary-stat"><div class="pss-num" style="color:#D97706">' + counts.developing + '</div><div class="pss-lbl">Developing</div></div>' +
-    '<div class="progress-summary-stat"><div class="pss-num" style="color:#EF4444">' + counts.learning + '</div><div class="pss-lbl">Learning</div></div>' +
-    '<div class="progress-summary-stat"><div class="pss-num" style="color:var(--muted)">' + counts.not_started + '</div><div class="pss-lbl">Not Started</div></div>' +
-  '</div>' +
-  '<div class="progress-overall">' +
-    '<div class="progress-overall-label">Overall — <strong>' + overallPct + '%</strong> chapters proficient or above</div>' +
-    '<div class="progress-bar-wrap" style="height:10px;margin-top:0.5rem">' +
-      '<div class="progress-bar-fill" style="width:' + overallPct + '%;background:linear-gradient(90deg,#7C3AED,#8B5CF6);transition:width 0.8s ease"></div>' +
+  var overallBar =
+    '<div class="progress-overall">' +
+      '<div class="progress-overall-label">Overall Completion &mdash; <strong>' + doneResources + '&thinsp;/&thinsp;' + totalResources + ' resources done</strong> (' + overallPct + '%)</div>' +
+      '<div class="progress-bar-wrap" style="height:10px;margin-top:0.5rem">' +
+        '<div class="progress-bar-fill" style="width:' + overallPct + '%;background:var(--accent);transition:width 0.8s ease"></div>' +
+      '</div>' +
+      '<div style="margin-top:0.55rem;font-size:0.8rem;color:var(--muted);display:flex;flex-wrap:wrap;gap:0.5rem">' +
+        (doneChTicks ? '<span>' + doneChTicks + ' section' + (doneChTicks !== 1 ? 's' : '') + ' ticked</span>' : '') +
+        (donePdfs    ? '<span>' + (doneChTicks ? '·' : '') + ' ' + donePdfs + ' PDF' + (donePdfs !== 1 ? 's' : '') + ' read</span>' : '') +
+        (!doneResources ? '<span>No resources completed yet &mdash; use the tick buttons on each section</span>' : '') +
+      '</div>' +
+    '</div>';
+
+  return mcqSummaryStrip +
+    overallBar +
+    '<div style="display:flex;align-items:center;justify-content:space-between;margin:1.5rem 0 0.75rem;flex-wrap:wrap;gap:0.5rem">' +
+      '<h3 style="margin:0;font-size:1rem;font-weight:800">Chapter Breakdown</h3>' +
+      '<a href="mistakes.html" class="btn btn-secondary" style="font-size:0.82rem;padding:0.35rem 0.9rem">Mistake Bank</a>' +
     '</div>' +
-    tickBreakdownHtml +
-  '</div>' +
-  '<div style="display:flex;align-items:center;justify-content:space-between;margin:1.5rem 0 0.75rem;flex-wrap:wrap;gap:0.5rem">' +
-    '<h3 style="margin:0;font-size:1rem;font-weight:800">Chapter Breakdown</h3>' +
-    '<a href="mistakes.html" class="btn btn-secondary" style="font-size:0.82rem;padding:0.35rem 0.9rem">📋 Mistake Bank</a>' +
-  '</div>' +
-  '<div class="progress-grid">' + cardsHTML + '</div>';
+    '<div class="progress-grid">' + cardsHTML + '</div>';
 }
 
 /* ══════════════════════════════════════
