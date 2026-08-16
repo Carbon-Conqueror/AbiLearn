@@ -1,4 +1,4 @@
-/* AbiLearn — Design System v47 */
+/* AbiLearn — Design System v48 */
 
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap');
 
@@ -1360,20 +1360,39 @@ footer {
   .tab-btn.active.science-t     { background:rgba(2,132,199,.05);  border-bottom-color:var(--science); }
   .tab-btn.active.english-t     { background:rgba(194,114,13,.05); border-bottom-color:var(--english); }
   .tab-btn.active.social-t      { background:rgba(5,150,105,.05);  border-bottom-color:var(--social); }
-  .hero { padding:2.75rem 1.25rem 2.25rem; }
+  /* ── Hero ── */
+  .hero { padding:2.75rem 1.25rem 2.5rem; }
   .hero h1 { font-size:1.85rem; letter-spacing:-.4px; }
-  .hero p  { font-size:.88rem; margin-bottom:1.5rem; }
+  .hero p  { font-size:.9rem; margin-bottom:1.75rem; line-height:1.7; }
   .hero-cta { gap:.6rem; }
-  .stats-strip { padding:1rem 1.25rem; gap:2rem; }
+  .hero-cta .btn-primary { border-radius:var(--radius-lg); font-size:.95rem; padding:.72rem 1.6rem; }
+  /* ── Stats strip: 4-even columns at tablet ── */
+  .stats-strip { padding:.85rem .5rem; gap:0; }
+  .stat-item { flex:1 1 0; min-width:0; padding:.35rem .3rem; }
+  .stat-num { font-size:1.35rem; }
+  /* ── Layout ── */
   .section-title { font-size:1.4rem; }
   .section { padding:2.5rem 0; }
+  .section-head { margin-bottom:1.5rem; }
   .container { padding:0 1rem; }
-  .subjects-grid { grid-template-columns:1fr; }
+  /* ── Subject cards: 2 columns on tablet ── */
+  .subjects-grid { grid-template-columns:1fr 1fr; gap:1rem; }
+  .subject-card { box-shadow:var(--shadow-sm); }
+  .card-top { padding:1.1rem 1.1rem .7rem; }
+  .card-meta { padding:0 1.1rem .7rem; }
+  .card-progress { padding:0 1.1rem .7rem; }
+  .card-footer { padding:.7rem 1.1rem; }
+  /* ── Other cards ── */
+  .why-card { box-shadow:var(--shadow-sm); }
+  .tip-card { box-shadow:var(--shadow-sm); }
+  /* ── Subject header ── */
   .subject-header { padding:1.35rem 1rem; }
   .subject-header h1 { font-size:1.4rem; }
   .subject-header-icon { width:44px; height:44px; font-size:1.4rem; }
+  /* ── PDFs ── */
   .pdf-cards-grid { display:flex !important; flex-direction:column; gap:.6rem; margin-bottom:1.4rem; }
   .coming-soon { padding:2.5rem 1.25rem; }
+  /* ── Footer ── */
   footer { padding:2rem 1rem 1.5rem; }
   .footer-grid { grid-template-columns:1fr 1fr; gap:1.25rem; }
   .footer-brand { grid-column:1/-1; display:flex; flex-wrap:wrap; align-items:center; gap:.72rem; padding-bottom:.72rem; border-bottom:1px solid rgba(255,255,255,.07); }
@@ -1385,27 +1404,48 @@ footer {
   .footer-bottom { flex-direction:row; flex-wrap:wrap; gap:.32rem; font-size:.7rem; justify-content:center; }
 }
 @media (max-width:480px) {
-  .hero h1 { font-size:1.6rem; }
-  .hero-cta { flex-direction:column; }
-  .hero-cta .btn { justify-content:center; text-align:center; width:100%; }
-  .stats-strip { gap:1.25rem; justify-content:space-around; }
+  /* ── Hero ── */
+  .hero { padding:2.25rem 1rem 2rem; }
+  .hero h1 { font-size:1.6rem; letter-spacing:-.35px; }
+  .hero p  { font-size:.88rem; margin-bottom:1.5rem; }
+  .hero-cta { flex-direction:column; align-items:stretch; gap:.6rem; }
+  .hero-cta .btn { justify-content:center; text-align:center; width:100%; padding:.78rem 1.5rem; border-radius:var(--radius-lg); }
+  /* ── Stats: 2×2 grid with card tiles ── */
+  .stats-strip { display:grid; grid-template-columns:1fr 1fr; gap:.6rem; padding:.85rem; }
+  .stat-item { flex:none; padding:.88rem .5rem; background:var(--surface-2); border-radius:var(--radius); border:1px solid var(--border); }
+  .stat-item + .stat-item::before { display:none; }
   .stat-num { font-size:1.3rem; }
+  /* ── Subject cards: 1 column on phone ── */
+  .subjects-grid { grid-template-columns:1fr; gap:1rem; }
+  .card-top { padding:1.25rem 1.25rem .85rem; }
+  .card-meta { padding:0 1.25rem .85rem; }
+  .card-progress { padding:0 1.25rem .85rem; }
+  .card-footer { padding:.82rem 1.25rem; }
+  /* ── Layout ── */
   .section { padding:2rem 0; }
-  .container { padding:0 .85rem; }
+  .section-head { margin-bottom:1.25rem; }
+  .container { padding:0 .9rem; }
   .section-title { font-size:1.25rem; }
+  /* ── PDFs ── */
   .pdf-card { flex-wrap:wrap; gap:.6rem; padding:.68rem; }
   .pdf-card-title { font-size:.86rem; }
   .pdf-open-btn { font-size:.76rem; padding:.32rem .7rem; }
-  .footer-grid { grid-template-columns:1fr; }
+  /* ── Tips ── */
   .tips-grid { grid-template-columns:1fr 1fr; }
+  /* ── Footer ── */
+  .footer-grid { grid-template-columns:1fr; }
+  /* ── Progress ── */
   .progress-summary-strip { gap:.62rem; }
   .pss-num { font-size:1.22rem; }
   .progress-grid { grid-template-columns:1fr; }
   .summary-score-big { font-size:2rem; }
 }
 @media (max-width:360px) {
+  .hero { padding:2rem .9rem 1.75rem; }
   .hero h1 { font-size:1.4rem; }
-  .hero { padding:2.25rem 1rem 2rem; }
+  .stats-strip { gap:.45rem; padding:.75rem; }
+  .stat-num { font-size:1.2rem; }
+  .stat-lbl { font-size:.7rem; }
   .btn-login { display:none; }
   .tips-grid { grid-template-columns:1fr; }
 }
