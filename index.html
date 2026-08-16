@@ -19,7 +19,7 @@
   <meta name="apple-mobile-web-app-title" content="AbiLearn">
   <link rel="manifest" href="manifest.json">
   <link rel="apple-touch-icon" href="assets/logo.jpeg">
-  <link rel="stylesheet" href="css/style.css?v=45">
+  <link rel="stylesheet" href="css/style.css?v=46">
   <link rel="icon" href="assets/logo.jpeg" type="image/jpeg">
   <link rel="preconnect" href="https://www.gstatic.com">
   <link rel="dns-prefetch" href="https://www.gstatic.com">
@@ -39,17 +39,17 @@
     <li class="nav-dropdown">
       <button class="nav-dropdown-toggle">Subjects <span class="dropdown-arrow">▾</span></button>
       <div class="dropdown-menu">
-        <a href="maths.html"><div class="sub-icon maths">📐</div><div><div style="font-weight:800;color:#EF4444;font-size:0.95rem">Mathematics</div><div style="font-size:0.72rem;color:rgba(255,255,255,0.55)">Algebra, Geometry, Statistics</div></div></a>
-        <a href="science.html"><div class="sub-icon science">🔬</div><div><div style="font-weight:800;color:#38BDF8;font-size:0.95rem">Science</div><div style="font-size:0.72rem;color:rgba(255,255,255,0.55)">Physics, Chemistry, Biology</div></div></a>
-        <a href="english.html"><div class="sub-icon english">📖</div><div><div style="font-weight:800;color:#FBBF24;font-size:0.95rem">English</div><div style="font-size:0.72rem;color:rgba(255,255,255,0.55)">First Flight, Grammar, Writing</div></div></a>
-        <a href="social.html"><div class="sub-icon social">🌍</div><div><div style="font-weight:800;color:#34D399;font-size:0.95rem">Social Science</div><div style="font-size:0.72rem;color:rgba(255,255,255,0.55)">History, Geography, Civics</div></div></a>
+        <a href="maths.html"><div class="sub-icon maths"></div><div><div style="font-weight:800;color:#EF4444;font-size:0.95rem">Mathematics</div><div style="font-size:0.72rem;color:rgba(255,255,255,0.55)">Algebra, Geometry, Statistics</div></div></a>
+        <a href="science.html"><div class="sub-icon science"></div><div><div style="font-weight:800;color:#38BDF8;font-size:0.95rem">Science</div><div style="font-size:0.72rem;color:rgba(255,255,255,0.55)">Physics, Chemistry, Biology</div></div></a>
+        <a href="english.html"><div class="sub-icon english"></div><div><div style="font-weight:800;color:#FBBF24;font-size:0.95rem">English</div><div style="font-size:0.72rem;color:rgba(255,255,255,0.55)">First Flight, Grammar, Writing</div></div></a>
+        <a href="social.html"><div class="sub-icon social"></div><div><div style="font-weight:800;color:#34D399;font-size:0.95rem">Social Science</div><div style="font-size:0.72rem;color:rgba(255,255,255,0.55)">History, Geography, Civics</div></div></a>
       </div>
     </li>
   </ul>
 
   <div class="nav-right">
     <div class="search-bar">
-      <span class="search-icon">🔍</span>
+      <span class="search-icon"></span>
       <input type="text" placeholder="Search topics..." id="searchInput" autocomplete="off">
       <div class="search-results" id="searchResults"></div>
     </div>
@@ -60,47 +60,13 @@
 
 <!-- ═══ HERO ═══ -->
 <section class="hero">
-  <div class="hero-blobs">
-    <div class="blob blob-1"></div>
-    <div class="blob blob-2"></div>
-    <div class="blob blob-3"></div>
-  </div>
   <div class="hero-grid container" style="padding-top:0;padding-bottom:0">
     <div class="hero-left">
-      <div class="hero-badge">✅ CBSE 2025 Board Aligned &nbsp;|&nbsp; 🏆 Trusted by Students</div>
-      <h1>Score <span class="highlight">Top Marks</span> in Class 10 Board Exams</h1>
-      <p>Complete notes, formula sheets, MCQ practice and PYQs. Everything you need to ace your boards, in one place.</p>
+      <div class="hero-badge">CBSE Class 10 &nbsp;·&nbsp; Board Exam Prep</div>
+      <h1>Everything you need to<br><span class="highlight">ace your boards</span></h1>
+      <p>Chapter notes, formula sheets, MCQ practice, and PYQs — all in one place, organized for how you actually study.</p>
       <div class="hero-cta">
-        <a href="maths.html" onclick="return guardNav(event,'maths.html')" class="btn btn-primary btn-lg">Start Learning Now →</a>
-      </div>
-    </div>
-    <div class="hero-right">
-      <div class="mockup-card">
-        <div class="mockup-header">
-          <div class="mockup-avatar">🦉</div>
-          <div>
-            <div class="mockup-status"><span class="online-dot"></span>Online Ask me anything</div>
-          </div>
-        </div>
-        <div class="mockup-msg">
-          <strong>What is Ohm's Law?</strong>
-        </div>
-        <div class="mockup-msg" style="background:linear-gradient(135deg,rgba(124,58,237,0.15),rgba(167,139,250,0.1))">
-          ⚡ <strong style="color:var(--purple-300)">Ohm's Law:</strong><br>
-          <strong>V = IR</strong> (Voltage = Current × Resistance)<br><br>
-          📌 Key Points:<br>
-          1️⃣ V = voltage (Volts)<br>
-          2️⃣ I = current (Amperes)<br>
-          3️⃣ R = resistance (Ohms Ω)<br><br>
-          <strong>Power: P = VI = I²R = V²/R</strong>
-        </div>
-        <div class="mockup-chips">
-          <div class="mockup-chip">Photosynthesis? 🌱</div>
-          <div class="mockup-chip">Dandi March 📅</div>
-          <div class="mockup-chip">Quadratic formula 📐</div>
-        </div>
-        <div class="mockup-user-msg">Explain photosynthesis equation</div>
-        <div class="mockup-typing"><div class="typing-dot"></div><div class="typing-dot"></div><div class="typing-dot"></div></div>
+        <a href="maths.html" onclick="return guardNav(event,'maths.html')" class="btn btn-primary btn-lg">Start Learning</a>
       </div>
     </div>
   </div>
@@ -118,7 +84,7 @@
 <div id="main-content" class="container">
   <section class="section">
     <div class="section-head reveal">
-      <div class="section-label">📚 Your Study Hub</div>
+      <div class="section-label">Your Study Hub</div>
       <h2 class="section-title">Pick a Subject & Start</h2>
       <p class="section-sub">Formula sheets, important notes, practice questions, PYQs all organized for you</p>
     </div>
@@ -136,21 +102,21 @@
     </div>
     <div class="why-grid">
       <div class="why-card reveal reveal-d1">
-        <div class="why-icon" style="background:#EF444415;color:#EF4444">📐</div>
+        <div class="why-icon" style="background:#EF444415;color:#EF4444"></div>
         <div class="why-body">
           <div class="why-title">Chapter-wise Notes</div>
           <div class="why-desc">All 4 subjects broken down chapter by chapter. Maths formulas, Science concepts, English lessons, Social Science everything organized so you can study one chapter at a time.</div>
         </div>
       </div>
       <div class="why-card reveal reveal-d2">
-        <div class="why-icon" style="background:#0EA5E915;color:#0EA5E9">❓</div>
+        <div class="why-icon" style="background:#0EA5E915;color:#0EA5E9"></div>
         <div class="why-body">
           <div class="why-title">1700+ Practice Questions</div>
           <div class="why-desc">2-mark, 3-mark and 5-mark questions for Science, Maths and Social Science taken directly from standard question banks and sorted chapter by chapter.</div>
         </div>
       </div>
       <div class="why-card reveal reveal-d3">
-        <div class="why-icon" style="background:#7C3AED15;color:#7C3AED">📄</div>
+        <div class="why-icon" style="background:#7C3AED15;color:#7C3AED"></div>
         <div class="why-body">
           <div class="why-title">PYQ Papers</div>
           <div class="why-desc">Previous year board exam papers for all subjects. Practise under real exam conditions with the same format and marking scheme as the actual CBSE board exam.</div>
@@ -162,7 +128,7 @@
   <!-- ═══ STUDY TIPS ═══ -->
   <section class="section">
     <div class="section-head reveal">
-      <div class="section-label">💡 Study Strategy</div>
+      <div class="section-label">Study Strategy</div>
       <h2 class="section-title">Smart Tips to Score 90+</h2>
     </div>
     <div class="tips-grid" id="tipsGrid"></div>
@@ -212,8 +178,8 @@
   </div>
   <div class="footer-bottom">
     <span>© 2026 AbiLearn. All rights reserved.</span>
-    <div class="footer-badge">🏫 CBSE Aligned Platform</div>
-    <span>Made with ❤️ for Class 10 students</span>
+    <div class="footer-badge">CBSE Aligned</div>
+    <span>Made for Class 10 students</span>
   </div>
 </footer>
 </div>
