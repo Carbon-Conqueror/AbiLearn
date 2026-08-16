@@ -729,13 +729,14 @@ input:focus-visible,select:focus-visible,textarea:focus-visible { outline:none; 
 ══════════════════════════════════════════ */
 .formula-sheet { display:flex;flex-direction:column;gap:1.5rem; }
 .formula-chapter-block {
-  background:white;border-radius:var(--radius-lg);
+  background:var(--surface);border-radius:var(--radius-lg);
   padding:1.5rem;box-shadow:var(--shadow-sm);
   border:1px solid var(--border);
 }
 .formula-chapter-title {
   font-size:1rem;font-weight:700;color:var(--text);
   margin-bottom:1rem;display:flex;align-items:center;gap:0.65rem;
+  justify-content:space-between;
 }
 .formula-num {
   width:28px;height:28px;border-radius:8px;

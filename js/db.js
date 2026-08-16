@@ -1,4 +1,4 @@
-/* AbiLearn — Firestore Data Access Layer v1
+/* AbiLearn — Firestore Data Access Layer v3
  *
  * All student data is stored under /users/{uid}/.
  * This module is the single point of contact with Firestore — nothing
@@ -272,6 +272,30 @@ var DB = (function () {
     } catch (e) { console.warn('DB.recordStudyActivity', e); }
   }
 
+  /* ══ CHAPTER PROGRESS ══
+   * Key: "{subjectId}_{section}_{chapterId}"
+   * Tracks per-tab chapter completion ticks, separate from pdfProgress and MCQ mastery.
+   */
+  async function getChapterProgress(id) {
+    if (!fs()) return {};
+    try {
+      var snap = await subCol('chapterProgress', id).get();
+      var out = {};
+      snap.forEach(function(doc) { out[doc.id] = doc.data(); });
+      return out;
+    } catch (e) { console.warn('DB.getChapterProgress', e); return {}; }
+  }
+
+  async function setChapterDone(key, done, id) {
+    if (!fs()) return;
+    try {
+      await subCol('chapterProgress', id).doc(key).set({
+        done:      !!done,
+        updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+      }, { merge: true });
+    } catch (e) { console.warn('DB.setChapterDone', e); }
+  }
+
   /* ══ LEGACY MIGRATION ══
    * One-time: copies pdf_done_<email> from localStorage to Firestore.
    */
@@ -328,6 +352,8 @@ var DB = (function () {
     getStudyPlan:              getStudyPlan,
     setStudyPlan:              setStudyPlan,
     recordStudyActivity:       recordStudyActivity,
-    migrateLegacyProgress:     migrateLegacyProgress
+    migrateLegacyProgress:     migrateLegacyProgress,
+    getChapterProgress:        getChapterProgress,
+    setChapterDone:            setChapterDone
   };
 })();

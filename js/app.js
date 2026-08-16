@@ -1,4 +1,4 @@
-/* AbiLearn Main Application Logic v2 */
+/* AbiLearn Main Application Logic v69 */
 
 /* ── SCROLL-HIDE HEADER ── */
 (function() {
@@ -56,8 +56,10 @@ const SUBJECT_TABS = {
 };
 
 /* ── FIRESTORE PROGRESS CACHE — populated after login by loadUserDataFromFirestore ── */
-var _cachedPdfProgress  = {};
-var _cachedKnowledgeMap = {};
+var _cachedPdfProgress     = {};
+var _cachedKnowledgeMap    = {};
+var _cachedChapterProgress = {};
+var _subjectPageSubject    = null;
 
 function _currentEmail() {
   try {
@@ -102,14 +104,19 @@ function getSubjectPct(subjectId) {
 async function loadUserDataFromFirestore(uid) {
   if (typeof DB === 'undefined' || !uid) return;
   try {
-    const [pdfProg, km] = await Promise.all([
+    const [pdfProg, km, chProg] = await Promise.all([
       DB.getPdfProgress(uid),
-      DB.getKnowledgeMap(uid)
+      DB.getKnowledgeMap(uid),
+      DB.getChapterProgress(uid)
     ]);
-    _cachedPdfProgress  = pdfProg || {};
-    _cachedKnowledgeMap = km      || {};
-    // Re-render subject cards on home page with real mastery data
+    _cachedPdfProgress     = pdfProg || {};
+    _cachedKnowledgeMap    = km      || {};
+    _cachedChapterProgress = chProg  || {};
     if (document.getElementById('subjectsGrid')) renderSubjectCards();
+    if (_subjectPageSubject) {
+      var activeBtn = document.querySelector('.tab-btn.active');
+      if (activeBtn) renderTabContent(_subjectPageSubject, activeBtn.dataset.tab);
+    }
   } catch (e) { console.warn('loadUserDataFromFirestore', e); }
 }
 
@@ -351,6 +358,7 @@ function initSubjectPage(subjectId) {
   initSearch(); initDropdowns(); initMobileNav();
   const subject = DATA.subjects.find(s => s.id === subjectId);
   if (!subject) return;
+  _subjectPageSubject = subject;
 
   renderSubjectShell(subject);
   renderTabContent(subject, SUBJECT_TABS[subjectId][0].id);
@@ -711,6 +719,22 @@ function togglePDFDone(btn, url) {
   }
 }
 
+function getChapterDone(key) {
+  return !!(_cachedChapterProgress[key] && _cachedChapterProgress[key].done);
+}
+
+function toggleChapterDone(btn, key) {
+  var user = (typeof getUser === 'function') ? getUser() : null;
+  if (!user) return;
+  var nowDone = !getChapterDone(key);
+  _cachedChapterProgress[key] = { done: nowDone };
+  btn.classList.toggle('done', nowDone);
+  btn.title = nowDone ? 'Mark as incomplete' : 'Mark as complete';
+  if (typeof DB !== 'undefined') {
+    DB.setChapterDone(key, nowDone, user.uid);
+  }
+}
+
 /* PDF/image cards with completion circle + Open button */
 function pdfCards(subject, tab) {
   const list = (PDFS[subject.id] || {})[tab] || [];
@@ -931,16 +955,21 @@ function buildFormulaSheet(subject) {
     ${chapters.length ? `
       <h2 class="section-title" style="margin-bottom:1.5rem;margin-top:${cards ? '2rem' : '0'}">📐 Formula Sheet ${subject.name}</h2>
       <div class="formula-sheet">
-        ${chapters.map(ch => `
+        ${chapters.map(ch => {
+          const dk = subject.id + '_formula_' + ch.id;
+          const chDone = getChapterDone(dk);
+          return `
           <div class="formula-chapter-block reveal">
             <div class="formula-chapter-title">
               <span class="formula-num" style="background:${color}">${ch.id}</span>
-              ${ch.title}
+              <span style="flex:1;min-width:0">${ch.title}</span>
+              <button class="pdf-done-circle ${chDone ? 'done' : ''}" onclick="toggleChapterDone(this,'${dk}')" title="${chDone ? 'Mark as incomplete' : 'Mark as complete'}">✓</button>
             </div>
             <div class="formula-grid">
               ${ch.formulas.map(f => `<div class="formula-pill">${escH(f)}</div>`).join('')}
             </div>
-          </div>`).join('')}
+          </div>`;
+        }).join('')}
       </div>` : ''}`;
 }
 
@@ -1038,6 +1067,8 @@ function buildScienceMCQCards(subject) {
   const cards = chapters.map(ch => {
     const count = (SCIENCE_MCQS[ch.id] || []).length;
     const mastery = (_cachedKnowledgeMap['science_' + ch.id] || {}).mastery || 'not_started';
+    const chDoneKey = 'science_mcq_' + ch.id;
+    const chDone = getChapterDone(chDoneKey);
     return `
       <div class="pdf-card">
         <div class="pdf-card-icon">🧪</div>
@@ -1045,6 +1076,7 @@ function buildScienceMCQCards(subject) {
           <div class="pdf-card-title">Ch ${ch.id}: ${escH(ch.title)}</div>
           <div class="pdf-card-desc">${count} MCQs &nbsp;${renderMasteryBadge(mastery)}</div>
         </div>
+        <button class="pdf-done-circle ${chDone ? 'done' : ''}" onclick="toggleChapterDone(this,'${chDoneKey}')" title="${chDone ? 'Mark as incomplete' : 'Mark as complete'}">✓</button>
         <button class="pdf-test-btn" onclick="openTestMode(${ch.id}, '${escH(ch.title)}', 'science')">Test</button>
         <button class="pdf-open-btn" onclick="openChapterMCQs(${ch.id}, '${escH(ch.title)}', 'science')">Open</button>
       </div>`;
@@ -1075,6 +1107,8 @@ function buildSocialMCQCards(subject) {
       const count = (SOCIAL_MCQS[id] || []).length;
       if (!count) return '';
       const mastery = (_cachedKnowledgeMap['social_' + id] || {}).mastery || 'not_started';
+      const chDoneKey = 'social_mcq_' + id;
+      const chDone = getChapterDone(chDoneKey);
       return `
         <div class="pdf-card">
           <div class="pdf-card-icon">${s.icon}</div>
@@ -1082,6 +1116,7 @@ function buildSocialMCQCards(subject) {
             <div class="pdf-card-title">${escH(ch.title)}</div>
             <div class="pdf-card-desc">${count} MCQs · ${s.key} &nbsp;${renderMasteryBadge(mastery)}</div>
           </div>
+          <button class="pdf-done-circle ${chDone ? 'done' : ''}" onclick="toggleChapterDone(this,'${chDoneKey}')" title="${chDone ? 'Mark as incomplete' : 'Mark as complete'}">✓</button>
           <button class="pdf-test-btn" onclick="openTestMode(${id}, '${escH(ch.title)}', 'social')">Test</button>
           <button class="pdf-open-btn" onclick="openChapterMCQs(${id}, '${escH(ch.title)}', 'social')">Open</button>
         </div>`;
@@ -1619,13 +1654,15 @@ function buildScienceQBank() {
   const cards = chapters.map(ch => {
     const d = (typeof SCIENCE_QBANK !== 'undefined') ? SCIENCE_QBANK[ch.id] : null;
     const n2 = d ? d.q2m.length : 0, n3 = d ? d.q3m.length : 0, n5 = d ? d.q5m.length : 0;
+    const chDoneKey = 'science_qbank_' + ch.id;
+    const chDone = getChapterDone(chDoneKey);
     return `
     <div class="pdf-card" style="cursor:pointer" onclick="openScienceQBank(${ch.id})">
-      
       <div class="pdf-card-info">
         <div class="pdf-card-title">${escH(ch.label)}</div>
         <div class="pdf-card-desc">${n2} short &nbsp;·&nbsp; ${n3} medium &nbsp;·&nbsp; ${n5} long</div>
       </div>
+      <button class="pdf-done-circle ${chDone ? 'done' : ''}" onclick="event.stopPropagation();toggleChapterDone(this,'${chDoneKey}')" title="${chDone ? 'Mark as incomplete' : 'Mark as complete'}">✓</button>
       <button class="pdf-open-btn" onclick="event.stopPropagation();openScienceQBank(${ch.id})">View</button>
     </div>`;
   }).join('');
@@ -1736,13 +1773,15 @@ function buildMathsQBank() {
   const cards = chapters.map(ch => {
     const d = (typeof MATHS_QBANK_CH !== 'undefined') ? MATHS_QBANK_CH[ch.id] : null;
     const n2 = d ? d.q2m.length : 0, n3 = d ? d.q3m.length : 0, n5 = d ? d.q5m.length : 0;
+    const chDoneKey = 'maths_qbank_' + ch.id;
+    const chDone = getChapterDone(chDoneKey);
     return `
     <div class="pdf-card" style="cursor:pointer" onclick="openMathsQBank(${ch.id})">
-      
       <div class="pdf-card-info">
         <div class="pdf-card-title">${escH(ch.label)}</div>
         <div class="pdf-card-desc">${n2} short &nbsp;·&nbsp; ${n3} medium &nbsp;·&nbsp; ${n5} long</div>
       </div>
+      <button class="pdf-done-circle ${chDone ? 'done' : ''}" onclick="event.stopPropagation();toggleChapterDone(this,'${chDoneKey}')" title="${chDone ? 'Mark as incomplete' : 'Mark as complete'}">✓</button>
       <button class="pdf-open-btn" onclick="event.stopPropagation();openMathsQBank(${ch.id})">View</button>
     </div>`;
   }).join('');
@@ -1899,15 +1938,19 @@ function buildSocialQBank() {
             <span style="font-size:0.75rem;color:var(--muted);background:var(--surface);padding:0.15rem 0.55rem;border-radius:20px;border:1px solid var(--border)">${chEntries.length} chapters</span>
           </div>
           <div class="pdf-cards-grid">
-            ${chEntries.map(([chKey, d]) => `
+            ${chEntries.map(([chKey, d]) => {
+              const chDoneKey = 'social_qbank_' + s.key + '_' + chKey.replace(/[^a-zA-Z0-9_-]/g, '_');
+              const chDone = getChapterDone(chDoneKey);
+              return `
               <div class="pdf-card" style="cursor:pointer" onclick="openSocialQBank('${s.key}','${chKey}')">
-                
                 <div class="pdf-card-info">
                   <div class="pdf-card-title">${escH(d.title)}</div>
                   <div class="pdf-card-desc">${d.q2m.length} × 2M &nbsp;·&nbsp; ${d.q3m.length} × 3M &nbsp;·&nbsp; ${d.q5m.length} × 5M</div>
                 </div>
+                <button class="pdf-done-circle ${chDone ? 'done' : ''}" onclick="event.stopPropagation();toggleChapterDone(this,'${chDoneKey}')" title="${chDone ? 'Mark as incomplete' : 'Mark as complete'}">✓</button>
                 <button class="pdf-open-btn" onclick="event.stopPropagation();openSocialQBank('${s.key}','${chKey}')">View</button>
-              </div>`).join('')}
+              </div>`;
+            }).join('')}
           </div>
         </div>`;
       }).join('')}
@@ -2248,6 +2291,9 @@ function buildProgressTab(subject) {
   var total = subject.chapters.length;
   var advCount = counts.mastered + counts.proficient;
   var overallPct = total ? Math.round((advCount / total) * 100) : 0;
+  var chTickCount = Object.keys(_cachedChapterProgress).filter(function(k) {
+    return k.startsWith(subject.id + '_') && _cachedChapterProgress[k].done;
+  }).length;
 
   return '<div class="progress-summary-strip">' +
     '<div class="progress-summary-stat"><div class="pss-num" style="color:#059669">' + counts.mastered + '</div><div class="pss-lbl">Mastered</div></div>' +
@@ -2261,6 +2307,7 @@ function buildProgressTab(subject) {
     '<div class="progress-bar-wrap" style="height:10px;margin-top:0.5rem">' +
       '<div class="progress-bar-fill" style="width:' + overallPct + '%;background:linear-gradient(90deg,#7C3AED,#8B5CF6);transition:width 0.8s ease"></div>' +
     '</div>' +
+    (chTickCount ? '<div style="margin-top:0.65rem;font-size:0.82rem;color:var(--muted)">📚 ' + chTickCount + ' resource' + (chTickCount !== 1 ? 's' : '') + ' marked as complete</div>' : '') +
   '</div>' +
   '<div style="display:flex;align-items:center;justify-content:space-between;margin:1.5rem 0 0.75rem;flex-wrap:wrap;gap:0.5rem">' +
     '<h3 style="margin:0;font-size:1rem;font-weight:800">Chapter Breakdown</h3>' +
