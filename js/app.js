@@ -1,4 +1,4 @@
-/* AbiLearn Main Application Logic v69 */
+/* AbiLearn Main Application Logic v70 */
 
 /* ── SCROLL-HIDE HEADER ── */
 (function() {
@@ -732,6 +732,12 @@ function toggleChapterDone(btn, key) {
   btn.title = nowDone ? 'Mark as incomplete' : 'Mark as complete';
   if (typeof DB !== 'undefined') {
     DB.setChapterDone(key, nowDone, user.uid);
+  }
+  // If the progress tab is currently open, refresh it live
+  var activeTab = document.querySelector('.tab-btn.active');
+  if (activeTab && activeTab.dataset.tab === 'progress' && _subjectPageSubject) {
+    var tc = document.getElementById('tabContent');
+    if (tc) tc.innerHTML = buildProgressTab(_subjectPageSubject);
   }
 }
 
@@ -2291,9 +2297,20 @@ function buildProgressTab(subject) {
   var total = subject.chapters.length;
   var advCount = counts.mastered + counts.proficient;
   var overallPct = total ? Math.round((advCount / total) * 100) : 0;
-  var chTickCount = Object.keys(_cachedChapterProgress).filter(function(k) {
+  var chProgDoneKeys = Object.keys(_cachedChapterProgress).filter(function(k) {
     return k.startsWith(subject.id + '_') && _cachedChapterProgress[k].done;
-  }).length;
+  });
+  var chTickCount  = chProgDoneKeys.length;
+  var formulaDone  = chProgDoneKeys.filter(function(k) { return k.indexOf('_formula_') !== -1; }).length;
+  var qbankDone    = chProgDoneKeys.filter(function(k) { return k.indexOf('_qbank_')   !== -1; }).length;
+  var mcqDone      = chProgDoneKeys.filter(function(k) { return k.indexOf('_mcq_')     !== -1; }).length;
+  var tickParts = [];
+  if (formulaDone) tickParts.push('📝 Formulas: ' + formulaDone);
+  if (qbankDone)   tickParts.push('📚 Q-Bank: '   + qbankDone);
+  if (mcqDone)     tickParts.push('🔬 MCQ: '      + mcqDone);
+  var tickBreakdownHtml = chTickCount
+    ? '<div style="margin-top:0.65rem;font-size:0.82rem;color:var(--muted)">✅ ' + chTickCount + ' resource' + (chTickCount !== 1 ? 's' : '') + ' marked as complete' + (tickParts.length ? ' · ' + tickParts.join(' · ') : '') + '</div>'
+    : '';
 
   return '<div class="progress-summary-strip">' +
     '<div class="progress-summary-stat"><div class="pss-num" style="color:#059669">' + counts.mastered + '</div><div class="pss-lbl">Mastered</div></div>' +
@@ -2307,7 +2324,7 @@ function buildProgressTab(subject) {
     '<div class="progress-bar-wrap" style="height:10px;margin-top:0.5rem">' +
       '<div class="progress-bar-fill" style="width:' + overallPct + '%;background:linear-gradient(90deg,#7C3AED,#8B5CF6);transition:width 0.8s ease"></div>' +
     '</div>' +
-    (chTickCount ? '<div style="margin-top:0.65rem;font-size:0.82rem;color:var(--muted)">📚 ' + chTickCount + ' resource' + (chTickCount !== 1 ? 's' : '') + ' marked as complete</div>' : '') +
+    tickBreakdownHtml +
   '</div>' +
   '<div style="display:flex;align-items:center;justify-content:space-between;margin:1.5rem 0 0.75rem;flex-wrap:wrap;gap:0.5rem">' +
     '<h3 style="margin:0;font-size:1rem;font-weight:800">Chapter Breakdown</h3>' +

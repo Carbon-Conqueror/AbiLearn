@@ -169,12 +169,16 @@
         '<div style="text-align:center;padding:3rem;color:var(--muted)">Firebase not configured. Please set up your credentials in js/firebase-config.js.</div>';
       return;
     }
+    // Load immediately with cached user (no waiting for Firebase round-trip)
+    var initialUser = (typeof getUser === 'function') ? getUser() : null;
+    if (initialUser) loadMistakes(initialUser.uid);
+    // onAuthStateChanged verifies the session; redirect if signed out, reload if different user
     window._fauth.onAuthStateChanged(function(fbUser) {
       if (!fbUser) {
         window.location.href = 'auth.html?from=' + encodeURIComponent(location.href);
         return;
       }
-      loadMistakes(fbUser.uid);
+      if (!initialUser || fbUser.uid !== initialUser.uid) loadMistakes(fbUser.uid);
     });
   });
 

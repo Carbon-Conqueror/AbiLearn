@@ -1,4 +1,4 @@
-/* AbiLearn — Auth Page v4 (Firebase Authentication)
+/* AbiLearn — Auth Page v16 (Firebase Authentication)
  * Standalone: no dependency on auth.js.
  * Handles: login, signup, forgot password, email verification notice.
  */
@@ -542,10 +542,9 @@ async function handleSignup(e) {
     var fbUser = cred.user;
 
     try { await fbUser.updateProfile({ displayName: name }); } catch(e) {}
-    try {
-      await DB.setProfile({ name: name, email: email, grade: grade, joinDate: new Date().toISOString(), avatar: null }, fbUser.uid);
-    } catch(e) {}
-    try { await fbUser.sendEmailVerification(); } catch(e) {}
+    // Fire-and-forget: don't await these — they can be slow and aren't needed before redirecting
+    try { if (typeof DB !== 'undefined') DB.setProfile({ name: name, email: email, grade: grade, joinDate: new Date().toISOString(), avatar: null }, fbUser.uid); } catch(e) {}
+    try { fbUser.sendEmailVerification().catch(function(){}); } catch(e) {}
 
     try {
       var signupCache = JSON.stringify({ uid: fbUser.uid, name: name, email: email, grade: grade });
