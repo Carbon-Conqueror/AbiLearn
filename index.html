@@ -19,7 +19,7 @@
   <meta name="apple-mobile-web-app-title" content="AbiLearn">
   <link rel="manifest" href="manifest.json">
   <link rel="apple-touch-icon" href="assets/logo.jpeg">
-  <link rel="stylesheet" href="css/style.css?v=49">
+  <link rel="stylesheet" href="css/style.css?v=50">
   <link rel="icon" href="assets/logo.jpeg" type="image/jpeg">
   <link rel="preconnect" href="https://www.gstatic.com">
   <link rel="dns-prefetch" href="https://www.gstatic.com">
@@ -60,33 +60,74 @@
 
 <!-- ═══ HERO ═══ -->
 <section class="hero">
-  <div class="hero-grid container" style="padding-top:0;padding-bottom:0">
+  <div class="hero-grid">
     <div class="hero-left">
-      <div class="hero-badge">CBSE Class 10 &nbsp;·&nbsp; Board Exam Prep</div>
-      <h1>Everything you need to<br><span class="highlight">ace your boards</span></h1>
-      <p>Chapter notes, formula sheets, MCQ practice and previous year papers — all organised chapter by chapter, built specifically for CBSE 2025.</p>
+      <div class="hero-badge">CBSE Class 10 &nbsp;·&nbsp; Complete Study System</div>
+      <h1>Everything Class 10.<br><span class="highlight">Built to master it.</span></h1>
+      <p>Notes, formulas, MCQ practice and PYQs — all organised around how you actually study, chapter by chapter.</p>
       <div class="hero-cta">
         <a href="science.html" onclick="return guardNav(event,'science.html')" class="btn btn-primary btn-lg">Start Learning</a>
-        <a href="maths.html" onclick="return guardNav(event,'maths.html')" class="btn btn-glass btn-lg">Maths Formulas</a>
+        <a href="#subjects" class="btn btn-glass btn-lg">Explore Subjects</a>
+      </div>
+      <div class="hero-value-row">
+        <span>Chapter Notes</span><span class="hvr-dot">·</span>
+        <span>Formula Sheets</span><span class="hvr-dot">·</span>
+        <span>MCQ Practice</span><span class="hvr-dot">·</span>
+        <span>PYQ Papers</span><span class="hvr-dot">·</span>
+        <span>Progress Tracking</span>
       </div>
     </div>
     <div class="hero-right">
-      <div class="hero-preview">
-        <div class="hp-eyebrow">Science &nbsp;·&nbsp; Chapter 10</div>
-        <div class="hp-title">Light — Reflection &amp; Refraction</div>
-        <div class="hp-chips">
-          <span class="hp-chip hp-done">Study Notes</span>
-          <span class="hp-chip hp-done">Formulas</span>
-          <span class="hp-chip">MCQ Practice</span>
-          <span class="hp-chip">PYQ Papers</span>
+      <div class="hero-product">
+        <div class="hprod-header">
+          <div class="hprod-subject">
+            <span class="hprod-subj-dot" style="background:#EF4444"></span>
+            Mathematics
+          </div>
+          <div class="hprod-ch-name">Ch 8 · Introduction to Trigonometry</div>
+          <div class="hprod-progress-row">
+            <div class="hprod-pbar"><div class="hprod-pfill maths-fill" style="width:72%"></div></div>
+            <span class="hprod-pct maths-color">72%</span>
+          </div>
         </div>
-        <div class="hp-divider"></div>
-        <div class="hp-progress-row">
-          <span>Your progress</span>
-          <span>7 of 13 chapters</span>
+        <div class="hprod-resources">
+          <div class="hprod-res done">
+            <div class="hprod-res-dot"></div>
+            <div class="hprod-res-body">
+              <div class="hprod-res-name">Formula Sheet</div>
+              <div class="hprod-res-meta">14 formulas · Chapter complete</div>
+            </div>
+            <div class="hprod-res-badge done">Done</div>
+          </div>
+          <div class="hprod-res done">
+            <div class="hprod-res-dot"></div>
+            <div class="hprod-res-body">
+              <div class="hprod-res-name">Study Notes</div>
+              <div class="hprod-res-meta">Key concepts &amp; examples</div>
+            </div>
+            <div class="hprod-res-badge done">Done</div>
+          </div>
+          <div class="hprod-res active">
+            <div class="hprod-res-dot"></div>
+            <div class="hprod-res-body">
+              <div class="hprod-res-name">MCQ Practice</div>
+              <div class="hprod-res-meta">5 questions</div>
+            </div>
+            <div class="hprod-res-badge next">Next</div>
+          </div>
+          <div class="hprod-res">
+            <div class="hprod-res-dot"></div>
+            <div class="hprod-res-body">
+              <div class="hprod-res-name">PYQ Papers</div>
+              <div class="hprod-res-meta">Board exam questions</div>
+            </div>
+            <div class="hprod-res-badge"></div>
+          </div>
         </div>
-        <div class="hp-ptrack"><div class="hp-pfill"></div></div>
-        <div class="hp-continue">Continue to Chapter 11 →</div>
+        <div class="hprod-footer">
+          <span class="hprod-continue">Continue Learning →</span>
+          <span class="hprod-next-ch">Next: Ch 9</span>
+        </div>
       </div>
     </div>
   </div>
@@ -94,11 +135,11 @@
 
 <!-- ═══ SUBJECTS ═══ -->
 <div id="main-content" class="container">
-  <section class="section">
+  <section class="section" id="subjects">
     <div class="section-head reveal">
-      <div class="section-label">Your Study Hub</div>
-      <h2 class="section-title">Pick a Subject & Start</h2>
-      <p class="section-sub">Formula sheets, important notes, practice questions, PYQs all organized for you</p>
+      <div class="section-label">Study Hub</div>
+      <h2 class="section-title">Four subjects. Everything covered.</h2>
+      <p class="section-sub">Chapter notes, formula sheets, MCQ practice and PYQs for Mathematics, Science, English and Social Science.</p>
     </div>
     <div class="subjects-grid" id="subjectsGrid"></div>
   </section>
@@ -108,9 +149,9 @@
   <!-- ═══ WHY ABILEARN ═══ -->
   <section class="section trust-section" style="background:transparent;border:none;margin:0">
     <div class="section-head reveal">
-      <div class="section-label">WHY ABILEARN</div>
-      <h2 class="section-title">Everything you need for Class 10 Boards</h2>
-      <p class="section-sub">Built specifically for CBSE Class 10 no filler, no fluff</p>
+      <div class="section-label">Why AbiLearn</div>
+      <h2 class="section-title">Built for the way Class 10 students actually study</h2>
+      <p class="section-sub">No filler, no fluff. Everything is organised around CBSE's chapter structure so you always know exactly where you are and what's next.</p>
     </div>
     <div class="why-grid">
       <div class="why-card reveal reveal-d1">
