@@ -1,4 +1,4 @@
-/* AbiLearn — Design System v48 */
+/* AbiLearn — Design System v49 */
 
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap');
 
@@ -327,10 +327,10 @@ input:focus-visible,select:focus-visible,textarea:focus-visible { outline:none; 
 
 /* ─── HERO BAND ───────────────────────────────── */
 .hero {
-  background:var(--ink);
+  background:#141C2E; /* always dark — deliberate contrast regardless of theme */
   padding:3.5rem 2rem 3rem;
   position:relative; overflow:hidden;
-  min-height:unset; /* override old min-height */
+  min-height:unset;
 }
 /* Kill the decorative blobs entirely */
 .hero-blobs,.blob,.blob-1,.blob-2,.blob-3 { display:none !important; }
@@ -340,7 +340,38 @@ input:focus-visible,select:focus-visible,textarea:focus-visible { outline:none; 
   display:grid; grid-template-columns:1fr 1fr;
   gap:3rem; align-items:center; position:relative; z-index:1;
 }
-.hero-right { display:none; } /* Hide chat mockup — product doesn't have AI chat */
+/* Hero right side — product preview card (visible on 1025px+) */
+.hero-right { display:flex; align-items:center; justify-content:flex-end; }
+.hero-preview {
+  background:rgba(255,255,255,.07); border:1px solid rgba(255,255,255,.12);
+  border-radius:var(--radius-xl); padding:1.5rem;
+  width:100%; max-width:320px;
+}
+.hp-eyebrow {
+  font-size:.65rem; font-weight:700; letter-spacing:.1em; text-transform:uppercase;
+  color:rgba(255,255,255,.38); margin-bottom:.55rem;
+}
+.hp-title {
+  font-size:.95rem; font-weight:700; color:#E4EAF6; line-height:1.35; margin-bottom:.85rem;
+}
+.hp-chips { display:flex; flex-wrap:wrap; gap:.38rem; margin-bottom:.85rem; }
+.hp-chip {
+  padding:.2rem .62rem; border-radius:4px; font-size:.68rem; font-weight:600;
+  background:rgba(255,255,255,.08); color:rgba(255,255,255,.48);
+  border:1px solid rgba(255,255,255,.1);
+}
+.hp-chip.hp-done { background:rgba(5,150,105,.18); color:#6EE7B7; border-color:rgba(52,211,153,.12); }
+.hp-divider { height:1px; background:rgba(255,255,255,.07); margin-bottom:.85rem; }
+.hp-progress-row {
+  display:flex; justify-content:space-between; font-size:.7rem;
+  color:rgba(255,255,255,.35); margin-bottom:.35rem;
+}
+.hp-ptrack {
+  height:3px; background:rgba(255,255,255,.1); border-radius:2px;
+  overflow:hidden; margin-bottom:.88rem;
+}
+.hp-pfill { height:100%; width:54%; background:#0284C7; border-radius:2px; }
+.hp-continue { font-size:.78rem; font-weight:600; color:#93C5FD; }
 
 /* Hero badge strip — restrain to plain text label */
 .hero-badge {
@@ -493,6 +524,55 @@ input:focus-visible,select:focus-visible,textarea:focus-visible { outline:none; 
 .subject-card.social  .continue-btn { color:var(--social); }
 .subject-card:hover .continue-btn { transform:translateX(3px); }
 .card-chapters { font-size:.74rem; color:var(--muted); }
+
+/* ─── SUBJECT CARDS (NEW scard-* layout) ─────── */
+.scard-top {
+  padding:1.25rem 1.25rem .7rem;
+  display:flex; align-items:flex-start; gap:.75rem;
+}
+.scard-top .card-icon-wrap { margin:0; flex-shrink:0; }
+.scard-name { font-size:.98rem; font-weight:700; color:var(--text); }
+.scard-count { font-size:.71rem; color:var(--muted); margin-top:.1rem; }
+.scard-chips {
+  padding:0 1.25rem .7rem;
+  display:flex; flex-wrap:wrap; gap:.32rem;
+}
+.scard-chip {
+  padding:.16rem .52rem; border-radius:4px; font-size:.66rem; font-weight:600;
+  background:var(--surface-2); color:var(--muted); border:1px solid var(--border);
+}
+.scard-chapters {
+  padding:0 1.25rem .7rem; display:flex; flex-direction:column; gap:.3rem;
+}
+.scard-ch { display:flex; align-items:center; gap:.5rem; }
+.scard-ch-num {
+  width:20px; height:20px; border-radius:4px; font-size:.62rem; font-weight:800;
+  color:white; display:flex; align-items:center; justify-content:center;
+  flex-shrink:0; line-height:1;
+}
+.scard-ch-title {
+  font-size:.77rem; color:var(--text-2); flex:1; min-width:0;
+  white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
+}
+.scard-ch-dot {
+  width:7px; height:7px; border-radius:50%;
+  border:1.5px solid var(--border-2); flex-shrink:0;
+}
+.scard-ch.done .scard-ch-dot { background:var(--correct); border-color:var(--correct); }
+.scard-more { font-size:.69rem; color:var(--muted); padding-left:1.5rem; }
+.scard-footer { padding:.82rem 1.25rem; border-top:1px solid var(--border); }
+.scard-pbar-row {
+  display:flex; justify-content:space-between; font-size:.68rem;
+  color:var(--muted); margin-bottom:.28rem;
+}
+.scard-ptrack {
+  height:3px; background:var(--surface-2); border-radius:2px; overflow:hidden;
+}
+.scard-pfill { height:100%; border-radius:2px; transition:width .8s var(--ease); }
+.subject-card.maths   .scard-pfill { background:var(--maths); }
+.subject-card.science .scard-pfill { background:var(--science); }
+.subject-card.english .scard-pfill { background:var(--english); }
+.subject-card.social  .scard-pfill { background:var(--social); }
 
 /* ─── WHY SECTION ─────────────────────────────── */
 .trust-section { background:transparent; border:none; }

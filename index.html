@@ -19,7 +19,7 @@
   <meta name="apple-mobile-web-app-title" content="AbiLearn">
   <link rel="manifest" href="manifest.json">
   <link rel="apple-touch-icon" href="assets/logo.jpeg">
-  <link rel="stylesheet" href="css/style.css?v=48">
+  <link rel="stylesheet" href="css/style.css?v=49">
   <link rel="icon" href="assets/logo.jpeg" type="image/jpeg">
   <link rel="preconnect" href="https://www.gstatic.com">
   <link rel="dns-prefetch" href="https://www.gstatic.com">
@@ -64,21 +64,33 @@
     <div class="hero-left">
       <div class="hero-badge">CBSE Class 10 &nbsp;·&nbsp; Board Exam Prep</div>
       <h1>Everything you need to<br><span class="highlight">ace your boards</span></h1>
-      <p>Chapter notes, formula sheets, MCQ practice, and PYQs — all in one place, organized for how you actually study.</p>
+      <p>Chapter notes, formula sheets, MCQ practice and previous year papers — all organised chapter by chapter, built specifically for CBSE 2025.</p>
       <div class="hero-cta">
-        <a href="maths.html" onclick="return guardNav(event,'maths.html')" class="btn btn-primary btn-lg">Start Learning</a>
+        <a href="science.html" onclick="return guardNav(event,'science.html')" class="btn btn-primary btn-lg">Start Learning</a>
+        <a href="maths.html" onclick="return guardNav(event,'maths.html')" class="btn btn-glass btn-lg">Maths Formulas</a>
+      </div>
+    </div>
+    <div class="hero-right">
+      <div class="hero-preview">
+        <div class="hp-eyebrow">Science &nbsp;·&nbsp; Chapter 10</div>
+        <div class="hp-title">Light — Reflection &amp; Refraction</div>
+        <div class="hp-chips">
+          <span class="hp-chip hp-done">Study Notes</span>
+          <span class="hp-chip hp-done">Formulas</span>
+          <span class="hp-chip">MCQ Practice</span>
+          <span class="hp-chip">PYQ Papers</span>
+        </div>
+        <div class="hp-divider"></div>
+        <div class="hp-progress-row">
+          <span>Your progress</span>
+          <span>7 of 13 chapters</span>
+        </div>
+        <div class="hp-ptrack"><div class="hp-pfill"></div></div>
+        <div class="hp-continue">Continue to Chapter 11 →</div>
       </div>
     </div>
   </div>
 </section>
-
-<!-- ═══ STATS STRIP ═══ -->
-<div class="stats-strip">
-  <div class="stat-item"><span class="stat-num">50+</span><div class="stat-lbl">Chapters Covered</div></div>
-  <div class="stat-item"><span class="stat-num">150+</span><div class="stat-lbl">Practice MCQs</div></div>
-  <div class="stat-item"><span class="stat-num">4</span><div class="stat-lbl">Subjects</div></div>
-  <div class="stat-item"><span class="stat-num">100%</span><div class="stat-lbl">CBSE Aligned</div></div>
-</div>
 
 <!-- ═══ SUBJECTS ═══ -->
 <div id="main-content" class="container">
@@ -190,7 +202,7 @@
 <script src="js/firebase-config.js"></script>
 <script src="js/db.js?v=3"></script>
 <script src="js/data.js?v=1"></script>
-<script src="js/app.js?v=71"></script>
+<script src="js/app.js?v=72"></script>
 <script src="js/auth.js?v=32"></script>
 <script>initHomePage();</script>
 </body>

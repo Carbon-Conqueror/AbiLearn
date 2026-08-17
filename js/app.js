@@ -1,4 +1,4 @@
-/* AbiLearn Main Application Logic v71 */
+/* AbiLearn Main Application Logic v72 */
 
 /* ── SCROLL-HIDE HEADER ── */
 (function() {
@@ -230,12 +230,12 @@ function initMobileNav() {
   menu.id = 'mobileMenu';
   menu.innerHTML = `
     <div class="mobile-menu-inner">
-      <a href="index.html" class="mobile-nav-link">🏠 Home</a>
+      <a href="index.html" class="mobile-nav-link">Home</a>
       <div class="mobile-nav-section">Subjects</div>
-      <a href="maths.html" class="mobile-nav-link mobile-sub-link">📐 Mathematics</a>
-      <a href="science.html" class="mobile-nav-link mobile-sub-link">🔬 Science</a>
-      <a href="english.html" class="mobile-nav-link mobile-sub-link">📖 English</a>
-      <a href="social.html" class="mobile-nav-link mobile-sub-link">🌍 Social Science</a>
+      <a href="maths.html" class="mobile-nav-link mobile-sub-link">Mathematics</a>
+      <a href="science.html" class="mobile-nav-link mobile-sub-link">Science</a>
+      <a href="english.html" class="mobile-nav-link mobile-sub-link">English</a>
+      <a href="social.html" class="mobile-nav-link mobile-sub-link">Social Science</a>
       <div class="mobile-menu-actions">
         <button class="btn-login">Log In</button>
         <button class="btn-signup">Sign Up Free</button>
@@ -305,7 +305,7 @@ function initHomePage() {
   renderSubjectCards();
   renderTips();
   setTimeout(() => {
-    document.querySelectorAll('.progress-fill[data-w]').forEach(el => el.style.width = el.dataset.w + '%');
+    document.querySelectorAll('.progress-fill[data-w],.scard-pfill[data-w]').forEach(el => el.style.width = el.dataset.w + '%');
     initReveal();
   }, 200);
 }
@@ -314,27 +314,45 @@ function renderSubjectCards() {
   const grid = document.getElementById('subjectsGrid');
   if (!grid) return;
   const map = { maths:'maths.html', science:'science.html', english:'english.html', social:'social.html' };
+  const chipsMap = {
+    maths:   ['Formulas', 'Q-Bank', 'PYQs'],
+    science: ['Study Notes', 'MCQs', 'Q-Bank', 'PYQs'],
+    english: ['First Flight', 'Grammar', 'PYQs'],
+    social:  ['Notes', 'MCQs', 'Q-Bank', 'Maps', 'PYQs']
+  };
   grid.innerHTML = DATA.subjects.map((sub, i) => {
     const pct = getSubjectPct(sub.id);
-    const qCount = sub.chapters.reduce((a, c) => a + (c.mcqs ? c.mcqs.length : 0), 0);
+    const chips = chipsMap[sub.id] || [];
+    const firstChaps = sub.chapters.slice(0, 3);
+    const totalCh = sub.chapters.length;
+    const doneCh = sub.chapters.filter(c => getChapterDone(sub.id + '_chapter_' + c.id)).length;
+    const chHTML = firstChaps.map(c => {
+      const done = getChapterDone(sub.id + '_chapter_' + c.id);
+      return `<div class="scard-ch${done ? ' done' : ''}">
+        <div class="scard-ch-num nm-${sub.id}">${c.id}</div>
+        <div class="scard-ch-title">${c.title}</div>
+        <div class="scard-ch-dot"></div>
+      </div>`;
+    }).join('');
+    const remaining = totalCh - 3;
+    const doneLabel = doneCh > 0 ? doneCh + ' of ' + totalCh + ' done' : totalCh + ' chapters';
     return `
     <a href="${map[sub.id]}" onclick="return guardNav(event,'${map[sub.id]}')" class="subject-card ${sub.id} reveal reveal-d${i + 1}">
-      <div class="card-top">
-        <div class="card-icon-wrap">${sub.icon}</div>
-        <div class="card-title">${sub.name}</div>
-        <div class="card-desc">${sub.description}</div>
+      <div class="scard-top">
+        <div class="card-icon-wrap"></div>
+        <div>
+          <div class="scard-name">${sub.name}</div>
+          <div class="scard-count">${totalCh} chapters</div>
+        </div>
       </div>
-      <div class="card-meta">
-        <span class="meta-pill">${sub.chapters.length} Chapters</span>
-        <span class="meta-pill">${qCount} MCQs</span>
+      <div class="scard-chips">${chips.map(c => `<span class="scard-chip">${c}</span>`).join('')}</div>
+      <div class="scard-chapters">
+        ${chHTML}
+        ${remaining > 0 ? `<div class="scard-more">+${remaining} more chapters</div>` : ''}
       </div>
-      <div class="card-progress">
-        <div class="progress-row"><span>Your Progress</span><span>${pct}%</span></div>
-        <div class="progress-track"><div class="progress-fill" data-w="${pct}" style="width:0%"></div></div>
-      </div>
-      <div class="card-footer">
-        <span class="card-chapters">CBSE 2025</span>
-        <button class="continue-btn">${pct > 0 ? 'Continue' : 'Start'} Learning →</button>
+      <div class="scard-footer">
+        <div class="scard-pbar-row"><span>${doneLabel}</span><span>${pct}%</span></div>
+        <div class="scard-ptrack"><div class="scard-pfill" data-w="${pct}" style="width:0%"></div></div>
       </div>
     </a>`;
   }).join('');
