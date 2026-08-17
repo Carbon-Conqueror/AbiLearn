@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>AbiLearn — Study Home</title>
+  <meta name="description" content="Your CBSE Class 10 study home. Pick up where you left off, practice MCQs, review mistakes and track your progress.">
+  <meta name="theme-color" content="#5B47DE">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <meta name="apple-mobile-web-app-title" content="AbiLearn">
+  <link rel="manifest" href="manifest.json">
+  <link rel="apple-touch-icon" href="assets/logo.jpeg">
+  <link rel="stylesheet" href="css/style.css?v=52">
+  <link rel="icon" href="assets/logo.jpeg" type="image/jpeg">
+  <link rel="preconnect" href="https://www.gstatic.com">
+  <link rel="dns-prefetch" href="https://www.gstatic.com">
+</head>
+<body class="app-body">
+<a href="#app-main" class="skip-nav">Skip to main content</a>
+
+<!-- ═══ APP NAVIGATION ═══ -->
+<nav class="app-nav" id="appNav">
+  <a href="learn.html" class="logo">
+    <img src="assets/logo.jpeg" alt="AbiLearn" class="logo-img">
+    <span class="logo-text">Abi<span>Learn</span></span>
+  </a>
+
+  <div class="app-nav-center">
+    <a href="learn.html" class="app-nav-link active">Home</a>
+    <button class="app-nav-link" id="appSearchBtn" onclick="openAppSearch()">Search</button>
+  </div>
+
+  <div class="nav-right">
+    <button class="btn-login" onclick="window.location.href='auth.html?from=learn.html'">Log In</button>
+    <button class="btn-signup" onclick="window.location.href='auth.html?from=learn.html'">Sign Up Free</button>
+  </div>
+</nav>
+
+<!-- ═══ MAIN CONTENT ═══ -->
+<main class="app-main" id="app-main">
+
+  <!-- Continue Learning (shown after auth if activity found) -->
+  <section id="continueSection" style="display:none">
+    <div class="app-section-head">
+      <h2 class="app-section-title">Continue Learning</h2>
+    </div>
+    <div id="continueCardWrap"></div>
+  </section>
+
+  <!-- Subjects -->
+  <section>
+    <div class="app-section-head">
+      <h2 class="app-section-title">Subjects</h2>
+    </div>
+    <div class="app-subjects-grid" id="appSubjectsGrid"></div>
+  </section>
+
+  <!-- Study Tools -->
+  <section>
+    <div class="app-section-head">
+      <h2 class="app-section-title">Study Tools</h2>
+    </div>
+    <div class="app-tools-grid" id="appToolsGrid"></div>
+  </section>
+
+</main>
+
+<!-- ═══ APP FOOTER ═══ -->
+<footer class="app-footer">
+  © 2026 AbiLearn · CBSE Class 10
+</footer>
+
+<!-- ═══ SEARCH OVERLAY ═══ -->
+<div class="app-search-overlay" id="appSearchOverlay" role="dialog" aria-label="Search">
+  <div class="app-search-box">
+    <div class="app-search-input-row">
+      <input class="app-search-inp" id="appSearchInput" type="search"
+        placeholder="Search chapters, topics…" autocomplete="off" autocorrect="off">
+      <button class="app-search-close" onclick="closeAppSearch()" aria-label="Close search">&#x2715;</button>
+    </div>
+    <div class="app-search-results" id="appSearchResults"></div>
+  </div>
+</div>
+
+<script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore-compat.js"></script>
+<script src="js/firebase-config.js"></script>
+<script src="js/db.js?v=3"></script>
+<script src="js/data.js?v=1"></script>
+<script src="js/app.js?v=73"></script>
+<script src="js/auth.js?v=32"></script>
+<script>initLearnPage();</script>
+</body>
+</html>

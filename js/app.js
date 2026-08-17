@@ -1,4 +1,4 @@
-/* AbiLearn Main Application Logic v72 */
+/* AbiLearn Main Application Logic v73 */
 
 /* ── SCROLL-HIDE HEADER ── */
 (function() {
@@ -112,10 +112,18 @@ async function loadUserDataFromFirestore(uid) {
     _cachedPdfProgress     = pdfProg || {};
     _cachedKnowledgeMap    = km      || {};
     _cachedChapterProgress = chProg  || {};
+    /* Home page subject cards */
     if (document.getElementById('subjectsGrid')) renderSubjectCards();
+    /* Subject tab page */
     if (_subjectPageSubject) {
       var activeBtn = document.querySelector('.tab-btn.active');
       if (activeBtn) renderTabContent(_subjectPageSubject, activeBtn.dataset.tab);
+    }
+    /* Learn page — app shell */
+    if (document.getElementById('appSubjectsGrid')) {
+      renderAppSubjects();
+      renderContinueLearning();
+      showMistakeBadge();
     }
   } catch (e) { console.warn('loadUserDataFromFirestore', e); }
 }
@@ -2624,3 +2632,220 @@ function closeTestModal() {
 function escH(s) {
   return String(s || '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;');
 }
+
+/* ══════════════════════════════════════
+   LANDING PAGE (index.html)
+══════════════════════════════════════ */
+function initLandingPage() {
+  /* Auth and nav handled automatically by auth.js.
+   * Nothing else needed on the pure landing page. */
+}
+
+/* ══════════════════════════════════════
+   LEARN PAGE — APP SHELL (learn.html)
+══════════════════════════════════════ */
+function initLearnPage() {
+  renderAppSubjects();
+  renderAppTools();
+  initAppSearch();
+
+  /* After auth fires and Firestore data loads, try to show Continue Learning.
+   * loadUserDataFromFirestore is called by auth.js; we re-render at 600ms and
+   * again at 1800ms to catch slow Firestore responses. */
+  setTimeout(renderContinueLearning, 600);
+  setTimeout(renderContinueLearning, 1800);
+}
+
+/* Render 4 subject tiles in learn.html */
+function renderAppSubjects() {
+  var grid = document.getElementById('appSubjectsGrid');
+  if (!grid) return;
+  var urlMap = { maths:'maths.html', science:'science.html', english:'english.html', social:'social.html' };
+  grid.innerHTML = DATA.subjects.map(function(sub) {
+    var pct = getSubjectPct(sub.id);
+    return '<a href="' + urlMap[sub.id] + '" onclick="return guardNav(event,\'' + urlMap[sub.id] + '\')" class="app-subject-tile ' + sub.id + '">' +
+      '<div class="app-tile-icon ' + sub.id + '"><div class="app-tile-icon-mark"></div></div>' +
+      '<div class="app-tile-name">' + sub.name + '</div>' +
+      '<div class="app-tile-meta">' + sub.chapters.length + ' chapters</div>' +
+      '<div class="app-tile-bar"><div class="app-tile-fill" data-w="' + pct + '" style="width:0%"></div></div>' +
+    '</a>';
+  }).join('');
+
+  setTimeout(function() {
+    grid.querySelectorAll('.app-tile-fill[data-w]').forEach(function(el) {
+      el.style.width = el.dataset.w + '%';
+    });
+  }, 100);
+}
+
+/* Render 4 study tool cards in learn.html */
+function renderAppTools() {
+  var grid = document.getElementById('appToolsGrid');
+  if (!grid) return;
+  var tools = [
+    {
+      name: 'MCQ Practice',
+      desc: 'Science multiple-choice questions, chapter by chapter. Track your mastery as you go.',
+      href: 'science.html',
+      onclick: 'return guardNav(event,\'science.html\')'
+    },
+    {
+      name: 'Tips & Tricks',
+      desc: 'Smart study strategies to help you score 90+ in your board exams.',
+      href: 'learn-tips.html',
+      onclick: ''
+    },
+    {
+      name: 'Mistake Bank',
+      desc: 'Questions you got wrong — review them until they stick.',
+      href: 'mistakes.html',
+      onclick: 'return guardNav(event,\'mistakes.html\')',
+      badgeId: 'toolMistakeBadge'
+    },
+    {
+      name: 'My Progress',
+      desc: 'Chapter mastery, study streak and readiness across all four subjects.',
+      href: 'dashboard.html',
+      onclick: 'return guardNav(event,\'dashboard.html\')'
+    }
+  ];
+  grid.innerHTML = tools.map(function(t) {
+    return '<a href="' + t.href + '"' + (t.onclick ? ' onclick="' + t.onclick + '"' : '') + ' class="app-tool-card">' +
+      '<div class="app-tool-icon"><div class="app-tool-icon-dot"></div></div>' +
+      '<div class="app-tool-body">' +
+        '<div class="app-tool-name">' + t.name + '</div>' +
+        '<div class="app-tool-desc">' + t.desc + '</div>' +
+        (t.badgeId ? '<span class="app-tool-badge" id="' + t.badgeId + '" style="display:none"></span>' : '') +
+      '</div>' +
+    '</a>';
+  }).join('');
+
+  /* Show mistake count if available */
+  setTimeout(showMistakeBadge, 800);
+}
+
+function showMistakeBadge() {
+  var badge = document.getElementById('toolMistakeBadge');
+  if (!badge) return;
+  var user = (typeof getUser === 'function') ? getUser() : null;
+  if (!user || typeof DB === 'undefined') return;
+  DB.getMistakes(user.uid).then(function(mistakes) {
+    var count = Object.keys(mistakes || {}).length;
+    if (count > 0) {
+      badge.textContent = count + ' to review';
+      badge.style.display = 'inline-block';
+    }
+  }).catch(function() {});
+}
+
+/* Show the most recently studied chapter as "Continue Learning" */
+function renderContinueLearning() {
+  var section = document.getElementById('continueSection');
+  var wrap    = document.getElementById('continueCardWrap');
+  if (!section || !wrap) return;
+
+  var user = (typeof getUser === 'function') ? getUser() : null;
+  if (!user) { section.style.display = 'none'; return; }
+
+  var map = _cachedKnowledgeMap;
+  if (!map || !Object.keys(map).length) { section.style.display = 'none'; return; }
+
+  /* Find the most recently studied chapter */
+  var latest = null, latestTime = 0;
+  Object.values(map).forEach(function(entry) {
+    var t = 0;
+    if (entry.lastStudied) {
+      t = entry.lastStudied.toDate ? entry.lastStudied.toDate().getTime()
+        : new Date(entry.lastStudied).getTime();
+    }
+    if (t > latestTime) { latestTime = t; latest = entry; }
+  });
+  if (!latest) { section.style.display = 'none'; return; }
+
+  var subject = DATA.subjects.find(function(s) { return s.id === latest.subjectId; });
+  var chapter = subject && subject.chapters.find(function(c) { return String(c.id) === String(latest.chapterId); });
+  if (!subject || !chapter) { section.style.display = 'none'; return; }
+
+  var urlMap = { maths:'maths.html', science:'science.html', english:'english.html', social:'social.html' };
+  var url = urlMap[subject.id] || 'learn.html';
+  var pct = Math.round((latest.accuracy || 0) * 100);
+  var masteryLabels = { not_started:'Not started', learning:'Learning', developing:'Developing', proficient:'Proficient', mastered:'Mastered' };
+  var masteryLabel = masteryLabels[latest.mastery] || '';
+
+  wrap.innerHTML =
+    '<a href="' + url + '" onclick="' +
+      'sessionStorage.setItem(\'openChapter\',\'' + chapter.id + '\');return guardNav(event,\'' + url + '\')" ' +
+      'class="continue-card">' +
+      '<div class="continue-icon"><div class="continue-icon-dot"></div></div>' +
+      '<div class="continue-body">' +
+        '<div class="continue-label">Continue Learning &nbsp;·&nbsp; ' + subject.name + '</div>' +
+        '<div class="continue-title">Ch ' + chapter.id + ' &middot; ' + escH(chapter.title) + '</div>' +
+        '<div class="continue-sub">' + (masteryLabel ? masteryLabel + ' · ' : '') + pct + '% accuracy</div>' +
+        (pct > 0 ? '<div class="continue-progress"><div class="continue-pfill" style="width:' + pct + '%"></div></div>' : '') +
+      '</div>' +
+      '<span class="continue-arrow">&#8594;</span>' +
+    '</a>';
+
+  section.style.display = '';
+}
+
+/* ══════════════════════════════════════
+   APP SEARCH (learn.html overlay)
+══════════════════════════════════════ */
+function initAppSearch() {
+  var inp = document.getElementById('appSearchInput');
+  var res = document.getElementById('appSearchResults');
+  var overlay = document.getElementById('appSearchOverlay');
+  if (!inp || !res || !overlay) return;
+
+  inp.addEventListener('input', function() {
+    var q = inp.value.trim().toLowerCase();
+    if (q.length < 2) { res.innerHTML = ''; return; }
+    var hits = [];
+    DATA.subjects.forEach(function(sub) {
+      sub.chapters.forEach(function(ch) {
+        var haystack = (sub.name + ' ' + ch.title + ' ' + (ch.subtitle || '')).toLowerCase();
+        if (haystack.includes(q)) {
+          hits.push({ sub: sub, ch: ch });
+        }
+      });
+    });
+    if (!hits.length) {
+      res.innerHTML = '<div style="padding:1.5rem;text-align:center;color:var(--muted);font-size:.87rem">No results for "' + escH(q) + '"</div>';
+      return;
+    }
+    var urlMap = { maths:'maths.html', science:'science.html', english:'english.html', social:'social.html' };
+    res.innerHTML = hits.slice(0, 12).map(function(hit) {
+      return '<div class="search-result-item" onclick="' +
+        'sessionStorage.setItem(\'openChapter\',\'' + hit.ch.id + '\');' +
+        'window.location.href=\'' + urlMap[hit.sub.id] + '\'">' +
+        '<div class="result-subject">' + hit.sub.name + '</div>' +
+        '<div class="result-title">Ch ' + hit.ch.id + ' &middot; ' + escH(hit.ch.title) + '</div>' +
+      '</div>';
+    }).join('');
+  });
+
+  overlay.addEventListener('click', function(e) {
+    if (e.target === overlay) closeAppSearch();
+  });
+  document.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape') closeAppSearch();
+  });
+}
+
+function openAppSearch() {
+  var overlay = document.getElementById('appSearchOverlay');
+  var inp     = document.getElementById('appSearchInput');
+  if (!overlay) return;
+  overlay.classList.add('open');
+  if (inp) { inp.value = ''; inp.focus(); }
+  document.body.style.overflow = 'hidden';
+}
+
+function closeAppSearch() {
+  var overlay = document.getElementById('appSearchOverlay');
+  if (!overlay) return;
+  overlay.classList.remove('open');
+  document.body.style.overflow = '';
+}
+
