@@ -12,7 +12,7 @@
   <meta name="twitter:card" content="summary">
   <meta name="twitter:title" content="AbiLearn — CBSE Class 10">
   <meta name="twitter:description" content="Notes, formula sheets, MCQs and PYQs. Free CBSE Class 10 board exam prep.">
-  <meta name="theme-color" content="#5B47DE">
+  <meta name="theme-color" content="#0A0618">
   <meta name="mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
@@ -23,325 +23,604 @@
   <link rel="icon" href="assets/logo.jpeg" type="image/jpeg">
   <link rel="preconnect" href="https://www.gstatic.com">
   <link rel="dns-prefetch" href="https://www.gstatic.com">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
   <style>
-  /* ━━ AbiLearn Landing Visual System ━━ */
-  html,body{margin:0;background:#09061A;color:#fff;min-height:100svh}
+  /* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+     AbiLearn — Landing Visual System v3
+     Premium educational platform entry screen
+  ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
 
-  /* ── Nav ── */
-  .lp-nav{
-    position:fixed;top:0;left:0;right:0;z-index:100;height:64px;
-    display:flex;align-items:center;justify-content:space-between;
-    padding:0 clamp(1.25rem,5vw,3rem);
-    background:linear-gradient(to bottom,rgba(9,6,26,.92) 0%,transparent 100%);
+  :root {
+    --lp-bg:        #0A0618;
+    --lp-accent:    #7C5CF6;
+    --lp-lavender:  #C4B4FF;
+    --lp-font:      'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+    --lp-nav-h:     68px;
+    --lp-ease:      cubic-bezier(.22,.68,0,1.1);
   }
-  .lp-nav .nav-right{display:flex;align-items:center;gap:.75rem}
-  .lp-nav .logo-text{color:#fff!important}
-  .lp-nav .logo-text span{color:#A89BF8!important}
-  .lp-nav .logo-img{border-radius:8px;width:32px;height:32px}
-  .lp-login-btn{
-    background:transparent;border:1.5px solid rgba(255,255,255,.2);
-    color:rgba(255,255,255,.72);padding:.44rem 1.1rem;border-radius:8px;
-    font-size:.86rem;font-weight:600;cursor:pointer;font-family:inherit;
-    transition:border-color .2s,color .2s;
-  }
-  .lp-login-btn:hover{border-color:rgba(255,255,255,.45);color:#fff}
 
-  /* ── Hero ── */
-  .lp-hero{
-    position:relative;
-    min-height:100svh;min-height:100dvh;
-    display:flex;flex-direction:column;
-    align-items:center;justify-content:center;overflow:hidden;
+  html, body {
+    margin: 0;
+    background: var(--lp-bg);
+    color: #fff;
+    font-family: var(--lp-font);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    overflow-x: hidden;
+  }
+
+  /* ── Skip nav ── */
+  .skip-nav {
+    position: absolute;
+    left: -9999px;
+    top: auto;
+  }
+  .skip-nav:focus {
+    left: 1rem;
+    top: 1rem;
+    z-index: 999;
+    background: #fff;
+    color: #0A0618;
+    padding: .5rem 1rem;
+    border-radius: 8px;
+    font-weight: 700;
+  }
+
+  /* ━━ NAVIGATION ━━ */
+  .lp-nav {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 100;
+    height: var(--lp-nav-h);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 clamp(1.5rem, 5.5vw, 3.5rem);
+    background: linear-gradient(to bottom, rgba(10,6,24,.94) 0%, transparent 100%);
+  }
+
+  .lp-brand {
+    display: flex;
+    align-items: center;
+    gap: 0.62rem;
+    text-decoration: none;
+    flex-shrink: 0;
+  }
+
+  .lp-brand-img {
+    width: 40px;
+    height: 40px;
+    border-radius: 9px;
+    object-fit: cover;
+    flex-shrink: 0;
+    display: block;
+  }
+
+  .lp-brand-name {
+    font-size: 1.42rem;
+    font-weight: 800;
+    letter-spacing: -0.028em;
+    line-height: 1;
+    white-space: nowrap;
+  }
+
+  .lp-brand-name .abi   { color: rgba(255,255,255,.97); }
+  .lp-brand-name .learn { color: #A891F8; }
+
+  .lp-nav-right {
+    display: flex;
+    align-items: center;
+    gap: .75rem;
+    /* auth.js injects user widget here */
+  }
+
+  /* Expose .nav-right alias so auth.js can find it */
+  .lp-nav .nav-right { display: flex; align-items: center; gap: .75rem; }
+
+  .lp-login-btn {
+    background: transparent;
+    border: 1.5px solid rgba(200,182,255,.2);
+    color: rgba(200,182,255,.68);
+    padding: .46rem 1.1rem;
+    border-radius: 9px;
+    font-size: .86rem;
+    font-weight: 600;
+    cursor: pointer;
+    font-family: var(--lp-font);
+    transition: border-color .22s, color .22s;
+    white-space: nowrap;
+  }
+  .lp-login-btn:hover  { border-color: rgba(200,182,255,.42); color: rgba(220,205,255,.9); }
+  .lp-login-btn:focus-visible { outline: 2px solid rgba(200,182,255,.8); outline-offset: 2px; }
+
+  /* ━━ HERO ━━ */
+  .lp-hero {
+    position: relative;
+    min-height: 100svh;
+    min-height: 100dvh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    /* Plane 1 — layered radial gradients */
     background:
-      radial-gradient(ellipse 90% 68% at 50% 38%,rgba(55,28,145,.58) 0%,transparent 70%),
-      radial-gradient(ellipse 52% 42% at 80% 16%,rgba(88,50,172,.32) 0%,transparent 65%),
-      radial-gradient(ellipse 44% 40% at 18% 74%,rgba(65,35,158,.26) 0%,transparent 65%),
-      radial-gradient(ellipse 32% 30% at 90% 84%,rgba(42,22,122,.22) 0%,transparent 60%),
-      radial-gradient(ellipse 25% 25% at 8% 12%,rgba(50,25,135,.18) 0%,transparent 55%),
-      #09061A;
+      radial-gradient(ellipse 88% 72% at 50% 42%, rgba(90,46,215,.46) 0%, transparent 68%),
+      radial-gradient(ellipse 56% 46% at 84% 13%, rgba(106,58,196,.30) 0%, transparent 63%),
+      radial-gradient(ellipse 50% 44% at 15% 78%, rgba(72,36,180,.26) 0%, transparent 65%),
+      radial-gradient(ellipse 38% 34% at 94% 88%, rgba(56,28,152,.22) 0%, transparent 58%),
+      radial-gradient(ellipse 30% 30% at 5% 8%,   rgba(68,32,172,.18) 0%, transparent 55%),
+      #0A0618;
+    /* bottom padding shifts optical center upward */
+    padding-bottom: 6vh;
   }
-  /* Grid overlay */
-  .lp-hero::before{
-    content:'';position:absolute;inset:0;pointer-events:none;z-index:0;
+
+  /* Plane 2 — refined grid texture */
+  .lp-hero::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    z-index: 0;
     background-image:
-      repeating-linear-gradient(rgba(130,90,255,.025) 0px,rgba(130,90,255,.025) 1px,transparent 1px,transparent 80px),
-      repeating-linear-gradient(90deg,rgba(130,90,255,.025) 0px,rgba(130,90,255,.025) 1px,transparent 1px,transparent 80px);
-  }
-  /* Vignette — darkens the very edges to frame content */
-  .lp-hero::after{
-    content:'';position:absolute;inset:0;pointer-events:none;z-index:1;
-    background:radial-gradient(ellipse 100% 100% at 50% 50%,transparent 55%,rgba(9,6,26,.55) 100%);
+      linear-gradient(rgba(158,124,255,.022) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(158,124,255,.022) 1px, transparent 1px);
+    background-size: 64px 64px;
   }
 
-  /* ── Background SVG ── */
-  .lp-bg-svg{
-    position:absolute;inset:0;width:100%;height:100%;
-    pointer-events:none;z-index:2;will-change:transform;
+  /* Edge vignette — frames content, adds depth */
+  .lp-hero::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    z-index: 1;
+    background: radial-gradient(ellipse 100% 100% at 50% 50%, transparent 46%, rgba(10,6,24,.60) 100%);
   }
 
-  /* ── Content ── */
-  .lp-content{
-    position:relative;z-index:3;
-    text-align:center;
-    padding:64px clamp(1.25rem,5vw,2rem) 0;
-    max-width:780px;width:100%;
+  /* Plane 3 — SVG background */
+  .lp-bg-svg {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 2;
+    will-change: transform;
   }
 
-  .lp-eyebrow{
-    display:inline-block;margin-bottom:1.55rem;
-    font-size:.68rem;font-weight:700;letter-spacing:.16em;text-transform:uppercase;
-    color:rgba(184,168,255,.78);
-    padding:.36rem 1rem;border:1px solid rgba(184,168,255,.22);border-radius:100px;
+  /* ━━ CONTENT ━━ */
+  .lp-content {
+    position: relative;
+    z-index: 3;
+    text-align: center;
+    padding: calc(var(--lp-nav-h) + clamp(1.5rem, 4vh, 3.5rem))
+             clamp(1.25rem, 5vw, 2rem)
+             clamp(1rem, 3vh, 2.5rem);
+    max-width: 860px;
+    width: 100%;
   }
 
-  .lp-h1{
-    font-size:clamp(2.4rem,6.8vw,5.2rem);font-weight:900;
-    line-height:1.05;letter-spacing:-.038em;
-    margin:0 0 1.25rem;text-wrap:balance;
-  }
-  .lp-h1-line1{display:block;color:rgba(255,255,255,.97)}
-  .lp-h1-line2{
-    display:block;
-    background:linear-gradient(112deg,#E4DBFF 0%,#B9A6FF 42%,#D6C8FF 100%);
-    -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
-  }
-
-  .lp-desc{
-    font-size:clamp(.94rem,2.2vw,1.12rem);line-height:1.7;
-    color:rgba(255,255,255,.48);margin:0 auto 2.4rem;max-width:450px;
-  }
-
-  .lp-cta-row{
-    display:flex;gap:.9rem;justify-content:center;flex-wrap:wrap;margin-bottom:2.9rem;
-  }
-  .lp-btn-primary{
-    display:inline-flex;align-items:center;gap:.52rem;
-    background:#fff;color:#3A1EB2;
-    padding:.9rem 2.1rem;border-radius:12px;
-    font-size:.96rem;font-weight:800;letter-spacing:-.01em;
-    text-decoration:none;border:none;cursor:pointer;font-family:inherit;
-    box-shadow:0 4px 28px rgba(91,71,222,.42),0 1px 4px rgba(0,0,0,.18);
-    transition:transform .18s ease,box-shadow .18s ease;
-  }
-  .lp-btn-primary:hover{
-    transform:translateY(-2px);
-    box-shadow:0 8px 36px rgba(91,71,222,.52),0 2px 8px rgba(0,0,0,.22);
-  }
-  .lp-btn-primary:active{transform:translateY(0)}
-
-  .lp-btn-secondary{
-    display:inline-flex;align-items:center;
-    background:rgba(255,255,255,.065);color:rgba(255,255,255,.84);
-    padding:.9rem 1.8rem;border-radius:12px;
-    font-size:.96rem;font-weight:700;
-    text-decoration:none;border:1.5px solid rgba(255,255,255,.16);
-    backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);
-    transition:background .2s,border-color .2s,transform .18s;
-    cursor:pointer;font-family:inherit;
-  }
-  .lp-btn-secondary:hover{
-    background:rgba(255,255,255,.1);border-color:rgba(255,255,255,.3);
-    transform:translateY(-1px);
+  /* ━━ EYEBROW ━━ */
+  .lp-eyebrow {
+    display: inline-flex;
+    align-items: center;
+    gap: .55rem;
+    padding: .42rem 1.05rem;
+    border-radius: 100px;
+    border: 1px solid rgba(186,164,255,.2);
+    background: rgba(140,108,255,.06);
+    box-shadow: inset 0 0 14px rgba(160,128,255,.05), 0 0 0 1px rgba(186,164,255,.04);
+    font-size: .67rem;
+    font-weight: 600;
+    letter-spacing: .15em;
+    text-transform: uppercase;
+    color: rgba(190,172,255,.7);
+    margin-bottom: 1.65rem;
+    white-space: nowrap;
   }
 
-  /* Subject dots */
-  .lp-subjects{
-    display:flex;align-items:center;justify-content:center;
-    gap:.5rem 1.5rem;flex-wrap:wrap;
-  }
-  .lp-sub{
-    display:flex;align-items:center;gap:.46rem;
-    font-size:.75rem;font-weight:600;letter-spacing:.01em;
-    color:rgba(255,255,255,.36);
-  }
-  .lp-dot{width:7px;height:7px;border-radius:50%;flex-shrink:0}
-  .lp-dot.m{background:#EF4444;box-shadow:0 0 8px rgba(239,68,68,.55)}
-  .lp-dot.s{background:#38BDF8;box-shadow:0 0 8px rgba(56,189,248,.55)}
-  .lp-dot.e{background:#FBBF24;box-shadow:0 0 8px rgba(251,191,36,.55)}
-  .lp-dot.g{background:#34D399;box-shadow:0 0 8px rgba(52,211,153,.55)}
-
-  /* Footer */
-  .lp-footer{
-    background:#09061A;padding:1.2rem 0;
-    border-top:1px solid rgba(255,255,255,.07);
-  }
-  .lp-footer-inner{
-    max-width:1200px;margin:0 auto;
-    padding:0 clamp(1rem,4vw,2.5rem);
-    display:flex;align-items:center;justify-content:space-between;
-    flex-wrap:wrap;gap:.75rem;
-  }
-  .lp-fc{font-size:.76rem;color:rgba(255,255,255,.32)}
-  .lp-flinks{display:flex;gap:.55rem}
-  .lp-flinks a{opacity:.32;transition:opacity .2s;display:flex;align-items:center}
-  .lp-flinks a:hover{opacity:.7}
-
-  /* ── Animations ── */
-  @keyframes lp-rise{
-    from{opacity:0;transform:translateY(26px)}
-    to{opacity:1;transform:translateY(0)}
-  }
-  @keyframes lp-svg-fade{from{opacity:0}to{opacity:1}}
-
-  .lp-bg-svg{animation:lp-svg-fade 1.5s ease both;animation-delay:150ms}
-  .lp-a0{animation:lp-rise .65s cubic-bezier(.22,.68,0,1.1) both;animation-delay:60ms}
-  .lp-a1{animation:lp-rise .65s cubic-bezier(.22,.68,0,1.1) both;animation-delay:150ms}
-  .lp-a2{animation:lp-rise .65s cubic-bezier(.22,.68,0,1.1) both;animation-delay:240ms}
-  .lp-a3{animation:lp-rise .65s cubic-bezier(.22,.68,0,1.1) both;animation-delay:330ms}
-  .lp-a4{animation:lp-rise .65s cubic-bezier(.22,.68,0,1.1) both;animation-delay:420ms}
-  .lp-a5{animation:lp-rise .65s cubic-bezier(.22,.68,0,1.1) both;animation-delay:510ms}
-
-  /* ── Responsive ── */
-  @media(max-width:900px){
-    .lpz-math,.lpz-sci{opacity:.45!important}
-    .lpz-book,.lpz-geo{opacity:.12!important}
-  }
-  @media(max-width:600px){
-    .lpz-math,.lpz-sci,.lpz-book,.lpz-geo{display:none}
-    .lp-cta-row{flex-direction:column;align-items:center}
-    .lp-btn-primary,.lp-btn-secondary{width:100%;max-width:300px;justify-content:center}
-    .lp-h1{letter-spacing:-.025em}
+  .lp-eyebrow-dot {
+    width: 5px;
+    height: 5px;
+    border-radius: 50%;
+    background: rgba(186,164,255,.5);
+    box-shadow: 0 0 6px rgba(186,164,255,.4);
+    flex-shrink: 0;
   }
 
-  /* ── Reduced motion ── */
-  @media(prefers-reduced-motion:reduce){
-    .lp-bg-svg,.lp-a0,.lp-a1,.lp-a2,.lp-a3,.lp-a4,.lp-a5{
-      animation:none!important;opacity:1!important;transform:none!important;
+  /* ━━ HEADLINE ━━ */
+  .lp-h1 {
+    font-family: var(--lp-font);
+    font-size: clamp(44px, 5.6vw, 82px);
+    font-weight: 900;
+    line-height: 1.04;
+    letter-spacing: -0.038em;
+    margin: 0 0 1.4rem;
+    text-wrap: balance;
+    max-width: 820px;
+  }
+
+  .lp-h1-line1 {
+    display: block;
+    color: rgba(255,255,255,.96);
+  }
+
+  .lp-h1-lines23 {
+    display: block;
+    background: linear-gradient(116deg, #DDD4FF 0%, #C2ABFF 34%, #B69CFF 62%, #D8CDFF 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    padding-bottom: .04em; /* prevent descender clipping */
+  }
+
+  /* ━━ DESCRIPTION ━━ */
+  .lp-desc {
+    font-family: var(--lp-font);
+    font-size: clamp(1rem, 2.1vw, 1.16rem);
+    font-weight: 400;
+    line-height: 1.74;
+    color: rgba(218,208,255,.60);
+    margin: 0 auto 2.5rem;
+    max-width: 540px;
+  }
+
+  /* ━━ BUTTONS ━━ */
+  .lp-cta-row {
+    display: flex;
+    gap: .9rem;
+    justify-content: center;
+    flex-wrap: wrap;
+    margin-bottom: 2.8rem;
+  }
+
+  .lp-btn-primary {
+    display: inline-flex;
+    align-items: center;
+    gap: .55rem;
+    background: #ffffff;
+    color: #3618B6;
+    height: 56px;
+    padding: 0 2rem;
+    border-radius: 14px;
+    font-family: var(--lp-font);
+    font-size: .98rem;
+    font-weight: 700;
+    letter-spacing: -0.012em;
+    text-decoration: none;
+    border: none;
+    cursor: pointer;
+    white-space: nowrap;
+    box-shadow:
+      0 4px 28px rgba(108,74,232,.44),
+      0 1px 4px rgba(0,0,0,.22);
+    transition: transform .2s ease, box-shadow .2s ease;
+    -webkit-tap-highlight-color: transparent;
+  }
+  .lp-btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 38px rgba(108,74,232,.54), 0 2px 8px rgba(0,0,0,.26);
+  }
+  .lp-btn-primary:active  { transform: translateY(0) scale(.98); box-shadow: 0 2px 16px rgba(108,74,232,.38); }
+  .lp-btn-primary:focus-visible { outline: 2.5px solid rgba(198,180,255,.9); outline-offset: 3px; }
+
+  .lp-btn-arrow {
+    display: inline-flex;
+    flex-shrink: 0;
+    transition: transform .2s ease;
+  }
+  .lp-btn-primary:hover .lp-btn-arrow { transform: translateX(3px); }
+
+  .lp-btn-secondary {
+    display: inline-flex;
+    align-items: center;
+    height: 56px;
+    padding: 0 1.8rem;
+    border-radius: 14px;
+    font-family: var(--lp-font);
+    font-size: .98rem;
+    font-weight: 600;
+    color: rgba(222,210,255,.82);
+    background: rgba(255,255,255,.065);
+    border: 1.5px solid rgba(200,180,255,.18);
+    text-decoration: none;
+    white-space: nowrap;
+    cursor: pointer;
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    transition: background .22s, border-color .22s, transform .18s;
+    -webkit-tap-highlight-color: transparent;
+  }
+  .lp-btn-secondary:hover {
+    background: rgba(160,128,255,.1);
+    border-color: rgba(200,180,255,.32);
+    transform: translateY(-1px);
+  }
+  .lp-btn-secondary:active  { transform: translateY(0); }
+  .lp-btn-secondary:focus-visible { outline: 2.5px solid rgba(198,180,255,.9); outline-offset: 3px; }
+
+  /* ━━ SUBJECT INDICATORS ━━ */
+  .lp-subjects {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: .3rem .65rem;
+    flex-wrap: wrap;
+  }
+
+  .lp-sub {
+    display: inline-flex;
+    align-items: center;
+    gap: .44rem;
+    padding: .32rem .82rem;
+    border-radius: 100px;
+    font-family: var(--lp-font);
+    font-size: .76rem;
+    font-weight: 500;
+    color: rgba(215,204,255,.40);
+    text-decoration: none;
+    border: 1px solid transparent;
+    transition: color .2s, background .2s, border-color .2s;
+    cursor: pointer;
+  }
+  .lp-sub:hover {
+    color: rgba(215,204,255,.75);
+    background: rgba(160,128,255,.08);
+    border-color: rgba(160,128,255,.15);
+  }
+  .lp-sub:focus-visible { outline: 2px solid rgba(198,180,255,.8); outline-offset: 2px; border-radius: 100px; }
+
+  .lp-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    flex-shrink: 0;
+    display: inline-block;
+  }
+  .lp-dot.m { background: #F87171; box-shadow: 0 0 7px rgba(248,113,113,.58); }
+  .lp-dot.s { background: #38BDF8; box-shadow: 0 0 7px rgba(56,189,248,.58); }
+  .lp-dot.e { background: #FCD34D; box-shadow: 0 0 7px rgba(252,211,77,.55); }
+  .lp-dot.g { background: #34D399; box-shadow: 0 0 7px rgba(52,211,153,.55); }
+
+  /* ━━ FOOTER ━━ */
+  .lp-footer {
+    background: var(--lp-bg);
+    padding: 1.1rem 0;
+    border-top: 1px solid rgba(160,128,255,.08);
+  }
+  .lp-footer-inner {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 clamp(1rem,4vw,2.5rem);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: .65rem;
+  }
+  .lp-fc { font-size: .74rem; color: rgba(160,140,220,.30); font-family: var(--lp-font); }
+  .lp-flinks { display: flex; gap: .55rem; }
+  .lp-flinks a {
+    opacity: .28;
+    transition: opacity .2s;
+    display: flex;
+    align-items: center;
+  }
+  .lp-flinks a:hover { opacity: .65; }
+
+  /* ━━ ANIMATIONS ━━ */
+  @keyframes lpRise {
+    from { opacity: 0; transform: translateY(16px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+  @keyframes lpFadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+  /* Network node drift */
+  @keyframes lpDrift1 {
+    0%,100% { transform: translate(0,0); }
+    25%  { transform: translate(2.2px,-2.8px); }
+    55%  { transform: translate(-1.2px,2.4px); }
+    80%  { transform: translate(-1.8px,-1px); }
+  }
+  @keyframes lpDrift2 {
+    0%,100% { transform: translate(0,0); }
+    30%  { transform: translate(-2.4px,1.8px); }
+    62%  { transform: translate(2.8px,-1.2px); }
+    88%  { transform: translate(-0.8px,-2.2px); }
+  }
+  @keyframes lpDrift3 {
+    0%,100% { transform: translate(0,0); }
+    35%  { transform: translate(1.6px,2.6px); }
+    70%  { transform: translate(-2.8px,0.8px); }
+  }
+  @keyframes lpGlowPulse {
+    0%,100% { opacity: .55; }
+    50%  { opacity: .95; }
+  }
+
+  /* SVG entrance */
+  .lp-bg-svg { animation: lpFadeIn 2s ease both; animation-delay: 180ms; }
+
+  /* Load sequence */
+  .lp-brand-anim { animation: lpRise .5s ease both; animation-delay: 0ms; }
+  .lp-a0 { animation: lpRise .55s var(--lp-ease) both; animation-delay: 80ms; }
+  .lp-a1 { animation: lpRise .6s  var(--lp-ease) both; animation-delay: 160ms; }
+  .lp-a2 { animation: lpRise .55s var(--lp-ease) both; animation-delay: 320ms; }
+  .lp-a3 { animation: lpRise .55s var(--lp-ease) both; animation-delay: 440ms; }
+  .lp-a4 { animation: lpRise .55s var(--lp-ease) both; animation-delay: 560ms; }
+
+  /* Animated SVG nodes */
+  .lpn-d1 { animation: lpDrift1 9s ease-in-out infinite; animation-delay: 0s; }
+  .lpn-d2 { animation: lpDrift2 11s ease-in-out infinite; animation-delay: -3.5s; }
+  .lpn-d3 { animation: lpDrift3 13s ease-in-out infinite; animation-delay: -6s; }
+  .lpn-glow { animation: lpGlowPulse 4s ease-in-out infinite; }
+  .lpn-glow2 { animation: lpGlowPulse 5.5s ease-in-out infinite; animation-delay: -2s; }
+  .lpn-glow3 { animation: lpGlowPulse 7s ease-in-out infinite; animation-delay: -4.5s; }
+
+  /* ━━ RESPONSIVE ━━ */
+
+  /* Tablet */
+  @media (max-width: 1024px) {
+    :root { --lp-nav-h: 64px; }
+    .lp-brand-img  { width: 36px; height: 36px; border-radius: 8px; }
+    .lp-brand-name { font-size: 1.28rem; }
+    .lpz-book, .lpz-geo { opacity: .5 !important; }
+  }
+
+  /* Phablet */
+  @media (max-width: 768px) {
+    .lpz-math, .lpz-sci, .lpz-book, .lpz-geo { opacity: .38 !important; }
+    .lp-desc { max-width: 420px; }
+  }
+
+  /* Mobile */
+  @media (max-width: 640px) {
+    :root { --lp-nav-h: 60px; }
+    .lp-brand-img  { width: 34px; height: 34px; border-radius: 7px; }
+    .lp-brand-name { font-size: 1.18rem; }
+    .lpz-math, .lpz-sci, .lpz-book, .lpz-geo { display: none; }
+    .lp-cta-row { flex-direction: column; align-items: center; gap: .75rem; }
+    .lp-btn-primary, .lp-btn-secondary {
+      width: 100%;
+      max-width: 320px;
+      justify-content: center;
     }
-    .lp-btn-primary:hover,.lp-btn-secondary:hover{transform:none!important}
+    .lp-subjects { gap: .25rem .5rem; }
+    .lp-hero { padding-bottom: 4vh; }
+  }
+
+  /* Small mobile */
+  @media (max-width: 390px) {
+    .lp-brand-name { font-size: 1.08rem; }
+    .lp-eyebrow { font-size: .62rem; }
+    .lp-btn-primary, .lp-btn-secondary { height: 52px; }
+  }
+
+  /* Short screens */
+  @media (max-height: 700px) {
+    .lp-hero { padding-bottom: 2vh; }
+    .lp-content { padding-top: calc(var(--lp-nav-h) + 1rem); }
+    .lp-h1 { margin-bottom: 1rem; }
+    .lp-desc { margin-bottom: 1.75rem; }
+    .lp-cta-row { margin-bottom: 1.75rem; }
+    .lp-eyebrow { margin-bottom: 1.1rem; }
+  }
+
+  /* Reduced motion */
+  @media (prefers-reduced-motion: reduce) {
+    .lp-bg-svg,
+    .lp-brand-anim,
+    .lp-a0, .lp-a1, .lp-a2, .lp-a3, .lp-a4 {
+      animation: none !important;
+      opacity: 1 !important;
+      transform: none !important;
+    }
+    .lpn-d1, .lpn-d2, .lpn-d3, .lpn-glow, .lpn-glow2, .lpn-glow3 {
+      animation: none !important;
+    }
+    .lp-btn-primary:hover  { transform: none !important; }
+    .lp-btn-secondary:hover{ transform: none !important; }
+    .lp-btn-primary:hover .lp-btn-arrow { transform: none !important; }
   }
   </style>
 </head>
 <body>
 <a href="#hero" class="skip-nav">Skip to main content</a>
 
-<!-- ── NAVBAR ── -->
-<nav class="lp-nav">
-  <a href="index.html" class="logo" style="text-decoration:none">
-    <img src="assets/logo.jpeg" alt="AbiLearn" class="logo-img">
-    <span class="logo-text">Abi<span>Learn</span></span>
+<!-- ━━ NAVIGATION ━━ -->
+<nav class="lp-nav" role="navigation" aria-label="Main">
+  <a href="index.html" class="lp-brand lp-brand-anim" aria-label="AbiLearn — Home">
+    <img src="assets/logo.jpeg" alt="" class="lp-brand-img" aria-hidden="true">
+    <span class="lp-brand-name"><span class="abi">Abi</span><span class="learn">Learn</span></span>
   </a>
-  <div class="nav-right">
+  <div class="nav-right lp-nav-right">
     <button class="btn-login lp-login-btn">Log In</button>
   </div>
 </nav>
 
-<!-- ── HERO ── -->
+<!-- ━━ HERO ━━ -->
 <main class="lp-hero" id="hero" role="main">
 
-  <!-- Academic background graphics -->
-  <svg id="lpBgSvg" class="lp-bg-svg" viewBox="0 0 1440 900"
-       preserveAspectRatio="xMidYMid slice" aria-hidden="true" focusable="false">
+  <!-- ── Background SVG (3 layers) ── -->
+  <svg id="lpBgSvg" class="lp-bg-svg"
+       viewBox="0 0 1440 900"
+       preserveAspectRatio="xMidYMid slice"
+       aria-hidden="true" focusable="false">
+    <defs>
+      <filter id="lpGlowFilter" x="-60%" y="-60%" width="220%" height="220%">
+        <feGaussianBlur stdDeviation="3.5" result="blur"/>
+        <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+      </filter>
+      <filter id="lpSoftGlow" x="-100%" y="-100%" width="300%" height="300%">
+        <feGaussianBlur stdDeviation="6"/>
+      </filter>
+    </defs>
 
-    <!-- PARTICLES: scattered dots + connector lines across the periphery -->
-    <g class="lpz-parts" fill="rgba(195,178,255,1)" stroke="rgba(195,178,255,.45)"
-       stroke-width=".9" opacity=".28">
-      <line x1="84" y1="126" x2="214" y2="276"/>
-      <line x1="214" y1="276" x2="166" y2="576"/>
-      <line x1="46" y1="420" x2="166" y2="576"/>
-      <line x1="166" y1="576" x2="328" y2="728"/>
-      <line x1="1196" y1="150" x2="1350" y2="316"/>
-      <line x1="1350" y1="316" x2="1380" y2="496"/>
-      <line x1="1380" y1="496" x2="1260" y2="680"/>
-      <line x1="1260" y1="680" x2="1108" y2="786"/>
-      <line x1="506" y1="76" x2="706" y2="56"/>
-      <line x1="706" y1="56" x2="896" y2="86"/>
-      <line x1="586" y1="826" x2="846" y2="836"/>
-      <line x1="436" y1="196" x2="506" y2="76"/>
-      <line x1="1016" y1="196" x2="896" y2="86"/>
-      <circle cx="84" cy="126" r="2.8"/>
-      <circle cx="214" cy="276" r="2.2"/>
-      <circle cx="46" cy="420" r="2.0"/>
-      <circle cx="166" cy="576" r="2.4"/>
-      <circle cx="328" cy="728" r="1.8"/>
-      <circle cx="436" cy="196" r="2.0"/>
-      <circle cx="1196" cy="150" r="2.8"/>
-      <circle cx="1350" cy="316" r="2.2"/>
-      <circle cx="1380" cy="496" r="2.5"/>
-      <circle cx="1260" cy="680" r="2.0"/>
-      <circle cx="1108" cy="786" r="1.8"/>
-      <circle cx="1016" cy="196" r="2.0"/>
-      <circle cx="506" cy="76" r="2.2"/>
-      <circle cx="706" cy="56" r="1.8"/>
-      <circle cx="896" cy="86" r="2.2"/>
-      <circle cx="586" cy="826" r="2.0"/>
-      <circle cx="846" cy="836" r="1.8"/>
-      <circle cx="466" cy="768" r="1.6"/>
-      <circle cx="976" cy="778" r="1.6"/>
-    </g>
+    <!-- ══ Plane 2 — Academic background structures (2–5% opacity) ══ -->
 
-    <!-- MATHS ZONE — left quadrant -->
-    <g class="lpz-math" opacity=".21" fill="none" stroke="rgba(208,192,255,1)"
+    <!-- MATH ZONE — left side -->
+    <g class="lpz-math" opacity=".048" fill="none" stroke="rgba(210,196,255,1)"
        stroke-linecap="round" stroke-linejoin="round">
       <!-- Coordinate axes -->
-      <line x1="66" y1="548" x2="350" y2="548" stroke-width="1.6"/>
-      <polyline points="341,541 350,548 341,555" stroke-width="1.3"/>
-      <line x1="188" y1="710" x2="188" y2="396" stroke-width="1.6"/>
-      <polyline points="181,405 188,396 195,405" stroke-width="1.3"/>
+      <line x1="62" y1="548" x2="354" y2="548" stroke-width="1.6"/>
+      <polyline points="345,541 354,548 345,555" stroke-width="1.4"/>
+      <line x1="184" y1="712" x2="184" y2="392" stroke-width="1.6"/>
+      <polyline points="177,401 184,392 191,401" stroke-width="1.4"/>
       <!-- Axis ticks -->
-      <line x1="238" y1="542" x2="238" y2="554" stroke-width="1"/>
-      <line x1="288" y1="542" x2="288" y2="554" stroke-width="1"/>
-      <line x1="138" y1="542" x2="138" y2="554" stroke-width="1"/>
-      <line x1="182" y1="498" x2="194" y2="498" stroke-width="1"/>
-      <line x1="182" y1="448" x2="194" y2="448" stroke-width="1"/>
-      <line x1="182" y1="648" x2="194" y2="648" stroke-width="1"/>
-      <!-- Sine wave — 1.5 cycles -->
-      <path d="M 66,548 C 107,486 138,486 178,548 C 218,610 248,610 288,548 C 328,486 348,486 368,548"
+      <line x1="234" y1="542" x2="234" y2="554" stroke-width="1"/>
+      <line x1="284" y1="542" x2="284" y2="554" stroke-width="1"/>
+      <line x1="134" y1="542" x2="134" y2="554" stroke-width="1"/>
+      <line x1="178" y1="498" x2="190" y2="498" stroke-width="1"/>
+      <line x1="178" y1="448" x2="190" y2="448" stroke-width="1"/>
+      <!-- Sine wave -->
+      <path d="M 62,548 C 104,484 136,484 178,548 C 220,612 252,612 294,548 C 336,484 356,484 376,548"
             stroke-width="2"/>
-      <!-- Parabola opening upward -->
-      <path d="M 76,700 Q 188,424 300,700" stroke-width="1.6"/>
+      <!-- Parabola -->
+      <path d="M 72,702 Q 184,418 296,702" stroke-width="1.7"/>
       <!-- Right-angle triangle with altitude -->
-      <polyline points="98,702 292,702 292,582" stroke-width="1.4"/>
-      <rect x="280" y="690" width="12" height="12" stroke-width="1" opacity=".7"/>
-      <line x1="292" y1="582" x2="98" y2="702" stroke-width=".9" stroke-dasharray="5,4"/>
+      <polyline points="94,706 296,706 296,578" stroke-width="1.5"/>
+      <rect x="284" y="694" width="12" height="12" stroke-width="1" opacity=".7"/>
+      <line x1="296" y1="578" x2="94" y2="706" stroke-width=".9" stroke-dasharray="5,4"/>
       <!-- Formulae -->
-      <text x="300" y="442" font-family="monospace" font-size="13" fill="rgba(208,192,255,.88)" stroke="none">y = ax²</text>
-      <text x="48" y="534" font-family="monospace" font-size="12" fill="rgba(208,192,255,.82)" stroke="none">sin θ</text>
-      <text x="334" y="498" font-family="monospace" font-size="20" fill="rgba(208,192,255,.78)" stroke="none">∫</text>
-      <text x="64" y="668" font-family="monospace" font-size="17" fill="rgba(208,192,255,.78)" stroke="none">∑</text>
-      <text x="230" y="594" font-family="monospace" font-size="14" fill="rgba(208,192,255,.82)" stroke="none">π</text>
-      <text x="108" y="462" font-family="monospace" font-size="11" fill="rgba(208,192,255,.72)" stroke="none">f(x) = mx + c</text>
+      <text x="304" y="436" font-family="monospace" font-size="14" fill="rgba(210,196,255,.9)" stroke="none">y = ax²</text>
+      <text x="44" y="534" font-family="monospace" font-size="13" fill="rgba(210,196,255,.85)" stroke="none">sin θ</text>
+      <text x="336" y="494" font-family="monospace" font-size="21" fill="rgba(210,196,255,.82)" stroke="none">∫</text>
+      <text x="60" y="672" font-family="monospace" font-size="18" fill="rgba(210,196,255,.80)" stroke="none">∑</text>
+      <text x="234" y="596" font-family="monospace" font-size="15" fill="rgba(210,196,255,.85)" stroke="none">π</text>
+      <text x="96" y="460" font-family="monospace" font-size="12" fill="rgba(210,196,255,.72)" stroke="none">f(x) = mx + c</text>
     </g>
 
     <!-- SCIENCE ZONE — right side -->
-    <g class="lpz-sci" opacity=".19" fill="none" stroke="rgba(134,214,255,1)"
+    <g class="lpz-sci" opacity=".046" fill="none" stroke="rgba(138,218,255,1)"
        stroke-linecap="round" stroke-linejoin="round">
       <!-- Bohr atom @ (1248, 272) -->
-      <circle cx="1248" cy="272" r="22" fill="rgba(134,214,255,.16)" stroke-width="1.6"/>
-      <circle cx="1241" cy="266" r="4.5" fill="rgba(134,214,255,.65)" stroke="none"/>
-      <circle cx="1255" cy="277" r="3.8" fill="rgba(160,228,255,.55)" stroke="none"/>
-      <circle cx="1243" cy="282" r="3.2" fill="rgba(134,214,255,.45)" stroke="none"/>
-      <!-- Three orbital ellipses -->
+      <circle cx="1248" cy="272" r="22" fill="rgba(138,218,255,.16)" stroke-width="1.6"/>
+      <circle cx="1241" cy="266" r="4.5" fill="rgba(138,218,255,.68)" stroke="none"/>
+      <circle cx="1256" cy="278" r="3.8" fill="rgba(165,230,255,.56)" stroke="none"/>
+      <circle cx="1243" cy="283" r="3.2" fill="rgba(138,218,255,.44)" stroke="none"/>
       <ellipse cx="1248" cy="272" rx="74" ry="26" stroke-width="1.2" opacity=".72"/>
-      <ellipse cx="1248" cy="272" rx="74" ry="26" stroke-width="1.2" opacity=".72"
-               transform="rotate(60 1248 272)"/>
-      <ellipse cx="1248" cy="272" rx="74" ry="26" stroke-width="1.2" opacity=".72"
-               transform="rotate(120 1248 272)"/>
-      <!-- Electrons -->
-      <circle cx="1322" cy="272" r="5.5" fill="rgba(134,214,255,.85)" stroke="none"/>
-      <circle cx="1211" cy="210" r="5.5" fill="rgba(134,214,255,.85)" stroke="none"/>
-      <circle cx="1211" cy="334" r="5.5" fill="rgba(134,214,255,.85)" stroke="none"/>
-      <!-- Benzene hexagon @ (1318, 510), circumradius 40 -->
+      <ellipse cx="1248" cy="272" rx="74" ry="26" stroke-width="1.2" opacity=".72" transform="rotate(60 1248 272)"/>
+      <ellipse cx="1248" cy="272" rx="74" ry="26" stroke-width="1.2" opacity=".72" transform="rotate(120 1248 272)"/>
+      <circle cx="1322" cy="272" r="5.5" fill="rgba(138,218,255,.88)" stroke="none"/>
+      <circle cx="1211" cy="208" r="5.5" fill="rgba(138,218,255,.88)" stroke="none"/>
+      <circle cx="1211" cy="336" r="5.5" fill="rgba(138,218,255,.88)" stroke="none"/>
+      <!-- Benzene @ (1318, 510) -->
       <polygon points="1358,510 1338,545 1298,545 1278,510 1298,475 1338,475" stroke-width="1.6"/>
-      <!-- Alternating double-bond indicators inside -->
       <line x1="1338" y1="475" x2="1358" y2="510" stroke-width=".9" opacity=".52"/>
       <line x1="1298" y1="545" x2="1278" y2="510" stroke-width=".9" opacity=".52"/>
-      <line x1="1338" y1="545" x2="1358" y2="510" stroke-width=".9" opacity=".52" stroke-dasharray="3,2"/>
       <!-- DNA double helix @ x≈1405, y 418–748 -->
-      <path d="M 1405,418 Q 1425,436 1405,454 Q 1385,472 1405,490
-               Q 1425,508 1405,526 Q 1385,544 1405,562
-               Q 1425,580 1405,598 Q 1385,616 1405,634
-               Q 1425,652 1405,670 Q 1385,688 1405,706
-               Q 1425,724 1405,742"
+      <path d="M 1405,418 Q 1425,436 1405,454 Q 1385,472 1405,490 Q 1425,508 1405,526
+               Q 1385,544 1405,562 Q 1425,580 1405,598 Q 1385,616 1405,634
+               Q 1425,652 1405,670 Q 1385,688 1405,706 Q 1425,724 1405,742"
             stroke-width="1.7"/>
-      <path d="M 1405,418 Q 1385,436 1405,454 Q 1425,472 1405,490
-               Q 1385,508 1405,526 Q 1425,544 1405,562
-               Q 1385,580 1405,598 Q 1425,616 1405,634
-               Q 1385,652 1405,670 Q 1425,688 1405,706
-               Q 1385,724 1405,742"
+      <path d="M 1405,418 Q 1385,436 1405,454 Q 1425,472 1405,490 Q 1385,508 1405,526
+               Q 1425,544 1405,562 Q 1385,580 1405,598 Q 1425,616 1405,634
+               Q 1385,652 1405,670 Q 1425,688 1405,706 Q 1385,724 1405,742"
             stroke-width="1.7"/>
-      <!-- Rungs -->
-      <g stroke-width="1" opacity=".62">
+      <g stroke-width=".9" opacity=".6">
         <line x1="1385" y1="436" x2="1425" y2="436"/>
         <line x1="1385" y1="472" x2="1425" y2="472"/>
         <line x1="1385" y1="508" x2="1425" y2="508"/>
@@ -352,115 +631,273 @@
         <line x1="1385" y1="688" x2="1425" y2="688"/>
         <line x1="1385" y1="724" x2="1425" y2="724"/>
       </g>
-      <!-- Chemical formulae -->
-      <text x="1096" y="192" font-family="monospace" font-size="13" fill="rgba(134,214,255,.86)" stroke="none">H₂O</text>
-      <text x="1118" y="752" font-family="monospace" font-size="12" fill="rgba(134,214,255,.82)" stroke="none">C₆H₁₂O₆</text>
-      <text x="1148" y="388" font-family="monospace" font-size="12" fill="rgba(134,214,255,.78)" stroke="none">Fe + O₂ → Fe₂O₃</text>
-      <text x="1152" y="830" font-family="monospace" font-size="11" fill="rgba(134,214,255,.72)" stroke="none">E = mc²</text>
+      <text x="1094" y="190" font-family="monospace" font-size="13" fill="rgba(138,218,255,.88)" stroke="none">H₂O</text>
+      <text x="1116" y="754" font-family="monospace" font-size="12" fill="rgba(138,218,255,.82)" stroke="none">C₆H₁₂O₆</text>
+      <text x="1148" y="386" font-family="monospace" font-size="12" fill="rgba(138,218,255,.76)" stroke="none">Fe + O₂ → Fe₂O₃</text>
     </g>
 
     <!-- BOOK ZONE — upper left -->
-    <g class="lpz-book" opacity=".2" stroke="rgba(255,224,134,1)" fill="none"
+    <g class="lpz-book" opacity=".046" stroke="rgba(255,226,138,1)" fill="none"
        stroke-linecap="round" stroke-linejoin="round">
-      <!-- Left page (slightly tilted) -->
-      <path d="M 58,44 L 162,33 L 164,194 L 54,205 Z" stroke-width="1.6"/>
-      <!-- Right page -->
-      <path d="M 164,33 L 270,44 L 274,205 L 164,194 Z" stroke-width="1.6"/>
-      <!-- Spine -->
-      <line x1="163" y1="33" x2="164" y2="194" stroke-width="2.8" opacity=".58"/>
-      <!-- Text lines — left page -->
-      <line x1="72" y1="72" x2="150" y2="69" stroke-width="1.3" opacity=".85"/>
-      <line x1="70" y1="90" x2="148" y2="87" stroke-width="1.3" opacity=".78"/>
-      <line x1="68" y1="108" x2="148" y2="105" stroke-width="1.1" opacity=".72"/>
-      <line x1="68" y1="126" x2="145" y2="123" stroke-width="1.1" opacity=".65"/>
-      <line x1="68" y1="144" x2="140" y2="141" stroke-width="1.0" opacity=".58"/>
-      <line x1="68" y1="162" x2="134" y2="159" stroke-width="1.0" opacity=".5"/>
-      <!-- Text lines — right page -->
-      <line x1="177" y1="72" x2="258" y2="69" stroke-width="1.3" opacity=".85"/>
-      <line x1="179" y1="90" x2="258" y2="87" stroke-width="1.3" opacity=".78"/>
-      <line x1="179" y1="108" x2="258" y2="105" stroke-width="1.1" opacity=".72"/>
-      <line x1="179" y1="126" x2="256" y2="123" stroke-width="1.1" opacity=".65"/>
-      <line x1="179" y1="144" x2="252" y2="141" stroke-width="1.0" opacity=".58"/>
-      <line x1="179" y1="162" x2="246" y2="159" stroke-width="1.0" opacity=".5"/>
+      <path d="M 56,44 L 162,33 L 164,196 L 52,207 Z" stroke-width="1.6"/>
+      <path d="M 164,33 L 272,44 L 276,207 L 164,196 Z" stroke-width="1.6"/>
+      <line x1="163" y1="33" x2="164" y2="196" stroke-width="2.8" opacity=".58"/>
+      <line x1="70" y1="70" x2="150" y2="67" stroke-width="1.3" opacity=".84"/>
+      <line x1="68" y1="88" x2="148" y2="85" stroke-width="1.3" opacity=".78"/>
+      <line x1="66" y1="106" x2="148" y2="103" stroke-width="1.1" opacity=".72"/>
+      <line x1="66" y1="124" x2="145" y2="121" stroke-width="1.1" opacity=".65"/>
+      <line x1="66" y1="142" x2="140" y2="139" stroke-width="1.0" opacity=".58"/>
+      <line x1="66" y1="160" x2="134" y2="157" stroke-width="1.0" opacity=".50"/>
+      <line x1="177" y1="70" x2="260" y2="67" stroke-width="1.3" opacity=".84"/>
+      <line x1="179" y1="88" x2="260" y2="85" stroke-width="1.3" opacity=".78"/>
+      <line x1="179" y1="106" x2="260" y2="103" stroke-width="1.1" opacity=".72"/>
+      <line x1="179" y1="124" x2="258" y2="121" stroke-width="1.1" opacity=".65"/>
+      <line x1="179" y1="142" x2="254" y2="139" stroke-width="1.0" opacity=".58"/>
+      <line x1="179" y1="160" x2="248" y2="157" stroke-width="1.0" opacity=".50"/>
     </g>
 
     <!-- GEOGRAPHY ZONE — lower right -->
-    <g class="lpz-geo" opacity=".19" stroke="rgba(132,224,180,1)" fill="none"
+    <g class="lpz-geo" opacity=".046" stroke="rgba(134,226,182,1)" fill="none"
        stroke-linecap="round">
-      <!-- Topographic contours — concentric ellipses -->
-      <ellipse cx="1272" cy="820" rx="150" ry="64" stroke-width="1.3" opacity=".88"/>
-      <ellipse cx="1272" cy="820" rx="110" ry="47" stroke-width="1.2" opacity=".76"/>
-      <ellipse cx="1272" cy="820" rx="74" ry="32" stroke-width="1.1" opacity=".68"/>
-      <ellipse cx="1272" cy="820" rx="42" ry="18" stroke-width="1.0" opacity=".58"/>
-      <ellipse cx="1272" cy="820" rx="18" ry="8" stroke-width=".9" opacity=".48"
-               fill="rgba(132,224,180,.1)"/>
-      <!-- Elevation ticks -->
-      <line x1="1272" y1="756" x2="1272" y2="748" stroke-width="1.1" opacity=".55"/>
-      <line x1="1272" y1="884" x2="1272" y2="892" stroke-width="1.1" opacity=".55"/>
-      <!-- Compass rose @ (1398, 762) -->
-      <line x1="1398" y1="784" x2="1398" y2="740" stroke-width="2"/>
-      <polyline points="1391,749 1398,740 1405,749" fill="rgba(132,224,180,.65)" stroke-width="1.3"/>
-      <line x1="1376" y1="762" x2="1420" y2="762" stroke-width="2"/>
-      <polyline points="1411,755 1420,762 1411,769" stroke-width="1.3"/>
-      <!-- Diagonal ticks -->
-      <line x1="1383" y1="749" x2="1387" y2="753" stroke-width="1" opacity=".48"/>
-      <line x1="1409" y1="771" x2="1413" y2="775" stroke-width="1" opacity=".48"/>
-      <line x1="1409" y1="749" x2="1413" y2="753" stroke-width="1" opacity=".48"/>
-      <line x1="1383" y1="771" x2="1387" y2="775" stroke-width="1" opacity=".48"/>
-      <text x="1392" y="738" font-family="sans-serif" font-size="10" font-weight="700"
-            fill="rgba(132,224,180,.92)" stroke="none">N</text>
+      <ellipse cx="1274" cy="820" rx="152" ry="66" stroke-width="1.3" opacity=".88"/>
+      <ellipse cx="1274" cy="820" rx="112" ry="49" stroke-width="1.2" opacity=".76"/>
+      <ellipse cx="1274" cy="820" rx="76" ry="33" stroke-width="1.1" opacity=".68"/>
+      <ellipse cx="1274" cy="820" rx="44" ry="19" stroke-width="1.0" opacity=".58"/>
+      <ellipse cx="1274" cy="820" rx="20" ry="9"  stroke-width=".9"  opacity=".48" fill="rgba(134,226,182,.1)"/>
+      <line x1="1400" y1="786" x2="1400" y2="740" stroke-width="2"/>
+      <polyline points="1393,749 1400,740 1407,749" fill="rgba(134,226,182,.65)" stroke-width="1.3"/>
+      <line x1="1378" y1="763" x2="1422" y2="763" stroke-width="2"/>
+      <polyline points="1413,756 1422,763 1413,770" stroke-width="1.3"/>
+      <text x="1394" y="738" font-family="sans-serif" font-size="10" font-weight="700"
+            fill="rgba(134,226,182,.92)" stroke="none">N</text>
+    </g>
+
+    <!-- ══ Plane 3 — Knowledge Network (structured geometry) ══ -->
+
+    <!-- Network connections — left cluster -->
+    <g opacity=".18" stroke="rgba(180,158,255,1)" stroke-width=".9" fill="none">
+      <line x1="60" y1="182" x2="162" y2="284"/>
+      <line x1="162" y1="284" x2="48" y2="422"/>
+      <line x1="48" y1="422" x2="112" y2="526"/>
+      <line x1="112" y1="526" x2="188" y2="412"/>
+      <line x1="188" y1="412" x2="162" y2="284"/>
+      <line x1="112" y1="526" x2="60" y2="652"/>
+      <line x1="60" y1="652" x2="138" y2="724"/>
+      <line x1="138" y1="724" x2="282" y2="684"/>
+      <line x1="242" y1="562" x2="282" y2="684"/>
+      <line x1="112" y1="526" x2="242" y2="562"/>
+      <line x1="188" y1="412" x2="242" y2="562"/>
+      <line x1="162" y1="284" x2="384" y2="282"/>
+      <line x1="384" y1="282" x2="364" y2="420"/>
+      <line x1="364" y1="420" x2="188" y2="412"/>
+      <line x1="242" y1="562" x2="364" y2="420"/>
+    </g>
+
+    <!-- Network connections — right cluster -->
+    <g opacity=".18" stroke="rgba(180,158,255,1)" stroke-width=".9" fill="none">
+      <line x1="1380" y1="182" x2="1278" y2="284"/>
+      <line x1="1278" y1="284" x2="1392" y2="422"/>
+      <line x1="1392" y1="422" x2="1328" y2="526"/>
+      <line x1="1328" y1="526" x2="1252" y2="412"/>
+      <line x1="1252" y1="412" x2="1278" y2="284"/>
+      <line x1="1328" y1="526" x2="1380" y2="652"/>
+      <line x1="1380" y1="652" x2="1302" y2="724"/>
+      <line x1="1302" y1="724" x2="1158" y2="684"/>
+      <line x1="1198" y1="562" x2="1158" y2="684"/>
+      <line x1="1328" y1="526" x2="1198" y2="562"/>
+      <line x1="1252" y1="412" x2="1198" y2="562"/>
+      <line x1="1278" y1="284" x2="1056" y2="282"/>
+      <line x1="1056" y1="282" x2="1076" y2="420"/>
+      <line x1="1076" y1="420" x2="1252" y2="412"/>
+      <line x1="1198" y1="562" x2="1076" y2="420"/>
+    </g>
+
+    <!-- Network connections — top band -->
+    <g opacity=".14" stroke="rgba(180,158,255,1)" stroke-width=".8" fill="none">
+      <line x1="462" y1="56" x2="582" y2="38"/>
+      <line x1="582" y1="38" x2="722" y2="48"/>
+      <line x1="722" y1="48" x2="872" y2="40"/>
+      <line x1="872" y1="40" x2="1004" y2="60"/>
+      <line x1="384" y1="282" x2="462" y2="56"/>
+      <line x1="1056" y1="282" x2="1004" y2="60"/>
+    </g>
+
+    <!-- Network connections — bottom band -->
+    <g opacity=".14" stroke="rgba(180,158,255,1)" stroke-width=".8" fill="none">
+      <line x1="452" y1="850" x2="602" y2="834"/>
+      <line x1="602" y1="834" x2="742" y2="858"/>
+      <line x1="742" y1="858" x2="902" y2="842"/>
+      <line x1="902" y1="842" x2="1044" y2="854"/>
+      <line x1="282" y1="684" x2="452" y2="850"/>
+      <line x1="1158" y1="684" x2="1044" y2="854"/>
+    </g>
+
+    <!-- Static network nodes — left -->
+    <g fill="rgba(192,174,255,1)" opacity=".35">
+      <circle cx="60"  cy="182" r="2.2"/>
+      <circle cx="48"  cy="422" r="2.0"/>
+      <circle cx="60"  cy="652" r="2.0"/>
+      <circle cx="138" cy="724" r="1.8"/>
+      <circle cx="282" cy="684" r="2.0"/>
+      <circle cx="364" cy="420" r="2.0"/>
+    </g>
+
+    <!-- Static network nodes — right -->
+    <g fill="rgba(192,174,255,1)" opacity=".35">
+      <circle cx="1380" cy="182" r="2.2"/>
+      <circle cx="1392" cy="422" r="2.0"/>
+      <circle cx="1380" cy="652" r="2.0"/>
+      <circle cx="1302" cy="724" r="1.8"/>
+      <circle cx="1158" cy="684" r="2.0"/>
+      <circle cx="1076" cy="420" r="2.0"/>
+    </g>
+
+    <!-- Static nodes — bands -->
+    <g fill="rgba(192,174,255,1)" opacity=".28">
+      <circle cx="462" cy="56"  r="1.8"/>
+      <circle cx="582" cy="38"  r="1.6"/>
+      <circle cx="722" cy="48"  r="1.8"/>
+      <circle cx="872" cy="40"  r="1.6"/>
+      <circle cx="1004" cy="60" r="1.8"/>
+      <circle cx="452" cy="850" r="1.8"/>
+      <circle cx="602" cy="834" r="1.6"/>
+      <circle cx="742" cy="858" r="1.8"/>
+      <circle cx="902" cy="842" r="1.6"/>
+      <circle cx="1044" cy="854" r="1.8"/>
+    </g>
+
+    <!-- Animated drifting nodes — left cluster -->
+    <g class="lpn-d1">
+      <circle cx="162" cy="284" r="3.2" fill="rgba(210,192,255,.75)"/>
+    </g>
+    <g class="lpn-d2">
+      <circle cx="188" cy="412" r="2.8" fill="rgba(210,192,255,.65)"/>
+    </g>
+    <g class="lpn-d3">
+      <circle cx="112" cy="526" r="2.6" fill="rgba(210,192,255,.60)"/>
+    </g>
+    <!-- Animated drifting nodes — right cluster -->
+    <g class="lpn-d2">
+      <circle cx="1278" cy="284" r="3.2" fill="rgba(210,192,255,.75)"/>
+    </g>
+    <g class="lpn-d1">
+      <circle cx="1252" cy="412" r="2.8" fill="rgba(210,192,255,.65)"/>
+    </g>
+    <g class="lpn-d3">
+      <circle cx="1328" cy="526" r="2.6" fill="rgba(210,192,255,.60)"/>
+    </g>
+
+    <!-- Glowing accent nodes -->
+    <!-- Left key node -->
+    <g class="lpn-glow">
+      <circle cx="384" cy="282" r="8" fill="rgba(180,150,255,.18)" filter="url(#lpSoftGlow)"/>
+      <circle cx="384" cy="282" r="3.5" fill="rgba(210,192,255,.88)"/>
+    </g>
+    <!-- Right key node -->
+    <g class="lpn-glow2">
+      <circle cx="1056" cy="282" r="8" fill="rgba(180,150,255,.18)" filter="url(#lpSoftGlow)"/>
+      <circle cx="1056" cy="282" r="3.5" fill="rgba(210,192,255,.88)"/>
+    </g>
+    <!-- Top center node -->
+    <g class="lpn-glow3">
+      <circle cx="722" cy="48" r="7" fill="rgba(180,150,255,.14)" filter="url(#lpSoftGlow)"/>
+      <circle cx="722" cy="48" r="3.0" fill="rgba(210,192,255,.82)"/>
+    </g>
+    <!-- Bottom center node -->
+    <g class="lpn-glow">
+      <circle cx="742" cy="858" r="7" fill="rgba(180,150,255,.12)" filter="url(#lpSoftGlow)"/>
+      <circle cx="742" cy="858" r="3.0" fill="rgba(210,192,255,.78)"/>
+    </g>
+
+    <!-- Scattered particles -->
+    <g fill="rgba(192,174,255,.28)" opacity=".8">
+      <circle cx="438" cy="198" r="1.8"/>
+      <circle cx="1016" cy="198" r="1.8"/>
+      <circle cx="470" cy="768" r="1.6"/>
+      <circle cx="978" cy="778" r="1.6"/>
+      <circle cx="240" cy="128" r="1.6"/>
+      <circle cx="1200" cy="130" r="1.6"/>
+      <circle cx="250" cy="776" r="1.5"/>
+      <circle cx="1192" cy="772" r="1.5"/>
     </g>
 
   </svg>
 
-  <!-- Page content -->
+  <!-- ── Main content ── -->
   <div class="lp-content">
-    <div class="lp-eyebrow lp-a0">CBSE Class 10 &nbsp;·&nbsp; Complete Study System</div>
+
+    <!-- Eyebrow -->
+    <div class="lp-eyebrow lp-a0" aria-label="CBSE Class 10 — Complete Study System">
+      <span class="lp-eyebrow-dot" aria-hidden="true"></span>
+      CBSE Class 10
+      <span style="color:rgba(186,164,255,.35);margin:0 .1rem" aria-hidden="true">·</span>
+      Complete Study System
+      <span class="lp-eyebrow-dot" aria-hidden="true"></span>
+    </div>
+
+    <!-- Headline -->
     <h1 class="lp-h1">
       <span class="lp-h1-line1 lp-a1">Everything Class 10.</span>
-      <span class="lp-h1-line2 lp-a2">Built for the Mind Ahead.</span>
+      <span class="lp-h1-lines23 lp-a1">Built for the<br>Mind Ahead.</span>
     </h1>
-    <p class="lp-desc lp-a3">Notes, formula sheets, MCQ practice and PYQs — built chapter by chapter, the way you actually prepare.</p>
-    <div class="lp-cta-row lp-a4">
-      <a href="learn.html" onclick="return guardNav(event,'learn.html')" class="lp-btn-primary">
+
+    <!-- Description -->
+    <p class="lp-desc lp-a2">
+      Notes, formula sheets, MCQ practice and PYQs —
+      built chapter by chapter, the way you actually prepare.
+    </p>
+
+    <!-- CTAs -->
+    <div class="lp-cta-row lp-a3">
+      <a href="learn.html"
+         onclick="return guardNav(event,'learn.html')"
+         class="lp-btn-primary"
+         role="button">
         Start Learning
-        <svg width="15" height="15" viewBox="0 0 15 15" fill="none" aria-hidden="true">
-          <path d="M2.5 7.5h10m0 0L8.5 3.5m4 4L8.5 11.5" stroke="#3A1EB2"
-                stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-        </svg>
+        <span class="lp-btn-arrow" aria-hidden="true">
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+            <path d="M3 8h10M9 4l4 4-4 4" stroke="#3618B6" stroke-width="2"
+                  stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </span>
       </a>
-      <a href="learn.html" class="lp-btn-secondary">About AbiLearn</a>
+      <a href="learn.html" class="lp-btn-secondary" role="button">
+        About AbiLearn
+      </a>
     </div>
-    <div class="lp-subjects lp-a5">
-      <span class="lp-sub"><span class="lp-dot m"></span>Mathematics</span>
-      <span class="lp-sub"><span class="lp-dot s"></span>Science</span>
-      <span class="lp-sub"><span class="lp-dot e"></span>English</span>
-      <span class="lp-sub"><span class="lp-dot g"></span>Social Science</span>
-    </div>
+
+    <!-- Subject indicators -->
+    <nav class="lp-subjects lp-a4" aria-label="Subjects">
+      <a href="maths.html"   class="lp-sub"><span class="lp-dot m" aria-hidden="true"></span>Mathematics</a>
+      <a href="science.html" class="lp-sub"><span class="lp-dot s" aria-hidden="true"></span>Science</a>
+      <a href="english.html" class="lp-sub"><span class="lp-dot e" aria-hidden="true"></span>English</a>
+      <a href="social.html"  class="lp-sub"><span class="lp-dot g" aria-hidden="true"></span>Social Science</a>
+    </nav>
+
   </div>
 </main>
 
-<!-- ── FOOTER ── -->
+<!-- ━━ FOOTER ━━ -->
 <footer class="lp-footer">
   <div class="lp-footer-inner">
     <span class="lp-fc">© 2026 AbiLearn. All rights reserved.</span>
     <div class="lp-flinks">
-      <a href="https://www.instagram.com/abilearn10/" title="Instagram" target="_blank" rel="noopener noreferrer">
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="17" height="17">
-          <defs><linearGradient id="ig-lp" x1="0%" y1="100%" x2="100%" y2="0%">
+      <a href="https://www.instagram.com/abilearn10/" title="Instagram" target="_blank" rel="noopener noreferrer" aria-label="AbiLearn on Instagram">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="16" height="16">
+          <defs><linearGradient id="ig-lp3" x1="0%" y1="100%" x2="100%" y2="0%">
             <stop offset="0%" stop-color="#f09433"/>
             <stop offset="100%" stop-color="#bc1888"/>
           </linearGradient></defs>
-          <path fill="url(#ig-lp)" d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z"/>
+          <path fill="url(#ig-lp3)" d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z"/>
         </svg>
       </a>
-      <a href="https://www.youtube.com/channel/UCEIveaQHZfa35rr17W6bR-g" title="YouTube" target="_blank" rel="noopener noreferrer">
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="17" height="17" fill="#FF0000">
+      <a href="https://www.youtube.com/channel/UCEIveaQHZfa35rr17W6bR-g" title="YouTube" target="_blank" rel="noopener noreferrer" aria-label="AbiLearn on YouTube">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="16" height="16" fill="#FF0000">
           <path d="M23.498 6.186a3.016 3.016 0 00-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 00.502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 002.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 002.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/>
         </svg>
       </a>
-      <a href="https://x.com/abilearn10" title="X (Twitter)" target="_blank" rel="noopener noreferrer">
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="17" height="17" fill="#ffffff">
+      <a href="https://x.com/abilearn10" title="X" target="_blank" rel="noopener noreferrer" aria-label="AbiLearn on X">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="16" height="16" fill="rgba(255,255,255,.85)">
           <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.748l7.73-8.835L1.254 2.25H8.08l4.259 5.632L18.244 2.25zm-1.161 17.52h1.833L7.084 4.126H5.117L17.083 19.77z"/>
         </svg>
       </a>
@@ -477,27 +914,29 @@
 <script src="js/app.js?v=73"></script>
 <script src="js/auth.js?v=32"></script>
 <script>
-/* rAF-throttled mouse parallax on the background SVG */
+/* rAF-throttled mouse parallax */
 (function(){
-  var svg=document.getElementById('lpBgSvg');
-  var hero=document.getElementById('hero');
-  if(!svg||!hero)return;
-  if(window.matchMedia('(prefers-reduced-motion:reduce)').matches)return;
-  var raf=null,tx=0,ty=0,gx=0,gy=0;
-  hero.addEventListener('mousemove',function(e){
-    var r=hero.getBoundingClientRect();
-    gx=(e.clientX-r.left-r.width*.5)/r.width*-5.5;
-    gy=(e.clientY-r.top-r.height*.5)/r.height*-3.8;
-    if(!raf)raf=requestAnimationFrame(step);
+  var svg  = document.getElementById('lpBgSvg');
+  var hero = document.getElementById('hero');
+  if (!svg || !hero) return;
+  if (window.matchMedia('(prefers-reduced-motion:reduce)').matches) return;
+  var raf = null, tx = 0, ty = 0, gx = 0, gy = 0;
+  hero.addEventListener('mousemove', function(e) {
+    var r = hero.getBoundingClientRect();
+    gx = (e.clientX - r.left  - r.width  * .5) / r.width  * -5.5;
+    gy = (e.clientY - r.top   - r.height * .5) / r.height * -3.8;
+    if (!raf) raf = requestAnimationFrame(step);
   });
-  hero.addEventListener('mouseleave',function(){
-    gx=0;gy=0;if(!raf)raf=requestAnimationFrame(step);
+  hero.addEventListener('mouseleave', function() {
+    gx = 0; gy = 0;
+    if (!raf) raf = requestAnimationFrame(step);
   });
-  function step(){
-    raf=null;
-    tx+=(gx-tx)*.10;ty+=(gy-ty)*.10;
-    svg.style.transform='translate('+tx.toFixed(2)+'px,'+ty.toFixed(2)+'px)';
-    if(Math.abs(gx-tx)>.04||Math.abs(gy-ty)>.04)raf=requestAnimationFrame(step);
+  function step() {
+    raf = null;
+    tx += (gx - tx) * .10;
+    ty += (gy - ty) * .10;
+    svg.style.transform = 'translate(' + tx.toFixed(2) + 'px,' + ty.toFixed(2) + 'px)';
+    if (Math.abs(gx - tx) > .04 || Math.abs(gy - ty) > .04) raf = requestAnimationFrame(step);
   }
 })();
 initLandingPage();
