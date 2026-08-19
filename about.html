@@ -1,0 +1,625 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>About AbiLearn</title>
+  <meta name="description" content="AbiLearn is a CBSE Class 10 study platform built to help students learn smarter, practise purposefully, and walk into board exams with confidence.">
+  <meta name="theme-color" content="#7C3AED">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="AbiLearn">
+  <link rel="manifest" href="manifest.json">
+  <link rel="apple-touch-icon" href="assets/logo.jpeg">
+  <link rel="stylesheet" href="css/style.css?v=52">
+  <link rel="icon" href="assets/logo.jpeg" type="image/jpeg">
+  <link rel="preconnect" href="https://www.gstatic.com">
+  <link rel="dns-prefetch" href="https://www.gstatic.com">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    body,button,input,select,textarea{font-family:'Plus Jakarta Sans',-apple-system,system-ui,sans-serif}
+
+    :root {
+      --ab-bg:      #F8F7FD;
+      --ab-surface: #FFFFFF;
+      --ab-brand:   #5B47DE;
+      --ab-brand2:  #7C6FEF;
+      --ab-text:    #1A1035;
+      --ab-muted:   #6B6398;
+      --ab-border:  #E8E4F8;
+      --ab-shadow:  0 2px 14px rgba(91,71,222,.08);
+    }
+    @media (prefers-color-scheme:dark) {
+      :root:not([data-theme="light"]) {
+        --ab-bg:      #0F0E1A;
+        --ab-surface: #1A1830;
+        --ab-brand:   #7C6FEF;
+        --ab-brand2:  #A89EFF;
+        --ab-text:    #EAE8FF;
+        --ab-muted:   #9894C0;
+        --ab-border:  #2A2645;
+        --ab-shadow:  0 2px 14px rgba(0,0,0,.28);
+      }
+    }
+    :root[data-theme="dark"] {
+      --ab-bg:      #0F0E1A;
+      --ab-surface: #1A1830;
+      --ab-brand:   #7C6FEF;
+      --ab-brand2:  #A89EFF;
+      --ab-text:    #EAE8FF;
+      --ab-muted:   #9894C0;
+      --ab-border:  #2A2645;
+      --ab-shadow:  0 2px 14px rgba(0,0,0,.28);
+    }
+
+    body { background: var(--ab-bg); color: var(--ab-text); }
+
+    .ab-wrap {
+      max-width: 860px;
+      margin: 0 auto;
+      padding: 2rem 1.25rem 5rem;
+    }
+
+    /* Breadcrumb */
+    .ab-crumb {
+      display: flex;
+      align-items: center;
+      gap: .5rem;
+      font-size: .82rem;
+      color: var(--ab-muted);
+      margin-bottom: 1.75rem;
+      flex-wrap: wrap;
+    }
+    .ab-crumb a { color: var(--ab-muted); text-decoration: none; }
+    .ab-crumb a:hover { color: var(--ab-brand); }
+
+    /* ── Hero banner ── */
+    .ab-hero {
+      background: linear-gradient(135deg, #5B47DE 0%, #7C6FEF 60%, #9D91FF 100%);
+      border-radius: 20px;
+      padding: 2.5rem 2rem;
+      margin-bottom: 2rem;
+      color: #fff;
+      position: relative;
+      overflow: hidden;
+    }
+    .ab-hero::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(ellipse 70% 80% at 90% 20%, rgba(255,255,255,.08) 0%, transparent 60%);
+      pointer-events: none;
+    }
+    .ab-hero-brand {
+      display: flex;
+      align-items: center;
+      gap: .6rem;
+      margin-bottom: 1.25rem;
+    }
+    .ab-hero-logo {
+      width: 44px;
+      height: 44px;
+      border-radius: 11px;
+      object-fit: cover;
+      border: 2px solid rgba(255,255,255,.3);
+    }
+    .ab-hero-name {
+      font-size: 1.5rem;
+      font-weight: 800;
+      letter-spacing: -.03em;
+    }
+    .ab-hero-name span { opacity: .75; }
+    .ab-hero h1 {
+      font-size: clamp(1.5rem, 3.5vw, 2.1rem);
+      font-weight: 800;
+      line-height: 1.18;
+      margin: 0 0 .75rem;
+      text-wrap: balance;
+    }
+    .ab-hero p {
+      font-size: .95rem;
+      line-height: 1.65;
+      opacity: .88;
+      max-width: 540px;
+      margin: 0;
+    }
+    .ab-hero-cta {
+      margin-top: 1.5rem;
+      display: flex;
+      gap: .75rem;
+      flex-wrap: wrap;
+    }
+    .ab-btn-white {
+      display: inline-flex;
+      align-items: center;
+      gap: .4rem;
+      height: 42px;
+      padding: 0 1.25rem;
+      border-radius: 10px;
+      background: #fff;
+      color: #5B47DE;
+      font-weight: 700;
+      font-size: .88rem;
+      text-decoration: none;
+      font-family: inherit;
+      transition: opacity .15s, transform .15s;
+    }
+    .ab-btn-white:hover { opacity: .92; transform: translateY(-1px); }
+    .ab-btn-outline {
+      display: inline-flex;
+      align-items: center;
+      height: 42px;
+      padding: 0 1.25rem;
+      border-radius: 10px;
+      background: rgba(255,255,255,.12);
+      border: 1.5px solid rgba(255,255,255,.3);
+      color: #fff;
+      font-weight: 600;
+      font-size: .88rem;
+      text-decoration: none;
+      font-family: inherit;
+      transition: background .15s, transform .15s;
+    }
+    .ab-btn-outline:hover { background: rgba(255,255,255,.2); transform: translateY(-1px); }
+
+    /* ── Section label ── */
+    .ab-label {
+      font-size: .7rem;
+      font-weight: 700;
+      letter-spacing: .1em;
+      text-transform: uppercase;
+      color: var(--ab-brand);
+      margin: 2rem 0 .85rem;
+    }
+
+    /* ── Card grid ── */
+    .ab-grid-2 {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+      gap: 1rem;
+    }
+    .ab-card {
+      background: var(--ab-surface);
+      border: 1px solid var(--ab-border);
+      border-radius: 14px;
+      padding: 1.25rem;
+      box-shadow: var(--ab-shadow);
+    }
+    .ab-card-icon {
+      width: 42px; height: 42px;
+      border-radius: 11px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.2rem;
+      margin-bottom: .9rem;
+      flex-shrink: 0;
+    }
+    .ab-card-title {
+      font-weight: 700;
+      font-size: .92rem;
+      color: var(--ab-text);
+      margin: 0 0 .35rem;
+    }
+    .ab-card-desc {
+      font-size: .82rem;
+      color: var(--ab-muted);
+      line-height: 1.6;
+      margin: 0;
+    }
+
+    /* Icon variants */
+    .ic-v { background: #EDE9FF; color: #5B47DE; }
+    .ic-t { background: #E0F5FB; color: #0891B2; }
+    .ic-a { background: #FEF3C7; color: #B45309; }
+    .ic-g { background: #D1FAE5; color: #047857; }
+    @media (prefers-color-scheme:dark) {
+      :root:not([data-theme="light"]) .ic-v { background: #2D2660; color: #A89EFF; }
+      :root:not([data-theme="light"]) .ic-t { background: #0C2F3A; color: #38BDF8; }
+      :root:not([data-theme="light"]) .ic-a { background: #2E1F08; color: #FCD34D; }
+      :root:not([data-theme="light"]) .ic-g { background: #052E1C; color: #34D399; }
+    }
+    :root[data-theme="dark"] .ic-v { background: #2D2660; color: #A89EFF; }
+    :root[data-theme="dark"] .ic-t { background: #0C2F3A; color: #38BDF8; }
+    :root[data-theme="dark"] .ic-a { background: #2E1F08; color: #FCD34D; }
+    :root[data-theme="dark"] .ic-g { background: #052E1C; color: #34D399; }
+
+    /* ── Subject rows ── */
+    .ab-subjects {
+      background: var(--ab-surface);
+      border: 1px solid var(--ab-border);
+      border-radius: 14px;
+      overflow: hidden;
+      box-shadow: var(--ab-shadow);
+    }
+    .ab-subject-row {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      padding: 1rem 1.25rem;
+      border-bottom: 1px solid var(--ab-border);
+      text-decoration: none;
+      transition: background .14s;
+    }
+    .ab-subject-row:last-child { border-bottom: none; }
+    .ab-subject-row:hover { background: var(--ab-bg); }
+    .ab-sub-dot {
+      width: 10px; height: 10px;
+      border-radius: 50%;
+      flex-shrink: 0;
+    }
+    .ab-sub-name {
+      font-weight: 700;
+      font-size: .9rem;
+      color: var(--ab-text);
+      flex: 1;
+    }
+    .ab-sub-tags {
+      display: flex;
+      gap: .4rem;
+      flex-wrap: wrap;
+    }
+    .ab-sub-tag {
+      font-size: .7rem;
+      font-weight: 500;
+      color: var(--ab-muted);
+      background: var(--ab-bg);
+      border: 1px solid var(--ab-border);
+      padding: .15rem .5rem;
+      border-radius: 100px;
+    }
+    .ab-sub-arrow {
+      color: var(--ab-muted);
+      font-size: .9rem;
+      flex-shrink: 0;
+    }
+
+    /* ── Mission block ── */
+    .ab-mission {
+      background: var(--ab-surface);
+      border: 1px solid var(--ab-border);
+      border-radius: 14px;
+      padding: 1.5rem 1.5rem;
+      box-shadow: var(--ab-shadow);
+      border-left: 4px solid var(--ab-brand);
+    }
+    .ab-mission-quote {
+      font-size: 1.05rem;
+      font-weight: 700;
+      color: var(--ab-text);
+      line-height: 1.5;
+      margin: 0 0 .6rem;
+    }
+    .ab-mission-body {
+      font-size: .86rem;
+      color: var(--ab-muted);
+      line-height: 1.7;
+      margin: 0;
+    }
+
+    /* ── Stats row ── */
+    .ab-stats {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+      gap: 1rem;
+    }
+    .ab-stat {
+      background: var(--ab-surface);
+      border: 1px solid var(--ab-border);
+      border-radius: 12px;
+      padding: 1rem;
+      text-align: center;
+      box-shadow: var(--ab-shadow);
+    }
+    .ab-stat-num {
+      font-size: 1.65rem;
+      font-weight: 800;
+      color: var(--ab-brand);
+      line-height: 1;
+    }
+    .ab-stat-label {
+      font-size: .72rem;
+      color: var(--ab-muted);
+      margin-top: .25rem;
+    }
+
+    /* ── Contact ── */
+    .ab-contact {
+      background: var(--ab-surface);
+      border: 1px solid var(--ab-border);
+      border-radius: 14px;
+      padding: 1.5rem;
+      box-shadow: var(--ab-shadow);
+      display: flex;
+      align-items: center;
+      gap: 1.25rem;
+      flex-wrap: wrap;
+    }
+    .ab-contact-text { flex: 1; min-width: 200px; }
+    .ab-contact-text p { font-size: .88rem; color: var(--ab-muted); line-height: 1.55; margin: 0; }
+    .ab-contact-text strong { color: var(--ab-text); font-weight: 700; display: block; margin-bottom: .3rem; }
+    .ab-contact-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: .4rem;
+      height: 40px;
+      padding: 0 1.15rem;
+      border-radius: 9px;
+      background: var(--ab-brand);
+      color: #fff;
+      font-weight: 700;
+      font-size: .85rem;
+      text-decoration: none;
+      font-family: inherit;
+      white-space: nowrap;
+      transition: opacity .15s;
+      flex-shrink: 0;
+    }
+    .ab-contact-btn:hover { opacity: .88; }
+
+    @media (max-width: 600px) {
+      .ab-hero { padding: 1.75rem 1.25rem; }
+      .ab-hero h1 { font-size: 1.4rem; }
+      .ab-grid-2 { grid-template-columns: 1fr; }
+      .ab-sub-tags { display: none; }
+    }
+  </style>
+</head>
+<body>
+<a href="#main-content" class="skip-nav">Skip to main content</a>
+
+<nav class="navbar">
+  <a href="index.html" class="logo">
+    <img src="assets/logo.jpeg" alt="AbiLearn" class="logo-img">
+    <span class="logo-text">Abi<span>Learn</span></span>
+  </a>
+  <ul class="nav-links" id="navLinks">
+    <li><a href="index.html">Home</a></li>
+    <li class="nav-dropdown">
+      <button class="nav-dropdown-toggle">Subjects <span class="dropdown-arrow">▾</span></button>
+      <div class="dropdown-menu">
+        <a href="maths.html"><div class="sub-icon maths"></div><div><div style="font-weight:700;color:#7C3AED;font-size:0.9rem">Mathematics</div><div style="font-size:0.72rem;color:#6B6398">Algebra, Geometry, Statistics</div></div></a>
+        <a href="science.html"><div class="sub-icon science"></div><div><div style="font-weight:700;color:#0891B2;font-size:0.9rem">Science</div><div style="font-size:0.72rem;color:#6B6398">Physics, Chemistry, Biology</div></div></a>
+        <a href="english.html"><div class="sub-icon english"></div><div><div style="font-weight:700;color:#B45309;font-size:0.9rem">English</div><div style="font-size:0.72rem;color:#6B6398">First Flight, Grammar, Writing</div></div></a>
+        <a href="social.html"><div class="sub-icon social"></div><div><div style="font-weight:700;color:#047857;font-size:0.9rem">Social Science</div><div style="font-size:0.72rem;color:#6B6398">History, Geography, Civics</div></div></a>
+      </div>
+    </li>
+  </ul>
+  <div class="nav-right">
+    <button class="btn-login">Log In</button>
+    <button class="btn-signup">Sign Up Free</button>
+  </div>
+</nav>
+
+<div id="main-content" class="ab-wrap">
+
+  <div class="ab-crumb">
+    <a href="index.html">Home</a>
+    <span>›</span>
+    <span style="color:var(--ab-text);font-weight:600">About AbiLearn</span>
+  </div>
+
+  <!-- Hero banner -->
+  <div class="ab-hero">
+    <div class="ab-hero-brand">
+      <img src="assets/logo.jpeg" alt="AbiLearn" class="ab-hero-logo">
+      <span class="ab-hero-name">Abi<span>Learn</span></span>
+    </div>
+    <h1>Built for the<br>Mind Ahead.</h1>
+    <p>AbiLearn is a CBSE Class 10 study platform designed to help students learn with clarity, practise with purpose, and walk into board exams with genuine confidence — not just last-minute revision.</p>
+    <div class="ab-hero-cta">
+      <a href="learn.html" class="ab-btn-white" onclick="return guardNav(event,'learn.html')">Start Learning →</a>
+      <a href="mailto:hello@abilearn.in" class="ab-btn-outline">Say Hello</a>
+    </div>
+  </div>
+
+  <!-- Mission -->
+  <div class="ab-label">Our Mission</div>
+  <div class="ab-mission">
+    <p class="ab-mission-quote">"Every student deserves a system, not just a shortcut."</p>
+    <p class="ab-mission-body">Most Class 10 students have access to the same textbooks, the same syllabus, and the same amount of time. What separates a 90+ score from an average one is a structured approach — knowing what to study, when to revise, how to identify weak spots, and where to focus in the final weeks. AbiLearn exists to give every student that system, completely free.</p>
+  </div>
+
+  <!-- What we offer -->
+  <div class="ab-label">What AbiLearn Offers</div>
+  <div class="ab-grid-2">
+
+    <div class="ab-card">
+      <div class="ab-card-icon ic-v">📚</div>
+      <p class="ab-card-title">Chapter-wise Learning</p>
+      <p class="ab-card-desc">Every subject broken down chapter by chapter with structured notes, key concepts, and NCERT-aligned explanations — so nothing important gets missed.</p>
+    </div>
+
+    <div class="ab-card">
+      <div class="ab-card-icon ic-t">✅</div>
+      <p class="ab-card-title">MCQ Practice</p>
+      <p class="ab-card-desc">Subject-specific multiple choice questions for active recall. Immediate feedback helps you understand not just what is wrong, but why.</p>
+    </div>
+
+    <div class="ab-card">
+      <div class="ab-card-icon ic-a">📋</div>
+      <p class="ab-card-title">PYQs & Sample Papers</p>
+      <p class="ab-card-desc">Past year board questions and sample papers organised by chapter and pattern — so you know exactly what CBSE has asked, and what it is likely to ask again.</p>
+    </div>
+
+    <div class="ab-card">
+      <div class="ab-card-icon ic-g">📊</div>
+      <p class="ab-card-title">Progress Tracking</p>
+      <p class="ab-card-desc">A Mistake Bank that logs every wrong answer, and a dashboard showing your readiness across subjects so revision always goes where it matters most.</p>
+    </div>
+
+    <div class="ab-card">
+      <div class="ab-card-icon ic-v">💡</div>
+      <p class="ab-card-title">Tips & Strategies</p>
+      <p class="ab-card-desc">Exam strategies, spaced repetition guides, subject-specific techniques, and an exam-day checklist — all the non-syllabus knowledge that actually moves scores.</p>
+    </div>
+
+    <div class="ab-card">
+      <div class="ab-card-icon ic-t">🔍</div>
+      <p class="ab-card-title">Smart Search</p>
+      <p class="ab-card-desc">Instant search across all chapters, topics, and formulas — so you can find exactly what you need without hunting through menus or textbook indexes.</p>
+    </div>
+
+  </div>
+
+  <!-- Stats -->
+  <div class="ab-label">By the Numbers</div>
+  <div class="ab-stats">
+    <div class="ab-stat">
+      <div class="ab-stat-num">4</div>
+      <div class="ab-stat-label">Core subjects</div>
+    </div>
+    <div class="ab-stat">
+      <div class="ab-stat-num">30+</div>
+      <div class="ab-stat-label">Chapters covered</div>
+    </div>
+    <div class="ab-stat">
+      <div class="ab-stat-num">500+</div>
+      <div class="ab-stat-label">Practice questions</div>
+    </div>
+    <div class="ab-stat">
+      <div class="ab-stat-num">100%</div>
+      <div class="ab-stat-label">Free to use</div>
+    </div>
+  </div>
+
+  <!-- Subjects -->
+  <div class="ab-label">Subjects Covered</div>
+  <div class="ab-subjects">
+
+    <a href="maths.html" class="ab-subject-row">
+      <div class="ab-sub-dot" style="background:#7C3AED"></div>
+      <span class="ab-sub-name">Mathematics</span>
+      <div class="ab-sub-tags">
+        <span class="ab-sub-tag">Real Numbers</span>
+        <span class="ab-sub-tag">Quadratics</span>
+        <span class="ab-sub-tag">Trigonometry</span>
+        <span class="ab-sub-tag">Statistics</span>
+      </div>
+      <span class="ab-sub-arrow">›</span>
+    </a>
+
+    <a href="science.html" class="ab-subject-row">
+      <div class="ab-sub-dot" style="background:#0891B2"></div>
+      <span class="ab-sub-name">Science</span>
+      <div class="ab-sub-tags">
+        <span class="ab-sub-tag">Physics</span>
+        <span class="ab-sub-tag">Chemistry</span>
+        <span class="ab-sub-tag">Biology</span>
+      </div>
+      <span class="ab-sub-arrow">›</span>
+    </a>
+
+    <a href="english.html" class="ab-subject-row">
+      <div class="ab-sub-dot" style="background:#B45309"></div>
+      <span class="ab-sub-name">English</span>
+      <div class="ab-sub-tags">
+        <span class="ab-sub-tag">First Flight</span>
+        <span class="ab-sub-tag">Grammar</span>
+        <span class="ab-sub-tag">Writing</span>
+      </div>
+      <span class="ab-sub-arrow">›</span>
+    </a>
+
+    <a href="social.html" class="ab-subject-row">
+      <div class="ab-sub-dot" style="background:#047857"></div>
+      <span class="ab-sub-name">Social Science</span>
+      <div class="ab-sub-tags">
+        <span class="ab-sub-tag">History</span>
+        <span class="ab-sub-tag">Geography</span>
+        <span class="ab-sub-tag">Civics</span>
+        <span class="ab-sub-tag">Economics</span>
+      </div>
+      <span class="ab-sub-arrow">›</span>
+    </a>
+
+  </div>
+
+  <!-- Why different -->
+  <div class="ab-label">Why AbiLearn Is Different</div>
+  <div class="ab-grid-2">
+
+    <div class="ab-card">
+      <div class="ab-card-icon ic-g">🎯</div>
+      <p class="ab-card-title">Purpose-built, not repurposed</p>
+      <p class="ab-card-desc">AbiLearn is designed from the ground up for CBSE Class 10 — not a generic platform with a Class 10 filter applied. Every feature exists because Class 10 students need it.</p>
+    </div>
+
+    <div class="ab-card">
+      <div class="ab-card-icon ic-v">⚡</div>
+      <p class="ab-card-title">Fast and distraction-free</p>
+      <p class="ab-card-desc">No ads, no paywalls, no dark patterns. AbiLearn loads fast and gets out of the way so students can spend more time actually studying, not navigating the app.</p>
+    </div>
+
+    <div class="ab-card">
+      <div class="ab-card-icon ic-a">🔄</div>
+      <p class="ab-card-title">A system, not a dump</p>
+      <p class="ab-card-desc">Notes alone aren't enough. AbiLearn connects learning → practice → review → improvement in a single flow, ensuring students actually retain what they study.</p>
+    </div>
+
+    <div class="ab-card">
+      <div class="ab-card-icon ic-t">🤝</div>
+      <p class="ab-card-title">Built with students, for students</p>
+      <p class="ab-card-desc">Every feature on AbiLearn comes from real student pain points — the confusion of where to start, which topics to focus on, and how to know if preparation is actually working.</p>
+    </div>
+
+  </div>
+
+  <!-- Contact -->
+  <div class="ab-label">Get in Touch</div>
+  <div class="ab-contact">
+    <div class="ab-contact-text">
+      <strong>Have a question or feedback?</strong>
+      <p>We're always happy to hear from students, parents, and teachers. Whether it's a suggestion, a bug, or just a note about how AbiLearn helped — write to us.</p>
+    </div>
+    <a href="mailto:hello@abilearn.in" class="ab-contact-btn">
+      <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+        <rect x="1" y="3" width="14" height="10" rx="1.5" stroke="currentColor" stroke-width="1.4"/>
+        <path d="M1 4l7 5 7-5" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/>
+      </svg>
+      hello@abilearn.in
+    </a>
+  </div>
+
+</div>
+
+<script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore-compat.js"></script>
+<script src="js/firebase-config.js"></script>
+<script src="js/db.js?v=3"></script>
+<script src="js/app.js?v=73"></script>
+<script src="js/auth.js?v=32"></script>
+
+<!-- ── App Bottom Nav ── -->
+<nav class="al-bnav" aria-label="App navigation">
+  <div class="al-bnav-inner">
+    <a href="index.html" class="al-btab" aria-label="Home">
+      <span class="al-btab-icon" aria-hidden="true"><svg width="22" height="22" viewBox="0 0 22 22" fill="none"><path d="M3 9.2L11 3l8 6.2V19a1 1 0 01-1 1H14v-5.5H8V20H4a1 1 0 01-1-1V9.2z" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+      <span class="al-btab-label">Home</span>
+    </a>
+    <a href="learn.html" class="al-btab" aria-label="Learn">
+      <span class="al-btab-icon" aria-hidden="true"><svg width="22" height="22" viewBox="0 0 22 22" fill="none"><rect x="3" y="3" width="16" height="16" rx="2.5" stroke="currentColor" stroke-width="1.6"/><path d="M7 8h8M7 12h8M7 16h5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg></span>
+      <span class="al-btab-label">Learn</span>
+    </a>
+    <a href="learn.html" class="al-btab" aria-label="Search">
+      <span class="al-btab-icon" aria-hidden="true"><svg width="22" height="22" viewBox="0 0 22 22" fill="none"><circle cx="9.5" cy="9.5" r="6" stroke="currentColor" stroke-width="1.6"/><line x1="14.2" y1="14.2" x2="19" y2="19" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg></span>
+      <span class="al-btab-label">Search</span>
+    </a>
+    <a href="dashboard.html" class="al-btab" aria-label="Progress" onclick="return guardNav(event,'dashboard.html')">
+      <span class="al-btab-icon" aria-hidden="true"><svg width="22" height="22" viewBox="0 0 22 22" fill="none"><path d="M4 17V12M8.5 17V9M13 17V7M17.5 17V4" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg></span>
+      <span class="al-btab-label">Progress</span>
+    </a>
+    <button class="al-btab" id="alProfileBtn" aria-label="Profile">
+      <span class="al-btab-icon" aria-hidden="true"><svg width="22" height="22" viewBox="0 0 22 22" fill="none"><circle cx="11" cy="8" r="4" stroke="currentColor" stroke-width="1.6"/><path d="M3 19c0-3.87 3.58-7 8-7s8 3.13 8 7" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg></span>
+      <span class="al-btab-label">Profile</span>
+    </button>
+  </div>
+</nav>
+<style>
+body{padding-bottom:70px}.al-bnav{position:fixed;bottom:0;left:0;right:0;z-index:500;background:#fff;border-top:1px solid #E8E4F8;padding-bottom:env(safe-area-inset-bottom,0)}.al-bnav-inner{display:flex;align-items:stretch;height:62px;max-width:600px;margin:0 auto}.al-btab{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;color:#9894C0;text-decoration:none;background:none;border:none;cursor:pointer;font-family:inherit;transition:color .15s;-webkit-tap-highlight-color:transparent;padding:0}.al-btab.al-btab-active{color:#5B47DE;font-weight:700}.al-btab-icon{display:flex}.al-btab-label{font-size:.66rem;font-weight:500}.al-btab.al-btab-active .al-btab-label{font-weight:700}@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .al-bnav{background:#1A1830;border-top-color:#2A2645}:root:not([data-theme="light"]) .al-btab{color:#6B6899}:root:not([data-theme="light"]) .al-btab.al-btab-active{color:#A89EFF}}:root[data-theme="dark"] .al-bnav{background:#1A1830;border-top-color:#2A2645}:root[data-theme="dark"] .al-btab{color:#6B6899}:root[data-theme="dark"] .al-btab.al-btab-active{color:#A89EFF}
+</style>
+<script>(function(){var b=document.getElementById('alProfileBtn');if(!b)return;b.addEventListener('click',function(){var u=(typeof getUser==='function')?getUser():null;if(u){if(typeof toggleUserDropdown==='function')toggleUserDropdown();}else{window.location.href='auth.html?from='+encodeURIComponent(location.href);}});})();</script>
+</body>
+</html>
