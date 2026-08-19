@@ -6,11 +6,10 @@
   <title>AbiLearn — CBSE Class 10 Study Platform</title>
   <meta name="description" content="Everything CBSE Class 10. Notes, formula sheets, MCQ practice and PYQs — organised chapter by chapter, built to help you score higher.">
   <meta property="og:type" content="website">
-  <meta property="og:title" content="AbiLearn — CBSE Class 10 Study Platform">
+  <meta property="og:title" content="AbiLearn — CBSE Class 10">
   <meta property="og:description" content="Notes, formula sheets, MCQs and PYQs for CBSE Class 10 board exam prep.">
   <meta property="og:image" content="assets/logo.jpeg">
-  <meta name="twitter:card" content="summary">
-  <meta name="theme-color" content="#050312">
+  <meta name="theme-color" content="#04030F">
   <meta name="mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
@@ -25,136 +24,102 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <style>
-  /* ━━ AbiLearn — Landing v4 ━━ */
+  /* ━━ AbiLearn — Landing v5 ━━ */
 
   :root {
-    --bg:     #050312;
-    --accent: #6348FF;
-    --lav:    #B8A4FF;
-    --text:   #EDE8FF;
-    --muted:  rgba(192,178,255,.62);
-    --border: rgba(176,156,255,.16);
-    --font:   'Plus Jakarta Sans', -apple-system, system-ui, sans-serif;
-    --ease:   cubic-bezier(.22,.68,0,1.1);
+    --bg:         #04030F;
+    --surface-1:  rgba(255,255,255,.038);
+    --surface-2:  rgba(255,255,255,.062);
+    --accent:     #6B4EFF;
+    --lav:        #B8A4FF;
+    --text:       #EDE8FF;
+    --text-2:     rgba(192,178,255,.68);
+    --text-3:     rgba(192,178,255,.38);
+    --border:     rgba(176,156,255,.10);
+    --border-2:   rgba(176,156,255,.20);
+    --math-c:     #9D8EFF;
+    --sci-c:      #22D3EE;
+    --eng-c:      #F59E0B;
+    --soc-c:      #10B981;
+    --nav-h:      clamp(58px, 7.5vh, 68px);
+    --r:          14px;
+    --font:       'Plus Jakarta Sans', -apple-system, system-ui, sans-serif;
+    --ease:       cubic-bezier(.22,.68,0,1.1);
   }
 
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
-  html, body {
-    height: 100%;
-    overflow: hidden;
+  html {
+    scroll-behavior: smooth;
     background: var(--bg);
   }
 
   body {
     font-family: var(--font);
     color: var(--text);
+    background: var(--bg);
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
+    overflow-x: hidden;
   }
 
   .skip-nav {
     position: absolute; left: -9999px; top: auto;
   }
   .skip-nav:focus {
-    left: 1rem; top: 1rem; z-index: 999;
+    left: 1rem; top: 1rem; z-index: 9999;
     background: #fff; color: var(--bg);
     padding: .5rem 1rem; border-radius: 8px; font-weight: 700;
   }
 
-  /* ── HERO SHELL ── */
-  .hero {
-    position: relative;
-    width: 100%;
-    height: 100dvh;
-    overflow: hidden;
-    display: grid;
-    grid-template-rows: auto 1fr;
-    background:
-      radial-gradient(ellipse 72% 66% at 50% 44%, rgba(80,44,228,.36) 0%, transparent 65%),
-      radial-gradient(ellipse 46% 40% at 82% 14%, rgba(90,50,208,.20) 0%, transparent 55%),
-      radial-gradient(ellipse 42% 36% at 16% 84%, rgba(64,32,188,.17) 0%, transparent 55%),
-      radial-gradient(ellipse 28% 24% at 94% 90%, rgba(50,24,168,.12) 0%, transparent 50%),
-      var(--bg);
+  .container {
+    max-width: 1200px;
+    margin-inline: auto;
+    padding-inline: clamp(1.25rem, 5vw, 3rem);
   }
 
-  /* Grid texture */
-  .hero::before {
-    content: '';
-    position: absolute; inset: 0; z-index: 0;
-    pointer-events: none;
-    background-image:
-      linear-gradient(rgba(156,132,255,.017) 1px, transparent 1px),
-      linear-gradient(90deg, rgba(156,132,255,.017) 1px, transparent 1px);
-    background-size: 72px 72px;
+  /* ━━ SITE HEADER ━━ */
+
+  .site-header {
+    position: sticky;
+    top: 0;
+    z-index: 200;
+    background: rgba(4,3,15,.82);
+    backdrop-filter: blur(18px);
+    -webkit-backdrop-filter: blur(18px);
+    border-bottom: 1px solid var(--border);
   }
 
-  /* Edge vignette */
-  .hero::after {
-    content: '';
-    position: absolute; inset: 0; z-index: 1;
-    pointer-events: none;
-    background: radial-gradient(ellipse 100% 100% at 50% 50%, transparent 40%, rgba(5,3,18,.52) 100%);
+  .header-inner {
+    max-width: 1200px;
+    margin-inline: auto;
+    padding-inline: clamp(1.25rem, 5vw, 3rem);
+    height: var(--nav-h);
+    display: flex;
+    align-items: center;
+    gap: clamp(1rem, 3vw, 2.5rem);
   }
 
-  /* Light bloom behind headline */
-  .hero-glow {
-    position: absolute;
-    top: 50%; left: 50%;
-    transform: translate(-50%, -50%);
-    width: min(76vw, 940px);
-    aspect-ratio: 1;
-    border-radius: 50%;
-    background: radial-gradient(circle, rgba(86,50,236,.13) 0%, rgba(66,36,206,.05) 40%, transparent 68%);
-    filter: blur(38px);
-    pointer-events: none;
-    z-index: 1;
-    animation: glowBreathe 9s ease-in-out infinite;
-  }
-
-  /* Grain texture */
-  .hero-grain {
-    position: absolute; inset: 0; z-index: 2;
-    pointer-events: none;
-    opacity: .022;
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='200' height='200' filter='url(%23n)'/%3E%3C/svg%3E");
-    background-size: 180px 180px;
-  }
-
-  /* Knowledge network SVG */
-  .hero-network {
-    position: absolute; inset: 0;
-    width: 100%; height: 100%;
-    pointer-events: none;
-    z-index: 2;
-    will-change: transform;
-    animation: fadeIn 2.2s ease both;
-    animation-delay: 180ms;
-  }
-
-  /* ── NAV ── */
-  .hero-nav {
-    position: relative; z-index: 10;
-    display: flex; align-items: center; justify-content: space-between;
-    padding: clamp(.9rem, 2.4vh, 1.75rem) clamp(1.25rem, 5vw, 3.5rem);
-  }
-
+  /* Brand */
   .brand {
-    display: flex; align-items: center;
-    gap: clamp(.5rem, .85vw, .7rem);
-    text-decoration: none; flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    gap: clamp(.48rem, .8vw, .7rem);
+    text-decoration: none;
+    flex-shrink: 0;
   }
 
   .brand-img {
-    width: clamp(34px, 3.8vw, 46px);
-    height: clamp(34px, 3.8vw, 46px);
-    border-radius: clamp(8px, 1vw, 10px);
-    object-fit: cover; display: block;
+    width: clamp(32px, 3.6vw, 42px);
+    height: clamp(32px, 3.6vw, 42px);
+    border-radius: clamp(7px, .9vw, 9px);
+    object-fit: cover;
+    display: block;
     flex-shrink: 0;
   }
 
   .brand-name {
-    font-size: clamp(1.18rem, 1.72vw, 1.7rem);
+    font-size: clamp(1.12rem, 1.6vw, 1.62rem);
     font-weight: 800;
     letter-spacing: -.032em;
     line-height: 1;
@@ -164,212 +129,737 @@
   .brand-abi   { color: #EDE8FF; }
   .brand-learn { color: #A891F8; }
 
-  .nav-right {
-    display: flex; align-items: center; gap: .75rem;
+  /* Desktop nav */
+  .desktop-nav {
+    display: flex;
+    align-items: center;
+    gap: clamp(.1rem, 1.5vw, .25rem);
+    flex: 1;
   }
+
+  .nav-link {
+    position: relative;
+    padding: .42rem .72rem;
+    border-radius: 8px;
+    font-size: clamp(.78rem, 1vw, .9rem);
+    font-weight: 500;
+    color: var(--text-2);
+    text-decoration: none;
+    white-space: nowrap;
+    transition: color .18s, background .18s;
+  }
+  .nav-link:hover { color: var(--text); background: var(--surface-1); }
+  .nav-link:focus-visible { outline: 2px solid rgba(176,156,255,.7); outline-offset: 2px; border-radius: 8px; }
+  .nav-link.is-active { color: var(--text); }
+  .nav-link.is-active::after {
+    content: '';
+    position: absolute;
+    bottom: -1px; left: .72rem; right: .72rem;
+    height: 1.5px;
+    background: var(--accent);
+    border-radius: 2px;
+  }
+
+  /* Nav right */
+  .nav-right {
+    display: flex;
+    align-items: center;
+    gap: .6rem;
+    margin-left: auto;
+    flex-shrink: 0;
+  }
+
+  .search-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 36px; height: 36px;
+    border-radius: 8px;
+    background: transparent;
+    border: 1px solid var(--border);
+    color: var(--text-2);
+    cursor: pointer;
+    transition: color .18s, border-color .18s, background .18s;
+    -webkit-tap-highlight-color: transparent;
+  }
+  .search-btn:hover { color: var(--text); border-color: var(--border-2); background: var(--surface-1); }
+  .search-btn:focus-visible { outline: 2px solid rgba(176,156,255,.7); outline-offset: 2px; }
 
   .btn-login {
     background: transparent;
-    border: 1px solid var(--border);
-    color: rgba(196,180,255,.62);
-    padding: .42rem 1.05rem;
+    border: 1px solid var(--border-2);
+    color: var(--text-2);
+    padding: .4rem 1rem;
     border-radius: 8px;
     font-family: var(--font);
-    font-size: clamp(.76rem, .94vw, .86rem);
+    font-size: clamp(.76rem, .92vw, .86rem);
     font-weight: 600;
     cursor: pointer;
-    transition: border-color .2s, color .2s;
+    transition: color .18s, border-color .18s, background .18s;
     white-space: nowrap;
     -webkit-tap-highlight-color: transparent;
   }
-  .btn-login:hover { border-color: rgba(196,180,255,.3); color: rgba(218,206,255,.88); }
-  .btn-login:focus-visible { outline: 2px solid rgba(196,180,255,.7); outline-offset: 2px; }
+  .btn-login:hover { color: var(--text); border-color: rgba(176,156,255,.35); background: var(--surface-1); }
+  .btn-login:focus-visible { outline: 2px solid rgba(176,156,255,.7); outline-offset: 2px; }
 
-  /* ── MAIN CONTENT ── */
-  .hero-main {
-    position: relative; z-index: 3;
-    min-height: 0;
-    display: flex; flex-direction: column;
-    align-items: center; justify-content: center;
-    padding: 0 clamp(1.25rem, 5vw, 2rem) clamp(.6rem, 2vh, 1.5rem);
-    gap: clamp(.8rem, 2.2vh, 1.6rem);
+  .btn-signup {
+    background: var(--accent);
+    border: 1px solid transparent;
+    color: #fff;
+    padding: .4rem 1rem;
+    border-radius: 8px;
+    font-family: var(--font);
+    font-size: clamp(.76rem, .92vw, .86rem);
+    font-weight: 600;
+    cursor: pointer;
+    transition: opacity .18s, transform .18s;
+    white-space: nowrap;
+    -webkit-tap-highlight-color: transparent;
+  }
+  .btn-signup:hover { opacity: .88; }
+  .btn-signup:active { transform: scale(.97); }
+  .btn-signup:focus-visible { outline: 2px solid rgba(176,156,255,.7); outline-offset: 2px; }
+
+  /* Hamburger */
+  .hamburger {
+    display: none;
+    flex-direction: column;
+    justify-content: center;
+    gap: 5px;
+    width: 36px; height: 36px;
+    background: transparent;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    cursor: pointer;
+    padding: 0 8px;
+    -webkit-tap-highlight-color: transparent;
+    transition: border-color .18s;
+  }
+  .hamburger:hover { border-color: var(--border-2); }
+  .hamburger:focus-visible { outline: 2px solid rgba(176,156,255,.7); outline-offset: 2px; }
+
+  .ham-bar {
+    display: block;
+    width: 100%; height: 1.5px;
+    background: var(--text-2);
+    border-radius: 1px;
+    transition: transform .25s var(--ease), opacity .2s;
+    transform-origin: center;
   }
 
-  .hero-left, .hero-right {
-    display: flex; flex-direction: column;
-    align-items: center; text-align: center; width: 100%;
-  }
-  .hero-left { gap: clamp(.55rem, 1.4vh, .95rem); }
-  .hero-right { gap: clamp(.55rem, 1.4vh, .95rem); }
+  .hamburger.is-open .ham-bar:nth-child(1) { transform: rotate(45deg) translate(4.5px, 4.5px); }
+  .hamburger.is-open .ham-bar:nth-child(2) { opacity: 0; transform: scaleX(0); }
+  .hamburger.is-open .ham-bar:nth-child(3) { transform: rotate(-45deg) translate(4.5px, -4.5px); }
 
-  /* ── EYEBROW ── */
+  /* Mobile menu */
+  .mobile-menu {
+    overflow: hidden;
+    max-height: 0;
+    transition: max-height .32s cubic-bezier(.4,0,.2,1);
+    border-top: 1px solid transparent;
+  }
+
+  .mobile-menu.is-open {
+    max-height: 420px;
+    border-top-color: var(--border);
+  }
+
+  .mobile-menu-inner {
+    padding: 1rem clamp(1.25rem, 5vw, 3rem);
+    display: flex;
+    flex-direction: column;
+    gap: .25rem;
+  }
+
+  .mobile-nav-link {
+    display: block;
+    padding: .75rem .5rem;
+    font-size: .95rem;
+    font-weight: 500;
+    color: var(--text-2);
+    text-decoration: none;
+    border-bottom: 1px solid var(--border);
+    transition: color .18s;
+  }
+  .mobile-nav-link:last-child { border-bottom: none; }
+  .mobile-nav-link:hover { color: var(--text); }
+  .mobile-nav-link.is-active { color: var(--text); }
+
+  .mobile-menu-actions {
+    display: flex;
+    gap: .75rem;
+    padding: 1rem 0 .25rem;
+  }
+
+  .mobile-menu-actions .btn-login,
+  .mobile-menu-actions .btn-signup {
+    flex: 1;
+    padding: .6rem;
+    font-size: .88rem;
+    text-align: center;
+    justify-content: center;
+  }
+
+  /* ━━ HERO ━━ */
+
+  .s-hero {
+    position: relative;
+    min-height: 100svh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    padding-top: var(--nav-h);
+    padding-bottom: clamp(3rem, 6vh, 5rem);
+    scroll-margin-top: 0;
+  }
+
+  /* Multi-layer radial atmosphere */
+  .s-hero::before {
+    content: '';
+    position: absolute; inset: 0; z-index: 0;
+    background:
+      radial-gradient(ellipse 78% 72% at 50% 42%, rgba(80,44,228,.34) 0%, transparent 65%),
+      radial-gradient(ellipse 48% 44% at 82% 14%, rgba(90,50,208,.18) 0%, transparent 55%),
+      radial-gradient(ellipse 44% 38% at 14% 86%, rgba(64,32,188,.15) 0%, transparent 55%),
+      radial-gradient(ellipse 30% 26% at 96% 92%, rgba(50,24,168,.11) 0%, transparent 50%);
+  }
+
+  /* Grid texture */
+  .s-hero::after {
+    content: '';
+    position: absolute; inset: 0; z-index: 0;
+    pointer-events: none;
+    background-image:
+      linear-gradient(rgba(156,132,255,.015) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(156,132,255,.015) 1px, transparent 1px);
+    background-size: 72px 72px;
+  }
+
+  /* Light bloom */
+  .hero-glow {
+    position: absolute; z-index: 1;
+    top: 40%; left: 50%;
+    transform: translate(-50%, -50%);
+    width: min(80vw, 980px);
+    aspect-ratio: 1;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(86,50,236,.12) 0%, rgba(66,36,206,.04) 40%, transparent 68%);
+    filter: blur(44px);
+    pointer-events: none;
+    animation: glowBreathe 9s ease-in-out infinite;
+  }
+
+  /* Grain */
+  .hero-grain {
+    position: absolute; inset: 0; z-index: 1;
+    pointer-events: none;
+    opacity: .02;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='200' height='200' filter='url(%23n)'/%3E%3C/svg%3E");
+    background-size: 180px 180px;
+  }
+
+  /* Edge vignette */
+  .hero-vignette {
+    position: absolute; inset: 0; z-index: 1;
+    pointer-events: none;
+    background: radial-gradient(ellipse 100% 100% at 50% 50%, transparent 38%, rgba(4,3,15,.5) 100%);
+  }
+
+  /* Knowledge network */
+  .hero-net {
+    position: absolute; inset: 0;
+    width: 100%; height: 100%;
+    pointer-events: none;
+    z-index: 1;
+    will-change: transform;
+    animation: netFadeIn 2s ease both;
+    animation-delay: 200ms;
+  }
+
+  /* Hero content */
+  .hero-content {
+    position: relative;
+    z-index: 2;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: clamp(.8rem, 2vh, 1.5rem);
+  }
+
+  /* Eyebrow */
   .lp-eyebrow {
-    display: inline-flex; align-items: center; gap: .52rem;
-    padding: .38rem .95rem;
+    display: inline-flex;
+    align-items: center;
+    gap: .5rem;
+    padding: .36rem .9rem;
     border-radius: 100px;
     background: rgba(96,68,252,.07);
-    border: 1px solid rgba(172,152,255,.17);
-    box-shadow: inset 0 0 10px rgba(132,102,252,.05);
-    font-size: clamp(.58rem, .78vw, .75rem);
-    font-weight: 600; letter-spacing: .15em; text-transform: uppercase;
-    color: rgba(192,174,255,.74);
+    border: 1px solid rgba(172,152,255,.16);
+    box-shadow: inset 0 0 10px rgba(132,102,252,.04);
+    font-size: clamp(.58rem, .76vw, .74rem);
+    font-weight: 600;
+    letter-spacing: .14em;
+    text-transform: uppercase;
+    color: rgba(192,174,255,.72);
     white-space: nowrap;
   }
 
   .eyebrow-dot {
-    width: 4px; height: 4px; border-radius: 50%; flex-shrink: 0;
-    background: rgba(172,152,255,.55);
-    box-shadow: 0 0 5px rgba(172,152,255,.45);
+    width: 4px; height: 4px;
+    border-radius: 50%;
+    background: rgba(172,152,255,.52);
+    box-shadow: 0 0 5px rgba(172,152,255,.42);
+    flex-shrink: 0;
+    display: inline-block;
   }
 
-  /* ── HEADLINE ── */
-  .lp-h1 {
-    font-size: clamp(2.75rem, 6.8vw, 6.2rem);
+  /* Headline */
+  .hero-h1 {
+    font-size: clamp(2.6rem, 6.6vw, 6rem);
     font-weight: 800;
     line-height: .97;
     letter-spacing: -.04em;
     text-wrap: balance;
-    max-width: min(950px, 92vw);
+    max-width: min(920px, 92vw);
     word-wrap: break-word;
+    display: flex;
+    flex-direction: column;
+    gap: .04em;
   }
 
-  .h1-line1 { display: block; color: #EDE8FF; }
+  .h1-line1 { color: #EDE8FF; }
 
   .h1-line2 {
-    display: block;
-    background: linear-gradient(158deg, #CFC0FF 0%, #9D7CFF 36%, #BAA5FF 70%, #D2C4FF 100%);
+    background: linear-gradient(155deg, #CFC0FF 0%, #9D7CFF 34%, #BAA5FF 68%, #D2C4FF 100%);
     background-size: 200% 200%;
-    -webkit-background-clip: text; background-clip: text;
+    -webkit-background-clip: text;
+    background-clip: text;
     -webkit-text-fill-color: transparent;
     padding-bottom: .04em;
     animation: gradShimmer 7.5s ease-in-out infinite;
   }
 
-  /* ── DESCRIPTION ── */
-  .lp-desc {
-    font-size: clamp(.88rem, 1.4vw, 1.12rem);
+  /* Description */
+  .hero-desc {
+    font-size: clamp(.9rem, 1.4vw, 1.12rem);
     font-weight: 400;
-    line-height: 1.68;
-    color: var(--muted);
-    max-width: min(580px, 88vw);
+    line-height: 1.7;
+    color: var(--text-2);
+    max-width: min(600px, 88vw);
   }
 
-  /* ── CTA ROW ── */
-  .lp-cta-row {
-    display: flex; gap: .85rem;
-    justify-content: center; flex-wrap: nowrap;
+  /* Action buttons */
+  .hero-actions {
+    display: flex;
+    gap: .85rem;
+    flex-wrap: nowrap;
     align-items: center;
+    justify-content: center;
+    margin-top: .25rem;
   }
 
   .btn-primary {
-    display: inline-flex; align-items: center; gap: .5rem;
-    height: clamp(50px, 7.5vh, 60px);
-    padding: 0 clamp(1.4rem, 2.8vw, 2.2rem);
-    border-radius: 13px;
+    display: inline-flex;
+    align-items: center;
+    gap: .5rem;
+    height: clamp(50px, 7vh, 58px);
+    padding: 0 clamp(1.4rem, 2.8vw, 2.25rem);
+    border-radius: 12px;
     background: #FFFFFF;
     color: #2C12AA;
     font-family: var(--font);
     font-size: clamp(.88rem, 1.1vw, 1rem);
-    font-weight: 700; letter-spacing: -.012em;
-    text-decoration: none; border: none; cursor: pointer;
+    font-weight: 700;
+    letter-spacing: -.012em;
+    text-decoration: none;
+    border: none;
+    cursor: pointer;
     white-space: nowrap;
-    box-shadow: 0 4px 32px rgba(88,56,236,.40), 0 1px 4px rgba(0,0,0,.18);
+    box-shadow: 0 4px 28px rgba(88,56,236,.38), 0 1px 4px rgba(0,0,0,.16);
     transition: transform .2s var(--ease), box-shadow .2s ease;
     -webkit-tap-highlight-color: transparent;
     min-width: 44px; min-height: 44px;
   }
   .btn-primary:hover {
     transform: translateY(-2px);
-    box-shadow: 0 8px 42px rgba(88,56,236,.50), 0 2px 8px rgba(0,0,0,.20);
+    box-shadow: 0 8px 38px rgba(88,56,236,.48), 0 2px 8px rgba(0,0,0,.18);
   }
-  .btn-primary:active { transform: scale(.984); }
-  .btn-primary:focus-visible { outline: 2.5px solid rgba(192,176,255,.82); outline-offset: 3px; }
+  .btn-primary:active { transform: scale(.985); }
+  .btn-primary:focus-visible { outline: 2.5px solid rgba(192,176,255,.8); outline-offset: 3px; }
 
-  .btn-arrow { display: inline-flex; flex-shrink: 0; transition: transform .2s ease; }
+  .btn-arrow {
+    display: inline-flex;
+    flex-shrink: 0;
+    transition: transform .2s ease;
+  }
   .btn-primary:hover .btn-arrow { transform: translateX(3px); }
 
-  .btn-secondary {
-    display: inline-flex; align-items: center;
-    height: clamp(50px, 7.5vh, 60px);
+  .btn-ghost {
+    display: inline-flex;
+    align-items: center;
+    height: clamp(50px, 7vh, 58px);
     padding: 0 clamp(1.25rem, 2.4vw, 2rem);
-    border-radius: 13px;
-    background: rgba(255,255,255,.057);
-    border: 1px solid rgba(192,172,255,.17);
-    color: rgba(218,206,255,.78);
+    border-radius: 12px;
+    background: rgba(255,255,255,.054);
+    border: 1px solid rgba(192,172,255,.16);
+    color: rgba(218,206,255,.76);
     font-family: var(--font);
     font-size: clamp(.88rem, 1.1vw, 1rem);
     font-weight: 600;
-    text-decoration: none; cursor: pointer; white-space: nowrap;
-    backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
+    text-decoration: none;
+    cursor: pointer;
+    white-space: nowrap;
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
     transition: background .22s, border-color .22s, transform .18s;
     -webkit-tap-highlight-color: transparent;
     min-width: 44px; min-height: 44px;
   }
-  .btn-secondary:hover {
-    background: rgba(152,122,255,.096);
-    border-color: rgba(192,172,255,.28);
+  .btn-ghost:hover {
+    background: rgba(152,122,255,.09);
+    border-color: rgba(192,172,255,.26);
     transform: translateY(-1px);
   }
-  .btn-secondary:active { transform: none; }
-  .btn-secondary:focus-visible { outline: 2.5px solid rgba(192,176,255,.82); outline-offset: 3px; }
+  .btn-ghost:focus-visible { outline: 2.5px solid rgba(192,176,255,.8); outline-offset: 3px; }
 
-  /* ── SUBJECTS ── */
-  .lp-subjects {
-    display: flex; align-items: center; justify-content: center;
-    gap: .18rem .52rem; flex-wrap: wrap;
-  }
+  /* ━━ VALUE STRIP ━━ */
 
-  .lp-sub {
-    display: inline-flex; align-items: center; gap: .42rem;
-    padding: .28rem .72rem; border-radius: 100px;
-    font-size: clamp(.7rem, .9vw, .86rem); font-weight: 500;
-    color: rgba(210,198,255,.36);
-    text-decoration: none; border: 1px solid transparent;
-    transition: color .2s, background .2s, border-color .2s;
-    cursor: pointer; white-space: nowrap;
-  }
-  .lp-sub:hover {
-    color: rgba(210,198,255,.7);
-    background: rgba(148,116,255,.08);
-    border-color: rgba(148,116,255,.14);
-  }
-  .lp-sub:focus-visible {
-    outline: 2px solid rgba(192,176,255,.72);
-    outline-offset: 2px; border-radius: 100px;
+  .s-values {
+    border-top: 1px solid var(--border);
+    padding-block: clamp(2.5rem, 5vw, 4rem);
   }
 
-  .sub-dot {
-    width: 6px; height: 6px; border-radius: 50%;
-    flex-shrink: 0; display: inline-block;
+  .values-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1px;
+    background: var(--border);
+    border: 1px solid var(--border);
+    border-radius: var(--r);
+    overflow: hidden;
   }
-  .sub-dot.m { background: #F87171; box-shadow: 0 0 6px rgba(248,113,113,.52); }
-  .sub-dot.s { background: #38BDF8; box-shadow: 0 0 6px rgba(56,189,248,.52); }
-  .sub-dot.e { background: #FCD34D; box-shadow: 0 0 6px rgba(252,211,77,.48); }
-  .sub-dot.g { background: #34D399; box-shadow: 0 0 6px rgba(52,211,153,.48); }
 
-  /* ── ANIMATIONS ── */
+  .value-item {
+    display: flex;
+    flex-direction: column;
+    gap: .75rem;
+    padding: clamp(1.25rem, 2.5vw, 1.75rem);
+    background: var(--bg);
+    transition: background .22s;
+  }
+  .value-item:hover { background: var(--surface-1); }
+
+  .value-icon {
+    width: 40px; height: 40px;
+    border-radius: 10px;
+    background: rgba(107,78,255,.1);
+    border: 1px solid rgba(107,78,255,.18);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--lav);
+    flex-shrink: 0;
+    transition: background .22s;
+  }
+  .value-item:hover .value-icon { background: rgba(107,78,255,.16); }
+
+  .value-title {
+    font-size: clamp(.82rem, 1.1vw, .95rem);
+    font-weight: 700;
+    color: var(--text);
+    line-height: 1.3;
+  }
+
+  .value-desc {
+    font-size: clamp(.74rem, .92vw, .84rem);
+    font-weight: 400;
+    color: var(--text-3);
+    line-height: 1.5;
+  }
+
+  /* ━━ SUBJECTS ━━ */
+
+  .s-subjects {
+    padding-block: clamp(3.5rem, 6vw, 6rem);
+    scroll-margin-top: var(--nav-h);
+  }
+
+  .section-head {
+    margin-bottom: clamp(1.75rem, 3.5vw, 2.75rem);
+  }
+
+  .section-head h2 {
+    font-size: clamp(1.6rem, 3vw, 2.4rem);
+    font-weight: 800;
+    letter-spacing: -.03em;
+    color: var(--text);
+    margin-bottom: .5rem;
+    text-wrap: balance;
+  }
+
+  .section-head p {
+    font-size: clamp(.86rem, 1.2vw, 1rem);
+    color: var(--text-2);
+    line-height: 1.6;
+    max-width: 520px;
+  }
+
+  .subjects-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: clamp(.75rem, 1.5vw, 1.25rem);
+  }
+
+  .subject-card {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    gap: clamp(.75rem, 1.5vw, 1rem);
+    padding: clamp(1.25rem, 2.5vw, 1.75rem);
+    border-radius: var(--r);
+    background: var(--surface-1);
+    border: 1px solid var(--border);
+    text-decoration: none;
+    color: inherit;
+    overflow: hidden;
+    transition: background .24s, border-color .24s, transform .24s, box-shadow .24s;
+  }
+
+  .subject-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 2px;
+    border-radius: var(--r) var(--r) 0 0;
+    background: var(--card-c, var(--accent));
+    opacity: .7;
+  }
+
+  .subject-card.math  { --card-c: var(--math-c); }
+  .subject-card.sci   { --card-c: var(--sci-c); }
+  .subject-card.eng   { --card-c: var(--eng-c); }
+  .subject-card.soc   { --card-c: var(--soc-c); }
+
+  .subject-card:hover {
+    background: var(--surface-2);
+    transform: translateY(-3px);
+    box-shadow: 0 12px 32px rgba(0,0,0,.28);
+  }
+  .subject-card.math:hover  { border-color: rgba(157,142,255,.28); }
+  .subject-card.sci:hover   { border-color: rgba(34,211,238,.24); }
+  .subject-card.eng:hover   { border-color: rgba(245,158,11,.22); }
+  .subject-card.soc:hover   { border-color: rgba(16,185,129,.22); }
+
+  .subject-card:focus-visible {
+    outline: 2px solid rgba(176,156,255,.7);
+    outline-offset: 2px;
+  }
+
+  .subject-icon {
+    width: 40px; height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 10px;
+    background: rgba(107,78,255,.08);
+    color: var(--lav);
+    flex-shrink: 0;
+  }
+  .subject-card.math .subject-icon { background: rgba(157,142,255,.1); color: var(--math-c); }
+  .subject-card.sci  .subject-icon { background: rgba(34,211,238,.08); color: var(--sci-c); }
+  .subject-card.eng  .subject-icon { background: rgba(245,158,11,.08); color: var(--eng-c); }
+  .subject-card.soc  .subject-icon { background: rgba(16,185,129,.08); color: var(--soc-c); }
+
+  .subject-name {
+    font-size: clamp(.96rem, 1.4vw, 1.08rem);
+    font-weight: 700;
+    color: var(--text);
+    line-height: 1.2;
+  }
+
+  .subject-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: .28rem;
+    margin-top: auto;
+  }
+
+  .subject-tag {
+    font-size: clamp(.64rem, .78vw, .72rem);
+    font-weight: 500;
+    color: var(--text-3);
+    background: rgba(255,255,255,.04);
+    border: 1px solid var(--border);
+    padding: .18rem .48rem;
+    border-radius: 100px;
+  }
+
+  .subject-cta {
+    display: flex;
+    align-items: center;
+    gap: .3rem;
+    font-size: clamp(.78rem, .95vw, .88rem);
+    font-weight: 600;
+    color: var(--card-c, var(--accent));
+    margin-top: .25rem;
+    opacity: .72;
+    transition: opacity .18s, gap .18s;
+  }
+  .subject-card:hover .subject-cta { opacity: 1; gap: .48rem; }
+
+  /* ━━ LEARNING JOURNEY ━━ */
+
+  .s-journey {
+    padding-block: clamp(3.5rem, 6vw, 6rem);
+    border-top: 1px solid var(--border);
+  }
+
+  .journey-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    position: relative;
+    gap: 0;
+  }
+
+  /* connector line */
+  .journey-grid::before {
+    content: '';
+    position: absolute;
+    top: 28px;
+    left: calc(12.5% + 1.75rem);
+    right: calc(12.5% + 1.75rem);
+    height: 1px;
+    background: linear-gradient(90deg,
+      var(--accent) 0%,
+      rgba(107,78,255,.5) 33%,
+      rgba(107,78,255,.3) 66%,
+      rgba(107,78,255,.15) 100%
+    );
+    z-index: 0;
+  }
+
+  .journey-step {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    flex-direction: column;
+    gap: clamp(.6rem, 1.2vw, .9rem);
+    padding: clamp(1rem, 2vw, 1.5rem) clamp(.75rem, 1.5vw, 1.25rem);
+  }
+
+  .step-num {
+    width: 40px; height: 40px;
+    border-radius: 10px;
+    background: rgba(107,78,255,.1);
+    border: 1px solid rgba(107,78,255,.22);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: .78rem;
+    font-weight: 700;
+    color: var(--lav);
+    letter-spacing: .02em;
+    flex-shrink: 0;
+  }
+
+  .step-title {
+    font-size: clamp(.96rem, 1.4vw, 1.08rem);
+    font-weight: 700;
+    color: var(--text);
+    line-height: 1.2;
+  }
+
+  .step-desc {
+    font-size: clamp(.78rem, 1vw, .9rem);
+    font-weight: 400;
+    color: var(--text-2);
+    line-height: 1.6;
+  }
+
+  /* ━━ FOOTER ━━ */
+
+  .site-footer {
+    border-top: 1px solid var(--border);
+    padding-block: clamp(2rem, 4vw, 3rem);
+  }
+
+  .footer-inner {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 2rem;
+    flex-wrap: wrap;
+  }
+
+  .footer-brand .brand { margin-bottom: .75rem; }
+
+  .footer-copy {
+    font-size: .76rem;
+    color: var(--text-3);
+    line-height: 1.5;
+  }
+
+  .footer-nav {
+    display: flex;
+    flex-direction: column;
+    gap: .5rem;
+  }
+
+  .footer-nav a {
+    font-size: .84rem;
+    font-weight: 500;
+    color: var(--text-3);
+    text-decoration: none;
+    transition: color .18s;
+  }
+  .footer-nav a:hover { color: var(--text-2); }
+
+  .footer-social {
+    display: flex;
+    gap: .75rem;
+    align-items: center;
+  }
+
+  .footer-social a {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 34px; height: 34px;
+    border-radius: 8px;
+    border: 1px solid var(--border);
+    color: var(--text-3);
+    transition: color .18s, border-color .18s, background .18s;
+  }
+  .footer-social a:hover {
+    color: var(--text-2);
+    border-color: var(--border-2);
+    background: var(--surface-1);
+  }
+
+  /* ━━ ANIMATIONS ━━ */
+
   @keyframes gradShimmer {
     0%, 100% { background-position: 0% 50%; }
     50%       { background-position: 100% 50%; }
   }
   @keyframes glowBreathe {
-    0%, 100% { opacity: .62; transform: translate(-50%,-50%) scale(1); }
-    50%       { opacity: 1;   transform: translate(-50%,-50%) scale(1.07); }
+    0%, 100% { opacity: .58; transform: translate(-50%,-50%) scale(1); }
+    50%       { opacity: .95; transform: translate(-50%,-50%) scale(1.08); }
   }
-  @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
-  @keyframes riseIn { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: none; } }
+  @keyframes netFadeIn { from { opacity: 0; } to { opacity: 1; } }
+  @keyframes riseIn { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: none; } }
   @keyframes lpDrift1 { 0%,100%{transform:translate(0,0)} 28%{transform:translate(2.4px,-2.6px)} 58%{transform:translate(-1.4px,2.2px)} 82%{transform:translate(-1.6px,-.8px)} }
   @keyframes lpDrift2 { 0%,100%{transform:translate(0,0)} 32%{transform:translate(-2.2px,1.6px)} 65%{transform:translate(2.6px,-1.4px)} 88%{transform:translate(-.6px,-2px)} }
   @keyframes lpDrift3 { 0%,100%{transform:translate(0,0)} 38%{transform:translate(1.4px,2.4px)} 72%{transform:translate(-2.6px,.6px)} }
-  @keyframes lpGlowPulse { 0%,100%{opacity:.52} 50%{opacity:.92} }
+  @keyframes lpGlowPulse { 0%,100%{opacity:.5} 50%{opacity:.9} }
 
-  /* Load entrance */
-  .brand-anim { animation: riseIn .5s ease both; }
-  .a0 { animation: riseIn .58s var(--ease) both; animation-delay: 80ms; }
-  .a1 { animation: riseIn .62s var(--ease) both; animation-delay: 160ms; }
-  .a2 { animation: riseIn .58s var(--ease) both; animation-delay: 310ms; }
-  .a3 { animation: riseIn .58s var(--ease) both; animation-delay: 430ms; }
-  .a4 { animation: riseIn .58s var(--ease) both; animation-delay: 550ms; }
+  /* Entrance sequence */
+  .a0 { animation: riseIn .58s var(--ease) both; animation-delay: 40ms; }
+  .a1 { animation: riseIn .62s var(--ease) both; animation-delay: 120ms; }
+  .a2 { animation: riseIn .58s var(--ease) both; animation-delay: 260ms; }
+  .a3 { animation: riseIn .58s var(--ease) both; animation-delay: 380ms; }
 
   /* Network nodes */
   .lpn-d1 { animation: lpDrift1 9.4s ease-in-out infinite; }
@@ -379,141 +869,198 @@
   .lpn-glow2 { animation: lpGlowPulse 6s ease-in-out infinite; animation-delay: -2.2s; }
   .lpn-glow3 { animation: lpGlowPulse 7.4s ease-in-out infinite; animation-delay: -4.8s; }
 
-  /* Network entrance */
-  .hero-network { animation: fadeIn 2.2s ease both; animation-delay: 180ms; }
+  /* ━━ RESPONSIVE ━━ */
 
-  /* ── WIDTH RESPONSIVE ── */
-  @media (max-width: 1024px) {
-    .lpz-book, .lpz-geo { opacity: .46 !important; }
-  }
+  /* Desktop nav hidden on mobile */
   @media (max-width: 768px) {
-    .lpz-math, .lpz-sci, .lpz-book, .lpz-geo { opacity: .28 !important; }
+    .desktop-nav { display: none; }
+    .hamburger   { display: flex; }
+    .btn-login, .btn-signup { display: none; }
+    .search-btn  { display: none; }
   }
+
+  /* Show search on mobile only via hamburger */
+  @media (max-width: 768px) {
+    .nav-right { gap: .4rem; }
+  }
+
+  /* Tablet subjects: 2×2 */
+  @media (max-width: 1024px) {
+    .subjects-grid { grid-template-columns: repeat(2, 1fr); }
+    .journey-grid  { grid-template-columns: repeat(2, 1fr); gap: 1px; background: var(--border); border-radius: var(--r); overflow: hidden; }
+    .journey-step  { background: var(--bg); }
+    .journey-grid::before { display: none; }
+  }
+
+  /* Phablet */
   @media (max-width: 640px) {
-    .lpz-math, .lpz-sci, .lpz-book, .lpz-geo { display: none; }
-    .lp-cta-row { flex-direction: column; align-items: center; gap: .68rem; }
-    .btn-primary, .btn-secondary {
-      width: 100%; max-width: 296px; justify-content: center;
+    .values-grid { grid-template-columns: repeat(2, 1fr); }
+    .hero-actions {
+      flex-direction: column;
+      width: 100%;
+      gap: .65rem;
     }
-  }
-  @media (max-width: 380px) {
-    .lp-eyebrow { font-size: .57rem; padding: .34rem .8rem; }
-    .brand-name { font-size: 1.08rem; }
-  }
-
-  /* ── HEIGHT RESPONSIVE ── */
-  @media (max-height: 800px) {
-    .hero-main { gap: clamp(.6rem, 1.7vh, 1.25rem); }
-  }
-  @media (max-height: 700px) {
-    .hero-main { gap: clamp(.5rem, 1.4vh, .95rem); }
-    .lp-desc { line-height: 1.56; }
-  }
-  @media (max-height: 600px) {
-    .lp-desc { display: none; }
-    .hero-main { gap: clamp(.42rem, 1.2vh, .8rem); }
-  }
-  @media (max-height: 500px) {
-    .lp-eyebrow { display: none; }
-    .hero-main { gap: clamp(.36rem, 1vh, .65rem); }
-    .lp-h1 { font-size: clamp(2rem, 5.2vw, 4.5rem); }
-  }
-
-  /* ── LANDSCAPE MOBILE ── */
-  @media (orientation: landscape) and (max-height: 520px) {
-    .hero-main {
-      flex-direction: row;
-      gap: clamp(1.4rem, 4vw, 3rem);
-      padding: 0 clamp(1.5rem, 4vw, 3rem) clamp(.4rem, 1.5vh, .9rem);
-      align-items: center;
+    .btn-primary, .btn-ghost {
+      width: 100%;
+      max-width: 300px;
       justify-content: center;
     }
-    .hero-left {
-      flex: 1.3; min-width: 0;
-      align-items: flex-start; text-align: left;
-    }
-    .hero-right {
-      flex: .9; min-width: 0;
-      align-items: flex-start;
-    }
-    .lp-eyebrow { display: none; }
-    .lp-h1 { font-size: clamp(1.7rem, 4.4vw, 2.8rem); max-width: none; }
-    .lp-desc {
-      display: block !important;
-      font-size: clamp(.74rem, 1.3vw, .86rem);
-      line-height: 1.5;
-    }
-    .lp-cta-row {
-      flex-direction: row; gap: .6rem;
-      justify-content: flex-start;
-    }
-    .btn-primary, .btn-secondary {
-      height: 42px !important;
-      width: auto !important; max-width: none !important;
-    }
-    .lp-subjects { justify-content: flex-start; }
-    .sub-dot { width: 5px; height: 5px; }
+    .footer-inner { flex-direction: column; gap: 1.5rem; }
   }
 
-  /* ── REDUCED MOTION ── */
+  /* Mobile */
+  @media (max-width: 480px) {
+    .subjects-grid { grid-template-columns: 1fr; }
+    .values-grid   { grid-template-columns: 1fr; }
+    .journey-grid  { grid-template-columns: 1fr; }
+    .lpz-math, .lpz-sci, .lpz-book, .lpz-geo { display: none; }
+    .journey-step  { border-bottom: 1px solid var(--border); }
+    .journey-step:last-child { border-bottom: none; }
+  }
+
+  /* Phablet SVG opacity */
+  @media (max-width: 768px) {
+    .lpz-math, .lpz-sci, .lpz-book, .lpz-geo { opacity: .3 !important; }
+  }
+  @media (max-width: 1024px) {
+    .lpz-book, .lpz-geo { opacity: .44 !important; }
+  }
+
+  /* Hero height-aware */
+  @media (max-height: 750px) {
+    .hero-content { gap: clamp(.6rem, 1.6vh, 1.1rem); }
+    .hero-h1 { font-size: clamp(2.2rem, 5.5vw, 4.8rem); }
+  }
+  @media (max-height: 640px) {
+    .hero-desc { display: none; }
+    .hero-content { gap: clamp(.5rem, 1.3vh, .9rem); }
+  }
+
+  /* Landscape mobile: tighten hero */
+  @media (orientation: landscape) and (max-height: 520px) {
+    .s-hero {
+      min-height: auto;
+      padding-top: calc(var(--nav-h) + 1rem);
+      padding-bottom: 2rem;
+    }
+    .hero-h1 { font-size: clamp(1.8rem, 4.2vw, 2.8rem); }
+    .hero-desc { font-size: .82rem; }
+    .btn-primary, .btn-ghost { height: 44px; }
+    .hero-actions { flex-direction: row; }
+    .btn-primary, .btn-ghost { width: auto; max-width: none; }
+  }
+
+  /* Reduced motion */
   @media (prefers-reduced-motion: reduce) {
-    .brand-anim, .a0, .a1, .a2, .a3, .a4 {
+    html { scroll-behavior: auto; }
+    .a0, .a1, .a2, .a3 {
       animation: none !important; opacity: 1 !important; transform: none !important;
     }
     .lpn-d1, .lpn-d2, .lpn-d3, .lpn-glow, .lpn-glow2, .lpn-glow3 {
       animation: none !important;
     }
     .h1-line2 { animation: none !important; }
-    .hero-glow {
-      animation: none !important; opacity: .7 !important;
-      transform: translate(-50%,-50%) !important;
-    }
-    .hero-network { animation: none !important; opacity: 1 !important; }
-    .btn-primary:hover, .btn-secondary:hover { transform: none !important; }
+    .hero-glow { animation: none !important; opacity: .65 !important; }
+    .hero-net  { animation: none !important; opacity: 1 !important; }
+    .btn-primary:hover, .btn-ghost:hover, .subject-card:hover { transform: none !important; }
     .btn-primary:hover .btn-arrow { transform: none !important; }
+    .value-item, .site-header, .mobile-menu, .ham-bar { transition: none !important; }
   }
   </style>
 </head>
 <body>
-<a href="#hero-content" class="skip-nav">Skip to main content</a>
+<a href="#hero-main" class="skip-nav">Skip to main content</a>
 
-<div class="hero" id="hero">
+<!-- ━━ HEADER ━━ -->
+<header class="site-header" role="banner">
+  <div class="header-inner">
 
+    <a href="index.html" class="brand" aria-label="AbiLearn — Home">
+      <img src="assets/logo.jpeg" alt="" class="brand-img" aria-hidden="true">
+      <span class="brand-name">
+        <span class="brand-abi">Abi</span><span class="brand-learn">Learn</span>
+      </span>
+    </a>
+
+    <nav class="desktop-nav" aria-label="Main navigation">
+      <a href="index.html" class="nav-link is-active" aria-current="page">Home</a>
+      <a href="#subjects" class="nav-link">Subjects</a>
+      <a href="learn.html" class="nav-link">Tips &amp; Tricks</a>
+      <a href="learn.html" class="nav-link">About</a>
+    </nav>
+
+    <div class="nav-right">
+      <button class="search-btn" aria-label="Search AbiLearn" onclick="window.location.href='learn.html'">
+        <svg width="17" height="17" viewBox="0 0 17 17" fill="none" aria-hidden="true">
+          <circle cx="7.5" cy="7.5" r="5" stroke="currentColor" stroke-width="1.6"/>
+          <line x1="11.5" y1="11.5" x2="15" y2="15" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>
+        </svg>
+      </button>
+      <button class="btn-login">Log In</button>
+      <button class="btn-signup">Sign Up</button>
+      <button class="hamburger" id="hamburgerBtn"
+              aria-label="Open navigation menu"
+              aria-expanded="false"
+              aria-controls="mobileMenu">
+        <span class="ham-bar"></span>
+        <span class="ham-bar"></span>
+        <span class="ham-bar"></span>
+      </button>
+    </div>
+
+  </div>
+
+  <!-- Mobile menu -->
+  <div class="mobile-menu" id="mobileMenu" aria-hidden="true" role="navigation" aria-label="Mobile navigation">
+    <div class="mobile-menu-inner">
+      <a href="index.html" class="mobile-nav-link is-active" aria-current="page">Home</a>
+      <a href="#subjects" class="mobile-nav-link" id="mobileSubjectsLink">Subjects</a>
+      <a href="learn.html" class="mobile-nav-link">Tips &amp; Tricks</a>
+      <a href="learn.html" class="mobile-nav-link">About</a>
+      <div class="mobile-menu-actions">
+        <button class="btn-login">Log In</button>
+        <button class="btn-signup">Sign Up Free</button>
+      </div>
+    </div>
+  </div>
+</header>
+
+<!-- ━━ HERO ━━ -->
+<section class="s-hero" id="hero" aria-label="AbiLearn — Class 10 Learning Platform">
+
+  <!-- Background layers -->
   <div class="hero-glow" aria-hidden="true"></div>
   <div class="hero-grain" aria-hidden="true"></div>
+  <div class="hero-vignette" aria-hidden="true"></div>
 
-  <!-- ── Knowledge network SVG ── -->
-  <svg id="lpBgSvg" class="hero-network"
+  <!-- Knowledge network SVG -->
+  <svg id="heroNet" class="hero-net"
        viewBox="0 0 1440 900"
        preserveAspectRatio="xMidYMid slice"
        aria-hidden="true" focusable="false">
     <defs>
-      <filter id="lpGlowFilter" x="-60%" y="-60%" width="220%" height="220%">
-        <feGaussianBlur stdDeviation="3.5" result="blur"/>
-        <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
-      </filter>
       <filter id="lpSoftGlow" x="-100%" y="-100%" width="300%" height="300%">
         <feGaussianBlur stdDeviation="6"/>
       </filter>
     </defs>
 
     <!-- MATH ZONE -->
-    <g class="lpz-math" opacity=".048" fill="none" stroke="rgba(210,196,255,1)"
+    <g class="lpz-math" opacity=".046" fill="none" stroke="rgba(210,196,255,1)"
        stroke-linecap="round" stroke-linejoin="round">
-      <line x1="62" y1="548" x2="354" y2="548" stroke-width="1.6"/>
-      <polyline points="345,541 354,548 345,555" stroke-width="1.4"/>
-      <line x1="184" y1="712" x2="184" y2="392" stroke-width="1.6"/>
-      <polyline points="177,401 184,392 191,401" stroke-width="1.4"/>
+      <line x1="62" y1="548" x2="354" y2="548" stroke-width="1.5"/>
+      <polyline points="345,541 354,548 345,555" stroke-width="1.3"/>
+      <line x1="184" y1="712" x2="184" y2="392" stroke-width="1.5"/>
+      <polyline points="177,401 184,392 191,401" stroke-width="1.3"/>
       <line x1="234" y1="542" x2="234" y2="554" stroke-width="1"/>
       <line x1="284" y1="542" x2="284" y2="554" stroke-width="1"/>
       <line x1="134" y1="542" x2="134" y2="554" stroke-width="1"/>
       <line x1="178" y1="498" x2="190" y2="498" stroke-width="1"/>
       <line x1="178" y1="448" x2="190" y2="448" stroke-width="1"/>
-      <path d="M 62,548 C 104,484 136,484 178,548 C 220,612 252,612 294,548 C 336,484 356,484 376,548" stroke-width="2"/>
-      <path d="M 72,702 Q 184,418 296,702" stroke-width="1.7"/>
-      <polyline points="94,706 296,706 296,578" stroke-width="1.5"/>
+      <path d="M 62,548 C 104,484 136,484 178,548 C 220,612 252,612 294,548 C 336,484 356,484 376,548" stroke-width="1.8"/>
+      <path d="M 72,702 Q 184,418 296,702" stroke-width="1.5"/>
+      <polyline points="94,706 296,706 296,578" stroke-width="1.4"/>
       <rect x="284" y="694" width="12" height="12" stroke-width="1" opacity=".7"/>
-      <line x1="296" y1="578" x2="94" y2="706" stroke-width=".9" stroke-dasharray="5,4"/>
+      <line x1="296" y1="578" x2="94" y2="706" stroke-width=".8" stroke-dasharray="5,4"/>
       <text x="304" y="436" font-family="monospace" font-size="14" fill="rgba(210,196,255,.9)" stroke="none">y = ax²</text>
       <text x="44" y="534" font-family="monospace" font-size="13" fill="rgba(210,196,255,.85)" stroke="none">sin θ</text>
       <text x="336" y="494" font-family="monospace" font-size="21" fill="rgba(210,196,255,.82)" stroke="none">∫</text>
@@ -523,268 +1070,437 @@
     </g>
 
     <!-- SCIENCE ZONE -->
-    <g class="lpz-sci" opacity=".046" fill="none" stroke="rgba(138,218,255,1)"
+    <g class="lpz-sci" opacity=".044" fill="none" stroke="rgba(138,218,255,1)"
        stroke-linecap="round" stroke-linejoin="round">
-      <circle cx="1248" cy="272" r="22" fill="rgba(138,218,255,.16)" stroke-width="1.6"/>
-      <circle cx="1241" cy="266" r="4.5" fill="rgba(138,218,255,.68)" stroke="none"/>
-      <circle cx="1256" cy="278" r="3.8" fill="rgba(165,230,255,.56)" stroke="none"/>
-      <circle cx="1243" cy="283" r="3.2" fill="rgba(138,218,255,.44)" stroke="none"/>
-      <ellipse cx="1248" cy="272" rx="74" ry="26" stroke-width="1.2" opacity=".72"/>
-      <ellipse cx="1248" cy="272" rx="74" ry="26" stroke-width="1.2" opacity=".72" transform="rotate(60 1248 272)"/>
-      <ellipse cx="1248" cy="272" rx="74" ry="26" stroke-width="1.2" opacity=".72" transform="rotate(120 1248 272)"/>
-      <circle cx="1322" cy="272" r="5.5" fill="rgba(138,218,255,.88)" stroke="none"/>
-      <circle cx="1211" cy="208" r="5.5" fill="rgba(138,218,255,.88)" stroke="none"/>
-      <circle cx="1211" cy="336" r="5.5" fill="rgba(138,218,255,.88)" stroke="none"/>
-      <polygon points="1358,510 1338,545 1298,545 1278,510 1298,475 1338,475" stroke-width="1.6"/>
-      <line x1="1338" y1="475" x2="1358" y2="510" stroke-width=".9" opacity=".52"/>
-      <line x1="1298" y1="545" x2="1278" y2="510" stroke-width=".9" opacity=".52"/>
-      <path d="M 1405,418 Q 1425,436 1405,454 Q 1385,472 1405,490 Q 1425,508 1405,526 Q 1385,544 1405,562 Q 1425,580 1405,598 Q 1385,616 1405,634 Q 1425,652 1405,670 Q 1385,688 1405,706 Q 1425,724 1405,742" stroke-width="1.7"/>
-      <path d="M 1405,418 Q 1385,436 1405,454 Q 1425,472 1405,490 Q 1385,508 1405,526 Q 1425,544 1405,562 Q 1385,580 1405,598 Q 1425,616 1405,634 Q 1385,652 1405,670 Q 1425,688 1405,706 Q 1385,724 1405,742" stroke-width="1.7"/>
-      <g stroke-width=".9" opacity=".6">
-        <line x1="1385" y1="436" x2="1425" y2="436"/>
-        <line x1="1385" y1="472" x2="1425" y2="472"/>
-        <line x1="1385" y1="508" x2="1425" y2="508"/>
-        <line x1="1385" y1="544" x2="1425" y2="544"/>
-        <line x1="1385" y1="580" x2="1425" y2="580"/>
-        <line x1="1385" y1="616" x2="1425" y2="616"/>
-        <line x1="1385" y1="652" x2="1425" y2="652"/>
-        <line x1="1385" y1="688" x2="1425" y2="688"/>
-        <line x1="1385" y1="724" x2="1425" y2="724"/>
+      <circle cx="1248" cy="272" r="22" fill="rgba(138,218,255,.14)" stroke-width="1.5"/>
+      <circle cx="1241" cy="266" r="4.5" fill="rgba(138,218,255,.65)" stroke="none"/>
+      <circle cx="1256" cy="278" r="3.8" fill="rgba(165,230,255,.52)" stroke="none"/>
+      <circle cx="1243" cy="283" r="3.2" fill="rgba(138,218,255,.40)" stroke="none"/>
+      <ellipse cx="1248" cy="272" rx="74" ry="26" stroke-width="1.2" opacity=".68"/>
+      <ellipse cx="1248" cy="272" rx="74" ry="26" stroke-width="1.2" opacity=".68" transform="rotate(60 1248 272)"/>
+      <ellipse cx="1248" cy="272" rx="74" ry="26" stroke-width="1.2" opacity=".68" transform="rotate(120 1248 272)"/>
+      <circle cx="1322" cy="272" r="5.5" fill="rgba(138,218,255,.85)" stroke="none"/>
+      <circle cx="1211" cy="208" r="5.5" fill="rgba(138,218,255,.85)" stroke="none"/>
+      <circle cx="1211" cy="336" r="5.5" fill="rgba(138,218,255,.85)" stroke="none"/>
+      <polygon points="1358,510 1338,545 1298,545 1278,510 1298,475 1338,475" stroke-width="1.5"/>
+      <path d="M 1405,418 Q 1425,436 1405,454 Q 1385,472 1405,490 Q 1425,508 1405,526 Q 1385,544 1405,562 Q 1425,580 1405,598 Q 1385,616 1405,634 Q 1425,652 1405,670 Q 1385,688 1405,706 Q 1425,724 1405,742" stroke-width="1.6"/>
+      <path d="M 1405,418 Q 1385,436 1405,454 Q 1425,472 1405,490 Q 1385,508 1405,526 Q 1425,544 1405,562 Q 1385,580 1405,598 Q 1425,616 1405,634 Q 1385,652 1405,670 Q 1425,688 1405,706 Q 1385,724 1405,742" stroke-width="1.6"/>
+      <g stroke-width=".9" opacity=".55">
+        <line x1="1385" y1="436" x2="1425" y2="436"/><line x1="1385" y1="472" x2="1425" y2="472"/>
+        <line x1="1385" y1="508" x2="1425" y2="508"/><line x1="1385" y1="544" x2="1425" y2="544"/>
+        <line x1="1385" y1="580" x2="1425" y2="580"/><line x1="1385" y1="616" x2="1425" y2="616"/>
+        <line x1="1385" y1="652" x2="1425" y2="652"/><line x1="1385" y1="688" x2="1425" y2="688"/>
       </g>
-      <text x="1094" y="190" font-family="monospace" font-size="13" fill="rgba(138,218,255,.88)" stroke="none">H₂O</text>
-      <text x="1116" y="754" font-family="monospace" font-size="12" fill="rgba(138,218,255,.82)" stroke="none">C₆H₁₂O₆</text>
-      <text x="1148" y="386" font-family="monospace" font-size="12" fill="rgba(138,218,255,.76)" stroke="none">Fe + O₂ → Fe₂O₃</text>
+      <text x="1094" y="190" font-family="monospace" font-size="13" fill="rgba(138,218,255,.85)" stroke="none">H₂O</text>
+      <text x="1116" y="754" font-family="monospace" font-size="12" fill="rgba(138,218,255,.78)" stroke="none">C₆H₁₂O₆</text>
+      <text x="1148" y="386" font-family="monospace" font-size="12" fill="rgba(138,218,255,.72)" stroke="none">Fe + O₂ → Fe₂O₃</text>
     </g>
 
     <!-- BOOK ZONE -->
-    <g class="lpz-book" opacity=".046" stroke="rgba(255,226,138,1)" fill="none"
+    <g class="lpz-book" opacity=".044" stroke="rgba(255,226,138,1)" fill="none"
        stroke-linecap="round" stroke-linejoin="round">
-      <path d="M 56,44 L 162,33 L 164,196 L 52,207 Z" stroke-width="1.6"/>
-      <path d="M 164,33 L 272,44 L 276,207 L 164,196 Z" stroke-width="1.6"/>
-      <line x1="163" y1="33" x2="164" y2="196" stroke-width="2.8" opacity=".58"/>
-      <line x1="70" y1="70" x2="150" y2="67" stroke-width="1.3" opacity=".84"/>
-      <line x1="68" y1="88" x2="148" y2="85" stroke-width="1.3" opacity=".78"/>
-      <line x1="66" y1="106" x2="148" y2="103" stroke-width="1.1" opacity=".72"/>
-      <line x1="66" y1="124" x2="145" y2="121" stroke-width="1.1" opacity=".65"/>
-      <line x1="66" y1="142" x2="140" y2="139" stroke-width="1.0" opacity=".58"/>
-      <line x1="66" y1="160" x2="134" y2="157" stroke-width="1.0" opacity=".50"/>
-      <line x1="177" y1="70" x2="260" y2="67" stroke-width="1.3" opacity=".84"/>
-      <line x1="179" y1="88" x2="260" y2="85" stroke-width="1.3" opacity=".78"/>
-      <line x1="179" y1="106" x2="260" y2="103" stroke-width="1.1" opacity=".72"/>
-      <line x1="179" y1="124" x2="258" y2="121" stroke-width="1.1" opacity=".65"/>
-      <line x1="179" y1="142" x2="254" y2="139" stroke-width="1.0" opacity=".58"/>
-      <line x1="179" y1="160" x2="248" y2="157" stroke-width="1.0" opacity=".50"/>
+      <path d="M 56,44 L 162,33 L 164,196 L 52,207 Z" stroke-width="1.5"/>
+      <path d="M 164,33 L 272,44 L 276,207 L 164,196 Z" stroke-width="1.5"/>
+      <line x1="163" y1="33" x2="164" y2="196" stroke-width="2.6" opacity=".55"/>
+      <line x1="70" y1="70" x2="150" y2="67" stroke-width="1.2" opacity=".82"/>
+      <line x1="68" y1="88" x2="148" y2="85" stroke-width="1.2" opacity=".74"/>
+      <line x1="66" y1="106" x2="148" y2="103" stroke-width="1.0" opacity=".68"/>
+      <line x1="66" y1="124" x2="145" y2="121" stroke-width="1.0" opacity=".60"/>
+      <line x1="66" y1="142" x2="140" y2="139" stroke-width=".9"  opacity=".52"/>
+      <line x1="177" y1="70" x2="260" y2="67" stroke-width="1.2" opacity=".82"/>
+      <line x1="179" y1="88" x2="260" y2="85" stroke-width="1.2" opacity=".74"/>
+      <line x1="179" y1="106" x2="260" y2="103" stroke-width="1.0" opacity=".68"/>
+      <line x1="179" y1="124" x2="258" y2="121" stroke-width="1.0" opacity=".60"/>
+      <line x1="179" y1="142" x2="254" y2="139" stroke-width=".9"  opacity=".52"/>
     </g>
 
-    <!-- GEOGRAPHY ZONE -->
-    <g class="lpz-geo" opacity=".046" stroke="rgba(134,226,182,1)" fill="none" stroke-linecap="round">
-      <ellipse cx="1274" cy="820" rx="152" ry="66" stroke-width="1.3" opacity=".88"/>
-      <ellipse cx="1274" cy="820" rx="112" ry="49" stroke-width="1.2" opacity=".76"/>
-      <ellipse cx="1274" cy="820" rx="76"  ry="33" stroke-width="1.1" opacity=".68"/>
-      <ellipse cx="1274" cy="820" rx="44"  ry="19" stroke-width="1.0" opacity=".58"/>
-      <ellipse cx="1274" cy="820" rx="20"  ry="9"  stroke-width=".9"  opacity=".48" fill="rgba(134,226,182,.1)"/>
-      <line x1="1400" y1="786" x2="1400" y2="740" stroke-width="2"/>
-      <polyline points="1393,749 1400,740 1407,749" fill="rgba(134,226,182,.65)" stroke-width="1.3"/>
-      <line x1="1378" y1="763" x2="1422" y2="763" stroke-width="2"/>
-      <polyline points="1413,756 1422,763 1413,770" stroke-width="1.3"/>
-      <text x="1394" y="738" font-family="sans-serif" font-size="10" font-weight="700"
-            fill="rgba(134,226,182,.92)" stroke="none">N</text>
+    <!-- GEO ZONE -->
+    <g class="lpz-geo" opacity=".044" stroke="rgba(134,226,182,1)" fill="none" stroke-linecap="round">
+      <ellipse cx="1274" cy="820" rx="152" ry="66" stroke-width="1.2" opacity=".85"/>
+      <ellipse cx="1274" cy="820" rx="112" ry="49" stroke-width="1.1" opacity=".72"/>
+      <ellipse cx="1274" cy="820" rx="76"  ry="33" stroke-width="1.0" opacity=".62"/>
+      <ellipse cx="1274" cy="820" rx="44"  ry="19" stroke-width=".9"  opacity=".52"/>
+      <ellipse cx="1274" cy="820" rx="20"  ry="9"  stroke-width=".8"  opacity=".44" fill="rgba(134,226,182,.08)"/>
+      <line x1="1400" y1="786" x2="1400" y2="740" stroke-width="1.8"/>
+      <line x1="1378" y1="763" x2="1422" y2="763" stroke-width="1.8"/>
+      <text x="1394" y="738" font-family="sans-serif" font-size="10" font-weight="700" fill="rgba(134,226,182,.9)" stroke="none">N</text>
     </g>
 
-    <!-- Network connections — left cluster -->
-    <g opacity=".18" stroke="rgba(180,158,255,1)" stroke-width=".9" fill="none">
-      <line x1="60"  y1="182" x2="162" y2="284"/>
-      <line x1="162" y1="284" x2="48"  y2="422"/>
-      <line x1="48"  y1="422" x2="112" y2="526"/>
-      <line x1="112" y1="526" x2="188" y2="412"/>
-      <line x1="188" y1="412" x2="162" y2="284"/>
-      <line x1="112" y1="526" x2="60"  y2="652"/>
-      <line x1="60"  y1="652" x2="138" y2="724"/>
-      <line x1="138" y1="724" x2="282" y2="684"/>
-      <line x1="242" y1="562" x2="282" y2="684"/>
-      <line x1="112" y1="526" x2="242" y2="562"/>
-      <line x1="188" y1="412" x2="242" y2="562"/>
-      <line x1="162" y1="284" x2="384" y2="282"/>
-      <line x1="384" y1="282" x2="364" y2="420"/>
-      <line x1="364" y1="420" x2="188" y2="412"/>
+    <!-- Network — left cluster -->
+    <g opacity=".16" stroke="rgba(180,158,255,1)" stroke-width=".9" fill="none">
+      <line x1="60" y1="182" x2="162" y2="284"/><line x1="162" y1="284" x2="48" y2="422"/>
+      <line x1="48" y1="422" x2="112" y2="526"/><line x1="112" y1="526" x2="188" y2="412"/>
+      <line x1="188" y1="412" x2="162" y2="284"/><line x1="112" y1="526" x2="60" y2="652"/>
+      <line x1="60" y1="652" x2="138" y2="724"/><line x1="138" y1="724" x2="282" y2="684"/>
+      <line x1="242" y1="562" x2="282" y2="684"/><line x1="112" y1="526" x2="242" y2="562"/>
+      <line x1="188" y1="412" x2="242" y2="562"/><line x1="162" y1="284" x2="384" y2="282"/>
+      <line x1="384" y1="282" x2="364" y2="420"/><line x1="364" y1="420" x2="188" y2="412"/>
       <line x1="242" y1="562" x2="364" y2="420"/>
     </g>
 
-    <!-- Network connections — right cluster -->
-    <g opacity=".18" stroke="rgba(180,158,255,1)" stroke-width=".9" fill="none">
-      <line x1="1380" y1="182" x2="1278" y2="284"/>
-      <line x1="1278" y1="284" x2="1392" y2="422"/>
-      <line x1="1392" y1="422" x2="1328" y2="526"/>
-      <line x1="1328" y1="526" x2="1252" y2="412"/>
-      <line x1="1252" y1="412" x2="1278" y2="284"/>
-      <line x1="1328" y1="526" x2="1380" y2="652"/>
-      <line x1="1380" y1="652" x2="1302" y2="724"/>
-      <line x1="1302" y1="724" x2="1158" y2="684"/>
-      <line x1="1198" y1="562" x2="1158" y2="684"/>
-      <line x1="1328" y1="526" x2="1198" y2="562"/>
-      <line x1="1252" y1="412" x2="1198" y2="562"/>
-      <line x1="1278" y1="284" x2="1056" y2="282"/>
-      <line x1="1056" y1="282" x2="1076" y2="420"/>
-      <line x1="1076" y1="420" x2="1252" y2="412"/>
+    <!-- Network — right cluster -->
+    <g opacity=".16" stroke="rgba(180,158,255,1)" stroke-width=".9" fill="none">
+      <line x1="1380" y1="182" x2="1278" y2="284"/><line x1="1278" y1="284" x2="1392" y2="422"/>
+      <line x1="1392" y1="422" x2="1328" y2="526"/><line x1="1328" y1="526" x2="1252" y2="412"/>
+      <line x1="1252" y1="412" x2="1278" y2="284"/><line x1="1328" y1="526" x2="1380" y2="652"/>
+      <line x1="1380" y1="652" x2="1302" y2="724"/><line x1="1302" y1="724" x2="1158" y2="684"/>
+      <line x1="1198" y1="562" x2="1158" y2="684"/><line x1="1328" y1="526" x2="1198" y2="562"/>
+      <line x1="1252" y1="412" x2="1198" y2="562"/><line x1="1278" y1="284" x2="1056" y2="282"/>
+      <line x1="1056" y1="282" x2="1076" y2="420"/><line x1="1076" y1="420" x2="1252" y2="412"/>
       <line x1="1198" y1="562" x2="1076" y2="420"/>
     </g>
 
-    <!-- Network — top band -->
-    <g opacity=".14" stroke="rgba(180,158,255,1)" stroke-width=".8" fill="none">
-      <line x1="462"  y1="56"  x2="582"  y2="38"/>
-      <line x1="582"  y1="38"  x2="722"  y2="48"/>
-      <line x1="722"  y1="48"  x2="872"  y2="40"/>
-      <line x1="872"  y1="40"  x2="1004" y2="60"/>
-      <line x1="384"  y1="282" x2="462"  y2="56"/>
-      <line x1="1056" y1="282" x2="1004" y2="60"/>
+    <!-- Network — top/bottom bands -->
+    <g opacity=".12" stroke="rgba(180,158,255,1)" stroke-width=".8" fill="none">
+      <line x1="462" y1="56" x2="582" y2="38"/><line x1="582" y1="38" x2="722" y2="48"/>
+      <line x1="722" y1="48" x2="872" y2="40"/><line x1="872" y1="40" x2="1004" y2="60"/>
+      <line x1="384" y1="282" x2="462" y2="56"/><line x1="1056" y1="282" x2="1004" y2="60"/>
+    </g>
+    <g opacity=".12" stroke="rgba(180,158,255,1)" stroke-width=".8" fill="none">
+      <line x1="452" y1="850" x2="602" y2="834"/><line x1="602" y1="834" x2="742" y2="858"/>
+      <line x1="742" y1="858" x2="902" y2="842"/><line x1="902" y1="842" x2="1044" y2="854"/>
+      <line x1="282" y1="684" x2="452" y2="850"/><line x1="1158" y1="684" x2="1044" y2="854"/>
     </g>
 
-    <!-- Network — bottom band -->
-    <g opacity=".14" stroke="rgba(180,158,255,1)" stroke-width=".8" fill="none">
-      <line x1="452"  y1="850" x2="602"  y2="834"/>
-      <line x1="602"  y1="834" x2="742"  y2="858"/>
-      <line x1="742"  y1="858" x2="902"  y2="842"/>
-      <line x1="902"  y1="842" x2="1044" y2="854"/>
-      <line x1="282"  y1="684" x2="452"  y2="850"/>
-      <line x1="1158" y1="684" x2="1044" y2="854"/>
+    <!-- Static nodes -->
+    <g fill="rgba(192,174,255,1)" opacity=".32">
+      <circle cx="60" cy="182" r="2.2"/><circle cx="48" cy="422" r="2.0"/>
+      <circle cx="60" cy="652" r="2.0"/><circle cx="138" cy="724" r="1.8"/>
+      <circle cx="282" cy="684" r="2.0"/><circle cx="364" cy="420" r="2.0"/>
+      <circle cx="1380" cy="182" r="2.2"/><circle cx="1392" cy="422" r="2.0"/>
+      <circle cx="1380" cy="652" r="2.0"/><circle cx="1302" cy="724" r="1.8"/>
+      <circle cx="1158" cy="684" r="2.0"/><circle cx="1076" cy="420" r="2.0"/>
+    </g>
+    <g fill="rgba(192,174,255,1)" opacity=".24">
+      <circle cx="462" cy="56" r="1.8"/><circle cx="582" cy="38" r="1.6"/>
+      <circle cx="722" cy="48" r="1.8"/><circle cx="872" cy="40" r="1.6"/>
+      <circle cx="1004" cy="60" r="1.8"/><circle cx="452" cy="850" r="1.8"/>
+      <circle cx="602" cy="834" r="1.6"/><circle cx="742" cy="858" r="1.8"/>
+      <circle cx="902" cy="842" r="1.6"/><circle cx="1044" cy="854" r="1.8"/>
     </g>
 
-    <!-- Static nodes — left -->
-    <g fill="rgba(192,174,255,1)" opacity=".35">
-      <circle cx="60"  cy="182" r="2.2"/>
-      <circle cx="48"  cy="422" r="2.0"/>
-      <circle cx="60"  cy="652" r="2.0"/>
-      <circle cx="138" cy="724" r="1.8"/>
-      <circle cx="282" cy="684" r="2.0"/>
-      <circle cx="364" cy="420" r="2.0"/>
-    </g>
-
-    <!-- Static nodes — right -->
-    <g fill="rgba(192,174,255,1)" opacity=".35">
-      <circle cx="1380" cy="182" r="2.2"/>
-      <circle cx="1392" cy="422" r="2.0"/>
-      <circle cx="1380" cy="652" r="2.0"/>
-      <circle cx="1302" cy="724" r="1.8"/>
-      <circle cx="1158" cy="684" r="2.0"/>
-      <circle cx="1076" cy="420" r="2.0"/>
-    </g>
-
-    <!-- Static nodes — bands -->
-    <g fill="rgba(192,174,255,1)" opacity=".28">
-      <circle cx="462"  cy="56"  r="1.8"/>
-      <circle cx="582"  cy="38"  r="1.6"/>
-      <circle cx="722"  cy="48"  r="1.8"/>
-      <circle cx="872"  cy="40"  r="1.6"/>
-      <circle cx="1004" cy="60"  r="1.8"/>
-      <circle cx="452"  cy="850" r="1.8"/>
-      <circle cx="602"  cy="834" r="1.6"/>
-      <circle cx="742"  cy="858" r="1.8"/>
-      <circle cx="902"  cy="842" r="1.6"/>
-      <circle cx="1044" cy="854" r="1.8"/>
-    </g>
-
-    <!-- Animated drifting nodes -->
-    <g class="lpn-d1"><circle cx="162" cy="284" r="3.2" fill="rgba(210,192,255,.75)"/></g>
-    <g class="lpn-d2"><circle cx="188" cy="412" r="2.8" fill="rgba(210,192,255,.65)"/></g>
-    <g class="lpn-d3"><circle cx="112" cy="526" r="2.6" fill="rgba(210,192,255,.60)"/></g>
-    <g class="lpn-d2"><circle cx="1278" cy="284" r="3.2" fill="rgba(210,192,255,.75)"/></g>
-    <g class="lpn-d1"><circle cx="1252" cy="412" r="2.8" fill="rgba(210,192,255,.65)"/></g>
-    <g class="lpn-d3"><circle cx="1328" cy="526" r="2.6" fill="rgba(210,192,255,.60)"/></g>
+    <!-- Animated nodes -->
+    <g class="lpn-d1"><circle cx="162" cy="284" r="3.2" fill="rgba(210,192,255,.72)"/></g>
+    <g class="lpn-d2"><circle cx="188" cy="412" r="2.8" fill="rgba(210,192,255,.62)"/></g>
+    <g class="lpn-d3"><circle cx="112" cy="526" r="2.6" fill="rgba(210,192,255,.58)"/></g>
+    <g class="lpn-d2"><circle cx="1278" cy="284" r="3.2" fill="rgba(210,192,255,.72)"/></g>
+    <g class="lpn-d1"><circle cx="1252" cy="412" r="2.8" fill="rgba(210,192,255,.62)"/></g>
+    <g class="lpn-d3"><circle cx="1328" cy="526" r="2.6" fill="rgba(210,192,255,.58)"/></g>
 
     <!-- Glowing accent nodes -->
     <g class="lpn-glow">
-      <circle cx="384" cy="282" r="8" fill="rgba(180,150,255,.18)" filter="url(#lpSoftGlow)"/>
-      <circle cx="384" cy="282" r="3.5" fill="rgba(210,192,255,.88)"/>
+      <circle cx="384" cy="282" r="7" fill="rgba(180,150,255,.16)" filter="url(#lpSoftGlow)"/>
+      <circle cx="384" cy="282" r="3.2" fill="rgba(210,192,255,.85)"/>
     </g>
     <g class="lpn-glow2">
-      <circle cx="1056" cy="282" r="8" fill="rgba(180,150,255,.18)" filter="url(#lpSoftGlow)"/>
-      <circle cx="1056" cy="282" r="3.5" fill="rgba(210,192,255,.88)"/>
+      <circle cx="1056" cy="282" r="7" fill="rgba(180,150,255,.16)" filter="url(#lpSoftGlow)"/>
+      <circle cx="1056" cy="282" r="3.2" fill="rgba(210,192,255,.85)"/>
     </g>
     <g class="lpn-glow3">
-      <circle cx="722" cy="48" r="7" fill="rgba(180,150,255,.14)" filter="url(#lpSoftGlow)"/>
-      <circle cx="722" cy="48" r="3.0" fill="rgba(210,192,255,.82)"/>
+      <circle cx="722" cy="48" r="6" fill="rgba(180,150,255,.13)" filter="url(#lpSoftGlow)"/>
+      <circle cx="722" cy="48" r="2.8" fill="rgba(210,192,255,.78)"/>
     </g>
     <g class="lpn-glow">
-      <circle cx="742" cy="858" r="7" fill="rgba(180,150,255,.12)" filter="url(#lpSoftGlow)"/>
-      <circle cx="742" cy="858" r="3.0" fill="rgba(210,192,255,.78)"/>
+      <circle cx="742" cy="858" r="6" fill="rgba(180,150,255,.11)" filter="url(#lpSoftGlow)"/>
+      <circle cx="742" cy="858" r="2.8" fill="rgba(210,192,255,.72)"/>
     </g>
 
     <!-- Scattered particles -->
-    <g fill="rgba(192,174,255,.28)" opacity=".8">
-      <circle cx="438"  cy="198" r="1.8"/>
-      <circle cx="1016" cy="198" r="1.8"/>
-      <circle cx="470"  cy="768" r="1.6"/>
-      <circle cx="978"  cy="778" r="1.6"/>
-      <circle cx="240"  cy="128" r="1.6"/>
-      <circle cx="1200" cy="130" r="1.6"/>
-      <circle cx="250"  cy="776" r="1.5"/>
-      <circle cx="1192" cy="772" r="1.5"/>
+    <g fill="rgba(192,174,255,.24)">
+      <circle cx="438" cy="198" r="1.6"/><circle cx="1016" cy="198" r="1.6"/>
+      <circle cx="470" cy="768" r="1.4"/><circle cx="978" cy="778" r="1.4"/>
+      <circle cx="240" cy="128" r="1.4"/><circle cx="1200" cy="130" r="1.4"/>
     </g>
   </svg>
 
-  <!-- ── NAV ── -->
-  <nav class="hero-nav" role="navigation" aria-label="Main">
-    <a href="index.html" class="brand brand-anim" aria-label="AbiLearn — Home">
-      <img src="assets/logo.jpeg" alt="" class="brand-img" aria-hidden="true">
-      <span class="brand-name">
-        <span class="brand-abi">Abi</span><span class="brand-learn">Learn</span>
-      </span>
-    </a>
-    <div class="nav-right">
-      <button class="btn-login">Log In</button>
+  <!-- Hero content -->
+  <div class="hero-content container" id="hero-main">
+
+    <div class="lp-eyebrow a0" aria-label="CBSE Class 10 — Complete Study System">
+      <span class="eyebrow-dot" aria-hidden="true"></span>
+      CBSE Class 10
+      <span style="color:rgba(172,152,255,.28);margin:0 .15rem" aria-hidden="true">·</span>
+      Complete Study System
+      <span class="eyebrow-dot" aria-hidden="true"></span>
     </div>
-  </nav>
 
-  <!-- ── MAIN CONTENT ── -->
-  <main class="hero-main" id="hero-content" role="main">
+    <h1 class="hero-h1">
+      <span class="h1-line1 a1">Everything Class 10.</span>
+      <span class="h1-line2 a1">Built for the<br>Mind Ahead.</span>
+    </h1>
 
-    <div class="hero-left">
-      <div class="lp-eyebrow a0" aria-label="CBSE Class 10 — Complete Study System">
-        <span class="eyebrow-dot" aria-hidden="true"></span>
-        CBSE Class 10
-        <span aria-hidden="true" style="color:rgba(172,152,255,.30);margin:0 .1rem">·</span>
-        Complete Study System
-        <span class="eyebrow-dot" aria-hidden="true"></span>
+    <p class="hero-desc a2">
+      Notes, formula sheets, MCQ practice, PYQs and focused revision resources —
+      organised chapter by chapter so you can learn, practise and prepare with clarity.
+    </p>
+
+    <div class="hero-actions a3">
+      <a href="learn.html"
+         onclick="return guardNav(event,'learn.html')"
+         class="btn-primary"
+         role="button">
+        Start Learning
+        <span class="btn-arrow" aria-hidden="true">
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+            <path d="M3 8h10M9 4l4 4-4 4" stroke="#2C12AA" stroke-width="2"
+                  stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </span>
+      </a>
+      <a href="learn.html" class="btn-ghost" role="button">About AbiLearn</a>
+    </div>
+
+  </div>
+</section>
+
+<!-- ━━ VALUE STRIP ━━ -->
+<section class="s-values" aria-label="What AbiLearn includes">
+  <div class="container">
+    <div class="values-grid">
+
+      <div class="value-item">
+        <div class="value-icon" aria-hidden="true">
+          <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+            <path d="M10 4.5C10 4.5 7.5 3.2 4.5 4.5V15.5C7.5 14.2 10 15.5 10 15.5V4.5Z" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/>
+            <path d="M10 4.5C10 4.5 12.5 3.2 15.5 4.5V15.5C12.5 14.2 10 15.5 10 15.5V4.5Z" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </div>
+        <div class="value-title">Chapter-wise Learning</div>
+        <p class="value-desc">Every subject broken down chapter by chapter with structured notes and key concepts.</p>
       </div>
 
-      <h1 class="lp-h1">
-        <span class="h1-line1 a1">Everything Class 10.</span>
-        <span class="h1-line2 a1">Built for the<br>Mind Ahead.</span>
-      </h1>
-    </div>
-
-    <div class="hero-right">
-      <p class="lp-desc a2">
-        Notes, formula sheets, MCQ practice and PYQs —
-        built chapter by chapter, the way you actually prepare.
-      </p>
-
-      <div class="lp-cta-row a3">
-        <a href="learn.html"
-           onclick="return guardNav(event,'learn.html')"
-           class="btn-primary"
-           role="button">
-          Start Learning
-          <span class="btn-arrow" aria-hidden="true">
-            <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
-              <path d="M3 8h10M9 4l4 4-4 4" stroke="#2C12AA" stroke-width="2"
-                    stroke-linecap="round" stroke-linejoin="round"/>
-            </svg>
-          </span>
-        </a>
-        <a href="learn.html" class="btn-secondary" role="button">About AbiLearn</a>
+      <div class="value-item">
+        <div class="value-icon" aria-hidden="true">
+          <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+            <rect x="3.5" y="4" width="5.5" height="5.5" rx="1.2" stroke="currentColor" stroke-width="1.4"/>
+            <path d="M5.5 6.5l1 1.2 2-2.2" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/>
+            <rect x="3.5" y="11.5" width="5.5" height="4.5" rx="1.2" stroke="currentColor" stroke-width="1.4"/>
+            <line x1="11" y1="7" x2="16.5" y2="7" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/>
+            <line x1="11" y1="13.5" x2="16.5" y2="13.5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/>
+            <line x1="11" y1="15.5" x2="14.5" y2="15.5" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" opacity=".55"/>
+          </svg>
+        </div>
+        <div class="value-title">MCQ Practice</div>
+        <p class="value-desc">Topic-specific multiple choice questions for active recall and self-assessment.</p>
       </div>
 
-      <nav class="lp-subjects a4" aria-label="Subjects">
-        <a href="maths.html"   class="lp-sub"><span class="sub-dot m" aria-hidden="true"></span>Mathematics</a>
-        <a href="science.html" class="lp-sub"><span class="sub-dot s" aria-hidden="true"></span>Science</a>
-        <a href="english.html" class="lp-sub"><span class="sub-dot e" aria-hidden="true"></span>English</a>
-        <a href="social.html"  class="lp-sub"><span class="sub-dot g" aria-hidden="true"></span>Social Science</a>
-      </nav>
+      <div class="value-item">
+        <div class="value-icon" aria-hidden="true">
+          <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+            <rect x="4" y="4.5" width="12" height="13" rx="2" stroke="currentColor" stroke-width="1.4"/>
+            <path d="M7.5 9h5M7.5 12h5M7.5 15h3" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/>
+            <path d="M6 2.5h8a1 1 0 011 1" stroke="currentColor" stroke-width="1.1" stroke-linecap="round" opacity=".4"/>
+          </svg>
+        </div>
+        <div class="value-title">PYQs &amp; Sample Papers</div>
+        <p class="value-desc">Past year questions and sample papers organised by chapter and exam pattern.</p>
+      </div>
+
+      <div class="value-item">
+        <div class="value-icon" aria-hidden="true">
+          <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+            <path d="M3 14.5l3.5-4 3 2.5 4-5.5 3 2" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+            <circle cx="16.5" cy="9.5" r="1.5" fill="currentColor"/>
+          </svg>
+        </div>
+        <div class="value-title">Track Your Progress</div>
+        <p class="value-desc">Mistake Bank and progress tracking to identify and improve weak areas over time.</p>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ━━ SUBJECTS ━━ -->
+<section class="s-subjects" id="subjects">
+  <div class="container">
+
+    <div class="section-head">
+      <h2>Explore Subjects</h2>
+      <p>Select a subject to begin chapter-by-chapter learning, practice and revision.</p>
     </div>
 
-  </main>
-</div>
+    <div class="subjects-grid">
+
+      <a href="maths.html" class="subject-card math" aria-label="Mathematics — Concepts, Formulas, MCQs, PYQs">
+        <div class="subject-icon" aria-hidden="true">
+          <svg width="22" height="22" viewBox="0 0 22 22" fill="none">
+            <path d="M6 17L11 5l5 12" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+            <path d="M7.8 13h6.4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+            <line x1="3" y1="11" x2="19" y2="11" stroke="currentColor" stroke-width="1.2" stroke-dasharray="2,3" opacity=".4"/>
+          </svg>
+        </div>
+        <h3 class="subject-name">Mathematics</h3>
+        <div class="subject-tags">
+          <span class="subject-tag">Algebra</span>
+          <span class="subject-tag">Geometry</span>
+          <span class="subject-tag">Trigonometry</span>
+          <span class="subject-tag">PYQs</span>
+        </div>
+        <span class="subject-cta" aria-hidden="true">
+          Explore
+          <svg width="13" height="13" viewBox="0 0 13 13" fill="none">
+            <path d="M2.5 6.5h8M7 3.5l3 3-3 3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </span>
+      </a>
+
+      <a href="science.html" class="subject-card sci" aria-label="Science — Physics, Chemistry, Biology">
+        <div class="subject-icon" aria-hidden="true">
+          <svg width="22" height="22" viewBox="0 0 22 22" fill="none">
+            <circle cx="11" cy="11" r="2.5" fill="currentColor" opacity=".7"/>
+            <ellipse cx="11" cy="11" rx="8" ry="3.5" stroke="currentColor" stroke-width="1.4"/>
+            <ellipse cx="11" cy="11" rx="8" ry="3.5" stroke="currentColor" stroke-width="1.4" transform="rotate(60 11 11)"/>
+            <ellipse cx="11" cy="11" rx="8" ry="3.5" stroke="currentColor" stroke-width="1.4" transform="rotate(-60 11 11)"/>
+          </svg>
+        </div>
+        <h3 class="subject-name">Science</h3>
+        <div class="subject-tags">
+          <span class="subject-tag">Physics</span>
+          <span class="subject-tag">Chemistry</span>
+          <span class="subject-tag">Biology</span>
+          <span class="subject-tag">PYQs</span>
+        </div>
+        <span class="subject-cta" aria-hidden="true">
+          Explore
+          <svg width="13" height="13" viewBox="0 0 13 13" fill="none">
+            <path d="M2.5 6.5h8M7 3.5l3 3-3 3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </span>
+      </a>
+
+      <a href="english.html" class="subject-card eng" aria-label="English — Language, Literature, Writing">
+        <div class="subject-icon" aria-hidden="true">
+          <svg width="22" height="22" viewBox="0 0 22 22" fill="none">
+            <rect x="4" y="3" width="14" height="16" rx="2" stroke="currentColor" stroke-width="1.4"/>
+            <path d="M7.5 8h7M7.5 11.5h7M7.5 15h4.5" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/>
+          </svg>
+        </div>
+        <h3 class="subject-name">English</h3>
+        <div class="subject-tags">
+          <span class="subject-tag">Language</span>
+          <span class="subject-tag">Literature</span>
+          <span class="subject-tag">Writing</span>
+          <span class="subject-tag">Grammar</span>
+        </div>
+        <span class="subject-cta" aria-hidden="true">
+          Explore
+          <svg width="13" height="13" viewBox="0 0 13 13" fill="none">
+            <path d="M2.5 6.5h8M7 3.5l3 3-3 3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </span>
+      </a>
+
+      <a href="social.html" class="subject-card soc" aria-label="Social Science — History, Geography, Civics, Economics">
+        <div class="subject-icon" aria-hidden="true">
+          <svg width="22" height="22" viewBox="0 0 22 22" fill="none">
+            <circle cx="11" cy="11" r="7.5" stroke="currentColor" stroke-width="1.4"/>
+            <path d="M11 3.5c0 0-4 3-4 7.5s4 7.5 4 7.5" stroke="currentColor" stroke-width="1.2"/>
+            <path d="M11 3.5c0 0 4 3 4 7.5s-4 7.5-4 7.5" stroke="currentColor" stroke-width="1.2"/>
+            <path d="M3.5 11h15" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/>
+            <path d="M4.5 7.5h13M4.5 14.5h13" stroke="currentColor" stroke-width=".9" stroke-linecap="round" opacity=".55"/>
+          </svg>
+        </div>
+        <h3 class="subject-name">Social Science</h3>
+        <div class="subject-tags">
+          <span class="subject-tag">History</span>
+          <span class="subject-tag">Geography</span>
+          <span class="subject-tag">Civics</span>
+          <span class="subject-tag">Economics</span>
+        </div>
+        <span class="subject-cta" aria-hidden="true">
+          Explore
+          <svg width="13" height="13" viewBox="0 0 13 13" fill="none">
+            <path d="M2.5 6.5h8M7 3.5l3 3-3 3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </span>
+      </a>
+
+    </div>
+  </div>
+</section>
+
+<!-- ━━ LEARNING JOURNEY ━━ -->
+<section class="s-journey" aria-label="How AbiLearn works">
+  <div class="container">
+
+    <div class="section-head">
+      <h2>A Complete Learning System</h2>
+      <p>Not just notes. A structured path from first concept to exam day.</p>
+    </div>
+
+    <div class="journey-grid" role="list">
+
+      <div class="journey-step" role="listitem">
+        <div class="step-num" aria-hidden="true">01</div>
+        <h4 class="step-title">Learn</h4>
+        <p class="step-desc">Chapter-wise notes and structured concept breakdowns across every subject and topic.</p>
+      </div>
+
+      <div class="journey-step" role="listitem">
+        <div class="step-num" aria-hidden="true">02</div>
+        <h4 class="step-title">Practise</h4>
+        <p class="step-desc">MCQs and focused exercises to actively test understanding after each chapter.</p>
+      </div>
+
+      <div class="journey-step" role="listitem">
+        <div class="step-num" aria-hidden="true">03</div>
+        <h4 class="step-title">Review</h4>
+        <p class="step-desc">Past year questions and sample papers to understand CBSE exam patterns and question types.</p>
+      </div>
+
+      <div class="journey-step" role="listitem">
+        <div class="step-num" aria-hidden="true">04</div>
+        <h4 class="step-title">Improve</h4>
+        <p class="step-desc">Mistake Bank and progress tracking to identify gaps and refine your preparation where it matters.</p>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ━━ FOOTER ━━ -->
+<footer class="site-footer" role="contentinfo">
+  <div class="container footer-inner">
+
+    <div class="footer-brand">
+      <a href="index.html" class="brand" aria-label="AbiLearn — Home">
+        <img src="assets/logo.jpeg" alt="" class="brand-img" aria-hidden="true" style="width:30px;height:30px;border-radius:7px">
+        <span class="brand-name" style="font-size:1.12rem">
+          <span class="brand-abi">Abi</span><span class="brand-learn">Learn</span>
+        </span>
+      </a>
+      <p class="footer-copy" style="margin-top:.6rem">CBSE Class 10 Learning Platform<br>© 2026 AbiLearn</p>
+    </div>
+
+    <nav class="footer-nav" aria-label="Footer navigation">
+      <a href="learn.html" onclick="return guardNav(event,'learn.html')">Start Learning</a>
+      <a href="#subjects">Subjects</a>
+      <a href="dashboard.html" onclick="return guardNav(event,'dashboard.html')">Dashboard</a>
+      <a href="mistakes.html" onclick="return guardNav(event,'mistakes.html')">Mistake Bank</a>
+    </nav>
+
+    <div class="footer-social" aria-label="AbiLearn on social media">
+      <a href="https://www.instagram.com/abilearn10/" target="_blank" rel="noopener noreferrer" aria-label="AbiLearn on Instagram">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="16" height="16" aria-hidden="true">
+          <defs><linearGradient id="ig-f" x1="0%" y1="100%" x2="100%" y2="0%"><stop offset="0%" stop-color="#f09433"/><stop offset="100%" stop-color="#bc1888"/></linearGradient></defs>
+          <path fill="url(#ig-f)" d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0 2.163a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z"/>
+        </svg>
+      </a>
+      <a href="https://www.youtube.com/channel/UCEIveaQHZfa35rr17W6bR-g" target="_blank" rel="noopener noreferrer" aria-label="AbiLearn on YouTube">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="16" height="16" fill="#FF0000" aria-hidden="true">
+          <path d="M23.498 6.186a3.016 3.016 0 00-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 00.502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 002.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 002.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/>
+        </svg>
+      </a>
+      <a href="https://x.com/abilearn10" target="_blank" rel="noopener noreferrer" aria-label="AbiLearn on X">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="16" height="16" fill="currentColor" aria-hidden="true">
+          <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.748l7.73-8.835L1.254 2.25H8.08l4.259 5.632L18.244 2.25zm-1.161 17.52h1.833L7.084 4.126H5.117L17.083 19.77z"/>
+        </svg>
+      </a>
+    </div>
+
+  </div>
+</footer>
 
 <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-auth-compat.js"></script>
@@ -795,16 +1511,52 @@
 <script src="js/app.js?v=73"></script>
 <script src="js/auth.js?v=32"></script>
 <script>
+/* Mobile menu toggle */
 (function(){
-  var svg  = document.getElementById('lpBgSvg');
+  var btn  = document.getElementById('hamburgerBtn');
+  var menu = document.getElementById('mobileMenu');
+  if (!btn || !menu) return;
+
+  btn.addEventListener('click', function() {
+    var expanded = this.getAttribute('aria-expanded') === 'true';
+    this.setAttribute('aria-expanded', !expanded);
+    menu.setAttribute('aria-hidden', expanded);
+    menu.classList.toggle('is-open');
+    this.classList.toggle('is-open');
+  });
+
+  /* Close on mobile link click */
+  menu.querySelectorAll('a').forEach(function(a) {
+    a.addEventListener('click', function() {
+      btn.setAttribute('aria-expanded', 'false');
+      menu.setAttribute('aria-hidden', 'true');
+      menu.classList.remove('is-open');
+      btn.classList.remove('is-open');
+    });
+  });
+
+  /* Close on outside click */
+  document.addEventListener('click', function(e) {
+    if (!e.target.closest('.site-header') && menu.classList.contains('is-open')) {
+      btn.setAttribute('aria-expanded', 'false');
+      menu.setAttribute('aria-hidden', 'true');
+      menu.classList.remove('is-open');
+      btn.classList.remove('is-open');
+    }
+  });
+})();
+
+/* rAF parallax on hero background */
+(function(){
+  var net  = document.getElementById('heroNet');
   var hero = document.getElementById('hero');
-  if (!svg || !hero) return;
+  if (!net || !hero) return;
   if (window.matchMedia('(prefers-reduced-motion:reduce)').matches) return;
   var raf = null, tx = 0, ty = 0, gx = 0, gy = 0;
   hero.addEventListener('mousemove', function(e) {
     var r = hero.getBoundingClientRect();
-    gx = (e.clientX - r.left  - r.width  * .5) / r.width  * -5.5;
-    gy = (e.clientY - r.top   - r.height * .5) / r.height * -3.8;
+    gx = (e.clientX - r.left  - r.width  * .5) / r.width  * -5;
+    gy = (e.clientY - r.top   - r.height * .5) / r.height * -3.5;
     if (!raf) raf = requestAnimationFrame(step);
   });
   hero.addEventListener('mouseleave', function() {
@@ -815,10 +1567,11 @@
     raf = null;
     tx += (gx - tx) * .10;
     ty += (gy - ty) * .10;
-    svg.style.transform = 'translate(' + tx.toFixed(2) + 'px,' + ty.toFixed(2) + 'px)';
+    net.style.transform = 'translate(' + tx.toFixed(2) + 'px,' + ty.toFixed(2) + 'px)';
     if (Math.abs(gx - tx) > .04 || Math.abs(gy - ty) > .04) raf = requestAnimationFrame(step);
   }
 })();
+
 initLandingPage();
 </script>
 </body>
