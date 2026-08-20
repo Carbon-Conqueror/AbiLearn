@@ -4,8 +4,8 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
   <title>About AbiLearn</title>
-  <meta name="description" content="AbiLearn is a CBSE Class 10 study platform built to help students prepare with clarity, structure, and purpose.">
-  <meta name="theme-color" content="#5B47DE">
+  <meta name="description" content="AbiLearn is a CBSE Class 10 study platform built to make learning personal, clear, and completely free.">
+  <meta name="theme-color" content="#04030F">
   <meta name="mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
@@ -13,289 +13,1325 @@
   <link rel="manifest" href="manifest.json">
   <link rel="apple-touch-icon" href="assets/logo.jpeg">
   <link rel="icon" href="assets/logo.jpeg" type="image/jpeg">
+  <link rel="preconnect" href="https://www.gstatic.com">
+  <link rel="dns-prefetch" href="https://www.gstatic.com">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <style id="_ag">body{visibility:hidden!important}</style>
   <style>
+  /* ━━ AbiLearn — About Page ━━ */
+
   :root {
-    --bg:       #FFFFFF;
-    --surface:  #F5F3FF;
-    --accent:   #5B47DE;
-    --accent-2: #7C5CF6;
-    --text:     #1B1740;
-    --muted:    #7A77A8;
-    --border:   rgba(91,71,222,.10);
-    --quote-bg: #F0ECFF;
+    --bg:       #04030F;
+    --accent:   #6B4EFF;
+    --violet:   #8B5CF6;
+    --sky:      #38BDF8;
+    --coral:    #FB923C;
+    --emerald:  #34D399;
+    --text:     #EDE8FF;
+    --text-2:   rgba(192,178,255,.65);
+    --text-3:   rgba(192,178,255,.38);
+    --s1:       rgba(255,255,255,.042);
+    --border:   rgba(176,156,255,.10);
+    --border-2: rgba(176,156,255,.20);
+    --lav:      #B8A4FF;
     --font:     'Plus Jakarta Sans', -apple-system, system-ui, sans-serif;
-  }
-  @media (prefers-color-scheme: dark) {
-    :root:not([data-theme="light"]) {
-      --bg:       #0E0C1E;
-      --surface:  #17143A;
-      --accent:   #8A79F8;
-      --accent-2: #A491FF;
-      --text:     #EBE7FF;
-      --muted:    #8A87B8;
-      --border:   rgba(138,121,248,.12);
-      --quote-bg: #1D1A40;
-    }
-  }
-  :root[data-theme="dark"] {
-    --bg:       #0E0C1E;
-    --surface:  #17143A;
-    --accent:   #8A79F8;
-    --accent-2: #A491FF;
-    --text:     #EBE7FF;
-    --muted:    #8A87B8;
-    --border:   rgba(138,121,248,.12);
-    --quote-bg: #1D1A40;
+    --ease:     cubic-bezier(.22,.68,0,1.1);
+    --nav-h:    60px;
+    --r:        18px;
   }
 
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
-  html { background: var(--bg); }
+  html { scroll-behavior: smooth; background: var(--bg); }
 
   body {
     font-family: var(--font);
-    background: var(--bg);
     color: var(--text);
+    background: var(--bg);
     -webkit-font-smoothing: antialiased;
-    padding-bottom: 80px;
+    -moz-osx-font-smoothing: grayscale;
+    overflow-x: hidden;
+    padding-bottom: 70px;
   }
 
-  /* ── Topbar ── */
-  .ab-topbar {
+  .skip-nav {
+    position: absolute; left: -9999px; top: auto;
+  }
+  .skip-nav:focus {
+    left: 1rem; top: 1rem; z-index: 9999;
+    background: #fff; color: var(--bg);
+    padding: .5rem 1rem; border-radius: 8px; font-weight: 700;
+  }
+
+  .container {
+    max-width: 1200px;
+    margin-inline: auto;
+    padding-inline: clamp(1.25rem, 5vw, 3rem);
+  }
+
+  /* ━━ BRAND BAR ━━ */
+  .ab-header {
     position: sticky;
-    top: 0;
-    z-index: 100;
-    background: var(--bg);
+    top: 0; left: 0;
+    z-index: 200;
+    background: rgba(4,3,15,.82);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
     border-bottom: 1px solid var(--border);
-    padding: .85rem 1.4rem;
+  }
+  .ab-header-inner {
+    max-width: 1200px;
+    margin-inline: auto;
+    padding-inline: clamp(1.25rem, 5vw, 3rem);
+    height: var(--nav-h);
+    display: flex;
+    align-items: center;
+  }
+  .brand {
     display: flex;
     align-items: center;
     gap: .55rem;
-  }
-  .ab-logo {
-    width: 32px; height: 32px;
-    border-radius: 7px;
-    object-fit: cover;
+    text-decoration: none;
     flex-shrink: 0;
   }
-  .ab-wordmark {
-    font-size: 1.05rem;
+  .brand-img {
+    width: 36px; height: 36px;
+    border-radius: 8px;
+    object-fit: cover;
+    display: block;
+    flex-shrink: 0;
+  }
+  .brand-name {
+    font-size: 1.22rem;
     font-weight: 800;
-    letter-spacing: -.025em;
+    letter-spacing: -.032em;
     line-height: 1;
+    white-space: nowrap;
+  }
+  .brand-abi   { color: #EDE8FF; }
+  .brand-learn { color: #A891F8; }
+
+  /* ━━ EYEBROW ━━ */
+  .ab-eyebrow {
+    display: inline-flex;
+    align-items: center;
+    gap: .45rem;
+    padding: .32rem .85rem;
+    border-radius: 100px;
+    background: rgba(96,68,252,.07);
+    border: 1px solid rgba(172,152,255,.16);
+    font-size: .68rem;
+    font-weight: 600;
+    letter-spacing: .14em;
+    text-transform: uppercase;
+    color: rgba(192,174,255,.72);
+    white-space: nowrap;
+  }
+  .eyebrow-dot {
+    width: 4px; height: 4px;
+    border-radius: 50%;
+    background: rgba(172,152,255,.52);
+    box-shadow: 0 0 5px rgba(172,152,255,.42);
+    flex-shrink: 0;
+  }
+
+  /* ━━ SECTION HEADING ━━ */
+  .ab-section-h2 {
+    font-size: clamp(1.72rem, 3.4vw, 2.6rem);
+    font-weight: 800;
+    letter-spacing: -.034em;
+    line-height: 1.08;
+    color: var(--text);
+    text-wrap: balance;
+    margin-top: .75rem;
+  }
+
+  /* ━━ GRADIENT TEXT ━━ */
+  .grad-text {
+    background: linear-gradient(130deg, var(--violet) 0%, var(--sky) 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+
+  /* ━━ BUTTONS ━━ */
+  .btn-primary {
+    display: inline-flex;
+    align-items: center;
+    gap: .5rem;
+    height: 52px;
+    padding: 0 clamp(1.4rem, 2.8vw, 2rem);
+    border-radius: 12px;
+    background: #FFFFFF;
+    color: #2C12AA;
+    font-family: var(--font);
+    font-size: .95rem;
+    font-weight: 700;
     text-decoration: none;
+    border: none;
+    cursor: pointer;
+    white-space: nowrap;
+    box-shadow: 0 4px 28px rgba(88,56,236,.38);
+    transition: transform .2s var(--ease), box-shadow .2s ease;
+    -webkit-tap-highlight-color: transparent;
+    min-width: 44px; min-height: 44px;
+  }
+  .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 8px 38px rgba(88,56,236,.48); }
+  .btn-primary:active { transform: scale(.985); }
+  .btn-primary:focus-visible { outline: 2.5px solid rgba(192,176,255,.8); outline-offset: 3px; }
+
+  .btn-ghost {
+    display: inline-flex;
+    align-items: center;
+    height: 52px;
+    padding: 0 clamp(1.25rem, 2.4vw, 1.75rem);
+    border-radius: 12px;
+    background: rgba(255,255,255,.054);
+    border: 1px solid rgba(192,172,255,.16);
+    color: rgba(218,206,255,.76);
+    font-family: var(--font);
+    font-size: .95rem;
+    font-weight: 600;
+    text-decoration: none;
+    cursor: pointer;
+    white-space: nowrap;
+    backdrop-filter: blur(8px);
+    transition: background .22s, border-color .22s, transform .18s;
+    -webkit-tap-highlight-color: transparent;
+    min-width: 44px; min-height: 44px;
+  }
+  .btn-ghost:hover { background: rgba(152,122,255,.09); border-color: rgba(192,172,255,.26); transform: translateY(-1px); }
+  .btn-ghost:focus-visible { outline: 2.5px solid rgba(192,176,255,.8); outline-offset: 3px; }
+
+  /* ━━ SCROLL REVEAL ━━ */
+  .ab-reveal {
+    opacity: 0;
+    transform: translateY(28px);
+    transition: opacity .55s var(--ease), transform .55s var(--ease);
+  }
+  .ab-reveal.is-visible {
+    opacity: 1;
+    transform: none;
+  }
+  [data-delay="1"] { transition-delay: .12s; }
+  [data-delay="2"] { transition-delay: .24s; }
+  [data-delay="3"] { transition-delay: .36s; }
+  [data-delay="4"] { transition-delay: .48s; }
+  [data-delay="5"] { transition-delay: .60s; }
+
+  /* ━━ SECTION BASE ━━ */
+  .ab-section {
+    padding-block: clamp(4rem, 8vw, 7rem);
+  }
+  .ab-section + .ab-section {
+    border-top: 1px solid var(--border);
+  }
+
+  /* ━━━━━━━━━━━━━━━━━━━━━━
+     SECTION 1 — HERO
+  ━━━━━━━━━━━━━━━━━━━━━━ */
+  .s-hero {
+    position: relative;
+    min-height: 100svh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    padding-top: var(--nav-h);
+    padding-bottom: clamp(4rem, 7vh, 6rem);
+  }
+
+  /* Particle canvas */
+  #ab-particle-canvas {
+    position: absolute;
+    inset: 0;
+    width: 100%; height: 100%;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  /* Orbs */
+  .ab-orb {
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(80px);
+    pointer-events: none;
+    z-index: 0;
+  }
+  .ab-orb-1 {
+    width: clamp(340px, 50vw, 640px);
+    height: clamp(340px, 50vw, 640px);
+    background: radial-gradient(circle, rgba(107,78,255,.28) 0%, transparent 70%);
+    top: -10%; left: -8%;
+    animation: orbFloat1 10s ease-in-out infinite;
+  }
+  .ab-orb-2 {
+    width: clamp(280px, 42vw, 560px);
+    height: clamp(280px, 42vw, 560px);
+    background: radial-gradient(circle, rgba(56,189,248,.18) 0%, transparent 70%);
+    bottom: 0%; right: -6%;
+    animation: orbFloat2 8s ease-in-out infinite;
+    animation-delay: -3s;
+  }
+  .ab-orb-3 {
+    width: clamp(200px, 30vw, 400px);
+    height: clamp(200px, 30vw, 400px);
+    background: radial-gradient(circle, rgba(139,92,246,.18) 0%, transparent 70%);
+    top: 55%; left: 40%;
+    animation: orbFloat3 12s ease-in-out infinite;
+    animation-delay: -6s;
+  }
+
+  @keyframes orbFloat1 {
+    0%, 100% { transform: translate(0, 0) scale(1); }
+    35% { transform: translate(32px, -24px) scale(1.04); }
+    70% { transform: translate(-16px, 18px) scale(.97); }
+  }
+  @keyframes orbFloat2 {
+    0%, 100% { transform: translate(0, 0) scale(1); }
+    40% { transform: translate(-24px, 20px) scale(1.05); }
+    75% { transform: translate(14px, -16px) scale(.98); }
+  }
+  @keyframes orbFloat3 {
+    0%, 100% { transform: translate(0, 0); }
+    50% { transform: translate(18px, -22px); }
+  }
+
+  /* Grid texture */
+  .s-hero::before {
+    content: '';
+    position: absolute; inset: 0; z-index: 0;
+    pointer-events: none;
+    background-image:
+      linear-gradient(rgba(156,132,255,.012) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(156,132,255,.012) 1px, transparent 1px);
+    background-size: 72px 72px;
+  }
+
+  /* Hero content */
+  .hero-content {
+    position: relative;
+    z-index: 2;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: clamp(.9rem, 2.2vh, 1.6rem);
+  }
+
+  .hero-h1 {
+    font-size: clamp(2.4rem, 6vw, 4.2rem);
+    font-weight: 800;
+    letter-spacing: -.04em;
+    line-height: 1.05;
+    text-wrap: balance;
+    max-width: min(820px, 92vw);
     color: var(--text);
   }
-  .ab-wordmark span { color: var(--accent); }
 
-  /* ── Page body ── */
-  .ab-wrap {
-    max-width: 660px;
-    margin: 0 auto;
-    padding: 3.5rem 1.4rem 2rem;
+  .hero-sub {
+    font-size: clamp(.92rem, 1.4vw, 1.1rem);
+    line-height: 1.72;
+    color: var(--text-2);
+    max-width: min(580px, 90vw);
   }
 
-  /* ── Eyebrow + title ── */
-  .ab-eyebrow {
-    display: inline-block;
-    font-size: .72rem;
+  .hero-actions {
+    display: flex;
+    gap: .85rem;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+    margin-top: .2rem;
+  }
+
+  /* Scroll indicator */
+  .ab-scroll-indicator {
+    position: absolute;
+    bottom: clamp(1.5rem, 4vh, 2.5rem);
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 2;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: .5rem;
+    color: var(--text-3);
+    font-size: .68rem;
+    font-weight: 500;
+    letter-spacing: .1em;
+    text-transform: uppercase;
+    animation: scrollBob 2s ease-in-out infinite;
+  }
+  @keyframes scrollBob {
+    0%, 100% { transform: translateX(-50%) translateY(0); opacity: .55; }
+    50% { transform: translateX(-50%) translateY(6px); opacity: .9; }
+  }
+
+  /* ━━━━━━━━━━━━━━━━━━━━━━
+     SECTION 2 — STORY
+  ━━━━━━━━━━━━━━━━━━━━━━ */
+  .s-story { padding-block: clamp(4rem, 8vw, 7rem); border-top: 1px solid var(--border); }
+
+  .story-intro {
+    font-size: clamp(.92rem, 1.3vw, 1.05rem);
+    line-height: 1.75;
+    color: var(--text-2);
+    max-width: 640px;
+    margin-top: 1rem;
+  }
+
+  .ab-timeline {
+    margin-top: clamp(2rem, 4vw, 3.5rem);
+    position: relative;
+    padding-left: clamp(1.75rem, 4vw, 2.5rem);
+  }
+  .ab-timeline::before {
+    content: '';
+    position: absolute;
+    left: 7px; top: 8px; bottom: 8px;
+    width: 2px;
+    background: linear-gradient(180deg, var(--accent) 0%, rgba(107,78,255,.15) 100%);
+    border-radius: 2px;
+  }
+
+  .tl-item {
+    position: relative;
+    padding-bottom: clamp(1.75rem, 3.5vw, 2.5rem);
+  }
+  .tl-item:last-child { padding-bottom: 0; }
+
+  .tl-dot {
+    position: absolute;
+    left: calc(-1 * clamp(1.75rem, 4vw, 2.5rem) + 1px);
+    top: 6px;
+    width: 14px; height: 14px;
+    border-radius: 50%;
+    background: var(--bg);
+    border: 2.5px solid var(--accent);
+    box-shadow: 0 0 10px rgba(107,78,255,.45);
+    flex-shrink: 0;
+  }
+
+  .tl-step-num {
+    font-size: .68rem;
     font-weight: 700;
     letter-spacing: .12em;
     text-transform: uppercase;
     color: var(--accent);
-    margin-bottom: 1rem;
+    margin-bottom: .35rem;
+  }
+  .tl-title {
+    font-size: clamp(1rem, 1.5vw, 1.15rem);
+    font-weight: 700;
+    color: var(--text);
+    margin-bottom: .4rem;
+  }
+  .tl-desc {
+    font-size: clamp(.84rem, 1.1vw, .95rem);
+    line-height: 1.7;
+    color: var(--text-2);
+    max-width: 600px;
   }
 
-  .ab-title {
-    font-size: clamp(2rem, 6vw, 3rem);
+  /* ━━━━━━━━━━━━━━━━━━━━━━
+     SECTION 3 — MISSION
+  ━━━━━━━━━━━━━━━━━━━━━━ */
+  .s-mission { padding-block: clamp(4rem, 8vw, 7rem); border-top: 1px solid var(--border); }
+
+  .mission-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: clamp(2.5rem, 5vw, 5rem);
+    align-items: center;
+  }
+
+  .mission-quote {
+    margin-top: 1.5rem;
+    padding-left: 1.25rem;
+    border-left: 2.5px solid var(--accent);
+    font-size: clamp(1.02rem, 1.4vw, 1.18rem);
+    font-style: italic;
+    font-weight: 600;
+    color: var(--text);
+    line-height: 1.6;
+  }
+  .mission-body {
+    margin-top: 1.25rem;
+    font-size: clamp(.88rem, 1.2vw, 1rem);
+    line-height: 1.78;
+    color: var(--text-2);
+  }
+
+  /* Concentric rings visual */
+  .rings-visual {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 2.5rem;
+  }
+
+  .rings-wrap {
+    position: relative;
+    width: clamp(180px, 26vw, 280px);
+    height: clamp(180px, 26vw, 280px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .ring {
+    position: absolute;
+    border-radius: 50%;
+    border: 1.5px solid rgba(107,78,255,.28);
+    animation: ringPulse 3s ease-in-out infinite;
+  }
+  .ring-1 {
+    inset: 0;
+    animation-delay: 0s;
+  }
+  .ring-2 {
+    inset: 18%;
+    animation-delay: .6s;
+    border-color: rgba(107,78,255,.44);
+  }
+  .ring-3 {
+    inset: 36%;
+    animation-delay: 1.2s;
+    border-color: rgba(107,78,255,.68);
+  }
+  .ring-center {
+    width: 24px; height: 24px;
+    border-radius: 50%;
+    background: var(--accent);
+    box-shadow: 0 0 18px rgba(107,78,255,.7), 0 0 36px rgba(107,78,255,.3);
+    position: relative;
+    z-index: 2;
+  }
+
+  @keyframes ringPulse {
+    0%, 100% { opacity: .5; transform: scale(1); }
+    50% { opacity: 1; transform: scale(1.04); }
+  }
+
+  /* Stats 2×2 grid */
+  .mission-stats {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: .75rem;
+    width: 100%;
+  }
+  .mstat {
+    background: var(--s1);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 1.1rem 1rem;
+    text-align: center;
+    transition: border-color .22s, background .22s;
+  }
+  .mstat:hover { background: rgba(255,255,255,.065); border-color: var(--border-2); }
+  .mstat-num {
+    font-size: clamp(1.6rem, 2.8vw, 2.2rem);
     font-weight: 800;
-    line-height: 1.08;
-    letter-spacing: -.03em;
+    letter-spacing: -.04em;
+    color: var(--lav);
+  }
+  .mstat-label {
+    font-size: .74rem;
+    color: var(--text-3);
+    margin-top: .2rem;
+    font-weight: 500;
+  }
+
+  /* ━━━━━━━━━━━━━━━━━━━━━━
+     SECTION 4 — HOW IT WORKS
+  ━━━━━━━━━━━━━━━━━━━━━━ */
+  .s-how { padding-block: clamp(4rem, 8vw, 7rem); border-top: 1px solid var(--border); }
+
+  .how-grid {
+    margin-top: clamp(2rem, 4vw, 3rem);
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 1.1rem;
+  }
+
+  .how-card {
+    background: var(--s1);
+    border: 1px solid var(--border);
+    border-radius: var(--r);
+    padding: clamp(1.25rem, 2.5vw, 1.75rem);
+    display: flex;
+    flex-direction: column;
+    gap: .85rem;
+    transition: transform .24s var(--ease), border-color .22s, box-shadow .22s;
+  }
+  .how-card:hover {
+    transform: translateY(-4px);
+    border-color: var(--border-2);
+    box-shadow: 0 12px 32px rgba(0,0,0,.26);
+  }
+
+  .how-card-top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .how-icon {
+    width: 44px; height: 44px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+  .how-step-num {
+    font-size: .68rem;
+    font-weight: 700;
+    letter-spacing: .12em;
+    opacity: .42;
+    color: var(--text);
+  }
+  .how-title {
+    font-size: clamp(.96rem, 1.3vw, 1.08rem);
+    font-weight: 700;
+    color: var(--text);
+  }
+  .how-desc {
+    font-size: clamp(.82rem, 1.05vw, .92rem);
+    line-height: 1.68;
+    color: var(--text-2);
+  }
+
+  /* Icon color variants */
+  .ic-purple { background: rgba(107,78,255,.12); color: #A78BFA; }
+  .ic-violet { background: rgba(139,92,246,.12); color: #C4B5FD; }
+  .ic-sky    { background: rgba(56,189,248,.1);  color: var(--sky); }
+  .ic-emerald{ background: rgba(52,211,153,.1);  color: var(--emerald); }
+  .ic-coral  { background: rgba(251,146,60,.1);  color: var(--coral); }
+
+  /* ━━━━━━━━━━━━━━━━━━━━━━
+     SECTION 5 — VALUES
+  ━━━━━━━━━━━━━━━━━━━━━━ */
+  .s-values { padding-block: clamp(4rem, 8vw, 7rem); border-top: 1px solid var(--border); }
+
+  .values-grid {
+    margin-top: clamp(2rem, 4vw, 3rem);
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 1rem;
+  }
+
+  .val-card {
+    background: var(--s1);
+    border: 1px solid var(--border);
+    border-radius: var(--r);
+    padding: clamp(1.25rem, 2.5vw, 1.6rem);
+    display: flex;
+    flex-direction: column;
+    gap: .75rem;
+    transition: transform .22s var(--ease), border-color .2s, box-shadow .2s;
+  }
+  .val-card:hover {
+    transform: translateY(-4px);
+    border-color: var(--border-2);
+    box-shadow: 0 10px 28px rgba(0,0,0,.22);
+  }
+  .val-icon {
+    width: 42px; height: 42px;
+    border-radius: 11px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+  .val-title {
+    font-size: clamp(.9rem, 1.2vw, 1rem);
+    font-weight: 700;
+    color: var(--text);
+    line-height: 1.25;
+  }
+  .val-desc {
+    font-size: clamp(.78rem, 1vw, .88rem);
+    line-height: 1.65;
+    color: var(--text-2);
+  }
+
+  /* ━━━━━━━━━━━━━━━━━━━━━━
+     SECTION 6 — IMPACT
+  ━━━━━━━━━━━━━━━━━━━━━━ */
+  .s-impact { padding-block: clamp(4rem, 8vw, 7rem); border-top: 1px solid var(--border); }
+
+  .impact-stats {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1px;
+    background: var(--border);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    overflow: hidden;
+    margin-top: clamp(2rem, 4vw, 3rem);
+  }
+  .istat {
+    background: var(--bg);
+    padding: clamp(1.25rem, 2.5vw, 1.75rem);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: .35rem;
+    transition: background .22s;
+  }
+  .istat:hover { background: var(--s1); }
+  .istat-num {
+    font-size: clamp(2rem, 4vw, 3rem);
+    font-weight: 800;
+    letter-spacing: -.05em;
+    color: var(--lav);
+  }
+  .istat-label {
+    font-size: clamp(.76rem, 1vw, .88rem);
+    color: var(--text-2);
+    font-weight: 500;
+    text-align: center;
+  }
+
+  /* Testimonials */
+  .testimonials {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 1.1rem;
+    margin-top: 2.5rem;
+  }
+
+  .testi-card {
+    background: var(--s1);
+    border: 1px solid var(--border);
+    border-radius: var(--r);
+    padding: clamp(1.25rem, 2.5vw, 1.6rem);
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    transition: border-color .22s, box-shadow .22s;
+  }
+  .testi-card:hover { border-color: var(--border-2); box-shadow: 0 8px 24px rgba(0,0,0,.22); }
+
+  .testi-quote {
+    font-size: clamp(.86rem, 1.1vw, .96rem);
+    line-height: 1.72;
+    color: var(--text-2);
+    flex: 1;
+  }
+  .testi-quote::before { content: '\201C'; }
+  .testi-quote::after  { content: '\201D'; }
+
+  .testi-footer {
+    display: flex;
+    align-items: center;
+    gap: .75rem;
+    padding-top: .75rem;
+    border-top: 1px solid var(--border);
+  }
+  .testi-avatar {
+    width: 38px; height: 38px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: .88rem;
+    font-weight: 800;
+    flex-shrink: 0;
+  }
+  .testi-name { font-size: .88rem; font-weight: 700; color: var(--text); }
+  .testi-role { font-size: .76rem; color: var(--text-3); margin-top: .1rem; }
+
+  /* ━━━━━━━━━━━━━━━━━━━━━━
+     SECTION 7 — TEAM
+  ━━━━━━━━━━━━━━━━━━━━━━ */
+  .s-team { padding-block: clamp(4rem, 8vw, 7rem); border-top: 1px solid var(--border); }
+
+  .team-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 1.25rem;
+    margin-top: clamp(2rem, 4vw, 3rem);
+  }
+  .team-card {
+    background: var(--s1);
+    border: 1px solid var(--border);
+    border-radius: var(--r);
+    padding: clamp(1.5rem, 3vw, 2rem);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    gap: .75rem;
+    transition: transform .24s var(--ease), border-color .22s, box-shadow .22s;
+  }
+  .team-card:hover { transform: translateY(-4px); border-color: var(--border-2); box-shadow: 0 12px 32px rgba(0,0,0,.25); }
+  .team-avatar {
+    width: 72px; height: 72px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem;
+    font-weight: 800;
+    border: 2px solid var(--border-2);
+    flex-shrink: 0;
+  }
+  .team-name { font-size: 1.05rem; font-weight: 700; color: var(--text); }
+  .team-role { font-size: .84rem; font-weight: 600; }
+  .team-bio { font-size: .86rem; line-height: 1.65; color: var(--text-2); }
+
+  /* ━━━━━━━━━━━━━━━━━━━━━━
+     SECTION 8 — CLOSING CTA
+  ━━━━━━━━━━━━━━━━━━━━━━ */
+  .s-cta-wrap {
+    padding-block: clamp(4rem, 8vw, 6rem);
+    border-top: 1px solid var(--border);
+  }
+  .ab-cta-box {
+    background: var(--s1);
+    border: 1px solid var(--border-2);
+    border-radius: 24px;
+    padding: clamp(2rem, 5vw, 3.5rem) clamp(1.5rem, 4vw, 3rem);
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1.25rem;
+    position: relative;
+    overflow: hidden;
+  }
+  .ab-cta-box::before {
+    content: '';
+    position: absolute; inset: 0;
+    border-radius: 24px;
+    padding: 1px;
+    background: linear-gradient(135deg, rgba(107,78,255,.42) 0%, rgba(56,189,248,.28) 50%, rgba(139,92,246,.38) 100%);
+    -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+    mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+    -webkit-mask-composite: xor;
+    mask-composite: exclude;
+    pointer-events: none;
+  }
+  .cta-h2 {
+    font-size: clamp(1.5rem, 3vw, 2.2rem);
+    font-weight: 800;
+    letter-spacing: -.034em;
     color: var(--text);
     text-wrap: balance;
-    margin-bottom: 1.25rem;
+  }
+  .cta-sub {
+    font-size: clamp(.88rem, 1.2vw, 1rem);
+    line-height: 1.72;
+    color: var(--text-2);
+    max-width: 500px;
   }
 
-  .ab-lead {
-    font-size: 1.08rem;
-    font-weight: 500;
-    color: var(--muted);
-    line-height: 1.65;
-    margin-bottom: 3rem;
-    padding-bottom: 2.5rem;
-    border-bottom: 1px solid var(--border);
-  }
-
-  /* ── Body sections ── */
-  .ab-section {
-    margin-bottom: 2.8rem;
-  }
-  .ab-section-label {
-    font-size: .72rem;
-    font-weight: 700;
-    letter-spacing: .1em;
-    text-transform: uppercase;
-    color: var(--accent);
-    margin-bottom: .75rem;
-  }
-  .ab-body {
-    font-size: 1rem;
-    line-height: 1.78;
-    color: var(--text);
-  }
-  .ab-body + .ab-body {
-    margin-top: 1rem;
-  }
-
-  /* ── Mission pull-quote ── */
-  .ab-quote {
-    background: var(--quote-bg);
-    border-left: 3.5px solid var(--accent);
-    border-radius: 0 12px 12px 0;
-    padding: 1.4rem 1.6rem;
-    margin: 2.5rem 0;
-  }
-  .ab-quote-text {
-    font-size: 1.12rem;
-    font-weight: 600;
-    line-height: 1.55;
-    color: var(--text);
-    font-style: italic;
-    letter-spacing: -.01em;
-  }
-
-  /* ── Contact ── */
-  .ab-contact {
-    background: var(--surface);
-    border-radius: 16px;
-    padding: 2rem 1.6rem;
-    margin-top: 3rem;
-  }
-  .ab-contact-title {
-    font-size: 1rem;
-    font-weight: 700;
-    color: var(--text);
-    margin-bottom: .5rem;
-  }
-  .ab-contact-body {
-    font-size: .9rem;
-    color: var(--muted);
-    line-height: 1.6;
-    margin-bottom: 1.1rem;
-  }
-  .ab-contact-link {
-    display: inline-flex;
-    align-items: center;
-    gap: .45rem;
-    color: var(--accent);
-    font-weight: 600;
-    font-size: .93rem;
-    text-decoration: none;
-    border-bottom: 1.5px solid transparent;
-    transition: border-color .15s;
-  }
-  .ab-contact-link:hover { border-color: var(--accent); }
-
-  /* ── Bottom Nav ── */
-  body { padding-bottom: 70px; }
+  /* ━━━━━━━━━━━━━━━━━━━━━━
+     BOTTOM NAV
+  ━━━━━━━━━━━━━━━━━━━━━━ */
   .al-bnav {
-    position: fixed; bottom: 0; left: 0; right: 0;
+    position: fixed;
+    bottom: 0; left: 0; right: 0;
     z-index: 500;
-    background: var(--bg);
-    border-top: 1px solid var(--border);
+    background: rgba(4,3,15,.92);
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+    border-top: 1px solid rgba(176,156,255,.1);
     padding-bottom: env(safe-area-inset-bottom, 0);
   }
   .al-bnav-inner {
-    display: flex; align-items: stretch;
-    height: 62px; max-width: 600px; margin: 0 auto;
+    display: flex;
+    align-items: stretch;
+    height: 62px;
+    max-width: 600px;
+    margin: 0 auto;
   }
   .al-btab {
-    flex: 1; display: flex; flex-direction: column;
-    align-items: center; justify-content: center;
-    gap: 3px; color: var(--muted);
-    text-decoration: none; background: none; border: none;
-    cursor: pointer; font-family: var(--font);
-    transition: color .15s; -webkit-tap-highlight-color: transparent; padding: 0;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 3px;
+    color: rgba(192,178,255,.65);
+    text-decoration: none;
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-family: var(--font);
+    transition: color .15s;
+    -webkit-tap-highlight-color: transparent;
+    padding: 0;
   }
-  .al-btab.al-btab-active { color: var(--accent); font-weight: 700; }
+  .al-btab.al-btab-active { color: #B8A4FF; font-weight: 700; }
   .al-btab-icon { display: flex; }
   .al-btab-label { font-size: .66rem; font-weight: 500; }
   .al-btab.al-btab-active .al-btab-label { font-weight: 700; }
+
+  /* ━━━━━━━━━━━━━━━━━━━━━━
+     RESPONSIVE
+  ━━━━━━━━━━━━━━━━━━━━━━ */
+  @media (max-width: 900px) {
+    .mission-grid { grid-template-columns: 1fr; }
+    .rings-visual { flex-direction: row; flex-wrap: wrap; justify-content: center; gap: 1.5rem; }
+  }
+
+  @media (max-width: 640px) {
+    .impact-stats { grid-template-columns: repeat(2, 1fr); }
+    .hero-actions { flex-direction: column; width: 100%; }
+    .btn-primary, .btn-ghost { width: 100%; max-width: 300px; justify-content: center; }
+  }
+
+  @media (max-width: 480px) {
+    .impact-stats { grid-template-columns: repeat(2, 1fr); }
+  }
+
+  /* ━━ REDUCED MOTION ━━ */
+  @media (prefers-reduced-motion: reduce) {
+    html { scroll-behavior: auto; }
+    .ab-orb-1, .ab-orb-2, .ab-orb-3 { animation: none !important; }
+    .ab-scroll-indicator { animation: none !important; opacity: .55; }
+    .ring { animation: none !important; opacity: .6; }
+    .ab-reveal { opacity: 1 !important; transform: none !important; transition: none !important; }
+    .how-card:hover, .val-card:hover, .team-card:hover { transform: none !important; }
+  }
   </style>
 </head>
 <body>
+<a href="#ab-main" class="skip-nav">Skip to main content</a>
 
-<header class="ab-topbar">
-  <img src="assets/logo.jpeg" alt="" class="ab-logo" aria-hidden="true">
-  <a href="index.html" class="ab-wordmark">Abi<span>Learn</span></a>
-</header>
-
-<div class="ab-wrap">
-
-  <span class="ab-eyebrow">About</span>
-
-  <h1 class="ab-title">Built for the<br>Mind Ahead.</h1>
-
-  <p class="ab-lead">
-    AbiLearn is a CBSE Class 10 study platform designed to help students learn with clarity, practise with purpose, and walk into board exams with genuine confidence.
-  </p>
-
-  <div class="ab-section">
-    <div class="ab-section-label">What We Are</div>
-    <p class="ab-body">
-      AbiLearn is a structured study platform for CBSE Class 10. Every subject is organised chapter by chapter with notes, MCQ practice, past year board questions, and progress tracking — so students always know what to study next and how well they have covered it.
-    </p>
-    <p class="ab-body">
-      The platform covers all four core subjects: Mathematics, Science, English, and Social Science. Content is mapped directly to the NCERT syllabus and CBSE board exam patterns, with a focus on the specific chapters, question types, and marks-weightages that matter most in the actual exam.
-    </p>
-  </div>
-
-  <div class="ab-section">
-    <div class="ab-section-label">Why It Exists</div>
-    <p class="ab-body">
-      Most Class 10 students have the same textbooks, the same syllabus, and the same amount of time. What separates a 90+ score from an average one is rarely raw intelligence — it is a structured approach. Knowing what to study, when to revise, how to identify weak areas, and where to direct effort in the final weeks.
-    </p>
-    <p class="ab-body">
-      That structure used to be expensive, or scattered across dozens of sources. AbiLearn puts it in one place, completely free.
-    </p>
-  </div>
-
-  <div class="ab-quote">
-    <p class="ab-quote-text">
-      "Every student deserves a clear, honest map of their preparation — not just more content to consume."
-    </p>
-  </div>
-
-  <div class="ab-section">
-    <div class="ab-section-label">How It Works</div>
-    <p class="ab-body">
-      Open any subject. Pick a chapter. Read structured notes, attempt MCQs, and work through past year questions. Your progress is saved automatically. The dashboard shows which chapters are covered, where your weak spots are, and what to revise next. The Mistake Bank keeps a record of every question you got wrong, so nothing slips through permanently.
-    </p>
-    <p class="ab-body">
-      Study tips and exam strategies are available separately — not generic advice, but techniques specific to CBSE board preparation at the Class 10 level.
-    </p>
-  </div>
-
-  <div class="ab-contact">
-    <div class="ab-contact-title">Get in Touch</div>
-    <p class="ab-contact-body">
-      Have a question, a suggestion, or found something that needs fixing? We read every message.
-    </p>
-    <a href="mailto:hello@abilearn.in" class="ab-contact-link">
-      <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
-        <rect x="1" y="3" width="14" height="10" rx="2" stroke="currentColor" stroke-width="1.4"/>
-        <path d="M1 5l7 5 7-5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/>
-      </svg>
-      hello@abilearn.in
+<!-- ━━ BRAND BAR ━━ -->
+<header class="ab-header" role="banner">
+  <div class="ab-header-inner">
+    <a href="index.html" class="brand" aria-label="AbiLearn home">
+      <img src="assets/logo.jpeg" alt="" class="brand-img" aria-hidden="true">
+      <span class="brand-name">
+        <span class="brand-abi">Abi</span><span class="brand-learn">Learn</span>
+      </span>
     </a>
   </div>
+</header>
 
+<!-- ━━ SECTION 1: HERO ━━ -->
+<section class="s-hero" id="ab-main" aria-label="About AbiLearn — hero">
+  <canvas id="ab-particle-canvas" aria-hidden="true"></canvas>
+  <div class="ab-orb ab-orb-1" aria-hidden="true"></div>
+  <div class="ab-orb ab-orb-2" aria-hidden="true"></div>
+  <div class="ab-orb ab-orb-3" aria-hidden="true"></div>
+
+  <div class="hero-content container">
+    <span class="ab-eyebrow ab-reveal">
+      <span class="eyebrow-dot" aria-hidden="true"></span>
+      About AbiLearn
+    </span>
+    <h1 class="hero-h1 ab-reveal" data-delay="1">
+      Every Mind Has a <span class="grad-text">Different Way</span> to Learn.
+    </h1>
+    <p class="hero-sub ab-reveal" data-delay="2">
+      AbiLearn turns curiosity into confidence with learning experiences that adapt to your pace, goals, and strengths.
+    </p>
+    <div class="hero-actions ab-reveal" data-delay="3">
+      <a href="learn.html" class="btn-primary">Start Learning</a>
+      <a href="#ab-story" class="btn-ghost">Explore Our Story</a>
+    </div>
+  </div>
+
+  <div class="ab-scroll-indicator" aria-hidden="true">
+    <svg width="24" height="36" viewBox="0 0 24 36" fill="none">
+      <rect x="1" y="1" width="22" height="34" rx="11" stroke="currentColor" stroke-width="1.5" opacity=".4"/>
+      <rect x="10" y="7" width="4" height="8" rx="2" fill="currentColor" opacity=".6"/>
+    </svg>
+  </div>
+</section>
+
+<!-- ━━ SECTION 2: STORY ━━ -->
+<section class="s-story container" id="ab-story" aria-label="Our story">
+  <span class="ab-eyebrow ab-reveal"><span class="eyebrow-dot" aria-hidden="true"></span>Our Story</span>
+  <h2 class="ab-section-h2 ab-reveal" data-delay="1">We Built AbiLearn for the Moment Learning Finally Became Personal.</h2>
+  <p class="story-intro ab-reveal" data-delay="2">
+    We noticed something: students had access to more content than ever, but fewer of them felt understood by it.
+    AbiLearn was built to fix that — one chapter at a time, one student at a time.
+  </p>
+
+  <div class="ab-timeline">
+    <div class="tl-item ab-reveal" data-delay="1">
+      <div class="tl-dot"></div>
+      <div class="tl-step-num">Step 01</div>
+      <div class="tl-title">Curiosity — Questions as Starting Points</div>
+      <p class="tl-desc">Every great learning journey begins with a question. AbiLearn meets you at that moment of wonder and refuses to let it go unanswered. We treat curiosity as the engine, not the destination.</p>
+    </div>
+    <div class="tl-item ab-reveal" data-delay="2">
+      <div class="tl-dot"></div>
+      <div class="tl-step-num">Step 02</div>
+      <div class="tl-title">Discovery — Chapter-by-Chapter Structured Content</div>
+      <p class="tl-desc">Messy notes are replaced by clean, structured content — organised by chapter, by concept, and by complexity. You always know where you are, what comes next, and why it matters.</p>
+    </div>
+    <div class="tl-item ab-reveal" data-delay="3">
+      <div class="tl-dot"></div>
+      <div class="tl-step-num">Step 03</div>
+      <div class="tl-title">Practice — MCQs, PYQs, Real Feedback</div>
+      <p class="tl-desc">Understanding gets tested. Practice questions, past year papers, and instant feedback close the gap between "I think I know this" and "I actually know this." Mistakes are tracked, not punished.</p>
+    </div>
+    <div class="tl-item ab-reveal" data-delay="4">
+      <div class="tl-dot"></div>
+      <div class="tl-step-num">Step 04</div>
+      <div class="tl-title">Confidence — Progress Becomes Visible</div>
+      <p class="tl-desc">Your improvement becomes something you can see. Chapter completion, streak tracking, and a Mistake Bank show you exactly how far you've come — and how close you are to where you want to be.</p>
+    </div>
+    <div class="tl-item ab-reveal" data-delay="5">
+      <div class="tl-dot"></div>
+      <div class="tl-step-num">Step 05</div>
+      <div class="tl-title">Achievement — Understanding What Was Once Impossible</div>
+      <p class="tl-desc">The goal was never just marks. It was the moment a concept that felt impossible clicks into place, permanently. That clarity — that's what AbiLearn is built to deliver for every student.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ━━ SECTION 3: MISSION ━━ -->
+<section class="s-mission" aria-label="Our mission">
+  <div class="container">
+    <div class="mission-grid">
+      <div>
+        <span class="ab-eyebrow ab-reveal"><span class="eyebrow-dot" aria-hidden="true"></span>Mission</span>
+        <h2 class="ab-section-h2 ab-reveal" data-delay="1">Our Mission: Make Progress Feel Possible for Everyone.</h2>
+        <blockquote class="mission-quote ab-reveal" data-delay="2">
+          "Every student deserves the same quality of learning — regardless of where they are, what they can afford, or how they've been taught before."
+        </blockquote>
+        <p class="mission-body ab-reveal" data-delay="3">
+          AbiLearn is free. Completely, intentionally, permanently free. We believe access to quality education is a right, not a privilege reserved for those who can pay for the best coaching centres.
+          We're removing every barrier between a Class 10 student and the understanding they need to succeed — starting with Math, Science, English, and Social Science.
+        </p>
+      </div>
+      <div class="rings-visual ab-reveal" data-delay="2">
+        <div class="rings-wrap" aria-hidden="true">
+          <div class="ring ring-1"></div>
+          <div class="ring ring-2"></div>
+          <div class="ring ring-3"></div>
+          <div class="ring-center"></div>
+        </div>
+        <div class="mission-stats">
+          <div class="mstat">
+            <div class="mstat-num">4</div>
+            <div class="mstat-label">Subjects</div>
+          </div>
+          <div class="mstat">
+            <div class="mstat-num">30+</div>
+            <div class="mstat-label">Chapters</div>
+          </div>
+          <div class="mstat">
+            <div class="mstat-num">500+</div>
+            <div class="mstat-label">Questions</div>
+          </div>
+          <div class="mstat">
+            <div class="mstat-num">100%</div>
+            <div class="mstat-label">Free</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ━━ SECTION 4: HOW IT WORKS ━━ -->
+<section class="s-how" aria-label="How AbiLearn works">
+  <div class="container">
+    <span class="ab-eyebrow ab-reveal"><span class="eyebrow-dot" aria-hidden="true"></span>How It Works</span>
+    <h2 class="ab-section-h2 ab-reveal" data-delay="1">Learning Built Around You, Not the Other Way Around.</h2>
+    <div class="how-grid">
+
+      <div class="how-card ab-reveal" data-delay="1">
+        <div class="how-card-top">
+          <div class="how-icon ic-purple" aria-hidden="true">
+            <svg width="22" height="22" viewBox="0 0 22 22" fill="none">
+              <circle cx="11" cy="11" r="8" stroke="currentColor" stroke-width="1.6"/>
+              <path d="M11 7v4l2.5 2.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+            </svg>
+          </div>
+          <span class="how-step-num">#01</span>
+        </div>
+        <div class="how-title">Understand You</div>
+        <p class="how-desc">We start with where you are, not where a syllabus says you should be. Your pace, your gaps, your goals — the platform shapes around them.</p>
+      </div>
+
+      <div class="how-card ab-reveal" data-delay="2">
+        <div class="how-card-top">
+          <div class="how-icon ic-violet" aria-hidden="true">
+            <svg width="22" height="22" viewBox="0 0 22 22" fill="none">
+              <rect x="3" y="2" width="16" height="18" rx="2.5" stroke="currentColor" stroke-width="1.6"/>
+              <path d="M7 7h8M7 11h8M7 15h5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/>
+            </svg>
+          </div>
+          <span class="how-step-num">#02</span>
+        </div>
+        <div class="how-title">Make Ideas Clear</div>
+        <p class="how-desc">Notes, formula sheets, and concept breakdowns turn confusing textbook language into something that actually makes sense — without skipping the depth.</p>
+      </div>
+
+      <div class="how-card ab-reveal" data-delay="3">
+        <div class="how-card-top">
+          <div class="how-icon ic-sky" aria-hidden="true">
+            <svg width="22" height="22" viewBox="0 0 22 22" fill="none">
+              <path d="M4 17V12M8.5 17V9M13 17V7M17.5 17V4" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/>
+            </svg>
+          </div>
+          <span class="how-step-num">#03</span>
+        </div>
+        <div class="how-title">Learn by Doing</div>
+        <p class="how-desc">MCQs, PYQs, and chapter-specific practice give you real reps. Every question answered is a step from memory to mastery, and every mistake is a lesson, not a mark.</p>
+      </div>
+
+      <div class="how-card ab-reveal" data-delay="4">
+        <div class="how-card-top">
+          <div class="how-icon ic-emerald" aria-hidden="true">
+            <svg width="22" height="22" viewBox="0 0 22 22" fill="none">
+              <polygon points="11,3 13.9,8.9 20.5,9.8 15.7,14.4 17,21 11,17.9 5,21 6.3,14.4 1.5,9.8 8.1,8.9" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+            </svg>
+          </div>
+          <span class="how-step-num">#04</span>
+        </div>
+        <div class="how-title">See Your Progress</div>
+        <p class="how-desc">Completion streaks, chapter scores, and your Mistake Bank make your learning journey visible. Progress that's measurable is progress that keeps you moving.</p>
+      </div>
+
+      <div class="how-card ab-reveal" data-delay="5">
+        <div class="how-card-top">
+          <div class="how-icon ic-coral" aria-hidden="true">
+            <svg width="22" height="22" viewBox="0 0 22 22" fill="none">
+              <path d="M11 18V4M5 10l6-6 6 6" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </div>
+          <span class="how-step-num">#05</span>
+        </div>
+        <div class="how-title">Keep Moving Forward</div>
+        <p class="how-desc">Learning is not linear. When you hit a wall, daily revision queues, smart suggestions, and bite-sized goals help you break through and stay on track.</p>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ━━ SECTION 5: VALUES ━━ -->
+<section class="s-values" aria-label="Our values">
+  <div class="container">
+    <span class="ab-eyebrow ab-reveal"><span class="eyebrow-dot" aria-hidden="true"></span>Values</span>
+    <h2 class="ab-section-h2 ab-reveal" data-delay="1">The Principles Behind Every Learning Moment.</h2>
+    <div class="values-grid">
+
+      <div class="val-card ab-reveal" data-delay="1">
+        <div class="val-icon ic-purple" aria-hidden="true">
+          <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+            <circle cx="10" cy="7" r="3.5" stroke="currentColor" stroke-width="1.5"/>
+            <path d="M3 17c0-3.31 3.13-6 7-6s7 2.69 7 6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+          </svg>
+        </div>
+        <div class="val-title">Learner First</div>
+        <p class="val-desc">Every decision we make starts with a simple question: does this help the student learn better? Features, design, content — all of it exists to serve the person opening their textbook at midnight.</p>
+      </div>
+
+      <div class="val-card ab-reveal" data-delay="2">
+        <div class="val-icon ic-violet" aria-hidden="true">
+          <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+            <circle cx="10" cy="10" r="7.5" stroke="currentColor" stroke-width="1.5"/>
+            <path d="M10 6v4l2.5 2" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/>
+          </svg>
+        </div>
+        <div class="val-title">Curiosity Without Limits</div>
+        <p class="val-desc">We never restrict access to knowledge. Whether you've read a chapter once or ten times, every question deserves a real answer and every concept deserves to be explored fully.</p>
+      </div>
+
+      <div class="val-card ab-reveal" data-delay="3">
+        <div class="val-icon ic-sky" aria-hidden="true">
+          <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+            <path d="M10 2l1.5 4.5h4.7l-3.8 2.8 1.5 4.5L10 11l-3.9 2.8 1.5-4.5L3.8 6.5h4.7L10 2z" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </div>
+        <div class="val-title">Inclusive by Design</div>
+        <p class="val-desc">AbiLearn is built for every Class 10 student — urban or rural, ahead or behind, confident or struggling. The platform adapts; it never judges. Learning should feel safe for everyone.</p>
+      </div>
+
+      <div class="val-card ab-reveal" data-delay="4">
+        <div class="val-icon ic-emerald" aria-hidden="true">
+          <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+            <path d="M4 6h12M4 10h8M4 14h10" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+          </svg>
+        </div>
+        <div class="val-title">Clarity Over Complexity</div>
+        <p class="val-desc">We strip out the noise. No jargon, no overwhelming dashboards, no walls of text. Every piece of content is crafted to make the hardest ideas feel accessible the first time you read them.</p>
+      </div>
+
+      <div class="val-card ab-reveal" data-delay="5">
+        <div class="val-icon ic-coral" aria-hidden="true">
+          <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+            <path d="M3 16V12M7 16V9M11 16V7M15 16V4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>
+          </svg>
+        </div>
+        <div class="val-title">Progress Over Perfection</div>
+        <p class="val-desc">A wrong answer is not failure — it's the starting point. We build systems that reward effort, track improvement, and celebrate the small wins that lead to the big ones.</p>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ━━ SECTION 6: IMPACT ━━ -->
+<section class="s-impact" aria-label="Impact and testimonials">
+  <div class="container">
+    <span class="ab-eyebrow ab-reveal"><span class="eyebrow-dot" aria-hidden="true"></span>Impact</span>
+    <h2 class="ab-section-h2 ab-reveal" data-delay="1">Small Steps. Remarkable Growth.</h2>
+
+    <div class="impact-stats ab-reveal" data-delay="2">
+      <div class="istat">
+        <div class="istat-num">4</div>
+        <div class="istat-label">Subjects Covered</div>
+      </div>
+      <div class="istat">
+        <div class="istat-num">30+</div>
+        <div class="istat-label">Chapters Available</div>
+      </div>
+      <div class="istat">
+        <div class="istat-num">500+</div>
+        <div class="istat-label">Practice Questions</div>
+      </div>
+      <div class="istat">
+        <div class="istat-num">100%</div>
+        <div class="istat-label">Completely Free</div>
+      </div>
+    </div>
+
+    <div class="testimonials">
+      <div class="testi-card ab-reveal" data-delay="1">
+        <p class="testi-quote">I used to skip chapters that felt too hard. With AbiLearn I actually went back and understood them. The way content is broken down made everything feel manageable for the first time.</p>
+        <div class="testi-footer">
+          <div class="testi-avatar" style="background:rgba(107,78,255,.15);color:#A78BFA;">A</div>
+          <div>
+            <div class="testi-name">Ananya</div>
+            <div class="testi-role">Class 10 Student</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="testi-card ab-reveal" data-delay="2">
+        <p class="testi-quote">Trigonometry was my biggest weakness. I kept getting the same questions wrong in every test. The Mistake Bank on AbiLearn literally showed me exactly where I was going wrong. Fixed it in two weeks.</p>
+        <div class="testi-footer">
+          <div class="testi-avatar" style="background:rgba(56,189,248,.12);color:var(--sky);">R</div>
+          <div>
+            <div class="testi-name">Rohan</div>
+            <div class="testi-role">Class 10 Student</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="testi-card ab-reveal" data-delay="3">
+        <p class="testi-quote">My family couldn't afford a coaching centre. I needed something structured that I could trust. AbiLearn gave me exactly that — and it was completely free. I didn't have to choose between studying and anything else.</p>
+        <div class="testi-footer">
+          <div class="testi-avatar" style="background:rgba(52,211,153,.12);color:var(--emerald);">P</div>
+          <div>
+            <div class="testi-name">Priya</div>
+            <div class="testi-role">Class 10 Student</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ━━ SECTION 7: TEAM ━━ -->
+<section class="s-team" aria-label="The team">
+  <div class="container">
+    <span class="ab-eyebrow ab-reveal"><span class="eyebrow-dot" aria-hidden="true"></span>The Team</span>
+    <h2 class="ab-section-h2 ab-reveal" data-delay="1">People Who Believe Learning Can Change Everything.</h2>
+
+    <div class="team-grid">
+      <div class="team-card ab-reveal" data-delay="1">
+        <div class="team-avatar" style="background:rgba(107,78,255,.15);color:#A78BFA;border-color:rgba(107,78,255,.28);">P</div>
+        <div class="team-name">Priyadharshan</div>
+        <div class="team-role" style="color:var(--accent);">Founder &amp; Builder</div>
+        <p class="team-bio">Built AbiLearn from scratch because he believed that the right study tool — designed thoughtfully, offered freely — could genuinely change what's possible for a Class 10 student in India.</p>
+      </div>
+      <div class="team-card ab-reveal" data-delay="2">
+        <div class="team-avatar" style="background:rgba(56,189,248,.12);color:var(--sky);border-color:rgba(56,189,248,.25);">E</div>
+        <div class="team-name">The Educators</div>
+        <div class="team-role" style="color:var(--sky);">Curriculum &amp; Content</div>
+        <p class="team-bio">The notes, the practice questions, the chapter structure — every piece of content is crafted to reflect how real students actually learn, not just how textbooks present information.</p>
+      </div>
+      <div class="team-card ab-reveal" data-delay="3">
+        <div class="team-avatar" style="background:rgba(52,211,153,.12);color:var(--emerald);border-color:rgba(52,211,153,.25);">Y</div>
+        <div class="team-name">You</div>
+        <div class="team-role" style="color:var(--emerald);">The Most Important Part</div>
+        <p class="team-bio">Every question you ask, every chapter you open, every session you complete shapes what AbiLearn becomes. You're not just using this platform — you're part of building it.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ━━ SECTION 8: CLOSING CTA ━━ -->
+<div class="s-cta-wrap" aria-label="Start learning">
+  <div class="container">
+    <div class="ab-cta-box">
+      <span class="ab-eyebrow ab-reveal"><span class="eyebrow-dot" aria-hidden="true"></span>What's Next?</span>
+      <h2 class="cta-h2 ab-reveal" data-delay="1">Your Next Chapter Starts with a Question.</h2>
+      <p class="cta-sub ab-reveal" data-delay="2">
+        Open any subject. Pick any chapter. Ask any question. AbiLearn is here to help you understand it — at your pace, on your terms, completely free.
+      </p>
+      <a href="learn.html" class="btn-primary ab-reveal" data-delay="3">Begin Your Learning Journey</a>
+    </div>
+  </div>
 </div>
 
+<!-- ━━ BOTTOM NAV ━━ -->
+<nav class="al-bnav" role="navigation" aria-label="App navigation">
+  <div class="al-bnav-inner">
+    <a href="index.html" class="al-btab" aria-label="Home">
+      <span class="al-btab-icon" aria-hidden="true">
+        <svg width="22" height="22" viewBox="0 0 22 22" fill="none">
+          <path d="M3 9.2L11 3l8 6.2V19a1 1 0 01-1 1H14v-5.5H8V20H4a1 1 0 01-1-1V9.2z" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </span>
+      <span class="al-btab-label">Home</span>
+    </a>
+    <a href="learn.html" class="al-btab" aria-label="Learn">
+      <span class="al-btab-icon" aria-hidden="true">
+        <svg width="22" height="22" viewBox="0 0 22 22" fill="none">
+          <rect x="3" y="3" width="16" height="16" rx="2.5" stroke="currentColor" stroke-width="1.6"/>
+          <path d="M7 8h8M7 12h8M7 16h5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/>
+        </svg>
+      </span>
+      <span class="al-btab-label">Learn</span>
+    </a>
+    <a href="learn.html" class="al-btab" aria-label="Search">
+      <span class="al-btab-icon" aria-hidden="true">
+        <svg width="22" height="22" viewBox="0 0 22 22" fill="none">
+          <circle cx="9.5" cy="9.5" r="6" stroke="currentColor" stroke-width="1.6"/>
+          <line x1="14.2" y1="14.2" x2="19" y2="19" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>
+        </svg>
+      </span>
+      <span class="al-btab-label">Search</span>
+    </a>
+    <a href="dashboard.html" class="al-btab" aria-label="Progress" onclick="return guardNav(event,'dashboard.html')">
+      <span class="al-btab-icon" aria-hidden="true">
+        <svg width="22" height="22" viewBox="0 0 22 22" fill="none">
+          <path d="M4 17V12M8.5 17V9M13 17V7M17.5 17V4" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/>
+        </svg>
+      </span>
+      <span class="al-btab-label">Progress</span>
+    </a>
+    <button class="al-btab" id="alProfileBtn" aria-label="Profile">
+      <span class="al-btab-icon" aria-hidden="true">
+        <svg width="22" height="22" viewBox="0 0 22 22" fill="none">
+          <circle cx="11" cy="8" r="4" stroke="currentColor" stroke-width="1.6"/>
+          <path d="M3 19c0-3.87 3.58-7 8-7s8 3.13 8 7" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>
+        </svg>
+      </span>
+      <span class="al-btab-label">Profile</span>
+    </button>
+  </div>
+</nav>
+
+<!-- Scripts -->
 <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-auth-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore-compat.js"></script>
@@ -305,32 +1341,106 @@
 <script src="js/app.js?v=73"></script>
 <script src="js/auth.js?v=32"></script>
 <script>(function(){var s=document.getElementById('_ag');function show(){if(s){s.remove();s=null;}}if(!window._fauth){show();return;}var t=setTimeout(show,3000);window._fauth.onAuthStateChanged(function(u){clearTimeout(t);show();if(!u)window.location.replace('auth.html?from='+encodeURIComponent(location.href));});}());</script>
+<script>
+(function(){
+  /* ── PARTICLE SYSTEM ── */
+  var canvas = document.getElementById('ab-particle-canvas');
+  if (!canvas) return;
+  if (window.matchMedia('(prefers-reduced-motion:reduce)').matches) return;
 
-<!-- ── App Bottom Nav ── -->
-<nav class="al-bnav" aria-label="App navigation">
-  <div class="al-bnav-inner">
-    <a href="index.html" class="al-btab" aria-label="Home">
-      <span class="al-btab-icon" aria-hidden="true"><svg width="22" height="22" viewBox="0 0 22 22" fill="none"><path d="M3 9.2L11 3l8 6.2V19a1 1 0 01-1 1H14v-5.5H8V20H4a1 1 0 01-1-1V9.2z" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
-      <span class="al-btab-label">Home</span>
-    </a>
-    <a href="learn.html" class="al-btab" aria-label="Learn">
-      <span class="al-btab-icon" aria-hidden="true"><svg width="22" height="22" viewBox="0 0 22 22" fill="none"><rect x="3" y="3" width="16" height="16" rx="2.5" stroke="currentColor" stroke-width="1.6"/><path d="M7 8h8M7 12h8M7 16h5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg></span>
-      <span class="al-btab-label">Learn</span>
-    </a>
-    <a href="learn.html" class="al-btab" aria-label="Search">
-      <span class="al-btab-icon" aria-hidden="true"><svg width="22" height="22" viewBox="0 0 22 22" fill="none"><circle cx="9.5" cy="9.5" r="6" stroke="currentColor" stroke-width="1.6"/><line x1="14.2" y1="14.2" x2="19" y2="19" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg></span>
-      <span class="al-btab-label">Search</span>
-    </a>
-    <a href="dashboard.html" class="al-btab" aria-label="Progress" onclick="return guardNav(event,'dashboard.html')">
-      <span class="al-btab-icon" aria-hidden="true"><svg width="22" height="22" viewBox="0 0 22 22" fill="none"><path d="M4 17V12M8.5 17V9M13 17V7M17.5 17V4" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg></span>
-      <span class="al-btab-label">Progress</span>
-    </a>
-    <button class="al-btab" id="alProfileBtn" aria-label="Profile">
-      <span class="al-btab-icon" aria-hidden="true"><svg width="22" height="22" viewBox="0 0 22 22" fill="none"><circle cx="11" cy="8" r="4" stroke="currentColor" stroke-width="1.6"/><path d="M3 19c0-3.87 3.58-7 8-7s8 3.13 8 7" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg></span>
-      <span class="al-btab-label">Profile</span>
-    </button>
-  </div>
-</nav>
-<script>(function(){var b=document.getElementById('alProfileBtn');if(!b)return;b.addEventListener('click',function(){var u=(typeof getUser==='function')?getUser():null;if(u){if(typeof toggleUserDropdown==='function')toggleUserDropdown();}else{window.location.href='auth.html?from='+encodeURIComponent(location.href);}});})();</script>
+  var ctx = canvas.getContext('2d');
+  var W, H, particles = [], RAF;
+  var COUNT = 60, CONNECT_DIST = 120;
+
+  function resize(){
+    W = canvas.width  = canvas.offsetWidth;
+    H = canvas.height = canvas.offsetHeight;
+  }
+
+  function mkParticle(){
+    return {
+      x:  Math.random() * W,
+      y:  Math.random() * H,
+      vx: (Math.random() - .5) * .45,
+      vy: (Math.random() - .5) * .45,
+      r:  Math.random() * 1.6 + .6,
+      a:  Math.random() * .55 + .15
+    };
+  }
+
+  function init(){
+    resize();
+    particles = [];
+    for(var i = 0; i < COUNT; i++) particles.push(mkParticle());
+  }
+
+  function draw(){
+    ctx.clearRect(0, 0, W, H);
+    for(var i = 0; i < particles.length; i++){
+      var p = particles[i];
+      p.x += p.vx; p.y += p.vy;
+      if(p.x < 0) p.x = W; if(p.x > W) p.x = 0;
+      if(p.y < 0) p.y = H; if(p.y > H) p.y = 0;
+      ctx.beginPath();
+      ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+      ctx.fillStyle = 'rgba(184,164,255,' + p.a + ')';
+      ctx.fill();
+    }
+    for(var i = 0; i < particles.length; i++){
+      for(var j = i + 1; j < particles.length; j++){
+        var dx = particles[i].x - particles[j].x;
+        var dy = particles[i].y - particles[j].y;
+        var dist = Math.sqrt(dx*dx + dy*dy);
+        if(dist < CONNECT_DIST){
+          var alpha = (1 - dist / CONNECT_DIST) * .18;
+          ctx.beginPath();
+          ctx.moveTo(particles[i].x, particles[i].y);
+          ctx.lineTo(particles[j].x, particles[j].y);
+          ctx.strokeStyle = 'rgba(184,164,255,' + alpha + ')';
+          ctx.lineWidth = .8;
+          ctx.stroke();
+        }
+      }
+    }
+    RAF = requestAnimationFrame(draw);
+  }
+
+  var ro = new ResizeObserver(function(){
+    resize();
+    particles.forEach(function(p){
+      if(p.x > W) p.x = Math.random() * W;
+      if(p.y > H) p.y = Math.random() * H;
+    });
+  });
+  ro.observe(canvas);
+
+  init();
+  draw();
+
+  /* ── INTERSECTION OBSERVER REVEAL ── */
+  var reveals = document.querySelectorAll('.ab-reveal');
+  if('IntersectionObserver' in window){
+    var io = new IntersectionObserver(function(entries){
+      entries.forEach(function(e){
+        if(e.isIntersecting){
+          e.target.classList.add('is-visible');
+          io.unobserve(e.target);
+        }
+      });
+    }, { threshold: 0.12, rootMargin: '0px 0px -40px 0px' });
+    reveals.forEach(function(el){ io.observe(el); });
+  } else {
+    reveals.forEach(function(el){ el.classList.add('is-visible'); });
+  }
+
+  /* ── PROFILE BUTTON ── */
+  var pb = document.getElementById('alProfileBtn');
+  if(pb){
+    pb.addEventListener('click', function(){
+      window.location.href = 'profile.html';
+    });
+  }
+}());
+</script>
 </body>
 </html>
