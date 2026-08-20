@@ -1064,7 +1064,7 @@
     border-top: 1px solid var(--lh-border);
     box-shadow: 0 -2px 16px rgba(13,9,34,.07);
     display: flex;
-    height: 68px;
+    height: 62px;
     padding-bottom: env(safe-area-inset-bottom, 0);
   }
 
@@ -1793,17 +1793,12 @@ initLearnPage();
   });
 })();
 
-/* ── Profile tab (mobile) → open dropdown or auth ── */
+/* ── Profile tab → profile page ── */
 (function () {
   var btn = document.getElementById('lhProfileBtn');
   if (!btn) return;
   btn.addEventListener('click', function () {
-    var u = (typeof getUser === 'function') ? getUser() : null;
-    if (u) {
-      toggleUserDropdown();
-    } else {
-      window.location.href = 'auth.html?from=' + encodeURIComponent(location.href);
-    }
+    window.location.href = 'profile.html';
   });
 })();
 
