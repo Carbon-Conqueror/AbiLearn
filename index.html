@@ -1325,7 +1325,7 @@ initLandingPage();
       <span class="al-btab-icon" aria-hidden="true"><svg width="22" height="22" viewBox="0 0 22 22" fill="none"><path d="M3 9.2L11 3l8 6.2V19a1 1 0 01-1 1H14v-5.5H8V20H4a1 1 0 01-1-1V9.2z" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
       <span class="al-btab-label">Home</span>
     </a>
-    <a href="learn.html" class="al-btab" aria-label="Learn" onclick="return guardNav(event,'learn.html')">
+    <a href="learn.html" class="al-btab" aria-label="Learn">
       <span class="al-btab-icon" aria-hidden="true"><svg width="22" height="22" viewBox="0 0 22 22" fill="none"><rect x="3" y="3" width="16" height="16" rx="2.5" stroke="currentColor" stroke-width="1.6"/><path d="M7 8h8M7 12h8M7 16h5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg></span>
       <span class="al-btab-label">Learn</span>
     </a>
@@ -1344,7 +1344,7 @@ initLandingPage();
   </div>
 </nav>
 <style>
-body{padding-bottom:70px}.al-bnav{position:fixed;bottom:0;left:0;right:0;z-index:500;background:rgba(10,8,28,.92);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border-top:1px solid rgba(176,156,255,.1);padding-bottom:env(safe-area-inset-bottom,0)}.al-bnav-inner{display:flex;align-items:stretch;height:62px;max-width:600px;margin:0 auto}.al-btab{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;color:rgba(192,178,255,.48);text-decoration:none;background:none;border:none;cursor:pointer;font-family:var(--font);transition:color .15s;-webkit-tap-highlight-color:transparent;padding:0}.al-btab.al-btab-active{color:#B8A4FF;font-weight:700}.al-btab-icon{display:flex}.al-btab-label{font-size:.66rem;font-weight:500}.al-btab.al-btab-active .al-btab-label{font-weight:700}
+html,body{height:100%;overflow:hidden;padding-bottom:0}.al-bnav{position:fixed;bottom:0;left:0;right:0;z-index:500;background:rgba(10,8,28,.92);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border-top:1px solid rgba(176,156,255,.15);padding-bottom:env(safe-area-inset-bottom,0)}.al-bnav-inner{display:flex;align-items:stretch;height:62px;max-width:600px;margin:0 auto}.al-btab{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;color:rgba(192,178,255,.65);text-decoration:none;background:none;border:none;cursor:pointer;font-family:var(--font);transition:color .15s;-webkit-tap-highlight-color:transparent;padding:0}.al-btab.al-btab-active{color:#B8A4FF;font-weight:700}.al-btab-icon{display:flex}.al-btab-label{font-size:.66rem;font-weight:500}.al-btab.al-btab-active .al-btab-label{font-weight:700}
 </style>
 <script>(function(){var b=document.getElementById('alProfileBtn');if(!b)return;b.addEventListener('click',function(){var u=(typeof getUser==='function')?getUser():null;if(u){if(typeof toggleUserDropdown==='function')toggleUserDropdown();}else{window.location.href='auth.html?from='+encodeURIComponent(location.href);}});})();</script>
 </body>
