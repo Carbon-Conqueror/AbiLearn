@@ -78,6 +78,14 @@
     padding-inline: clamp(1.25rem, 5vw, 3rem);
   }
 
+  /* ━━ TOP BRAND BAR ━━ */
+  .lp-topbar {
+    position: fixed;
+    top: 0; left: 0;
+    z-index: 200;
+    padding: clamp(.65rem,1.8vh,1rem) clamp(1rem,3vw,1.4rem);
+  }
+
   /* ━━ SITE HEADER ━━ */
 
   .site-header {
@@ -971,6 +979,14 @@
 <body>
 <a href="#hero-main" class="skip-nav">Skip to main content</a>
 
+<div class="lp-topbar">
+  <a href="index.html" class="brand" aria-label="AbiLearn home">
+    <img src="assets/logo.jpeg" alt="" class="brand-img" aria-hidden="true">
+    <span class="brand-name">
+      <span class="brand-abi">Abi</span><span class="brand-learn">Learn</span>
+    </span>
+  </a>
+</div>
 
 <!-- ━━ HERO ━━ -->
 <section class="s-hero" id="hero" aria-label="AbiLearn — Class 10 Learning Platform">
