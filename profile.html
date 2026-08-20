@@ -1,0 +1,1565 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>Profile — AbiLearn</title>
+  <meta name="description" content="Your AbiLearn profile, learning progress and account settings.">
+  <meta name="theme-color" content="#04030F">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="AbiLearn">
+  <link rel="manifest" href="manifest.json">
+  <link rel="apple-touch-icon" href="assets/logo.jpeg">
+  <link rel="icon" href="assets/logo.jpeg" type="image/jpeg">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style id="_ag">body{visibility:hidden!important}</style>
+  <style>
+  /* ━━ AbiLearn Profile v1 ━━ */
+
+  :root {
+    --bg:       #04030F;
+    --s1:       rgba(255,255,255,.04);
+    --s2:       rgba(255,255,255,.07);
+    --border:   rgba(176,156,255,.10);
+    --border-2: rgba(176,156,255,.20);
+    --accent:   #6B4EFF;
+    --lav:      #B8A4FF;
+    --text:     #EDE8FF;
+    --text-2:   rgba(192,178,255,.65);
+    --text-3:   rgba(192,178,255,.38);
+    --math:     #9D8EFF;
+    --sci:      #22D3EE;
+    --eng:      #F59E0B;
+    --soc:      #10B981;
+    --danger:   #F87171;
+    --font:     'Plus Jakarta Sans', -apple-system, system-ui, sans-serif;
+    --r:        12px;
+    --r-sm:     8px;
+    --ease:     cubic-bezier(.22,.68,0,1.1);
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html { background: var(--bg); scroll-behavior: smooth; }
+
+  body {
+    font-family: var(--font);
+    color: var(--text);
+    background: var(--bg);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    min-height: 100svh;
+    padding-bottom: calc(72px + env(safe-area-inset-bottom, 0px));
+    overflow-x: hidden;
+  }
+
+  .skip-nav { position: absolute; left: -9999px; top: auto; }
+  .skip-nav:focus {
+    left: 1rem; top: 1rem; z-index: 9999;
+    background: #fff; color: var(--bg);
+    padding: .5rem 1rem; border-radius: 8px; font-weight: 700;
+  }
+
+  /* ━━ LAYOUT ━━ */
+  .prof-wrap {
+    max-width: 520px;
+    margin: 0 auto;
+    padding: 0 1rem;
+  }
+
+  /* ━━ PAGE HEADER ━━ */
+  .page-hdr {
+    padding: 1.5rem 0 .5rem;
+  }
+  .page-hdr h1 {
+    font-size: 1.45rem;
+    font-weight: 800;
+    letter-spacing: -.032em;
+    color: var(--text);
+    line-height: 1.2;
+    text-wrap: balance;
+  }
+  .page-hdr p {
+    font-size: .8rem;
+    color: var(--text-3);
+    margin-top: .22rem;
+    line-height: 1.5;
+  }
+
+  /* ━━ SECTION ━━ */
+  .p-sec { margin-top: 1.4rem; }
+  .p-sec:last-of-type { margin-bottom: 1.5rem; }
+
+  .sec-label {
+    font-size: .63rem;
+    font-weight: 700;
+    letter-spacing: .11em;
+    text-transform: uppercase;
+    color: var(--text-3);
+    margin-bottom: .55rem;
+  }
+
+  /* ━━ IDENTITY CARD ━━ */
+  .id-card {
+    background: var(--s1);
+    border: 1px solid var(--border);
+    border-radius: var(--r);
+    padding: 1.2rem 1rem;
+  }
+  .id-top {
+    display: flex;
+    align-items: flex-start;
+    gap: .9rem;
+  }
+  .avatar-wrap { position: relative; flex-shrink: 0; }
+
+  .avatar {
+    width: 64px;
+    height: 64px;
+    border-radius: 50%;
+    background: rgba(107,78,255,.22);
+    border: 1.5px solid rgba(176,156,255,.2);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    cursor: pointer;
+    -webkit-tap-highlight-color: transparent;
+    transition: border-color .18s;
+  }
+  .avatar:hover { border-color: rgba(176,156,255,.4); }
+  .avatar img { width: 100%; height: 100%; object-fit: cover; display: block; }
+  .avatar-initials {
+    font-size: 1.25rem;
+    font-weight: 800;
+    color: var(--lav);
+    letter-spacing: -.02em;
+    user-select: none;
+    line-height: 1;
+  }
+
+  .avatar-cam {
+    position: absolute;
+    bottom: -1px; right: -1px;
+    width: 22px; height: 22px;
+    border-radius: 50%;
+    background: var(--accent);
+    border: 2px solid var(--bg);
+    display: flex; align-items: center; justify-content: center;
+    color: #fff;
+    cursor: pointer;
+    padding: 0;
+    line-height: 1;
+    -webkit-tap-highlight-color: transparent;
+  }
+  .avatar-cam:focus-visible { outline: 2px solid var(--lav); outline-offset: 2px; }
+
+  .id-info { flex: 1; min-width: 0; }
+
+  .id-name {
+    font-size: 1.12rem;
+    font-weight: 800;
+    color: var(--text);
+    letter-spacing: -.025em;
+    line-height: 1.2;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    min-height: 1.35em;
+  }
+  .id-grade {
+    font-size: .73rem;
+    font-weight: 500;
+    color: var(--text-3);
+    margin-top: .18rem;
+    letter-spacing: .04em;
+  }
+
+  .btn-edit-prof {
+    display: inline-flex;
+    align-items: center;
+    gap: .3rem;
+    margin-top: .55rem;
+    padding: .28rem .68rem;
+    border-radius: 100px;
+    border: 1px solid var(--border-2);
+    background: transparent;
+    color: var(--text-2);
+    font-family: var(--font);
+    font-size: .73rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background .18s, color .18s, border-color .18s;
+    -webkit-tap-highlight-color: transparent;
+  }
+  .btn-edit-prof:hover { background: var(--s2); color: var(--text); border-color: rgba(176,156,255,.35); }
+  .btn-edit-prof:focus-visible { outline: 2px solid var(--lav); outline-offset: 2px; }
+
+  /* ━━ EDIT FORM ━━ */
+  .edit-form {
+    display: none;
+    margin-top: .95rem;
+    padding-top: .95rem;
+    border-top: 1px solid var(--border);
+  }
+  .edit-form.open { display: block; }
+
+  .f-field { margin-bottom: .7rem; }
+  .f-field label {
+    display: block;
+    font-size: .68rem;
+    font-weight: 700;
+    color: var(--text-3);
+    letter-spacing: .07em;
+    text-transform: uppercase;
+    margin-bottom: .28rem;
+  }
+  .f-field input {
+    width: 100%;
+    background: rgba(255,255,255,.04);
+    border: 1px solid var(--border);
+    border-radius: var(--r-sm);
+    padding: .58rem .78rem;
+    font-family: var(--font);
+    font-size: .86rem;
+    font-weight: 500;
+    color: var(--text);
+    outline: none;
+    transition: border-color .18s;
+    -webkit-appearance: none;
+  }
+  .f-field input::placeholder { color: var(--text-3); }
+  .f-field input:focus { border-color: rgba(176,156,255,.38); }
+
+  .f-actions { display: flex; gap: .45rem; margin-top: .2rem; }
+
+  .btn-save {
+    flex: 1;
+    padding: .52rem;
+    border-radius: var(--r-sm);
+    background: var(--accent);
+    border: none;
+    color: #fff;
+    font-family: var(--font);
+    font-size: .82rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: opacity .18s;
+    -webkit-tap-highlight-color: transparent;
+  }
+  .btn-save:hover { opacity: .88; }
+  .btn-save:disabled { opacity: .6; cursor: default; }
+  .btn-save:focus-visible { outline: 2px solid var(--lav); outline-offset: 2px; }
+
+  .btn-cancel-form {
+    padding: .52rem .88rem;
+    border-radius: var(--r-sm);
+    border: 1px solid var(--border);
+    background: transparent;
+    color: var(--text-2);
+    font-family: var(--font);
+    font-size: .82rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background .18s;
+    -webkit-tap-highlight-color: transparent;
+  }
+  .btn-cancel-form:hover { background: var(--s1); }
+  .btn-cancel-form:focus-visible { outline: 2px solid var(--lav); outline-offset: 2px; }
+
+  .avatar-note {
+    display: none;
+    margin-top: .55rem;
+    font-size: .7rem;
+    color: var(--text-3);
+    padding: .38rem .6rem;
+    background: rgba(107,78,255,.06);
+    border: 1px solid rgba(107,78,255,.12);
+    border-radius: var(--r-sm);
+    line-height: 1.45;
+  }
+  .avatar-note.show { display: block; }
+
+  /* ━━ STATS GRID ━━ */
+  .stats-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: .55rem;
+  }
+  .stat-tile {
+    background: var(--s1);
+    border: 1px solid var(--border);
+    border-radius: var(--r);
+    padding: .85rem .95rem;
+    min-height: 80px;
+  }
+  .stat-lbl {
+    font-size: .65rem;
+    font-weight: 700;
+    letter-spacing: .05em;
+    text-transform: uppercase;
+    color: var(--text-3);
+    line-height: 1.3;
+  }
+  .stat-val {
+    font-size: 1.65rem;
+    font-weight: 800;
+    color: var(--text);
+    letter-spacing: -.04em;
+    line-height: 1.1;
+    margin-top: .15rem;
+    font-variant-numeric: tabular-nums;
+  }
+  .stat-sub {
+    font-size: .68rem;
+    color: var(--text-3);
+    margin-top: .06rem;
+    line-height: 1.3;
+  }
+
+  /* ━━ SUBJECT PROGRESS ━━ */
+  .subj-list { display: flex; flex-direction: column; gap: .45rem; }
+
+  .subj-card {
+    display: block;
+    background: var(--s1);
+    border: 1px solid var(--border);
+    border-radius: var(--r);
+    padding: .82rem .95rem;
+    text-decoration: none;
+    color: inherit;
+    transition: background .18s, border-color .18s;
+    -webkit-tap-highlight-color: transparent;
+  }
+  .subj-card:hover { background: var(--s2); }
+  .subj-card:focus-visible { outline: 2px solid var(--lav); outline-offset: 2px; }
+
+  .subj-hdr {
+    display: flex;
+    align-items: center;
+    gap: .55rem;
+    margin-bottom: .52rem;
+  }
+  .subj-dot {
+    width: 7px; height: 7px;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+  .subj-name {
+    flex: 1;
+    font-size: .86rem;
+    font-weight: 700;
+    color: var(--text);
+    min-width: 0;
+  }
+  .subj-pct {
+    font-size: .78rem;
+    font-weight: 700;
+    color: var(--text-2);
+    font-variant-numeric: tabular-nums;
+    flex-shrink: 0;
+  }
+  .prog-track {
+    height: 3px;
+    background: var(--s2);
+    border-radius: 100px;
+    overflow: hidden;
+  }
+  .prog-fill {
+    height: 100%;
+    border-radius: 100px;
+    transition: width .55s var(--ease);
+  }
+
+  /* ━━ CONTINUE LEARNING ━━ */
+  .continue-card {
+    background: var(--s1);
+    border: 1px solid var(--border);
+    border-radius: var(--r);
+    padding: .95rem;
+    display: flex;
+    align-items: center;
+    gap: .8rem;
+  }
+  .continue-icon {
+    width: 40px; height: 40px;
+    border-radius: 10px;
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+  }
+  .continue-info { flex: 1; min-width: 0; }
+  .continue-subj {
+    font-size: .67rem;
+    font-weight: 700;
+    letter-spacing: .07em;
+    text-transform: uppercase;
+    color: var(--text-3);
+  }
+  .continue-ch {
+    font-size: .88rem;
+    font-weight: 700;
+    color: var(--text);
+    margin-top: .1rem;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .continue-meta {
+    font-size: .73rem;
+    color: var(--text-2);
+    margin-top: .08rem;
+  }
+  .btn-cont {
+    display: inline-flex;
+    align-items: center;
+    padding: .42rem .82rem;
+    border-radius: 100px;
+    background: var(--accent);
+    border: none;
+    color: #fff;
+    font-family: var(--font);
+    font-size: .76rem;
+    font-weight: 700;
+    cursor: pointer;
+    text-decoration: none;
+    white-space: nowrap;
+    flex-shrink: 0;
+    transition: opacity .18s;
+    -webkit-tap-highlight-color: transparent;
+  }
+  .btn-cont:hover { opacity: .88; }
+  .btn-cont:focus-visible { outline: 2px solid var(--lav); outline-offset: 2px; }
+
+  .empty-card {
+    background: var(--s1);
+    border: 1px solid var(--border);
+    border-radius: var(--r);
+    padding: 1.4rem 1rem;
+    text-align: center;
+  }
+  .empty-card p {
+    font-size: .82rem;
+    color: var(--text-3);
+    line-height: 1.55;
+    margin-bottom: .8rem;
+  }
+  .btn-browse {
+    display: inline-flex;
+    align-items: center;
+    gap: .3rem;
+    padding: .44rem 1rem;
+    border-radius: 100px;
+    border: 1px solid var(--border-2);
+    background: transparent;
+    color: var(--text-2);
+    font-family: var(--font);
+    font-size: .78rem;
+    font-weight: 600;
+    cursor: pointer;
+    text-decoration: none;
+    transition: background .18s, color .18s;
+    -webkit-tap-highlight-color: transparent;
+  }
+  .btn-browse:hover { background: var(--s2); color: var(--text); }
+  .btn-browse:focus-visible { outline: 2px solid var(--lav); outline-offset: 2px; }
+
+  /* ━━ ACTIVITY LIST ━━ */
+  .activity-list {
+    background: var(--s1);
+    border: 1px solid var(--border);
+    border-radius: var(--r);
+    overflow: hidden;
+  }
+  .act-item {
+    display: flex;
+    align-items: center;
+    gap: .72rem;
+    padding: .82rem .95rem;
+    border-bottom: 1px solid var(--border);
+    transition: background .15s;
+  }
+  .act-item:last-child { border-bottom: none; }
+  .act-item:hover { background: var(--s2); }
+  .act-dot {
+    width: 7px; height: 7px;
+    border-radius: 50%;
+    flex-shrink: 0;
+    opacity: .65;
+  }
+  .act-info { flex: 1; min-width: 0; }
+  .act-title {
+    font-size: .84rem;
+    font-weight: 600;
+    color: var(--text);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .act-meta {
+    font-size: .7rem;
+    color: var(--text-3);
+    margin-top: .1rem;
+  }
+  .act-empty {
+    background: var(--s1);
+    border: 1px solid var(--border);
+    border-radius: var(--r);
+    padding: 1.2rem 1rem;
+    font-size: .82rem;
+    color: var(--text-3);
+    text-align: center;
+    line-height: 1.55;
+  }
+
+  /* ━━ TOOL ROWS ━━ */
+  .tool-list {
+    background: var(--s1);
+    border: 1px solid var(--border);
+    border-radius: var(--r);
+    overflow: hidden;
+  }
+  .tool-row {
+    display: flex;
+    align-items: center;
+    gap: .8rem;
+    padding: .88rem .95rem;
+    border-bottom: 1px solid var(--border);
+    text-decoration: none;
+    color: inherit;
+    background: transparent;
+    border-left: none; border-right: none; border-top: none;
+    font-family: var(--font);
+    width: 100%;
+    text-align: left;
+    cursor: pointer;
+    transition: background .15s;
+    -webkit-tap-highlight-color: transparent;
+  }
+  .tool-row:last-child { border-bottom: none; }
+  .tool-row:hover { background: var(--s2); }
+  .tool-row:focus-visible { outline: 2px solid var(--lav); outline-offset: -2px; }
+  .tool-icon {
+    width: 36px; height: 36px;
+    border-radius: 9px;
+    background: rgba(107,78,255,.08);
+    border: 1px solid rgba(107,78,255,.14);
+    display: flex; align-items: center; justify-content: center;
+    color: var(--lav);
+    flex-shrink: 0;
+  }
+  .tool-text { flex: 1; min-width: 0; }
+  .tool-title { font-size: .86rem; font-weight: 700; color: var(--text); }
+  .tool-desc { font-size: .72rem; color: var(--text-3); margin-top: .1rem; line-height: 1.4; }
+  .chev { color: var(--text-3); flex-shrink: 0; }
+
+  /* ━━ STREAK ━━ */
+  .streak-card {
+    background: var(--s1);
+    border: 1px solid var(--border);
+    border-radius: var(--r);
+    padding: 1rem .95rem;
+  }
+  .streak-top {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    margin-bottom: .85rem;
+  }
+  .streak-lbl {
+    font-size: .65rem;
+    font-weight: 700;
+    letter-spacing: .1em;
+    text-transform: uppercase;
+    color: var(--text-3);
+  }
+  .streak-num {
+    font-size: 1.5rem;
+    font-weight: 800;
+    color: var(--text);
+    letter-spacing: -.04em;
+    font-variant-numeric: tabular-nums;
+  }
+  .streak-num span {
+    font-size: .88rem;
+    font-weight: 600;
+    color: var(--text-2);
+    letter-spacing: 0;
+    margin-left: .18rem;
+  }
+  .streak-week {
+    display: flex;
+    gap: .28rem;
+  }
+  .sk-day {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: .28rem;
+  }
+  .sk-dot {
+    width: 100%;
+    max-width: 32px;
+    aspect-ratio: 1;
+    border-radius: 50%;
+    background: var(--s2);
+    border: 1.5px solid var(--border);
+    transition: background .2s, border-color .2s, box-shadow .2s;
+  }
+  .sk-dot.active {
+    background: var(--accent);
+    border-color: rgba(107,78,255,.45);
+    box-shadow: 0 0 8px rgba(107,78,255,.3);
+  }
+  .sk-dot.today { border-color: var(--lav); }
+  .sk-lbl {
+    font-size: .6rem;
+    font-weight: 600;
+    color: var(--text-3);
+    letter-spacing: .02em;
+  }
+  .streak-hint {
+    font-size: .72rem;
+    color: var(--text-3);
+    margin-top: .72rem;
+    text-align: center;
+    line-height: 1.45;
+  }
+
+  /* ━━ ACCOUNT ━━ */
+  .acct-list {
+    background: var(--s1);
+    border: 1px solid var(--border);
+    border-radius: var(--r);
+    overflow: hidden;
+  }
+  .acct-row {
+    display: flex;
+    align-items: center;
+    gap: .8rem;
+    padding: .88rem .95rem;
+    border-bottom: 1px solid var(--border);
+    text-decoration: none;
+    color: inherit;
+    background: transparent;
+    border-left: none; border-right: none; border-top: none;
+    font-family: var(--font);
+    width: 100%;
+    text-align: left;
+    cursor: pointer;
+    transition: background .15s;
+    -webkit-tap-highlight-color: transparent;
+  }
+  .acct-row:last-child { border-bottom: none; }
+  .acct-row.no-hover { cursor: default; }
+  .acct-row:not(.no-hover):hover { background: var(--s2); }
+  .acct-row:focus-visible { outline: 2px solid var(--lav); outline-offset: -2px; }
+  .acct-icon {
+    width: 34px; height: 34px;
+    border-radius: 9px;
+    background: var(--s2);
+    display: flex; align-items: center; justify-content: center;
+    color: var(--text-2);
+    flex-shrink: 0;
+  }
+  .acct-icon.danger { background: rgba(239,68,68,.1); color: var(--danger); }
+  .acct-main { flex: 1; min-width: 0; }
+  .acct-title { font-size: .86rem; font-weight: 600; color: var(--text); line-height: 1.3; }
+  .acct-title.danger { color: var(--danger); }
+  .acct-val { font-size: .74rem; color: var(--text-3); margin-top: .07rem; }
+
+  .so-confirm {
+    display: none;
+    padding: .78rem .95rem;
+    background: rgba(239,68,68,.05);
+    border-top: 1px solid rgba(239,68,68,.12);
+    align-items: center;
+    gap: .45rem;
+  }
+  .so-confirm.open { display: flex; }
+  .so-msg { flex: 1; font-size: .78rem; color: var(--text-2); }
+  .btn-so-cancel {
+    padding: .36rem .7rem;
+    border-radius: 6px;
+    border: 1px solid var(--border);
+    background: transparent;
+    color: var(--text-2);
+    font-family: var(--font);
+    font-size: .76rem;
+    font-weight: 600;
+    cursor: pointer;
+    -webkit-tap-highlight-color: transparent;
+  }
+  .btn-so-cancel:focus-visible { outline: 2px solid var(--lav); outline-offset: 2px; }
+  .btn-so-go {
+    padding: .36rem .7rem;
+    border-radius: 6px;
+    border: none;
+    background: #DC2626;
+    color: #fff;
+    font-family: var(--font);
+    font-size: .76rem;
+    font-weight: 700;
+    cursor: pointer;
+    -webkit-tap-highlight-color: transparent;
+    transition: opacity .18s;
+  }
+  .btn-so-go:hover { opacity: .88; }
+  .btn-so-go:disabled { opacity: .6; cursor: default; }
+  .btn-so-go:focus-visible { outline: 2px solid var(--lav); outline-offset: 2px; }
+
+  /* ━━ SUPPORT ━━ */
+  .sup-list {
+    background: var(--s1);
+    border: 1px solid var(--border);
+    border-radius: var(--r);
+    overflow: hidden;
+  }
+  .sup-row {
+    display: flex;
+    align-items: center;
+    gap: .72rem;
+    padding: .82rem .95rem;
+    border-bottom: 1px solid var(--border);
+    text-decoration: none;
+    color: var(--text-2);
+    font-size: .86rem;
+    font-weight: 500;
+    transition: background .15s, color .15s;
+    -webkit-tap-highlight-color: transparent;
+  }
+  .sup-row:last-child { border-bottom: none; }
+  .sup-row:hover { background: var(--s2); color: var(--text); }
+  .sup-row:focus-visible { outline: 2px solid var(--lav); outline-offset: -2px; }
+  .sup-row.muted { color: var(--text-3); }
+  .sup-row .s-ico { color: var(--text-3); flex-shrink: 0; }
+  .sup-row .s-chev { margin-left: auto; color: var(--text-3); flex-shrink: 0; }
+
+  /* ━━ BOTTOM NAV ━━ */
+  .bot-nav {
+    position: fixed;
+    bottom: 0; left: 0; right: 0;
+    z-index: 500;
+    background: rgba(4,3,15,.92);
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+    border-top: 1px solid rgba(176,156,255,.1);
+    padding-bottom: env(safe-area-inset-bottom, 0px);
+  }
+  .bot-inner {
+    display: flex;
+    align-items: stretch;
+    height: 62px;
+    max-width: 520px;
+    margin: 0 auto;
+  }
+  .bot-tab {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 3px;
+    color: rgba(192,178,255,.65);
+    text-decoration: none;
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-family: var(--font);
+    -webkit-tap-highlight-color: transparent;
+    padding: 0;
+    transition: color .15s;
+  }
+  .bot-tab:hover { color: rgba(192,178,255,.85); }
+  .bot-tab.active { color: #B8A4FF; }
+  .bot-tab:focus-visible { outline: 2px solid rgba(176,156,255,.6); outline-offset: -3px; }
+  .bt-ico { display: flex; }
+  .bt-lbl { font-size: .63rem; font-weight: 500; }
+  .bot-tab.active .bt-lbl { font-weight: 700; }
+
+  /* ━━ SKELETON ━━ */
+  .skel {
+    background: linear-gradient(90deg, var(--s1) 25%, var(--s2) 50%, var(--s1) 75%);
+    background-size: 200% 100%;
+    animation: sk-anim 1.4s infinite;
+    border-radius: 8px;
+    display: block;
+  }
+  @keyframes sk-anim {
+    0%   { background-position: 200% 0; }
+    100% { background-position: -200% 0; }
+  }
+
+  /* ━━ ENTRANCE ━━ */
+  @keyframes riseUp {
+    from { opacity: 0; transform: translateY(8px); }
+    to   { opacity: 1; transform: none; }
+  }
+  .p-sec {
+    animation: riseUp .36s var(--ease) both;
+  }
+  .page-hdr { animation: riseUp .32s var(--ease) both; animation-delay: 0ms; }
+  .p-sec:nth-child(2)  { animation-delay: 30ms; }
+  .p-sec:nth-child(3)  { animation-delay: 60ms; }
+  .p-sec:nth-child(4)  { animation-delay: 90ms; }
+  .p-sec:nth-child(5)  { animation-delay: 120ms; }
+  .p-sec:nth-child(6)  { animation-delay: 150ms; }
+  .p-sec:nth-child(7)  { animation-delay: 180ms; }
+  .p-sec:nth-child(8)  { animation-delay: 210ms; }
+  .p-sec:nth-child(9)  { animation-delay: 240ms; }
+  .p-sec:nth-child(10) { animation-delay: 270ms; }
+  .p-sec:nth-child(11) { animation-delay: 300ms; }
+
+  @media (prefers-reduced-motion: reduce) {
+    .p-sec, .page-hdr { animation: none !important; }
+    .prog-fill { transition: none !important; }
+    .skel { animation: none !important; background: var(--s2) !important; }
+  }
+  </style>
+</head>
+<body>
+<a href="#prof-main" class="skip-nav">Skip to main content</a>
+
+<main id="prof-main" class="prof-wrap">
+
+  <!-- ─── 1. PAGE HEADER ─── -->
+  <header class="page-hdr">
+    <h1>Profile</h1>
+    <p>Your learning, progress and account</p>
+  </header>
+
+  <!-- ─── 2. IDENTITY CARD ─── -->
+  <section class="p-sec" aria-label="Profile identity">
+    <div class="id-card">
+      <div class="id-top">
+        <!-- Avatar -->
+        <div class="avatar-wrap">
+          <div class="avatar" id="profAvatar" role="img" aria-label="Profile photo. Tap to change.">
+            <img id="profAvatarImg" src="" alt="Profile photo" style="display:none" width="64" height="64">
+            <span class="avatar-initials" id="profInits" aria-hidden="true">
+              <span class="skel" style="width:36px;height:28px;border-radius:4px;display:inline-block;" id="skelInits"></span>
+            </span>
+          </div>
+          <button class="avatar-cam" id="avatarCamBtn" type="button" aria-label="Change profile photo">
+            <svg width="11" height="11" viewBox="0 0 11 11" fill="none" aria-hidden="true">
+              <path d="M4.2 2H6.8L8.1 3.3H10V9H1V3.3H2.9L4.2 2Z" stroke="currentColor" stroke-width="1.1" stroke-linejoin="round" fill="none"/>
+              <circle cx="5.5" cy="6.1" r="1.4" stroke="currentColor" stroke-width="1"/>
+            </svg>
+          </button>
+          <input type="file" id="avatarFileInput" accept="image/*" style="display:none" aria-hidden="true" tabindex="-1">
+        </div>
+
+        <!-- Info -->
+        <div class="id-info">
+          <div class="id-name" id="profName">
+            <span class="skel" style="width:58%;height:18px;border-radius:5px;display:inline-block" id="skelName"></span>
+            <span id="profNameText" style="display:none"></span>
+          </div>
+          <div class="id-grade">CBSE &middot; Class 10</div>
+          <button class="btn-edit-prof" id="editProfBtn" type="button" aria-expanded="false" aria-controls="editProfForm">
+            <svg width="11" height="11" viewBox="0 0 11 11" fill="none" aria-hidden="true">
+              <path d="M7.5 1.5L9.5 3.5L3.5 9.5H1.5V7.5L7.5 1.5Z" stroke="currentColor" stroke-width="1.2" stroke-linejoin="round"/>
+            </svg>
+            Edit Profile
+          </button>
+        </div>
+      </div>
+
+      <!-- Inline edit form -->
+      <div class="edit-form" id="editProfForm" role="form" aria-label="Edit profile">
+        <div class="f-field">
+          <label for="editName">Display Name</label>
+          <input type="text" id="editName" name="name" placeholder="Your name" autocomplete="name" maxlength="60">
+        </div>
+        <div class="f-field">
+          <label for="editSchool">School <span style="font-weight:400;text-transform:none;letter-spacing:0">(optional)</span></label>
+          <input type="text" id="editSchool" name="school" placeholder="Your school" autocomplete="organization" maxlength="80">
+        </div>
+        <div class="f-actions">
+          <button class="btn-save" id="editSaveBtn" type="button">Save Changes</button>
+          <button class="btn-cancel-form" id="editCancelBtn" type="button">Cancel</button>
+        </div>
+        <span class="avatar-note" id="avatarNote">Photo preview applied. Cloud upload coming soon — photo will reset on next login.</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ─── 3. LEARNING SNAPSHOT ─── -->
+  <section class="p-sec" aria-label="Learning snapshot">
+    <div class="sec-label">Learning Snapshot</div>
+    <div class="stats-grid" id="statsGrid">
+      <div class="stat-tile"><div class="skel" style="height:60px;border-radius:8px"></div></div>
+      <div class="stat-tile"><div class="skel" style="height:60px;border-radius:8px"></div></div>
+      <div class="stat-tile"><div class="skel" style="height:60px;border-radius:8px"></div></div>
+      <div class="stat-tile"><div class="skel" style="height:60px;border-radius:8px"></div></div>
+    </div>
+  </section>
+
+  <!-- ─── 4. SUBJECT PROGRESS ─── -->
+  <section class="p-sec" aria-label="Subject progress">
+    <div class="sec-label">Subject Progress</div>
+    <div class="subj-list" id="subjList">
+      <div class="skel" style="height:58px;border-radius:12px"></div>
+      <div class="skel" style="height:58px;border-radius:12px;margin-top:.45rem"></div>
+      <div class="skel" style="height:58px;border-radius:12px;margin-top:.45rem"></div>
+      <div class="skel" style="height:58px;border-radius:12px;margin-top:.45rem"></div>
+    </div>
+  </section>
+
+  <!-- ─── 5. CONTINUE LEARNING ─── -->
+  <section class="p-sec" aria-label="Continue learning">
+    <div class="sec-label">Continue Learning</div>
+    <div id="continueArea">
+      <div class="empty-card" style="padding:.9rem 1rem">
+        <div class="skel" style="height:13px;width:68%;margin:0 auto .4rem;border-radius:6px"></div>
+        <div class="skel" style="height:10px;width:44%;margin:0 auto;border-radius:6px"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ─── 6. RECENT ACTIVITY ─── -->
+  <section class="p-sec" aria-label="Recent activity">
+    <div class="sec-label">Recent Activity</div>
+    <div id="activityArea">
+      <div class="activity-list">
+        <div class="act-item"><div class="skel" style="flex:1;height:34px;border-radius:7px"></div></div>
+        <div class="act-item"><div class="skel" style="flex:1;height:34px;border-radius:7px"></div></div>
+        <div class="act-item" style="border-bottom:none"><div class="skel" style="flex:1;height:34px;border-radius:7px"></div></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ─── 7. LEARNING TOOLS ─── -->
+  <section class="p-sec" aria-label="Learning tools">
+    <div class="sec-label">Learning</div>
+    <div class="tool-list">
+      <a href="dashboard.html" class="tool-row" onclick="return guardNav(event,'dashboard.html')">
+        <div class="tool-icon" aria-hidden="true">
+          <svg width="18" height="18" viewBox="0 0 18 18" fill="none"><path d="M3 14V11M7 14V8M11 14V5.5M15 14V3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+        </div>
+        <div class="tool-text">
+          <div class="tool-title">My Progress</div>
+          <div class="tool-desc">See your progress across all subjects</div>
+        </div>
+        <span class="chev" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M6 4l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+      </a>
+      <a href="mistakes.html" class="tool-row">
+        <div class="tool-icon" aria-hidden="true">
+          <svg width="18" height="18" viewBox="0 0 18 18" fill="none"><circle cx="9" cy="9" r="6.5" stroke="currentColor" stroke-width="1.4"/><path d="M9 6v3.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/><circle cx="9" cy="12.2" r=".75" fill="currentColor"/></svg>
+        </div>
+        <div class="tool-text">
+          <div class="tool-title">Mistake Bank</div>
+          <div class="tool-desc">Review questions you previously got wrong</div>
+        </div>
+        <span class="chev" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M6 4l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+      </a>
+      <a href="learn-tips.html" class="tool-row">
+        <div class="tool-icon" aria-hidden="true">
+          <svg width="18" height="18" viewBox="0 0 18 18" fill="none"><path d="M9 2C6.24 2 4 4.24 4 7c0 1.85 1 3.47 2.5 4.35V13h5v-1.65C13 10.47 14 8.85 14 7c0-2.76-2.24-5-5-5Z" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"/><path d="M6.5 15h5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg>
+        </div>
+        <div class="tool-text">
+          <div class="tool-title">Study Tips</div>
+          <div class="tool-desc">Strategies and techniques for the board exam</div>
+        </div>
+        <span class="chev" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M6 4l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+      </a>
+    </div>
+  </section>
+
+  <!-- ─── 8. STUDY STREAK ─── -->
+  <section class="p-sec" aria-label="Study streak">
+    <div class="sec-label">Study Streak</div>
+    <div class="streak-card">
+      <div class="streak-top">
+        <span class="streak-lbl">Current Streak</span>
+        <span class="streak-num" id="streakNum">0<span>days</span></span>
+      </div>
+      <div class="streak-week" id="streakWeek" aria-label="Activity over the past 7 days">
+        <!-- rendered by JS -->
+      </div>
+      <p class="streak-hint">Keep your learning consistent — a little every day adds up.</p>
+    </div>
+  </section>
+
+  <!-- ─── 9. ACCOUNT ─── -->
+  <section class="p-sec" aria-label="Account settings">
+    <div class="sec-label">Account</div>
+    <div class="acct-list">
+      <!-- Personal Information -->
+      <button class="acct-row" id="acctPersonalBtn" type="button" aria-label="Edit personal information">
+        <div class="acct-icon" aria-hidden="true">
+          <svg width="17" height="17" viewBox="0 0 17 17" fill="none"><circle cx="8.5" cy="6" r="3" stroke="currentColor" stroke-width="1.4"/><path d="M2 15c0-3.31 2.91-6 6.5-6s6.5 2.69 6.5 6" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg>
+        </div>
+        <div class="acct-main">
+          <div class="acct-title">Personal Information</div>
+          <div class="acct-val">Name and school details</div>
+        </div>
+        <span class="chev" aria-hidden="true"><svg width="15" height="15" viewBox="0 0 15 15" fill="none"><path d="M5.5 3.5l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+      </button>
+
+      <!-- Email (read-only) -->
+      <div class="acct-row no-hover" tabindex="0" role="group" aria-label="Email address — not editable">
+        <div class="acct-icon" aria-hidden="true">
+          <svg width="17" height="17" viewBox="0 0 17 17" fill="none"><rect x="2" y="4.5" width="13" height="8.5" rx="1.5" stroke="currentColor" stroke-width="1.4"/><path d="M2 6l6.5 4.5L15 6" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg>
+        </div>
+        <div class="acct-main">
+          <div class="acct-title">Email</div>
+          <div class="acct-val" id="maskedEmail">&#8226;&#8226;&#8226;&#8226;&#8226;@&#8226;&#8226;&#8226;&#8226;&#8226;</div>
+        </div>
+      </div>
+
+      <!-- Sign Out -->
+      <button class="acct-row" id="signOutBtn" type="button" aria-expanded="false" aria-controls="soConfirm">
+        <div class="acct-icon danger" aria-hidden="true">
+          <svg width="17" height="17" viewBox="0 0 17 17" fill="none"><path d="M6.5 2.5H4a1 1 0 00-1 1v10a1 1 0 001 1h2.5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/><path d="M11 12l4-3.5-4-3.5M15 8.5H7" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </div>
+        <div class="acct-main">
+          <div class="acct-title danger">Sign Out</div>
+        </div>
+        <span class="chev" aria-hidden="true"><svg width="15" height="15" viewBox="0 0 15 15" fill="none"><path d="M5.5 3.5l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+      </button>
+
+      <!-- Sign-out confirmation -->
+      <div class="so-confirm" id="soConfirm" role="alertdialog" aria-label="Confirm sign out">
+        <span class="so-msg">Sign out of AbiLearn?</span>
+        <button class="btn-so-cancel" id="soCancelBtn" type="button">Cancel</button>
+        <button class="btn-so-go" id="soGoBtn" type="button">Sign Out</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ─── 10. SUPPORT ─── -->
+  <section class="p-sec" aria-label="Support and info">
+    <div class="sec-label">Support</div>
+    <div class="sup-list">
+      <a href="about.html" class="sup-row">
+        <span class="s-ico" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="5.5" stroke="currentColor" stroke-width="1.4"/><path d="M8 7v1.5" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/><circle cx="8" cy="5.5" r=".6" fill="currentColor"/></svg></span>
+        About AbiLearn
+        <span class="s-chev" aria-hidden="true"><svg width="13" height="13" viewBox="0 0 13 13" fill="none"><path d="M5 2.5l3.5 3.5-3.5 3.5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+      </a>
+      <a href="mailto:hello@abilearn.in" class="sup-row">
+        <span class="s-ico" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><rect x="2" y="4" width="12" height="8" rx="1.5" stroke="currentColor" stroke-width="1.4"/><path d="M2 5.5l6 4 6-4" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg></span>
+        Send Feedback
+        <span class="s-chev" aria-hidden="true"><svg width="13" height="13" viewBox="0 0 13 13" fill="none"><path d="M5 2.5l3.5 3.5-3.5 3.5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+      </a>
+      <a href="#" class="sup-row muted" aria-label="Privacy Policy (coming soon)">
+        <span class="s-ico" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M8 2L3 4.5V8c0 2.9 2.3 5.1 5 5.9 2.7-.8 5-3 5-5.9V4.5L8 2Z" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"/></svg></span>
+        Privacy Policy
+        <span class="s-chev" aria-hidden="true"><svg width="13" height="13" viewBox="0 0 13 13" fill="none"><path d="M5 2.5l3.5 3.5-3.5 3.5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+      </a>
+    </div>
+  </section>
+
+</main>
+
+<!-- ─── BOTTOM NAV ─── -->
+<nav class="bot-nav" aria-label="App navigation">
+  <div class="bot-inner">
+    <a href="index.html" class="bot-tab" aria-label="Home">
+      <span class="bt-ico" aria-hidden="true"><svg width="22" height="22" viewBox="0 0 22 22" fill="none"><path d="M3 9.2L11 3l8 6.2V19a1 1 0 01-1 1H14v-5.5H8V20H4a1 1 0 01-1-1V9.2z" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+      <span class="bt-lbl">Home</span>
+    </a>
+    <a href="learn.html" class="bot-tab" aria-label="Learn">
+      <span class="bt-ico" aria-hidden="true"><svg width="22" height="22" viewBox="0 0 22 22" fill="none"><rect x="3" y="3" width="16" height="16" rx="2.5" stroke="currentColor" stroke-width="1.6"/><path d="M7 8h8M7 12h8M7 16h5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg></span>
+      <span class="bt-lbl">Learn</span>
+    </a>
+    <a href="learn.html" class="bot-tab" aria-label="Search">
+      <span class="bt-ico" aria-hidden="true"><svg width="22" height="22" viewBox="0 0 22 22" fill="none"><circle cx="9.5" cy="9.5" r="6" stroke="currentColor" stroke-width="1.6"/><line x1="14.2" y1="14.2" x2="19" y2="19" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg></span>
+      <span class="bt-lbl">Search</span>
+    </a>
+    <a href="dashboard.html" class="bot-tab" aria-label="Progress" onclick="return guardNav(event,'dashboard.html')">
+      <span class="bt-ico" aria-hidden="true"><svg width="22" height="22" viewBox="0 0 22 22" fill="none"><path d="M4 17V12M8.5 17V9M13 17V7M17.5 17V4" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg></span>
+      <span class="bt-lbl">Progress</span>
+    </a>
+    <button class="bot-tab active" id="alProfileBtn" type="button" aria-label="Profile" aria-current="page">
+      <span class="bt-ico" aria-hidden="true"><svg width="22" height="22" viewBox="0 0 22 22" fill="none"><circle cx="11" cy="8" r="4" stroke="currentColor" stroke-width="1.6"/><path d="M3 19c0-3.87 3.58-7 8-7s8 3.13 8 7" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg></span>
+      <span class="bt-lbl">Profile</span>
+    </button>
+  </div>
+</nav>
+
+<!-- ━━ FIREBASE ━━ -->
+<script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore-compat.js"></script>
+<script src="js/firebase-config.js"></script>
+<script src="js/db.js?v=3"></script>
+<script src="js/data.js?v=1"></script>
+<script src="js/app.js?v=73"></script>
+<script src="js/auth.js?v=32"></script>
+
+<!-- ━━ AUTH GUARD ━━ -->
+<script>(function(){var s=document.getElementById('_ag');function show(){if(s){s.remove();s=null;}}if(!window._fauth){show();return;}var t=setTimeout(show,3000);window._fauth.onAuthStateChanged(function(u){clearTimeout(t);show();if(!u)window.location.replace('auth.html?from='+encodeURIComponent(location.href));});}());</script>
+
+<!-- ━━ BOTTOM NAV PROFILE ━━ -->
+<script>
+(function(){
+  var b = document.getElementById('alProfileBtn');
+  if (b) b.addEventListener('click', function(){ window.location.href = 'profile.html'; });
+})();
+</script>
+
+<!-- ━━ PROFILE LOGIC ━━ -->
+<script>
+(function () {
+  'use strict';
+
+  /* ── Utilities ── */
+  function getInitials(name) {
+    if (!name) return '?';
+    var parts = name.trim().split(/\s+/).filter(Boolean);
+    if (parts.length === 0) return '?';
+    if (parts.length === 1) return parts[0].slice(0, 2).toUpperCase();
+    return (parts[0][0] + parts[parts.length - 1][0]).toUpperCase();
+  }
+
+  function maskEmail(email) {
+    if (!email) return '•••••@•••••';
+    var at = email.indexOf('@');
+    if (at < 1) return email;
+    return email[0] + '•••••' + email.slice(at);
+  }
+
+  function timeAgo(ts) {
+    if (!ts) return '';
+    try {
+      var d = (ts && typeof ts.toDate === 'function') ? ts.toDate() : new Date(ts);
+      var sec = Math.floor((Date.now() - d.getTime()) / 1000);
+      if (sec < 60)       return 'Just now';
+      if (sec < 3600)     return Math.floor(sec / 60) + 'm ago';
+      if (sec < 86400)    return 'Today';
+      if (sec < 172800)   return 'Yesterday';
+      return Math.floor(sec / 86400) + ' days ago';
+    } catch(e) { return ''; }
+  }
+
+  var SUBJECTS = [
+    { key: 'maths',   label: 'Mathematics',   color: '#9D8EFF', url: 'maths.html',   rgb: '157,142,255' },
+    { key: 'science', label: 'Science',        color: '#22D3EE', url: 'science.html', rgb: '34,211,238'  },
+    { key: 'english', label: 'English',        color: '#F59E0B', url: 'english.html', rgb: '245,158,11'  },
+    { key: 'social',  label: 'Social Science', color: '#10B981', url: 'social.html',  rgb: '16,185,129'  }
+  ];
+
+  function subjectByKey(k) {
+    var lk = (k || '').toLowerCase();
+    for (var i = 0; i < SUBJECTS.length; i++) {
+      var s = SUBJECTS[i];
+      if (s.key === lk || s.label.toLowerCase() === lk ||
+          (lk === 'mathematics' && s.key === 'maths') ||
+          (lk === 'soc' && s.key === 'social')) return s;
+    }
+    return { key: lk, label: k || 'Subject', color: '#B8A4FF', url: 'learn.html', rgb: '184,164,255' };
+  }
+
+  /* ── DOM refs ── */
+  var profAvatar      = document.getElementById('profAvatar');
+  var profAvatarImg   = document.getElementById('profAvatarImg');
+  var profInits       = document.getElementById('profInits');
+  var skelInits       = document.getElementById('skelInits');
+  var skelName        = document.getElementById('skelName');
+  var profNameText    = document.getElementById('profNameText');
+  var maskedEmailEl   = document.getElementById('maskedEmail');
+  var statsGrid       = document.getElementById('statsGrid');
+  var subjList        = document.getElementById('subjList');
+  var continueArea    = document.getElementById('continueArea');
+  var activityArea    = document.getElementById('activityArea');
+  var streakNum       = document.getElementById('streakNum');
+  var streakWeek      = document.getElementById('streakWeek');
+  var editProfForm    = document.getElementById('editProfForm');
+  var editProfBtn     = document.getElementById('editProfBtn');
+  var editCancelBtn   = document.getElementById('editCancelBtn');
+  var editSaveBtn     = document.getElementById('editSaveBtn');
+  var editNameInput   = document.getElementById('editName');
+  var editSchoolInput = document.getElementById('editSchool');
+  var acctPersonalBtn = document.getElementById('acctPersonalBtn');
+  var signOutBtn      = document.getElementById('signOutBtn');
+  var soConfirm       = document.getElementById('soConfirm');
+  var soCancelBtn     = document.getElementById('soCancelBtn');
+  var soGoBtn         = document.getElementById('soGoBtn');
+  var avatarCamBtn    = document.getElementById('avatarCamBtn');
+  var avatarFileInput = document.getElementById('avatarFileInput');
+  var avatarNote      = document.getElementById('avatarNote');
+
+  /* ── State ── */
+  var currentUser = null;
+  var userDocData  = null;
+  var progressItems = [];
+
+  /* ── Identity ── */
+  function showAvatar(user) {
+    if (user.avatar) {
+      profAvatarImg.src = user.avatar;
+      profAvatarImg.style.display = 'block';
+      profInits.style.display = 'none';
+    } else {
+      profAvatarImg.style.display = 'none';
+      if (skelInits) skelInits.remove();
+      profInits.style.display = '';
+      profInits.textContent = getInitials(user.name);
+    }
+  }
+
+  function populateIdentity(user) {
+    showAvatar(user);
+    // Name
+    if (skelName) skelName.style.display = 'none';
+    profNameText.style.display = 'inline';
+    profNameText.textContent = user.name || 'Student';
+    // Email
+    if (maskedEmailEl) maskedEmailEl.textContent = maskEmail(user.email);
+    // Prefill edit form
+    if (editNameInput && user.name) editNameInput.value = user.name;
+  }
+
+  /* ── Stats ── */
+  function calcStats() {
+    var streak = 0, chDone = 0, items = 0, totalItems = 0, doneItems = 0;
+    if (userDocData) {
+      streak  = userDocData.streak || userDocData.studyStreak || 0;
+      chDone  = userDocData.chaptersDone || userDocData.chaptersCompleted || 0;
+      items   = userDocData.itemsCompleted || userDocData.totalCompleted || 0;
+    }
+    progressItems.forEach(function (p) {
+      if (typeof p.total === 'number')     totalItems += p.total;
+      if (typeof p.completed === 'number') doneItems  += p.completed;
+      if (!chDone && typeof p.chaptersCompleted === 'number') chDone += p.chaptersCompleted;
+      if (!items  && typeof p.itemsCompleted    === 'number') items  += p.itemsCompleted;
+    });
+    var overallPct = (totalItems > 0) ? Math.round(doneItems / totalItems * 100) + '%' : '--';
+    return { streak: streak, chDone: chDone, items: items, overallPct: overallPct };
+  }
+
+  function renderStats() {
+    var s = calcStats();
+    statsGrid.innerHTML =
+      tile('Overall Progress', s.overallPct, 'across all subjects') +
+      tile('Chapters Done',    s.chDone,     'chapters completed')  +
+      tile('Items Completed',  s.items,      'notes, MCQs &amp; more') +
+      tile('Study Streak',     s.streak,     'consecutive days');
+  }
+
+  function tile(lbl, val, sub) {
+    return '<div class="stat-tile">' +
+      '<div class="stat-lbl">' + lbl + '</div>' +
+      '<div class="stat-val">' + val + '</div>' +
+      '<div class="stat-sub">' + sub + '</div>' +
+      '</div>';
+  }
+
+  /* ── Subject Progress ── */
+  function renderSubjectProgress() {
+    var lookup = {};
+    progressItems.forEach(function (p) {
+      var k = (p.subject || p.subjectId || p.id || '').toLowerCase();
+      if (!k) return;
+      var pct = 0;
+      if (typeof p.percent === 'number') {
+        pct = Math.round(p.percent);
+      } else if (typeof p.completed === 'number' && typeof p.total === 'number' && p.total > 0) {
+        pct = Math.round(p.completed / p.total * 100);
+      }
+      lookup[k] = pct;
+    });
+
+    subjList.innerHTML = '';
+    SUBJECTS.forEach(function (s) {
+      var pct = lookup[s.key] || lookup[s.label.toLowerCase()] || 0;
+      var card = document.createElement('a');
+      card.href = s.url;
+      card.className = 'subj-card';
+      card.setAttribute('aria-label', s.label + ' — ' + pct + '% complete');
+      card.innerHTML =
+        '<div class="subj-hdr">' +
+          '<div class="subj-dot" style="background:' + s.color + '" aria-hidden="true"></div>' +
+          '<span class="subj-name">' + s.label + '</span>' +
+          '<span class="subj-pct">' + pct + '%</span>' +
+        '</div>' +
+        '<div class="prog-track" role="progressbar" aria-valuenow="' + pct + '" aria-valuemin="0" aria-valuemax="100">' +
+          '<div class="prog-fill" style="width:' + pct + '%;background:' + s.color + '"></div>' +
+        '</div>';
+      subjList.appendChild(card);
+    });
+  }
+
+  /* ── Continue Learning ── */
+  function renderContinue(actArr) {
+    if (!actArr || actArr.length === 0) {
+      continueArea.innerHTML =
+        '<div class="empty-card">' +
+          '<p>Choose a subject and start your learning journey.</p>' +
+          '<a href="learn.html" class="btn-browse">Browse Subjects</a>' +
+        '</div>';
+      return;
+    }
+    var last = actArr[0];
+    var subj = subjectByKey(last.subject || last.subjectId || '');
+    var chapter = last.chapter || last.chapterName || last.title || 'Continue where you left off';
+    var rtype   = last.type || last.resourceType || '';
+    var pct     = typeof last.percent === 'number' ? last.percent : null;
+    var meta = rtype ? rtype.charAt(0).toUpperCase() + rtype.slice(1) : '';
+    if (pct !== null) meta += (meta ? ' · ' : '') + pct + '%';
+
+    continueArea.innerHTML =
+      '<div class="continue-card">' +
+        '<div class="continue-icon" style="background:rgba(' + subj.rgb + ',.1);color:' + subj.color + '" aria-hidden="true">' +
+          '<svg width="20" height="20" viewBox="0 0 20 20" fill="none"><rect x="3" y="3" width="14" height="14" rx="2" stroke="currentColor" stroke-width="1.5"/><path d="M7 7h6M7 10.5h6M7 14h4" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg>' +
+        '</div>' +
+        '<div class="continue-info">' +
+          '<div class="continue-subj">' + subj.label + '</div>' +
+          '<div class="continue-ch">' + chapter + '</div>' +
+          (meta ? '<div class="continue-meta">' + meta + '</div>' : '') +
+        '</div>' +
+        '<a href="' + subj.url + '" class="btn-cont">Continue</a>' +
+      '</div>';
+  }
+
+  /* ── Activity ── */
+  function renderActivity(actArr) {
+    if (!actArr || actArr.length === 0) {
+      activityArea.innerHTML =
+        '<div class="act-empty">Your recent learning activity will appear here as you study.</div>';
+      return;
+    }
+    var html = '<div class="activity-list" role="list">';
+    actArr.forEach(function (item) {
+      var subj  = subjectByKey(item.subject || item.subjectId || '');
+      var title = item.title || item.chapter || item.chapterName || 'Learning activity';
+      var when  = timeAgo(item.timestamp);
+      html +=
+        '<div class="act-item" role="listitem">' +
+          '<div class="act-dot" style="background:' + subj.color + '" aria-hidden="true"></div>' +
+          '<div class="act-info">' +
+            '<div class="act-title">' + title + '</div>' +
+            '<div class="act-meta">' + subj.label + (when ? ' · ' + when : '') + '</div>' +
+          '</div>' +
+        '</div>';
+    });
+    html += '</div>';
+    activityArea.innerHTML = html;
+  }
+
+  /* ── Streak week ── */
+  function buildStreakWeek(activeDaySet) {
+    var labels = ['M','T','W','T','F','S','S'];
+    var todayDow = new Date().getDay(); // 0=Sun
+    var todayIdx = todayDow === 0 ? 6 : todayDow - 1; // Mon=0
+    streakWeek.innerHTML = '';
+    labels.forEach(function (lbl, i) {
+      var wrap = document.createElement('div');
+      wrap.className = 'sk-day';
+      var dot = document.createElement('div');
+      dot.className = 'sk-dot' +
+        (activeDaySet && activeDaySet.has(i) ? ' active' : '') +
+        (i === todayIdx ? ' today' : '');
+      var span = document.createElement('span');
+      span.className = 'sk-lbl';
+      span.textContent = lbl;
+      wrap.appendChild(dot);
+      wrap.appendChild(span);
+      streakWeek.appendChild(wrap);
+    });
+  }
+
+  function activeDaysFromActivity(actArr) {
+    var set = new Set();
+    if (!actArr || !actArr.length) return set;
+    var weekAgo = Date.now() - 7 * 86400000;
+    actArr.forEach(function (item) {
+      if (!item.timestamp) return;
+      try {
+        var d = (typeof item.timestamp.toDate === 'function')
+          ? item.timestamp.toDate() : new Date(item.timestamp);
+        if (d.getTime() >= weekAgo) {
+          var dow = d.getDay();
+          set.add(dow === 0 ? 6 : dow - 1);
+        }
+      } catch(e) {}
+    });
+    return set;
+  }
+
+  /* ── Edit profile ── */
+  function openEditForm() {
+    editProfForm.classList.add('open');
+    editProfBtn.setAttribute('aria-expanded', 'true');
+    setTimeout(function () { editNameInput.focus(); }, 50);
+  }
+  function closeEditForm() {
+    editProfForm.classList.remove('open');
+    editProfBtn.setAttribute('aria-expanded', 'false');
+  }
+
+  editProfBtn.addEventListener('click', function () {
+    editProfForm.classList.contains('open') ? closeEditForm() : openEditForm();
+  });
+  editCancelBtn.addEventListener('click', closeEditForm);
+
+  acctPersonalBtn.addEventListener('click', function () {
+    document.querySelector('.id-card').scrollIntoView({ behavior: 'smooth', block: 'start' });
+    setTimeout(openEditForm, 200);
+  });
+
+  editSaveBtn.addEventListener('click', function () {
+    if (!currentUser) return;
+    var newName = editNameInput.value.trim();
+    if (!newName) { editNameInput.focus(); return; }
+    var newSchool = editSchoolInput.value.trim();
+
+    editSaveBtn.textContent = 'Saving…';
+    editSaveBtn.disabled = true;
+
+    var db = firebase.firestore();
+    var profileRef = db.collection('users').doc(currentUser.uid).collection('profile').doc('info');
+    var userRef    = db.collection('users').doc(currentUser.uid);
+
+    var updates = { name: newName };
+    if (newSchool) updates.school = newSchool;
+
+    profileRef.set(updates, { merge: true })
+      .then(function () { return userRef.set({ name: newName }, { merge: true }); })
+      .then(function () {
+        try {
+          var c = JSON.parse(localStorage.getItem('al_user_cache') || '{}');
+          c.name = newName;
+          localStorage.setItem('al_user_cache', JSON.stringify(c));
+        } catch (e) {}
+        currentUser.name = newName;
+        profNameText.textContent = newName;
+        if (!currentUser.avatar) profInits.textContent = getInitials(newName);
+        editSaveBtn.textContent = 'Saved!';
+        setTimeout(function () {
+          editSaveBtn.textContent = 'Save Changes';
+          editSaveBtn.disabled = false;
+          closeEditForm();
+        }, 1100);
+      })
+      .catch(function (err) {
+        console.warn('[Profile] Save failed:', err);
+        editSaveBtn.textContent = 'Save Changes';
+        editSaveBtn.disabled = false;
+        alert('Could not save. Please check your connection and try again.');
+      });
+  });
+
+  /* ── Avatar change (local preview) ── */
+  avatarCamBtn.addEventListener('click', function (e) { e.stopPropagation(); avatarFileInput.click(); });
+  profAvatar.addEventListener('click', function () { avatarFileInput.click(); });
+
+  avatarFileInput.addEventListener('change', function (e) {
+    var file = e.target.files && e.target.files[0];
+    if (!file) return;
+    var reader = new FileReader();
+    reader.onload = function (ev) {
+      profAvatarImg.src = ev.target.result;
+      profAvatarImg.style.display = 'block';
+      profInits.style.display = 'none';
+      avatarNote.classList.add('show');
+      if (!editProfForm.classList.contains('open')) openEditForm();
+    };
+    reader.readAsDataURL(file);
+  });
+
+  /* ── Sign out ── */
+  signOutBtn.addEventListener('click', function () {
+    var open = soConfirm.classList.contains('open');
+    soConfirm.classList.toggle('open', !open);
+    signOutBtn.setAttribute('aria-expanded', String(!open));
+  });
+  soCancelBtn.addEventListener('click', function () {
+    soConfirm.classList.remove('open');
+    signOutBtn.setAttribute('aria-expanded', 'false');
+  });
+  soGoBtn.addEventListener('click', function () {
+    soGoBtn.textContent = 'Signing out…';
+    soGoBtn.disabled = true;
+    try { localStorage.removeItem('al_user_cache'); } catch(e) {}
+    if (typeof authLogout === 'function') {
+      authLogout();
+    } else if (window._fauth) {
+      window._fauth.signOut();
+    }
+    setTimeout(function () { window.location.href = 'index.html'; }, 700);
+  });
+
+  /* ── Firestore load ── */
+  function loadFirestore(uid) {
+    var db = firebase.firestore();
+
+    // User document
+    db.collection('users').doc(uid).get()
+      .then(function (doc) {
+        userDocData = doc.exists ? (doc.data() || null) : null;
+        if (userDocData) {
+          var streak = userDocData.streak || userDocData.studyStreak || 0;
+          streakNum.innerHTML = streak + '<span>days</span>';
+          if (editSchoolInput && (userDocData.school || userDocData.schoolName))
+            editSchoolInput.value = userDocData.school || userDocData.schoolName || '';
+        }
+        renderStats();
+      })
+      .catch(function () { renderStats(); });
+
+    // Progress subcollection
+    db.collection('users').doc(uid).collection('progress').get()
+      .then(function (snap) {
+        snap.forEach(function (d) {
+          var pd = d.data(); pd.id = d.id; progressItems.push(pd);
+        });
+        renderSubjectProgress();
+        renderStats();
+      })
+      .catch(function () { renderSubjectProgress(); });
+
+    // Activity
+    db.collection('users').doc(uid).collection('activity')
+      .orderBy('timestamp', 'desc').limit(5).get()
+      .then(function (snap) {
+        var items = [];
+        snap.forEach(function (d) { var pd = d.data(); pd._id = d.id; items.push(pd); });
+        renderContinue(items);
+        renderActivity(items);
+        buildStreakWeek(activeDaysFromActivity(items));
+      })
+      .catch(function () {
+        renderContinue([]);
+        renderActivity([]);
+        buildStreakWeek(new Set());
+      });
+  }
+
+  /* ── Bootstrap ── */
+  // Render initial streak skeleton
+  buildStreakWeek(new Set());
+
+  // Apply cached user immediately for fast first paint
+  var cached = (typeof getUser === 'function') ? getUser() : null;
+  if (cached) {
+    currentUser = cached;
+    populateIdentity(cached);
+  }
+
+  if (window._fauth) {
+    window._fauth.onAuthStateChanged(function (fbUser) {
+      if (!fbUser) {
+        window.location.replace('auth.html?from=' + encodeURIComponent(location.href));
+        return;
+      }
+      currentUser = {
+        uid:    fbUser.uid,
+        name:   (cached && cached.name)  || fbUser.displayName || 'Student',
+        email:  (cached && cached.email) || fbUser.email       || '',
+        avatar: (cached && cached.avatar)|| null
+      };
+      populateIdentity(currentUser);
+      loadFirestore(currentUser.uid);
+    });
+  }
+
+})();
+</script>
+</body>
+</html>
