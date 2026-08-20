@@ -971,59 +971,6 @@
 <body>
 <a href="#hero-main" class="skip-nav">Skip to main content</a>
 
-<!-- ━━ HEADER ━━ -->
-<header class="site-header" role="banner">
-  <div class="header-inner">
-
-    <a href="index.html" class="brand" aria-label="AbiLearn — Home">
-      <img src="assets/logo.jpeg" alt="" class="brand-img" aria-hidden="true">
-      <span class="brand-name">
-        <span class="brand-abi">Abi</span><span class="brand-learn">Learn</span>
-      </span>
-    </a>
-
-    <nav class="desktop-nav" aria-label="Main navigation">
-      <a href="index.html" class="nav-link is-active" aria-current="page">Home</a>
-      <a href="#subjects" class="nav-link">Subjects</a>
-      <a href="learn.html" class="nav-link">Tips &amp; Tricks</a>
-      <a href="about.html" class="nav-link">About</a>
-    </nav>
-
-    <div class="nav-right">
-      <button class="search-btn" aria-label="Search AbiLearn" onclick="window.location.href='learn.html'">
-        <svg width="17" height="17" viewBox="0 0 17 17" fill="none" aria-hidden="true">
-          <circle cx="7.5" cy="7.5" r="5" stroke="currentColor" stroke-width="1.6"/>
-          <line x1="11.5" y1="11.5" x2="15" y2="15" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>
-        </svg>
-      </button>
-      <button class="btn-login">Log In</button>
-      <button class="btn-signup">Sign Up</button>
-      <button class="hamburger" id="hamburgerBtn"
-              aria-label="Open navigation menu"
-              aria-expanded="false"
-              aria-controls="mobileMenu">
-        <span class="ham-bar"></span>
-        <span class="ham-bar"></span>
-        <span class="ham-bar"></span>
-      </button>
-    </div>
-
-  </div>
-
-  <!-- Mobile menu -->
-  <div class="mobile-menu" id="mobileMenu" aria-hidden="true" role="navigation" aria-label="Mobile navigation">
-    <div class="mobile-menu-inner">
-      <a href="index.html" class="mobile-nav-link is-active" aria-current="page">Home</a>
-      <a href="#subjects" class="mobile-nav-link" id="mobileSubjectsLink">Subjects</a>
-      <a href="learn.html" class="mobile-nav-link">Tips &amp; Tricks</a>
-      <a href="about.html" class="mobile-nav-link">About</a>
-      <div class="mobile-menu-actions">
-        <button class="btn-login">Log In</button>
-        <button class="btn-signup">Sign Up Free</button>
-      </div>
-    </div>
-  </div>
-</header>
 
 <!-- ━━ HERO ━━ -->
 <section class="s-hero" id="hero" aria-label="AbiLearn — Class 10 Learning Platform">
@@ -1222,13 +1169,11 @@
     </h1>
 
     <p class="hero-desc a2">
-      Notes, formula sheets, MCQ practice, PYQs and focused revision resources —
-      organised chapter by chapter so you can learn, practise and prepare with clarity.
+      Notes, formula sheets, MCQ practice, PYQs and focused revision resources — organised chapter by chapter so you can learn, practise and prepare with clarity.
     </p>
 
     <div class="hero-actions a3">
       <a href="learn.html"
-         onclick="return guardNav(event,'learn.html')"
          class="btn-primary"
          role="button">
         Start Learning
@@ -1254,41 +1199,6 @@
 <script src="js/app.js?v=73"></script>
 <script src="js/auth.js?v=32"></script>
 <script>
-/* Mobile menu toggle */
-(function(){
-  var btn  = document.getElementById('hamburgerBtn');
-  var menu = document.getElementById('mobileMenu');
-  if (!btn || !menu) return;
-
-  btn.addEventListener('click', function() {
-    var expanded = this.getAttribute('aria-expanded') === 'true';
-    this.setAttribute('aria-expanded', !expanded);
-    menu.setAttribute('aria-hidden', expanded);
-    menu.classList.toggle('is-open');
-    this.classList.toggle('is-open');
-  });
-
-  /* Close on mobile link click */
-  menu.querySelectorAll('a').forEach(function(a) {
-    a.addEventListener('click', function() {
-      btn.setAttribute('aria-expanded', 'false');
-      menu.setAttribute('aria-hidden', 'true');
-      menu.classList.remove('is-open');
-      btn.classList.remove('is-open');
-    });
-  });
-
-  /* Close on outside click */
-  document.addEventListener('click', function(e) {
-    if (!e.target.closest('.site-header') && menu.classList.contains('is-open')) {
-      btn.setAttribute('aria-expanded', 'false');
-      menu.setAttribute('aria-hidden', 'true');
-      menu.classList.remove('is-open');
-      btn.classList.remove('is-open');
-    }
-  });
-})();
-
 /* rAF parallax on hero background */
 (function(){
   var net  = document.getElementById('heroNet');
@@ -1318,34 +1228,5 @@
 initLandingPage();
 </script>
 
-<!-- ── App Bottom Nav ── -->
-<nav class="al-bnav" aria-label="App navigation">
-  <div class="al-bnav-inner">
-    <a href="index.html" class="al-btab al-btab-active" aria-current="page" aria-label="Home">
-      <span class="al-btab-icon" aria-hidden="true"><svg width="22" height="22" viewBox="0 0 22 22" fill="none"><path d="M3 9.2L11 3l8 6.2V19a1 1 0 01-1 1H14v-5.5H8V20H4a1 1 0 01-1-1V9.2z" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
-      <span class="al-btab-label">Home</span>
-    </a>
-    <a href="learn.html" class="al-btab" aria-label="Learn">
-      <span class="al-btab-icon" aria-hidden="true"><svg width="22" height="22" viewBox="0 0 22 22" fill="none"><rect x="3" y="3" width="16" height="16" rx="2.5" stroke="currentColor" stroke-width="1.6"/><path d="M7 8h8M7 12h8M7 16h5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg></span>
-      <span class="al-btab-label">Learn</span>
-    </a>
-    <a href="learn.html" class="al-btab" aria-label="Search">
-      <span class="al-btab-icon" aria-hidden="true"><svg width="22" height="22" viewBox="0 0 22 22" fill="none"><circle cx="9.5" cy="9.5" r="6" stroke="currentColor" stroke-width="1.6"/><line x1="14.2" y1="14.2" x2="19" y2="19" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg></span>
-      <span class="al-btab-label">Search</span>
-    </a>
-    <a href="dashboard.html" class="al-btab" aria-label="Progress" onclick="return guardNav(event,'dashboard.html')">
-      <span class="al-btab-icon" aria-hidden="true"><svg width="22" height="22" viewBox="0 0 22 22" fill="none"><path d="M4 17V12M8.5 17V9M13 17V7M17.5 17V4" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg></span>
-      <span class="al-btab-label">Progress</span>
-    </a>
-    <button class="al-btab" id="alProfileBtn" aria-label="Profile">
-      <span class="al-btab-icon" aria-hidden="true"><svg width="22" height="22" viewBox="0 0 22 22" fill="none"><circle cx="11" cy="8" r="4" stroke="currentColor" stroke-width="1.6"/><path d="M3 19c0-3.87 3.58-7 8-7s8 3.13 8 7" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg></span>
-      <span class="al-btab-label">Profile</span>
-    </button>
-  </div>
-</nav>
-<style>
-html,body{height:100%;overflow:hidden;padding-bottom:0}.al-bnav{position:fixed;bottom:0;left:0;right:0;z-index:500;background:rgba(10,8,28,.92);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border-top:1px solid rgba(176,156,255,.15);padding-bottom:env(safe-area-inset-bottom,0)}.al-bnav-inner{display:flex;align-items:stretch;height:62px;max-width:600px;margin:0 auto}.al-btab{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;color:rgba(192,178,255,.65);text-decoration:none;background:none;border:none;cursor:pointer;font-family:var(--font);transition:color .15s;-webkit-tap-highlight-color:transparent;padding:0}.al-btab.al-btab-active{color:#B8A4FF;font-weight:700}.al-btab-icon{display:flex}.al-btab-label{font-size:.66rem;font-weight:500}.al-btab.al-btab-active .al-btab-label{font-weight:700}
-</style>
-<script>(function(){var b=document.getElementById('alProfileBtn');if(!b)return;b.addEventListener('click',function(){var u=(typeof getUser==='function')?getUser():null;if(u){if(typeof toggleUserDropdown==='function')toggleUserDropdown();}else{window.location.href='auth.html?from='+encodeURIComponent(location.href);}});})();</script>
 </body>
 </html>

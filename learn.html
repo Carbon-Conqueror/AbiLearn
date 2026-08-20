@@ -1617,63 +1617,12 @@
     .continue-pfill { transition: none !important; }
   }
   </style>
+<style id="_ag">body{visibility:hidden!important}</style>
 </head>
 <body class="lh-body">
 <a href="#lh-main" class="lh-skip">Skip to main content</a>
 
-<!-- ══ HEADER ══ -->
-<header class="lh-header" id="lhHeader" role="banner">
-  <div class="lh-header-inner">
 
-    <a href="index.html" class="lh-brand" aria-label="AbiLearn — Go to homepage">
-      <img src="assets/logo.jpeg" alt="" class="lh-brand-img" aria-hidden="true">
-      <span class="lh-wordmark">Abi<span class="lh-wordmark-accent">Learn</span></span>
-    </a>
-
-    <nav class="lh-nav" aria-label="Main navigation">
-      <a href="index.html" class="lh-nav-link">Home</a>
-      <a href="learn.html" class="lh-nav-link is-active" aria-current="page">Learn</a>
-      <button class="lh-nav-link" onclick="openAppSearch()" aria-haspopup="dialog">Search</button>
-    </nav>
-
-    <div class="nav-right">
-      <button class="lh-icon-btn" onclick="openAppSearch()" aria-label="Search AbiLearn" aria-haspopup="dialog">
-        <svg width="17" height="17" viewBox="0 0 17 17" fill="none" aria-hidden="true">
-          <circle cx="7.5" cy="7.5" r="5" stroke="currentColor" stroke-width="1.6"/>
-          <line x1="11.4" y1="11.4" x2="15" y2="15" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>
-        </svg>
-      </button>
-      <button class="btn-login">Log In</button>
-      <button class="btn-signup">Sign Up</button>
-      <button class="lh-hamburger" id="lhHamburger"
-              aria-label="Open navigation menu"
-              aria-expanded="false"
-              aria-controls="lhMmenu">
-        <span class="lh-ham-bar"></span>
-        <span class="lh-ham-bar"></span>
-        <span class="lh-ham-bar"></span>
-      </button>
-    </div>
-
-  </div>
-</header>
-
-<!-- Mobile dropdown menu -->
-<div class="lh-mmenu" id="lhMmenu" aria-hidden="true" role="navigation" aria-label="Mobile navigation">
-  <div class="lh-mmenu-inner">
-    <a href="index.html" class="lh-mmenu-link">Home</a>
-    <a href="learn.html" class="lh-mmenu-link is-active" aria-current="page">Learn</a>
-    <button class="lh-mmenu-link" onclick="openAppSearch();document.getElementById('lhMmenu').classList.remove('is-open')">Search</button>
-    <a href="dashboard.html" class="lh-mmenu-link" onclick="return guardNav(event,'dashboard.html')">My Progress</a>
-    <a href="mistakes.html"   class="lh-mmenu-link" onclick="return guardNav(event,'mistakes.html')">Mistake Bank</a>
-    <div class="lh-mmenu-actions" id="lhMmenuActions">
-      <button class="btn-login">Log In</button>
-      <button class="btn-signup">Sign Up</button>
-    </div>
-  </div>
-</div>
-
-<!-- ══ MAIN ══ -->
 <main id="lh-main">
 
   <!-- ── Dashboard Intro ── -->
@@ -1815,6 +1764,8 @@
 <script src="js/data.js?v=1"></script>
 <script src="js/app.js?v=73"></script>
 <script src="js/auth.js?v=32"></script>
+<script>(function(){var s=document.getElementById('_ag');function show(){if(s){s.remove();s=null;}}if(!window._fauth){show();return;}var t=setTimeout(show,3000);window._fauth.onAuthStateChanged(function(u){clearTimeout(t);show();if(!u)window.location.replace('auth.html?from='+encodeURIComponent(location.href));});}());</script>
+
 <script>
 /* ── Init ── */
 initLearnPage();
