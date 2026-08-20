@@ -5,10 +5,10 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
   <title>Profile — AbiLearn</title>
   <meta name="description" content="Your AbiLearn profile, learning progress and account settings.">
-  <meta name="theme-color" content="#04030F">
+  <meta name="theme-color" content="#5B47DE">
   <meta name="mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
   <meta name="apple-mobile-web-app-title" content="AbiLearn">
   <link rel="manifest" href="manifest.json">
   <link rel="apple-touch-icon" href="assets/logo.jpeg">
@@ -21,21 +21,22 @@
   /* ━━ AbiLearn Profile v1 ━━ */
 
   :root {
-    --bg:       #04030F;
-    --s1:       rgba(255,255,255,.04);
-    --s2:       rgba(255,255,255,.07);
-    --border:   rgba(176,156,255,.10);
-    --border-2: rgba(176,156,255,.20);
-    --accent:   #6B4EFF;
-    --lav:      #B8A4FF;
-    --text:     #EDE8FF;
-    --text-2:   rgba(192,178,255,.65);
-    --text-3:   rgba(192,178,255,.38);
-    --math:     #9D8EFF;
-    --sci:      #22D3EE;
-    --eng:      #F59E0B;
-    --soc:      #10B981;
-    --danger:   #F87171;
+    --bg:       #F7F6FF;
+    --surface:  #FFFFFF;
+    --s1:       rgba(91,71,222,.045);
+    --s2:       rgba(91,71,222,.08);
+    --border:   rgba(91,71,222,.09);
+    --border-2: rgba(91,71,222,.18);
+    --accent:   #5B47DE;
+    --lav:      #5B47DE;
+    --text:     #1C1640;
+    --text-2:   rgba(28,22,64,.58);
+    --text-3:   rgba(28,22,64,.36);
+    --math:     #6D5AE6;
+    --sci:      #0EA5E9;
+    --eng:      #D97706;
+    --soc:      #059669;
+    --danger:   #DC2626;
     --font:     'Plus Jakarta Sans', -apple-system, system-ui, sans-serif;
     --r:        12px;
     --r-sm:     8px;
@@ -53,14 +54,14 @@
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     min-height: 100svh;
-    padding-bottom: calc(72px + env(safe-area-inset-bottom, 0px));
+    padding-bottom: calc(70px + env(safe-area-inset-bottom, 0px));
     overflow-x: hidden;
   }
 
   .skip-nav { position: absolute; left: -9999px; top: auto; }
   .skip-nav:focus {
     left: 1rem; top: 1rem; z-index: 9999;
-    background: #fff; color: var(--bg);
+    background: var(--accent); color: #fff;
     padding: .5rem 1rem; border-radius: 8px; font-weight: 700;
   }
 
@@ -105,7 +106,7 @@
 
   /* ━━ IDENTITY CARD ━━ */
   .id-card {
-    background: var(--s1);
+    background: var(--surface);
     border: 1px solid var(--border);
     border-radius: var(--r);
     padding: 1.2rem 1rem;
@@ -121,8 +122,8 @@
     width: 64px;
     height: 64px;
     border-radius: 50%;
-    background: rgba(107,78,255,.22);
-    border: 1.5px solid rgba(176,156,255,.2);
+    background: rgba(91,71,222,.1);
+    border: 1.5px solid rgba(91,71,222,.18);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -148,7 +149,7 @@
     width: 22px; height: 22px;
     border-radius: 50%;
     background: var(--accent);
-    border: 2px solid var(--bg);
+    border: 2px solid #fff;
     display: flex; align-items: center; justify-content: center;
     color: #fff;
     cursor: pointer;
@@ -220,7 +221,7 @@
   }
   .f-field input {
     width: 100%;
-    background: rgba(255,255,255,.04);
+    background: var(--bg);
     border: 1px solid var(--border);
     border-radius: var(--r-sm);
     padding: .58rem .78rem;
@@ -291,7 +292,7 @@
     gap: .55rem;
   }
   .stat-tile {
-    background: var(--s1);
+    background: var(--surface);
     border: 1px solid var(--border);
     border-radius: var(--r);
     padding: .85rem .95rem;
@@ -326,7 +327,7 @@
 
   .subj-card {
     display: block;
-    background: var(--s1);
+    background: var(--surface);
     border: 1px solid var(--border);
     border-radius: var(--r);
     padding: .82rem .95rem;
@@ -377,7 +378,7 @@
 
   /* ━━ CONTINUE LEARNING ━━ */
   .continue-card {
-    background: var(--s1);
+    background: var(--surface);
     border: 1px solid var(--border);
     border-radius: var(--r);
     padding: .95rem;
@@ -435,7 +436,7 @@
   .btn-cont:focus-visible { outline: 2px solid var(--lav); outline-offset: 2px; }
 
   .empty-card {
-    background: var(--s1);
+    background: var(--surface);
     border: 1px solid var(--border);
     border-radius: var(--r);
     padding: 1.4rem 1rem;
@@ -469,7 +470,7 @@
 
   /* ━━ ACTIVITY LIST ━━ */
   .activity-list {
-    background: var(--s1);
+    background: var(--surface);
     border: 1px solid var(--border);
     border-radius: var(--r);
     overflow: hidden;
@@ -505,7 +506,7 @@
     margin-top: .1rem;
   }
   .act-empty {
-    background: var(--s1);
+    background: var(--surface);
     border: 1px solid var(--border);
     border-radius: var(--r);
     padding: 1.2rem 1rem;
@@ -517,7 +518,7 @@
 
   /* ━━ TOOL ROWS ━━ */
   .tool-list {
-    background: var(--s1);
+    background: var(--surface);
     border: 1px solid var(--border);
     border-radius: var(--r);
     overflow: hidden;
@@ -545,10 +546,10 @@
   .tool-icon {
     width: 36px; height: 36px;
     border-radius: 9px;
-    background: rgba(107,78,255,.08);
-    border: 1px solid rgba(107,78,255,.14);
+    background: rgba(91,71,222,.07);
+    border: 1px solid rgba(91,71,222,.12);
     display: flex; align-items: center; justify-content: center;
-    color: var(--lav);
+    color: var(--accent);
     flex-shrink: 0;
   }
   .tool-text { flex: 1; min-width: 0; }
@@ -558,7 +559,7 @@
 
   /* ━━ STREAK ━━ */
   .streak-card {
-    background: var(--s1);
+    background: var(--surface);
     border: 1px solid var(--border);
     border-radius: var(--r);
     padding: 1rem .95rem;
@@ -606,16 +607,16 @@
     max-width: 32px;
     aspect-ratio: 1;
     border-radius: 50%;
-    background: var(--s2);
+    background: rgba(91,71,222,.08);
     border: 1.5px solid var(--border);
     transition: background .2s, border-color .2s, box-shadow .2s;
   }
   .sk-dot.active {
     background: var(--accent);
-    border-color: rgba(107,78,255,.45);
-    box-shadow: 0 0 8px rgba(107,78,255,.3);
+    border-color: rgba(91,71,222,.45);
+    box-shadow: 0 0 8px rgba(91,71,222,.25);
   }
-  .sk-dot.today { border-color: var(--lav); }
+  .sk-dot.today { border-color: var(--accent); }
   .sk-lbl {
     font-size: .6rem;
     font-weight: 600;
@@ -632,7 +633,7 @@
 
   /* ━━ ACCOUNT ━━ */
   .acct-list {
-    background: var(--s1);
+    background: var(--surface);
     border: 1px solid var(--border);
     border-radius: var(--r);
     overflow: hidden;
@@ -714,7 +715,7 @@
 
   /* ━━ SUPPORT ━━ */
   .sup-list {
-    background: var(--s1);
+    background: var(--surface);
     border: 1px solid var(--border);
     border-radius: var(--r);
     overflow: hidden;
@@ -744,17 +745,15 @@
     position: fixed;
     bottom: 0; left: 0; right: 0;
     z-index: 500;
-    background: rgba(4,3,15,.92);
-    backdrop-filter: blur(14px);
-    -webkit-backdrop-filter: blur(14px);
-    border-top: 1px solid rgba(176,156,255,.1);
+    background: #fff;
+    border-top: 1px solid #E8E4F8;
     padding-bottom: env(safe-area-inset-bottom, 0px);
   }
   .bot-inner {
     display: flex;
     align-items: stretch;
     height: 62px;
-    max-width: 520px;
+    max-width: 600px;
     margin: 0 auto;
   }
   .bot-tab {
@@ -764,7 +763,7 @@
     align-items: center;
     justify-content: center;
     gap: 3px;
-    color: rgba(192,178,255,.65);
+    color: #9894C0;
     text-decoration: none;
     background: none;
     border: none;
@@ -774,11 +773,11 @@
     padding: 0;
     transition: color .15s;
   }
-  .bot-tab:hover { color: rgba(192,178,255,.85); }
-  .bot-tab.active { color: #B8A4FF; }
-  .bot-tab:focus-visible { outline: 2px solid rgba(176,156,255,.6); outline-offset: -3px; }
+  .bot-tab:hover { color: #7870B0; }
+  .bot-tab.active { color: #5B47DE; }
+  .bot-tab:focus-visible { outline: 2px solid rgba(91,71,222,.5); outline-offset: -3px; }
   .bt-ico { display: flex; }
-  .bt-lbl { font-size: .63rem; font-weight: 500; }
+  .bt-lbl { font-size: .66rem; font-weight: 500; }
   .bot-tab.active .bt-lbl { font-weight: 700; }
 
   /* ━━ SKELETON ━━ */
