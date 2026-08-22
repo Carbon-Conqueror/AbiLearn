@@ -1558,6 +1558,24 @@
     .app-tile-fill  { transition: none !important; }
     .continue-pfill { transition: none !important; }
   }
+
+  /* ── Bottom Nav ── */
+  body.lh-body{padding-bottom:70px}
+  .al-bnav{position:fixed;bottom:0;left:0;right:0;z-index:500;background:#fff;border-top:1px solid #E8E4F8;padding-bottom:env(safe-area-inset-bottom,0)}
+  .al-bnav-inner{display:flex;align-items:stretch;height:62px!important;max-width:600px;margin:0 auto}
+  .al-btab{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;color:#9894C0;text-decoration:none;background:none;border:none;cursor:pointer;font-family:inherit;transition:color .15s;-webkit-tap-highlight-color:transparent;padding:0!important;min-height:0!important}
+  .al-btab.al-btab-active{color:#5B47DE;font-weight:700}
+  .al-btab-icon{display:flex}
+  .al-btab-label{font-size:.66rem!important;font-weight:500;line-height:1}
+  .al-btab.al-btab-active .al-btab-label{font-weight:700}
+  @media (prefers-color-scheme:dark){
+    :root:not([data-theme="light"]) .al-bnav{background:#1A1830;border-top-color:#2A2645}
+    :root:not([data-theme="light"]) .al-btab{color:#6B6899}
+    :root:not([data-theme="light"]) .al-btab.al-btab-active{color:#A89EFF}
+  }
+  :root[data-theme="dark"] .al-bnav{background:#1A1830;border-top-color:#2A2645}
+  :root[data-theme="dark"] .al-btab{color:#6B6899}
+  :root[data-theme="dark"] .al-btab.al-btab-active{color:#A89EFF}
   </style>
 <style id="_ag">body{visibility:hidden!important}</style>
 <script src="js/protect.js"></script>
@@ -1647,9 +1665,6 @@
     </button>
   </div>
 </nav>
-<style>
-body.lh-body{padding-bottom:70px}.al-bnav{position:fixed;bottom:0;left:0;right:0;z-index:500;background:#fff;border-top:1px solid #E8E4F8;padding-bottom:env(safe-area-inset-bottom,0)}.al-bnav-inner{display:flex;align-items:stretch;height:62px;max-width:600px;margin:0 auto}.al-btab{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;color:#9894C0;text-decoration:none;background:none;border:none;cursor:pointer;font-family:inherit;transition:color .15s;-webkit-tap-highlight-color:transparent;padding:0}.al-btab.al-btab-active{color:#5B47DE;font-weight:700}.al-btab-icon{display:flex}.al-btab-label{font-size:.66rem;font-weight:500}.al-btab.al-btab-active .al-btab-label{font-weight:700}@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .al-bnav{background:#1A1830;border-top-color:#2A2645}:root:not([data-theme="light"]) .al-btab{color:#6B6899}:root:not([data-theme="light"]) .al-btab.al-btab-active{color:#A89EFF}}:root[data-theme="dark"] .al-bnav{background:#1A1830;border-top-color:#2A2645}:root[data-theme="dark"] .al-btab{color:#6B6899}:root[data-theme="dark"] .al-btab.al-btab-active{color:#A89EFF}
-</style>
 
 <!-- ── Search Overlay ── -->
 <div class="app-search-overlay" id="appSearchOverlay"
