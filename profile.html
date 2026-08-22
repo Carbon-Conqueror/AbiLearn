@@ -1188,6 +1188,7 @@
   var currentUser = null;
   var userDocData  = null;
   var progressItems = [];
+  var knowledgeMapData = {};
 
   /* ── Identity ── */
   function showAvatar(user) {
@@ -1252,22 +1253,28 @@
 
   /* ── Subject Progress ── */
   function renderSubjectProgress() {
+    /* Prefer knowledgeMap (real MCQ data) over progress subcollection */
+    var hasKm = Object.keys(knowledgeMapData).length > 0;
     var lookup = {};
-    progressItems.forEach(function (p) {
-      var k = (p.subject || p.subjectId || p.id || '').toLowerCase();
-      if (!k) return;
-      var pct = 0;
-      if (typeof p.percent === 'number') {
-        pct = Math.round(p.percent);
-      } else if (typeof p.completed === 'number' && typeof p.total === 'number' && p.total > 0) {
-        pct = Math.round(p.completed / p.total * 100);
-      }
-      lookup[k] = pct;
-    });
+    if (!hasKm) {
+      progressItems.forEach(function (p) {
+        var k = (p.subject || p.subjectId || p.id || '').toLowerCase();
+        if (!k) return;
+        var pct = 0;
+        if (typeof p.percent === 'number') {
+          pct = Math.round(p.percent);
+        } else if (typeof p.completed === 'number' && typeof p.total === 'number' && p.total > 0) {
+          pct = Math.round(p.completed / p.total * 100);
+        }
+        lookup[k] = pct;
+      });
+    }
 
     subjList.innerHTML = '';
     SUBJECTS.forEach(function (s) {
-      var pct = lookup[s.key] || lookup[s.label.toLowerCase()] || 0;
+      var pct = hasKm
+        ? (typeof DB !== 'undefined' && DB.computeSubjectPct ? DB.computeSubjectPct(s.key, knowledgeMapData) : 0)
+        : (lookup[s.key] || lookup[s.label.toLowerCase()] || 0);
       var card = document.createElement('a');
       card.href = s.url;
       card.className = 'subj-card';
@@ -1485,50 +1492,49 @@
     setTimeout(function () { window.location.href = 'index.html'; }, 700);
   });
 
-  /* ── Firestore load ── */
+  /* ── Firestore live listeners ── */
+  var _unsubs = [];
   function loadFirestore(uid) {
+    /* Clear any existing listeners */
+    _unsubs.forEach(function(u){ try{u();}catch(e){} });
+    _unsubs = [];
     var db = firebase.firestore();
 
-    // User document
-    db.collection('users').doc(uid).get()
-      .then(function (doc) {
-        userDocData = doc.exists ? (doc.data() || null) : null;
-        if (userDocData) {
-          var streak = userDocData.streak || userDocData.studyStreak || 0;
-          streakNum.innerHTML = streak + '<span>days</span>';
-          if (editSchoolInput && (userDocData.school || userDocData.schoolName))
-            editSchoolInput.value = userDocData.school || userDocData.schoolName || '';
-        }
-        renderStats();
-      })
-      .catch(function () { renderStats(); });
+    /* User document — live (streak, school name) */
+    _unsubs.push(db.collection('users').doc(uid).onSnapshot(function(doc) {
+      userDocData = doc.exists ? (doc.data() || null) : null;
+      if (userDocData) {
+        var streak = userDocData.streak || userDocData.studyStreak || 0;
+        streakNum.innerHTML = streak + '<span>days</span>';
+        if (editSchoolInput && (userDocData.school || userDocData.schoolName))
+          editSchoolInput.value = userDocData.school || userDocData.schoolName || '';
+      }
+      renderStats();
+    }, function() { renderStats(); }));
 
-    // Progress subcollection
-    db.collection('users').doc(uid).collection('progress').get()
-      .then(function (snap) {
-        snap.forEach(function (d) {
-          var pd = d.data(); pd.id = d.id; progressItems.push(pd);
-        });
+    /* knowledgeMap — live (subject progress updates instantly when MCQs are done) */
+    _unsubs.push(db.collection('users').doc(uid).collection('knowledgeMap')
+      .onSnapshot(function(snap) {
+        knowledgeMapData = {};
+        snap.forEach(function(d){ knowledgeMapData[d.id] = d.data(); });
         renderSubjectProgress();
         renderStats();
-      })
-      .catch(function () { renderSubjectProgress(); });
+      }, function() { renderSubjectProgress(); }));
 
-    // Activity
-    db.collection('users').doc(uid).collection('activity')
-      .orderBy('timestamp', 'desc').limit(5).get()
-      .then(function (snap) {
+    /* Activity — live (continue learning card updates) */
+    _unsubs.push(db.collection('users').doc(uid).collection('activity')
+      .orderBy('timestamp', 'desc').limit(5)
+      .onSnapshot(function(snap) {
         var items = [];
-        snap.forEach(function (d) { var pd = d.data(); pd._id = d.id; items.push(pd); });
+        snap.forEach(function(d){ var pd = d.data(); pd._id = d.id; items.push(pd); });
         renderContinue(items);
         renderActivity(items);
         buildStreakWeek(activeDaysFromActivity(items));
-      })
-      .catch(function () {
+      }, function() {
         renderContinue([]);
         renderActivity([]);
         buildStreakWeek(new Set());
-      });
+      }));
   }
 
   /* ── Bootstrap ── */

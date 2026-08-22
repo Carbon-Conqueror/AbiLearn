@@ -188,16 +188,26 @@ function initSearch() {
   inp.addEventListener('input', () => {
     const q = inp.value.trim().toLowerCase();
     if (q.length < 2) { res.classList.remove('show'); return; }
-    const hits = [];
+    const scored = [];
     DATA.subjects.forEach(sub => {
       sub.chapters.forEach(ch => {
-        if ((ch.title + ch.subtitle + (ch.keyPoints || []).join(' ')).toLowerCase().includes(q))
-          hits.push({ sub, ch });
+        const title    = (ch.title    || '').toLowerCase();
+        const subtitle = (ch.subtitle || '').toLowerCase();
+        const kp       = (ch.keyPoints || []).join(' ').toLowerCase();
+        let score = 0;
+        if (title === q)                        score = 100; // exact title
+        else if (title.startsWith(q))           score = 90;  // title starts with query
+        else if (title.includes(q))             score = 80;  // title contains query
+        else if (subtitle.includes(q))          score = 50;  // subtitle match
+        else if (kp.includes(q))                score = 30;  // keyword match
+        if (score > 0) scored.push({ sub, ch, score });
       });
     });
+    scored.sort((a, b) => b.score - a.score);
+    const hits = scored.slice(0, 5);
     res.innerHTML = hits.length === 0
       ? '<div class="search-result-item"><div class="result-title">No results found</div></div>'
-      : hits.slice(0, 7).map(h =>
+      : hits.map(h =>
           `<div class="search-result-item" onclick="goTo('${h.sub.id}','${h.ch.id}')">
             <div class="result-subject">${h.sub.name}</div>
             <div class="result-title">${h.ch.title}</div>
