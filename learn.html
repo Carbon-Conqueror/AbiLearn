@@ -1054,56 +1054,6 @@
   /* ══════════════════════════════════════
      MOBILE BOTTOM NAV
   ══════════════════════════════════════ */
-  .lh-bottom-nav {
-    position: fixed;
-    bottom: 0; left: 0; right: 0;
-    z-index: 300;
-    background: var(--lh-surface);
-    border-top: 1px solid var(--lh-border);
-    box-shadow: 0 -2px 16px rgba(13,9,34,.07);
-    padding-bottom: env(safe-area-inset-bottom, 0);
-  }
-
-  .lh-bottom-inner {
-    display: flex;
-    align-items: stretch;
-    height: 62px;
-    width: 100%;
-  }
-
-  .lh-btab {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    gap: 3px;
-    padding: 0;
-    background: none;
-    border: none;
-    cursor: pointer;
-    font-family: var(--lh-font);
-    color: var(--lh-text-muted);
-    text-decoration: none;
-    transition: color .15s;
-    -webkit-tap-highlight-color: transparent;
-  }
-  .lh-btab:hover { color: var(--lh-text-3); }
-  .lh-btab.is-active { color: var(--lh-brand); font-weight: 700; }
-  .lh-btab.is-active .lh-btab-label { font-weight: 700; }
-  .lh-btab:focus-visible { outline: 2px solid var(--lh-brand); outline-offset: -2px; }
-
-  .lh-btab-icon {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
-
-  .lh-btab-label {
-    font-size: .66rem;
-    font-weight: 500;
-    letter-spacing: .01em;
-  }
 
   /* ══════════════════════════════════════
      SEARCH OVERLAY
@@ -1672,67 +1622,34 @@
 
 </main>
 
-<!-- ── Footer ── -->
-<!-- ── Mobile Bottom Navigation ── -->
-<nav class="lh-bottom-nav" aria-label="Mobile navigation">
-  <div class="lh-bottom-inner">
-
-    <a href="index.html" class="lh-btab" aria-label="Home">
-      <span class="lh-btab-icon" aria-hidden="true">
-        <svg width="22" height="22" viewBox="0 0 22 22" fill="none">
-          <path d="M3 9.2L11 3l8 6.2V19a1 1 0 01-1 1H14v-5.5H8V20H4a1 1 0 01-1-1V9.2z"
-                stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
-        </svg>
-      </span>
-      <span class="lh-btab-label">Home</span>
+<!-- ── Bottom Nav ── -->
+<nav class="al-bnav" aria-label="App navigation">
+  <div class="al-bnav-inner">
+    <a href="index.html" class="al-btab" aria-label="Home">
+      <span class="al-btab-icon" aria-hidden="true"><svg width="22" height="22" viewBox="0 0 22 22" fill="none"><path d="M3 9.2L11 3l8 6.2V19a1 1 0 01-1 1H14v-5.5H8V20H4a1 1 0 01-1-1V9.2z" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+      <span class="al-btab-label">Home</span>
     </a>
-
-    <a href="learn.html" class="lh-btab is-active" aria-label="Learn" aria-current="page">
-      <span class="lh-btab-icon" aria-hidden="true">
-        <svg width="22" height="22" viewBox="0 0 22 22" fill="none">
-          <rect x="3" y="3" width="16" height="16" rx="2.5" stroke="currentColor" stroke-width="1.6"/>
-          <path d="M7 8h8M7 12h8M7 16h5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/>
-        </svg>
-      </span>
-      <span class="lh-btab-label">Learn</span>
+    <a href="learn.html" class="al-btab al-btab-active" aria-current="page" aria-label="Learn">
+      <span class="al-btab-icon" aria-hidden="true"><svg width="22" height="22" viewBox="0 0 22 22" fill="none"><rect x="3" y="3" width="16" height="16" rx="2.5" stroke="currentColor" stroke-width="1.6"/><path d="M7 8h8M7 12h8M7 16h5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg></span>
+      <span class="al-btab-label">Learn</span>
     </a>
-
-    <button class="lh-btab" onclick="openAppSearch()" aria-label="Search" aria-haspopup="dialog">
-      <span class="lh-btab-icon" aria-hidden="true">
-        <svg width="22" height="22" viewBox="0 0 22 22" fill="none">
-          <circle cx="9.5" cy="9.5" r="6" stroke="currentColor" stroke-width="1.6"/>
-          <line x1="14.2" y1="14.2" x2="19" y2="19" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>
-        </svg>
-      </span>
-      <span class="lh-btab-label">Search</span>
+    <button class="al-btab" onclick="openAppSearch()" aria-label="Search" aria-haspopup="dialog">
+      <span class="al-btab-icon" aria-hidden="true"><svg width="22" height="22" viewBox="0 0 22 22" fill="none"><circle cx="9.5" cy="9.5" r="6" stroke="currentColor" stroke-width="1.6"/><line x1="14.2" y1="14.2" x2="19" y2="19" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg></span>
+      <span class="al-btab-label">Search</span>
     </button>
-
-    <a href="dashboard.html"
-       class="lh-btab"
-       aria-label="My Progress"
-       onclick="return guardNav(event,'dashboard.html')">
-      <span class="lh-btab-icon" aria-hidden="true">
-        <svg width="22" height="22" viewBox="0 0 22 22" fill="none">
-          <path d="M4 17V12M8.5 17V9M13 17V7M17.5 17V4"
-                stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/>
-        </svg>
-      </span>
-      <span class="lh-btab-label">Progress</span>
+    <a href="dashboard.html" class="al-btab" aria-label="Progress" onclick="return guardNav(event,'dashboard.html')">
+      <span class="al-btab-icon" aria-hidden="true"><svg width="22" height="22" viewBox="0 0 22 22" fill="none"><path d="M4 17V12M8.5 17V9M13 17V7M17.5 17V4" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg></span>
+      <span class="al-btab-label">Progress</span>
     </a>
-
-    <button class="lh-btab" id="lhProfileBtn" aria-label="Account">
-      <span class="lh-btab-icon" aria-hidden="true">
-        <svg width="22" height="22" viewBox="0 0 22 22" fill="none">
-          <circle cx="11" cy="8" r="4" stroke="currentColor" stroke-width="1.6"/>
-          <path d="M3 19c0-3.87 3.58-7 8-7s8 3.13 8 7"
-                stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>
-        </svg>
-      </span>
-      <span class="lh-btab-label">Profile</span>
+    <button class="al-btab" id="lhProfileBtn" aria-label="Profile">
+      <span class="al-btab-icon" aria-hidden="true"><svg width="22" height="22" viewBox="0 0 22 22" fill="none"><circle cx="11" cy="8" r="4" stroke="currentColor" stroke-width="1.6"/><path d="M3 19c0-3.87 3.58-7 8-7s8 3.13 8 7" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg></span>
+      <span class="al-btab-label">Profile</span>
     </button>
-
   </div>
 </nav>
+<style>
+body.lh-body{padding-bottom:70px}.al-bnav{position:fixed;bottom:0;left:0;right:0;z-index:500;background:#fff;border-top:1px solid #E8E4F8;padding-bottom:env(safe-area-inset-bottom,0)}.al-bnav-inner{display:flex;align-items:stretch;height:62px;max-width:600px;margin:0 auto}.al-btab{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;color:#9894C0;text-decoration:none;background:none;border:none;cursor:pointer;font-family:inherit;transition:color .15s;-webkit-tap-highlight-color:transparent;padding:0}.al-btab.al-btab-active{color:#5B47DE;font-weight:700}.al-btab-icon{display:flex}.al-btab-label{font-size:.66rem;font-weight:500}.al-btab.al-btab-active .al-btab-label{font-weight:700}@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .al-bnav{background:#1A1830;border-top-color:#2A2645}:root:not([data-theme="light"]) .al-btab{color:#6B6899}:root:not([data-theme="light"]) .al-btab.al-btab-active{color:#A89EFF}}:root[data-theme="dark"] .al-bnav{background:#1A1830;border-top-color:#2A2645}:root[data-theme="dark"] .al-btab{color:#6B6899}:root[data-theme="dark"] .al-btab.al-btab-active{color:#A89EFF}
+</style>
 
 <!-- ── Search Overlay ── -->
 <div class="app-search-overlay" id="appSearchOverlay"
