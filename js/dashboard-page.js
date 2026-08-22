@@ -220,26 +220,19 @@
     );
   }
 
-  /* ── Main Render ── */
-  async function render(uid) {
-    var root = document.getElementById('dashRoot');
-    if (!root) return;
+  var CACHE_KEY = 'al_dash_cache';
 
-    try {
-      var [km, stats, profile] = await Promise.all([
-        DB.getKnowledgeMap(uid),
-        DB.getOverallStats(uid),
-        DB.getProfile(uid)
-      ]);
-      km      = km      || {};
-      stats   = stats   || { total: 0, correct: 0, accuracy: 0 };
-      profile = profile || {};
+  function saveCache(uid, data) {
+    try { localStorage.setItem(CACHE_KEY + '_' + uid, JSON.stringify(data)); } catch(e){}
+  }
+  function loadCache(uid) {
+    try { var v = localStorage.getItem(CACHE_KEY + '_' + uid); return v ? JSON.parse(v) : null; } catch(e){ return null; }
+  }
 
-      var score = (typeof computeReadinessScore === 'function') ? computeReadinessScore(km) : 0;
-      var planItems = await generateSmartPlan(uid, km);
-      var dueCount  = DB.getDueForRevision(km).length;
-
-      root.innerHTML =
+  function buildAndInsert(root, km, stats, profile, planItems) {
+    var score = (typeof computeReadinessScore === 'function') ? computeReadinessScore(km) : 0;
+    var dueCount = DB.getDueForRevision(km).length;
+    root.innerHTML =
         /* Readiness + Subjects row */
         '<div class="dash-top-grid">' +
           '<div class="dash-card dash-ring-card">' + buildReadinessRing(score) + '</div>' +
@@ -274,10 +267,37 @@
         '<div style="text-align:center;margin-top:0.5rem">' +
           '<a href="mistakes.html" class="btn btn-secondary" style="font-size:0.85rem">📋 Mistake Bank</a>' +
         '</div>';
+  }
+
+  /* ── Main Render ── */
+  async function render(uid) {
+    var root = document.getElementById('dashRoot');
+    if (!root) return;
+
+    /* Show cached data instantly while fresh data loads */
+    var cached = loadCache(uid);
+    if (cached) {
+      try { buildAndInsert(root, cached.km, cached.stats, cached.profile, cached.planItems); } catch(e){}
+    }
+
+    try {
+      var [km, stats, profile] = await Promise.all([
+        DB.getKnowledgeMap(uid),
+        DB.getOverallStats(uid),
+        DB.getProfile(uid)
+      ]);
+      km      = km      || {};
+      stats   = stats   || { total: 0, correct: 0, accuracy: 0 };
+      profile = profile || {};
+
+      var planItems = await generateSmartPlan(uid, km);
+
+      saveCache(uid, { km: km, stats: stats, profile: profile, planItems: planItems });
+      buildAndInsert(root, km, stats, profile, planItems);
 
     } catch (e) {
       console.warn('dashboard-page: render', e);
-      if (root) root.innerHTML = '<div style="text-align:center;padding:3rem;color:var(--muted)">Could not load dashboard. Please try again.</div>';
+      if (!cached && root) root.innerHTML = '<div style="text-align:center;padding:3rem;color:var(--muted)">Could not load dashboard. Please try again.</div>';
     }
   }
 
