@@ -100,9 +100,34 @@ function getSubjectPct(subjectId) {
   return Math.round((done / sub.chapters.length) * 100);
 }
 
+/* Real-time chapter progress listener — keeps tick buttons live on subject pages */
+var _chapterProgressUnsub = null;
+function subscribeChapterProgress(uid) {
+  if (_chapterProgressUnsub) { try { _chapterProgressUnsub(); } catch(e){} }
+  if (typeof DB === 'undefined' || !DB.listenChapterProgress) return;
+  _chapterProgressUnsub = DB.listenChapterProgress(uid, function(cp) {
+    _cachedChapterProgress = cp || {};
+    /* Patch any visible tick buttons instantly */
+    document.querySelectorAll('.chapter-done-btn').forEach(function(btn) {
+      var key = btn.dataset.key || (btn.dataset.subject + '_chapter_' + btn.dataset.cid);
+      var isDone = !!(_cachedChapterProgress[key] && _cachedChapterProgress[key].done);
+      btn.classList.toggle('done', isDone);
+    });
+    /* Also refresh progress tab if open */
+    if (_subjectPageSubject) {
+      var activeBtn = document.querySelector('.tab-btn.active');
+      if (activeBtn && (activeBtn.dataset.tab === 'my-progress' || activeBtn.dataset.tab === 'progress')) {
+        var tc = document.getElementById('tabContent');
+        if (tc) tc.innerHTML = buildProgressTab(_subjectPageSubject);
+      }
+    }
+  });
+}
+
 /* Called by auth.js onAuthStateChanged after Firebase auth resolves */
 async function loadUserDataFromFirestore(uid) {
   if (typeof DB === 'undefined' || !uid) return;
+  subscribeChapterProgress(uid);
   try {
     const [pdfProg, km, chProg] = await Promise.all([
       DB.getPdfProgress(uid),
@@ -114,10 +139,17 @@ async function loadUserDataFromFirestore(uid) {
     _cachedChapterProgress = chProg  || {};
     /* Home page subject cards */
     if (document.getElementById('subjectsGrid')) renderSubjectCards();
-    /* Subject tab page */
+    /* Subject tab page — re-render so tick buttons reflect loaded state */
     if (_subjectPageSubject) {
       var activeBtn = document.querySelector('.tab-btn.active');
-      if (activeBtn) renderTabContent(_subjectPageSubject, activeBtn.dataset.tab);
+      var tabId = activeBtn ? activeBtn.dataset.tab : (SUBJECT_TABS[_subjectPageSubject.id] ? SUBJECT_TABS[_subjectPageSubject.id][0].id : null);
+      if (tabId) renderTabContent(_subjectPageSubject, tabId);
+      /* Also patch any chapter-done-btn already in the DOM in case tab didn't re-render */
+      document.querySelectorAll('.chapter-done-btn').forEach(function(btn) {
+        var key = btn.dataset.key || (btn.dataset.subject + '_chapter_' + btn.dataset.cid);
+        var isDone = !!(_cachedChapterProgress[key] && _cachedChapterProgress[key].done);
+        btn.classList.toggle('done', isDone);
+      });
     }
     /* Learn page — app shell */
     if (document.getElementById('appSubjectsGrid')) {

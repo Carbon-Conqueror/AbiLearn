@@ -296,6 +296,18 @@ var DB = (function () {
     } catch (e) { console.warn('DB.setChapterDone', e); }
   }
 
+  function listenChapterProgress(id, cb) {
+    if (!fs()) { cb({}); return function(){}; }
+    return subCol('chapterProgress', id).onSnapshot(
+      function(snap) {
+        var out = {};
+        snap.forEach(function(doc) { out[doc.id] = doc.data(); });
+        cb(out);
+      },
+      function() { cb({}); }
+    );
+  }
+
   /* ══ LEGACY MIGRATION ══
    * One-time: copies pdf_done_<email> from localStorage to Firestore.
    */
@@ -354,6 +366,7 @@ var DB = (function () {
     recordStudyActivity:       recordStudyActivity,
     migrateLegacyProgress:     migrateLegacyProgress,
     getChapterProgress:        getChapterProgress,
-    setChapterDone:            setChapterDone
+    setChapterDone:            setChapterDone,
+    listenChapterProgress:     listenChapterProgress
   };
 })();

@@ -1087,9 +1087,9 @@
 <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-auth-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore-compat.js"></script>
 <script src="js/firebase-config.js"></script>
-<script src="js/db.js?v=3"></script>
+<script src="js/db.js?v=4"></script>
 <script src="js/data.js?v=1"></script>
-<script src="js/app.js?v=73"></script>
+<script src="js/app.js?v=74"></script>
 <script src="js/auth.js?v=32"></script>
 
 <!-- ━━ AUTH GUARD ━━ -->
@@ -1189,6 +1189,7 @@
   var userDocData  = null;
   var progressItems = [];
   var knowledgeMapData = {};
+  var chapterProgressData = {};
 
   /* ── Identity ── */
   function showAvatar(user) {
@@ -1252,8 +1253,19 @@
   }
 
   /* ── Subject Progress ── */
+  function computeChapterTickPct(subjectKey) {
+    /* Count chapters with done tick for this subject */
+    if (typeof DATA === 'undefined') return 0;
+    var sub = DATA.subjects.find(function(s){ return s.id === subjectKey; });
+    if (!sub || !sub.chapters || !sub.chapters.length) return 0;
+    var done = sub.chapters.filter(function(ch) {
+      var entry = chapterProgressData[subjectKey + '_chapter_' + ch.id];
+      return entry && entry.done;
+    }).length;
+    return Math.round((done / sub.chapters.length) * 100);
+  }
+
   function renderSubjectProgress() {
-    /* Prefer knowledgeMap (real MCQ data) over progress subcollection */
     var hasKm = Object.keys(knowledgeMapData).length > 0;
     var lookup = {};
     if (!hasKm) {
@@ -1272,9 +1284,19 @@
 
     subjList.innerHTML = '';
     SUBJECTS.forEach(function (s) {
-      var pct = hasKm
+      /* MCQ mastery % */
+      var mcqPct = hasKm
         ? (typeof DB !== 'undefined' && DB.computeSubjectPct ? DB.computeSubjectPct(s.key, knowledgeMapData) : 0)
         : (lookup[s.key] || lookup[s.label.toLowerCase()] || 0);
+      /* Chapter tick % */
+      var tickPct = computeChapterTickPct(s.key);
+      /* Overall = max of both (student gets credit for whichever is higher) */
+      var pct = Math.max(mcqPct, tickPct);
+      /* Chapter tick pill (shown when any chapter is ticked) */
+      var tickLabel = tickPct > 0
+        ? '<span style="font-size:.68rem;color:' + s.color + ';font-weight:600;margin-left:auto;padding-left:.5rem">' + tickPct + '% read</span>'
+        : '';
+
       var card = document.createElement('a');
       card.href = s.url;
       card.className = 'subj-card';
@@ -1283,11 +1305,17 @@
         '<div class="subj-hdr">' +
           '<div class="subj-dot" style="background:' + s.color + '" aria-hidden="true"></div>' +
           '<span class="subj-name">' + s.label + '</span>' +
-          '<span class="subj-pct">' + pct + '%</span>' +
+          tickLabel +
+          '<span class="subj-pct" style="margin-left:' + (tickPct > 0 ? '.35rem' : 'auto') + '">' + pct + '%</span>' +
         '</div>' +
         '<div class="prog-track" role="progressbar" aria-valuenow="' + pct + '" aria-valuemin="0" aria-valuemax="100">' +
           '<div class="prog-fill" style="width:' + pct + '%;background:' + s.color + '"></div>' +
-        '</div>';
+        '</div>' +
+        (tickPct > 0
+          ? '<div style="margin-top:.3rem;height:4px;border-radius:4px;background:rgba(0,0,0,.06);overflow:hidden">' +
+              '<div style="height:100%;width:' + tickPct + '%;background:' + s.color + ';opacity:.45;border-radius:4px"></div>' +
+            '</div>'
+          : '');
       subjList.appendChild(card);
     });
   }
@@ -1519,6 +1547,14 @@
         snap.forEach(function(d){ knowledgeMapData[d.id] = d.data(); });
         renderSubjectProgress();
         renderStats();
+      }, function() { renderSubjectProgress(); }));
+
+    /* chapterProgress — live (chapter ticks update profile instantly) */
+    _unsubs.push(db.collection('users').doc(uid).collection('chapterProgress')
+      .onSnapshot(function(snap) {
+        chapterProgressData = {};
+        snap.forEach(function(d){ chapterProgressData[d.id] = d.data(); });
+        renderSubjectProgress();
       }, function() { renderSubjectProgress(); }));
 
     /* Activity — live (continue learning card updates) */
