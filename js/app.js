@@ -77,6 +77,17 @@ function saveProgress(p) {
   if (!email) return;
   try { localStorage.setItem('abilearn_progress_' + email, JSON.stringify(p)); } catch {}
 }
+
+/* Email-free instant chapter-tick cache — readable before auth resolves */
+var _AL_CP_KEY = '_al_chprog';
+function _cpLoad(){ try{ return JSON.parse(localStorage.getItem(_AL_CP_KEY)||'{}'); }catch(e){ return {}; } }
+function _cpSave(key, done){
+  try{
+    var cp = _cpLoad();
+    if(done) cp[key] = 1; else delete cp[key];
+    localStorage.setItem(_AL_CP_KEY, JSON.stringify(cp));
+  }catch(e){}
+}
 function getPDFStore() {
   return _cachedPdfProgress;
 }
@@ -788,7 +799,11 @@ function togglePDFDone(btn, url) {
 }
 
 function getChapterDone(key) {
-  return !!(_cachedChapterProgress[key] && _cachedChapterProgress[key].done);
+  /* 1. Firestore cache (populated after auth) */
+  if (_cachedChapterProgress[key] && _cachedChapterProgress[key].done) return true;
+  /* 2. Instant email-free cache (available before auth resolves) */
+  if (_cpLoad()[key]) return true;
+  return false;
 }
 
 function toggleChapterDone(btn, key) {
@@ -796,6 +811,7 @@ function toggleChapterDone(btn, key) {
   if (!user) return;
   var nowDone = !getChapterDone(key);
   _cachedChapterProgress[key] = { done: nowDone };
+  _cpSave(key, nowDone);
   btn.classList.toggle('done', nowDone);
   btn.title = nowDone ? 'Mark as incomplete' : 'Mark as complete';
   if (typeof DB !== 'undefined') {
@@ -1576,7 +1592,8 @@ function buildEnglishReader(subject, type) {
 
 function buildChapterAccordionHTML(ch, subjectId, numClass) {
   const chKey = subjectId + '_chapter_' + ch.id;
-  const done = getChapterDone(chKey) || !!(getProgress()[subjectId + '_' + ch.id]);
+  /* getChapterDone checks Firestore cache, instant cache, and legacy localStorage */
+  const done = getChapterDone(chKey);
   const letters = ['A','B','C','D'];
   const kpHTML = ch.keyPoints?.length
     ? `<div class="kp-section"><h4>🔑 Key Points</h4><ul class="kp-list">${ch.keyPoints.map(k => `<li>${escH(k)}</li>`).join('')}</ul></div>` : '';
@@ -1628,7 +1645,9 @@ function toggleDone(btn) {
   var nowDone = !getChapterDone(fsKey);
   // Update in-memory cache
   _cachedChapterProgress[fsKey] = { done: nowDone };
-  // Legacy localStorage (backwards compat — keeps chapter accordion state on reload for non-authed state)
+  // Instant email-free cache — readable before auth resolves on next visit
+  _cpSave(fsKey, nowDone);
+  // Legacy email-keyed localStorage (backwards compat)
   var legacyKey = btn.dataset.subject + '_' + btn.dataset.cid;
   var p = getProgress();
   p[legacyKey] = nowDone;

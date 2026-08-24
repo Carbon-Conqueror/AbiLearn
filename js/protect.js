@@ -12,13 +12,9 @@
     '}' +
     'html,body{width:100%;min-height:100dvh;min-height:-webkit-fill-available;overflow-x:hidden}' +
     '@media print{html{display:none!important}}' +
-    /* Screenshot shield: backdrop-filter forces GPU compositing layer;
-       on Android Chrome this can cause the overlay area to appear black
-       in OS-level screenshots */
     '#_al_ss{position:fixed;inset:0;z-index:2147483645;pointer-events:none;' +
       'backdrop-filter:blur(0px);-webkit-backdrop-filter:blur(0px);' +
       'will-change:transform;transform:translateZ(0)}' +
-    /* Fullscreen prompt overlay */
     '#_al_fso{position:fixed;inset:0;z-index:2147483647;' +
       'background:linear-gradient(135deg,#5B47DE 0%,#7C3AED 100%);' +
       'display:flex;flex-direction:column;align-items:center;justify-content:center;' +
@@ -32,12 +28,11 @@
       'font-family:inherit;letter-spacing:.01em}';
   document.head.appendChild(st);
 
-  /* ── Screenshot shield element ── */
+  /* ── Screenshot shield ── */
   function createShield(){
     if(document.getElementById('_al_ss')) return;
     var s = document.createElement('div');
-    s.id = '_al_ss';
-    s.setAttribute('aria-hidden','true');
+    s.id = '_al_ss'; s.setAttribute('aria-hidden','true');
     document.body.appendChild(s);
   }
   if(document.readyState==='loading'){
@@ -48,13 +43,12 @@
   function setVh(){ document.documentElement.style.setProperty('--dvh', window.innerHeight*0.01+'px'); }
   setVh(); window.addEventListener('resize', setVh);
 
-  /* ── Block dev tools / copy / print shortcuts ── */
+  /* ── Block dev tools / copy / print ── */
   document.addEventListener('contextmenu', function(e){ e.preventDefault(); });
   document.addEventListener('copy',  function(e){ e.preventDefault(); });
   document.addEventListener('cut',   function(e){ e.preventDefault(); });
   document.addEventListener('keydown', function(e){
     var k = e.key ? e.key.toLowerCase() : '';
-    /* Block PrintScreen, F12, F11 (exits fullscreen) */
     if(e.key==='PrintScreen'||e.key==='F12'||e.key==='F11'){ e.preventDefault(); return false; }
     if(e.ctrlKey||e.metaKey){
       if(k==='c'||k==='x'||k==='a'||k==='p'||k==='s'||k==='u'||k==='i'){ e.preventDefault(); return false; }
@@ -64,6 +58,10 @@
 
   /* ── Fullscreen ── */
   var _fso = null;
+  var _FS_KEY = '_al_fs_ok'; /* sessionStorage key — set once per session after user accepts */
+
+  function fsAccepted(){ try{ return sessionStorage.getItem(_FS_KEY)==='1'; }catch(e){ return false; } }
+  function markFSAccepted(){ try{ sessionStorage.setItem(_FS_KEY,'1'); }catch(e){} }
 
   function isFS(){
     return !!(document.fullscreenElement||document.webkitFullscreenElement||
@@ -77,13 +75,14 @@
       else if(el.webkitRequestFullscreen) p = el.webkitRequestFullscreen();
       else if(el.mozRequestFullScreen)    p = el.mozRequestFullScreen();
       else if(el.msRequestFullscreen)     p = el.msRequestFullscreen();
-      if(p&&p.then) p.then(hideOverlay, function(){});
+      if(p&&p.then) p.then(function(){ markFSAccepted(); hideOverlay(); }, function(){});
       if(p&&p.catch) p.catch(function(){});
     } catch(ex){}
   }
 
   function showOverlay(){
-    if(_fso||isFS()) return;
+    /* Never show again once user has accepted fullscreen this session */
+    if(_fso || isFS() || fsAccepted()) return;
     _fso = document.createElement('div');
     _fso.id = '_al_fso';
     _fso.setAttribute('aria-label','Enter fullscreen to continue');
@@ -95,6 +94,7 @@
       '<button class="fso-btn" aria-label="Enter fullscreen">Enter Fullscreen</button>';
     function activate(e){
       if(e&&e.preventDefault) e.preventDefault();
+      markFSAccepted(); /* Mark accepted so overlay never shows again this session */
       tryFS();
       hideOverlay();
     }
@@ -107,15 +107,15 @@
     if(_fso){ try{_fso.remove();}catch(ex){} _fso=null; }
   }
 
-  /* Try silently on script load (works in installed PWA / kiosk mode) */
+  /* Try silently on load (works in installed PWA / kiosk) */
   try { tryFS(); } catch(ex){}
 
-  /* Show overlay after a short grace period if still not in fullscreen */
+  /* Show overlay only on first-ever visit (no sessionStorage key yet) */
   setTimeout(function(){
-    if(!isFS()) showOverlay();
+    if(!isFS() && !fsAccepted()) showOverlay();
   }, 800);
 
-  /* Re-enter on any user gesture while not in fullscreen */
+  /* Re-enter fullscreen silently on every gesture — NO overlay after first accept */
   function gestureFS(){
     if(!isFS()){ tryFS(); }
   }
@@ -125,26 +125,26 @@
     if((e.key==='Enter'||e.key===' ')&&!isFS()) tryFS();
   }, {capture:true, passive:true});
 
-  /* Show overlay whenever fullscreen is exited */
+  /* On fullscreen exit: only show overlay if user has never accepted;
+     otherwise silently re-enter on next gesture (gestureFS handles it) */
   function onFSChange(){
-    if(!isFS()) setTimeout(showOverlay, 400);
-    else hideOverlay();
+    if(!isFS()){
+      if(!fsAccepted()) setTimeout(showOverlay, 400);
+      /* If already accepted: next tap/click will silently re-enter via gestureFS */
+    } else {
+      markFSAccepted();
+      hideOverlay();
+    }
   }
   document.addEventListener('fullscreenchange',       onFSChange);
   document.addEventListener('webkitfullscreenchange', onFSChange);
   document.addEventListener('mozfullscreenchange',    onFSChange);
   document.addEventListener('MSFullscreenChange',     onFSChange);
 
-  /* Hide sensitive content during screen capture flows (visibility change) */
+  /* Hide content briefly during screenshot flows */
   document.addEventListener('visibilitychange', function(){
-    if(document.hidden){
-      /* Page went to background — could be screenshot flow on some Android devices */
-      var shield = document.getElementById('_al_ss');
-      if(shield) shield.style.background='#fff';
-    } else {
-      var shield = document.getElementById('_al_ss');
-      if(shield) shield.style.background='';
-    }
+    var shield = document.getElementById('_al_ss');
+    if(shield) shield.style.background = document.hidden ? '#fff' : '';
   });
 
 })();
