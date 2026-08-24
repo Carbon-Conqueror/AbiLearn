@@ -1703,6 +1703,15 @@
 /* ── Init ── */
 initLearnPage();
 
+/* Auto-open search when arriving from another page's Search tab */
+if (location.search.indexOf('openSearch=1') !== -1) {
+  setTimeout(function() {
+    if (typeof openAppSearch === 'function') openAppSearch();
+    /* Clean the URL without reload */
+    try { history.replaceState(null, '', location.pathname); } catch(e){}
+  }, 600);
+}
+
 /* ── Hamburger ── */
 (function () {
   var btn  = document.getElementById('lhHamburger');
