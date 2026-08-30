@@ -1093,7 +1093,7 @@
 <script src="js/auth.js?v=32"></script>
 
 <!-- ━━ AUTH GUARD ━━ -->
-<script>(function(){var s=document.getElementById('_ag');function show(){if(s){s.remove();s=null;}}if(!window._fauth){show();return;}var t=setTimeout(show,3000);window._fauth.onAuthStateChanged(function(u){clearTimeout(t);show();if(!u)window.location.replace('auth.html?from='+encodeURIComponent(location.href));});}());</script>
+<script>(function(){var s=document.getElementById('_ag');function show(){if(s){s.remove();s=null;}}try{if(localStorage.getItem('al_user_cache'))show();}catch(e){}if(!window._fauth){show();return;}var t=setTimeout(show,600);window._fauth.onAuthStateChanged(function(u){clearTimeout(t);show();if(!u)window.location.replace('auth.html?from='+encodeURIComponent(location.href));});}());</script>
 
 <!-- ━━ BOTTOM NAV PROFILE ━━ -->
 <script>
@@ -1188,8 +1188,13 @@
   var currentUser = null;
   var userDocData  = null;
   var progressItems = [];
+  var _PROF_KM_KEY = '_al_prof_km';
+  var _PROF_CP_KEY = '_al_prof_cp';
   var knowledgeMapData = {};
   var chapterProgressData = {};
+  /* Load cached progress instantly so subject cards render before Firestore responds */
+  try { knowledgeMapData    = JSON.parse(localStorage.getItem(_PROF_KM_KEY) || '{}'); } catch(e){}
+  try { chapterProgressData = JSON.parse(localStorage.getItem(_PROF_CP_KEY) || '{}'); } catch(e){}
 
   /* ── Identity ── */
   function showAvatar(user) {
@@ -1512,6 +1517,8 @@
     soGoBtn.textContent = 'Signing out…';
     soGoBtn.disabled = true;
     try { localStorage.removeItem('al_user_cache'); } catch(e) {}
+    try { localStorage.removeItem(_PROF_KM_KEY); } catch(e) {}
+    try { localStorage.removeItem(_PROF_CP_KEY); } catch(e) {}
     if (typeof authLogout === 'function') {
       authLogout();
     } else if (window._fauth) {
@@ -1545,6 +1552,7 @@
       .onSnapshot(function(snap) {
         knowledgeMapData = {};
         snap.forEach(function(d){ knowledgeMapData[d.id] = d.data(); });
+        try { localStorage.setItem(_PROF_KM_KEY, JSON.stringify(knowledgeMapData)); } catch(e){}
         renderSubjectProgress();
         renderStats();
       }, function() { renderSubjectProgress(); }));
@@ -1554,6 +1562,7 @@
       .onSnapshot(function(snap) {
         chapterProgressData = {};
         snap.forEach(function(d){ chapterProgressData[d.id] = d.data(); });
+        try { localStorage.setItem(_PROF_CP_KEY, JSON.stringify(chapterProgressData)); } catch(e){}
         renderSubjectProgress();
       }, function() { renderSubjectProgress(); }));
 
@@ -1576,6 +1585,11 @@
   /* ── Bootstrap ── */
   // Render initial streak skeleton
   buildStreakWeek(new Set());
+
+  // Paint cached progress immediately — no Firestore wait on repeat visits
+  if (Object.keys(knowledgeMapData).length || Object.keys(chapterProgressData).length) {
+    renderSubjectProgress();
+  }
 
   // Apply cached user immediately for fast first paint
   var cached = (typeof getUser === 'function') ? getUser() : null;
