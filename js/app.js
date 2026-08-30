@@ -118,13 +118,27 @@ function subscribeChapterProgress(uid) {
   if (typeof DB === 'undefined' || !DB.listenChapterProgress) return;
   _chapterProgressUnsub = DB.listenChapterProgress(uid, function(cp) {
     _cachedChapterProgress = cp || {};
-    /* Patch any visible tick buttons instantly */
+
+    /* Sync Firestore → localStorage so next page load is instant.
+       Only touch keys that Firestore knows about; local-only keys (pending writes)
+       are left untouched so they aren't wiped during in-flight saves. */
+    var localCp = _cpLoad();
+    var syncChanged = false;
+    Object.keys(_cachedChapterProgress).forEach(function(k) {
+      var done = !!(_cachedChapterProgress[k] && _cachedChapterProgress[k].done);
+      if (done && !localCp[k])  { localCp[k] = 1; syncChanged = true; }
+      if (!done && localCp[k])  { delete localCp[k]; syncChanged = true; }
+    });
+    if (syncChanged) { try { localStorage.setItem(_AL_CP_KEY, JSON.stringify(localCp)); } catch(e){} }
+
+    /* Patch visible tick buttons using getChapterDone — checks Firestore cache
+       AND localStorage, so a just-saved tick never flashes off before Firestore confirms. */
     document.querySelectorAll('.chapter-done-btn').forEach(function(btn) {
       var key = btn.dataset.key || (btn.dataset.subject + '_chapter_' + btn.dataset.cid);
-      var isDone = !!(_cachedChapterProgress[key] && _cachedChapterProgress[key].done);
-      btn.classList.toggle('done', isDone);
+      btn.classList.toggle('done', getChapterDone(key));
     });
-    /* Also refresh progress tab if open */
+
+    /* Refresh progress tab if currently open */
     if (_subjectPageSubject) {
       var activeBtn = document.querySelector('.tab-btn.active');
       if (activeBtn && (activeBtn.dataset.tab === 'my-progress' || activeBtn.dataset.tab === 'progress')) {

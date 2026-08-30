@@ -72,9 +72,9 @@
 <script src="js/data.js?v=1"></script>
 <script src="js/social-mcqs-final.js?v=1"></script>
 <script src="js/social-qbank-ch.js?v=1"></script>
-<script src="js/app.js?v=75"></script>
+<script src="js/app.js?v=76"></script>
 <script src="js/auth.js?v=32"></script>
-<script>(function(){var s=document.getElementById('_ag');function show(){if(s){s.remove();s=null;}}if(!window._fauth){show();return;}var t=setTimeout(show,600);window._fauth.onAuthStateChanged(function(u){clearTimeout(t);show();if(!u)window.location.replace('auth.html?from='+encodeURIComponent(location.href));});}());</script>
+<script>(function(){var s=document.getElementById('_ag');function show(){if(s){s.remove();s=null;}}try{if(localStorage.getItem('al_user_cache'))show();}catch(e){}if(!window._fauth){show();return;}var t=setTimeout(show,600);window._fauth.onAuthStateChanged(function(u){clearTimeout(t);show();if(!u)window.location.replace('auth.html?from='+encodeURIComponent(location.href));});}());</script>
 
 <script>initSubjectPage('social');</script>
 
