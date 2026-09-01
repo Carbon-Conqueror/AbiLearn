@@ -1774,7 +1774,7 @@ function buildScienceQBank() {
     <div class="pdf-card" style="cursor:pointer" onclick="openScienceQBank(${ch.id})">
       <div class="pdf-card-info">
         <div class="pdf-card-title">${escH(ch.label)}</div>
-        <div class="pdf-card-desc">${n2} short &nbsp;·&nbsp; ${n3} medium &nbsp;·&nbsp; ${n5} long</div>
+        <div class="pdf-card-desc">${n2 + n3 + n5} questions</div>
       </div>
       <button class="pdf-open-btn" onclick="event.stopPropagation();openScienceQBank(${ch.id})">View</button>
     </div>`;
@@ -1892,7 +1892,7 @@ function buildMathsQBank() {
     <div class="pdf-card" style="cursor:pointer" onclick="openMathsQBank(${ch.id})">
       <div class="pdf-card-info">
         <div class="pdf-card-title">${escH(ch.label)}</div>
-        <div class="pdf-card-desc">${n2} short &nbsp;·&nbsp; ${n3} medium &nbsp;·&nbsp; ${n5} long</div>
+        <div class="pdf-card-desc">${n2 + n3 + n5} questions</div>
       </div>
       <button class="pdf-open-btn" onclick="event.stopPropagation();openMathsQBank(${ch.id})">View</button>
     </div>`;
@@ -2056,7 +2056,7 @@ function buildSocialQBank() {
               <div class="pdf-card" style="cursor:pointer" onclick="openSocialQBank('${s.key}','${chKey}')">
                 <div class="pdf-card-info">
                   <div class="pdf-card-title">${escH(d.title)}</div>
-                  <div class="pdf-card-desc">${d.q2m.length} × 2M &nbsp;·&nbsp; ${d.q3m.length} × 3M &nbsp;·&nbsp; ${d.q5m.length} × 5M</div>
+                  <div class="pdf-card-desc">${d.q2m.length + d.q3m.length + d.q5m.length} questions</div>
                 </div>
                 <button class="pdf-open-btn" onclick="event.stopPropagation();openSocialQBank('${s.key}','${chKey}')">View</button>
               </div>`;
