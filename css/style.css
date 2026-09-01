@@ -966,45 +966,41 @@ input:focus-visible,select:focus-visible,textarea:focus-visible { outline:none; 
 /* ─── QBANK MODAL ─────────────────────────────── */
 #qbankModal,#mathsQBankModal,#socialQBankModal { display:none; position:fixed; inset:0; z-index:9998; }
 #qbankModal.open,#mathsQBankModal.open,#socialQBankModal.open { display:block; }
-.qbank-section { margin-bottom:1.5rem; }
+.qbank-section { margin-bottom:2rem; }
 .qbank-section-hdr {
-  display:flex; align-items:center; gap:.55rem;
-  margin-bottom:.72rem; padding-bottom:.48rem; border-bottom:2px solid var(--border);
+  display:flex; align-items:center; gap:.6rem; justify-content:space-between;
+  margin-bottom:.9rem; padding:.6rem .85rem;
+  background:var(--surface-2); border-radius:var(--radius-sm);
+  border-left:3px solid var(--accent);
 }
+.qbank-section-hdr-left { display:flex; align-items:center; gap:.6rem; }
 .qbank-badge {
-  font-size:.7rem; font-weight:800; letter-spacing:.04em;
-  padding:.18rem .6rem; border-radius:4px; text-transform:uppercase;
+  font-size:.68rem; font-weight:800; letter-spacing:.05em;
+  padding:.22rem .65rem; border-radius:4px; text-transform:uppercase;
 }
 .qbank-badge-2m { background:var(--badge-2m-bg); color:var(--badge-2m-txt); }
 .qbank-badge-3m { background:var(--badge-3m-bg); color:var(--badge-3m-txt); }
 .qbank-badge-5m { background:var(--badge-5m-bg); color:var(--badge-5m-txt); }
-.qbank-count { font-size:.76rem; color:var(--muted); font-weight:600; }
-.qbank-list { list-style:none; padding:0; margin:0; display:flex; flex-direction:column; gap:.48rem; counter-reset:qbank-counter; }
-.qbank-list li {
-  padding:.68rem 1rem; background:var(--surface); border:1px solid var(--border);
-  border-radius:var(--radius-sm); font-size:.87rem; line-height:1.6; color:var(--text);
-  counter-increment:qbank-counter;
+.qbank-section-hdr-left .qbank-badge-2m { border-left-color:var(--badge-2m-txt); }
+.qbank-section-hdr-left .qbank-badge-3m { border-left-color:var(--badge-3m-txt); }
+.qbank-section-hdr-left .qbank-badge-5m { border-left-color:var(--badge-5m-txt); }
+.qbank-count { font-size:.74rem; color:var(--muted); font-weight:600; }
+/* Question list */
+.qbank-list { display:flex; flex-direction:column; gap:.48rem; }
+.qb-item {
+  display:flex; align-items:flex-start; gap:.75rem;
+  padding:.9rem 1rem; background:var(--surface);
+  border:1px solid var(--border); border-radius:var(--radius-sm);
+  transition:border-color .15s;
 }
-.qbank-list li::before { content:counter(qbank-counter)". "; font-weight:700; color:var(--accent); margin-right:.2rem; }
-.qbank-pick-grid { display:grid; grid-template-columns:1fr; gap:.6rem; padding:.2rem 0; }
-.qbank-pick-card {
-  display:flex; align-items:center; justify-content:space-between;
-  padding:1rem 1.1rem; border-radius:var(--radius); border:1.5px solid transparent;
-  cursor:pointer; font-family:inherit; transition:opacity .15s; text-align:left;
+.qb-item:hover { border-color:rgba(91,71,222,.22); }
+.qb-num {
+  flex-shrink:0; width:1.8rem; height:1.8rem; border-radius:50%;
+  background:rgba(91,71,222,.09); color:var(--accent);
+  font-size:.68rem; font-weight:800; display:flex; align-items:center; justify-content:center;
+  line-height:1; margin-top:.08rem;
 }
-.qbank-pick-card:hover { opacity:.85; }
-.qbank-pick-label { font-size:1rem; font-weight:700; }
-.qbank-pick-count { font-size:.78rem; font-weight:600; opacity:.7; }
-.qbank-pick-2m { background:var(--badge-2m-bg); color:var(--badge-2m-txt); }
-.qbank-pick-3m { background:var(--badge-3m-bg); color:var(--badge-3m-txt); }
-.qbank-pick-5m { background:var(--badge-5m-bg); color:var(--badge-5m-txt); }
-.qbank-back-btn {
-  display:inline-flex; align-items:center; gap:.3rem;
-  background:none; border:1px solid var(--border); border-radius:var(--radius-sm);
-  padding:.36rem .82rem; margin-bottom:1.1rem;
-  font-size:.84rem; font-weight:600; color:var(--muted); cursor:pointer; transition:var(--transition);
-}
-.qbank-back-btn:hover { background:var(--surface-2); color:var(--text); }
+.qb-text { flex:1; font-size:.875rem; line-height:1.68; color:var(--text); margin:0; }
 
 /* ─── PDF MODALS ──────────────────────────────── */
 #pdfModal { display:none; position:fixed; inset:0; z-index:9999; }

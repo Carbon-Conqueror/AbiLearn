@@ -1786,6 +1786,25 @@ function buildScienceQBank() {
     </div>`;
 }
 
+function _buildQBankSection(qs, label, cls, startIdx) {
+  if (!qs.length) return '';
+  return `
+    <div class="qbank-section">
+      <div class="qbank-section-hdr">
+        <div class="qbank-section-hdr-left">
+          <span class="qbank-badge ${cls}">${label}</span>
+        </div>
+        <span class="qbank-count">${qs.length} questions</span>
+      </div>
+      <div class="qbank-list">${qs.map((q, i) => `
+        <div class="qb-item">
+          <span class="qb-num">${startIdx + i + 1}</span>
+          <p class="qb-text">${escH(q)}</p>
+        </div>`).join('')}
+      </div>
+    </div>`;
+}
+
 function openScienceQBank(chId) {
   const d = (typeof SCIENCE_QBANK !== 'undefined') ? SCIENCE_QBANK[chId] : null;
   if (!d) return;
@@ -1810,25 +1829,13 @@ function openScienceQBank(chId) {
     document.body.appendChild(modal);
     modal.addEventListener('click', e => { if (e.target === modal) closeQBankModal(); });
   }
+  const total = d.q2m.length + d.q3m.length + d.q5m.length;
   document.getElementById('qbankModalTitle').textContent = d.title;
-  document.getElementById('qbankModalMeta').textContent = 'Pick a section';
-
-  document.getElementById('qbankModalBody').innerHTML = `
-    <div class="qbank-pick-grid">
-      <button class="qbank-pick-card qbank-pick-2m" onclick="openScienceQBankSection(${chId},'2m')">
-        <span class="qbank-pick-label">2 Marks</span>
-        <span class="qbank-pick-count">${d.q2m.length} questions</span>
-      </button>
-      <button class="qbank-pick-card qbank-pick-3m" onclick="openScienceQBankSection(${chId},'3m')">
-        <span class="qbank-pick-label">3 Marks</span>
-        <span class="qbank-pick-count">${d.q3m.length} questions</span>
-      </button>
-      <button class="qbank-pick-card qbank-pick-5m" onclick="openScienceQBankSection(${chId},'5m')">
-        <span class="qbank-pick-label">5 Marks</span>
-        <span class="qbank-pick-count">${d.q5m.length} questions</span>
-      </button>
-    </div>`;
-
+  document.getElementById('qbankModalMeta').textContent = `${total} questions`;
+  document.getElementById('qbankModalBody').innerHTML =
+    _buildQBankSection(d.q2m, '2 Marks', 'qbank-badge-2m', 0) +
+    _buildQBankSection(d.q3m, '3 Marks', 'qbank-badge-3m', d.q2m.length) +
+    _buildQBankSection(d.q5m, '5 Marks', 'qbank-badge-5m', d.q2m.length + d.q3m.length);
   _lastModalTrigger = _lastModalTrigger || document.activeElement;
   modal.classList.add('open');
   _installFocusTrap(modal);
@@ -1838,28 +1845,6 @@ function openScienceQBank(chId) {
   });
   document.getElementById('qbankModalBody').scrollTop = 0;
   document.body.style.overflow = 'hidden';
-}
-
-function openScienceQBankSection(chId, marks) {
-  const d = (typeof SCIENCE_QBANK !== 'undefined') ? SCIENCE_QBANK[chId] : null;
-  if (!d) return;
-  const cfg = {
-    '2m': { qs: d.q2m, cls: 'qbank-badge-2m', label: '2 Marks' },
-    '3m': { qs: d.q3m, cls: 'qbank-badge-3m', label: '3 Marks' },
-    '5m': { qs: d.q5m, cls: 'qbank-badge-5m', label: '5 Marks' },
-  };
-  const { qs, cls, label } = cfg[marks];
-  document.getElementById('qbankModalMeta').textContent = `${qs.length} questions`;
-  document.getElementById('qbankModalBody').innerHTML = `
-    <button class="qbank-back-btn" onclick="openScienceQBank(${chId})">← Back</button>
-    <div class="qbank-section">
-      <div class="qbank-section-hdr">
-        <span class="qbank-badge ${cls}">${label}</span>
-        <span class="qbank-count">${qs.length} questions</span>
-      </div>
-      <ol class="qbank-list">${qs.map(q => `<li>${escH(q)}</li>`).join('')}</ol>
-    </div>`;
-  document.getElementById('qbankModalBody').scrollTop = 0;
 }
 
 function closeQBankModal() {
@@ -1928,25 +1913,13 @@ function openMathsQBank(chId) {
     document.body.appendChild(modal);
     modal.addEventListener('click', e => { if (e.target === modal) closeMathsQBankModal(); });
   }
+  const total = d.q2m.length + d.q3m.length + d.q5m.length;
   document.getElementById('mathsQBankModalTitle').textContent = d.title;
-  document.getElementById('mathsQBankModalMeta').textContent = 'Choose a section to study';
-
-  document.getElementById('mathsQBankModalBody').innerHTML = `
-    <div class="qbank-pick-grid">
-      <button class="qbank-pick-card qbank-pick-2m" onclick="openMathsQBankSection(${chId},'2m')">
-        <span class="qbank-pick-label">2 Marks</span>
-        <span class="qbank-pick-count">${d.q2m.length} questions</span>
-      </button>
-      <button class="qbank-pick-card qbank-pick-3m" onclick="openMathsQBankSection(${chId},'3m')">
-        <span class="qbank-pick-label">3 Marks</span>
-        <span class="qbank-pick-count">${d.q3m.length} questions</span>
-      </button>
-      <button class="qbank-pick-card qbank-pick-5m" onclick="openMathsQBankSection(${chId},'5m')">
-        <span class="qbank-pick-label">5 Marks</span>
-        <span class="qbank-pick-count">${d.q5m.length} questions</span>
-      </button>
-    </div>`;
-
+  document.getElementById('mathsQBankModalMeta').textContent = `${total} questions`;
+  document.getElementById('mathsQBankModalBody').innerHTML =
+    _buildQBankSection(d.q2m, '2 Marks', 'qbank-badge-2m', 0) +
+    _buildQBankSection(d.q3m, '3 Marks', 'qbank-badge-3m', d.q2m.length) +
+    _buildQBankSection(d.q5m, '5 Marks', 'qbank-badge-5m', d.q2m.length + d.q3m.length);
   _lastModalTrigger = _lastModalTrigger || document.activeElement;
   modal.classList.add('open');
   _installFocusTrap(modal);
@@ -1956,28 +1929,6 @@ function openMathsQBank(chId) {
   });
   document.getElementById('mathsQBankModalBody').scrollTop = 0;
   document.body.style.overflow = 'hidden';
-}
-
-function openMathsQBankSection(chId, marks) {
-  const d = (typeof MATHS_QBANK_CH !== 'undefined') ? MATHS_QBANK_CH[chId] : null;
-  if (!d) return;
-  const cfg = {
-    '2m': { qs: d.q2m, cls: 'qbank-badge-2m', label: '2 Marks' },
-    '3m': { qs: d.q3m, cls: 'qbank-badge-3m', label: '3 Marks' },
-    '5m': { qs: d.q5m, cls: 'qbank-badge-5m', label: '5 Marks' },
-  };
-  const { qs, cls, label } = cfg[marks];
-  document.getElementById('mathsQBankModalMeta').textContent = `${qs.length} questions`;
-  document.getElementById('mathsQBankModalBody').innerHTML = `
-    <button class="qbank-back-btn" onclick="openMathsQBank(${chId})">← Back</button>
-    <div class="qbank-section">
-      <div class="qbank-section-hdr">
-        <span class="qbank-badge ${cls}">${label}</span>
-        <span class="qbank-count">${qs.length} questions</span>
-      </div>
-      <ol class="qbank-list">${qs.map(q => `<li>${escH(q)}</li>`).join('')}</ol>
-    </div>`;
-  document.getElementById('mathsQBankModalBody').scrollTop = 0;
 }
 
 function closeMathsQBankModal() {
@@ -2092,25 +2043,13 @@ function openSocialQBank(subj, chKey) {
     document.body.appendChild(modal);
     modal.addEventListener('click', e => { if (e.target === modal) closeSocialQBankModal(); });
   }
+  const total = d.q2m.length + d.q3m.length + d.q5m.length;
   document.getElementById('socialQBankModalTitle').textContent = d.title;
-  document.getElementById('socialQBankModalMeta').textContent = 'Pick a section';
-
-  document.getElementById('socialQBankModalBody').innerHTML = `
-    <div class="qbank-pick-grid">
-      <button class="qbank-pick-card qbank-pick-2m" onclick="openSocialQBankSection('${subj}','${chKey}','2m')">
-        <span class="qbank-pick-label">2 Marks</span>
-        <span class="qbank-pick-count">${d.q2m.length} questions</span>
-      </button>
-      <button class="qbank-pick-card qbank-pick-3m" onclick="openSocialQBankSection('${subj}','${chKey}','3m')">
-        <span class="qbank-pick-label">3 Marks</span>
-        <span class="qbank-pick-count">${d.q3m.length} questions</span>
-      </button>
-      <button class="qbank-pick-card qbank-pick-5m" onclick="openSocialQBankSection('${subj}','${chKey}','5m')">
-        <span class="qbank-pick-label">5 Marks</span>
-        <span class="qbank-pick-count">${d.q5m.length} questions</span>
-      </button>
-    </div>`;
-
+  document.getElementById('socialQBankModalMeta').textContent = `${total} questions`;
+  document.getElementById('socialQBankModalBody').innerHTML =
+    _buildQBankSection(d.q2m, '2 Marks', 'qbank-badge-2m', 0) +
+    _buildQBankSection(d.q3m, '3 Marks', 'qbank-badge-3m', d.q2m.length) +
+    _buildQBankSection(d.q5m, '5 Marks', 'qbank-badge-5m', d.q2m.length + d.q3m.length);
   _lastModalTrigger = _lastModalTrigger || document.activeElement;
   modal.classList.add('open');
   _installFocusTrap(modal);
@@ -2120,29 +2059,6 @@ function openSocialQBank(subj, chKey) {
   });
   document.getElementById('socialQBankModalBody').scrollTop = 0;
   document.body.style.overflow = 'hidden';
-}
-
-function openSocialQBankSection(subj, chKey, marks) {
-  const db = (typeof SOCIAL_QBANK_CH !== 'undefined') ? SOCIAL_QBANK_CH : null;
-  const d = db && db[subj] ? db[subj][chKey] : null;
-  if (!d) return;
-  const cfg = {
-    '2m': { qs: d.q2m, cls: 'qbank-badge-2m', label: '2 Marks' },
-    '3m': { qs: d.q3m, cls: 'qbank-badge-3m', label: '3 Marks' },
-    '5m': { qs: d.q5m, cls: 'qbank-badge-5m', label: '5 Marks' },
-  };
-  const { qs, cls, label } = cfg[marks];
-  document.getElementById('socialQBankModalMeta').textContent = `${qs.length} questions`;
-  document.getElementById('socialQBankModalBody').innerHTML = `
-    <button class="qbank-back-btn" onclick="openSocialQBank('${subj}','${chKey}')">← Back</button>
-    <div class="qbank-section">
-      <div class="qbank-section-hdr">
-        <span class="qbank-badge ${cls}">${label}</span>
-        <span class="qbank-count">${qs.length} questions</span>
-      </div>
-      <ol class="qbank-list">${qs.map(q => `<li>${escH(q)}</li>`).join('')}</ol>
-    </div>`;
-  document.getElementById('socialQBankModalBody').scrollTop = 0;
 }
 
 function closeSocialQBankModal() {
