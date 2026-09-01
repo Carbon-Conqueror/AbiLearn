@@ -1851,9 +1851,183 @@ function buildGrammar() {
     '</ul>'
   );
 
+  var prepositions = acc('Prepositions — In / On / At &amp; Common Collocations',
+    '<p class="eng-h3">Time Prepositions</p>' +
+    '<div style="overflow-x:auto"><table class="eng-table">' +
+    trow(['Preposition','Used For','Examples'], true) +
+    trow(['at','Exact time; festivals; night','at 5 pm, at noon, at midnight, at Diwali, at night'], false) +
+    trow(['on','Days; dates; specific occasions','on Monday, on 15 August, on my birthday, on New Year\'s Day'], false) +
+    trow(['in','Months; years; seasons; parts of day (except night)','in January, in 2024, in summer, in the morning, in the evening'], false) +
+    trow(['for','Duration (how long)','I have lived here for 5 years. She studied for 3 hours.'], false) +
+    trow(['since','Starting point in time','She has been here since 2019. I have not slept since Monday.'], false) +
+    trow(['by','Deadline / not later than','Submit your work by Friday. The train leaves by 6 pm.'], false) +
+    trow(['during','Throughout a period','I slept during the lecture. It rained during our trip.'], false) +
+    trow(['until / till','Up to a point in time','She worked until midnight. Wait till I come back.'], false) +
+    '</table></div>' +
+    '<p class="eng-h3">Place Prepositions</p>' +
+    '<div style="overflow-x:auto"><table class="eng-table">' +
+    trow(['Preposition','Used For','Examples'], true) +
+    trow(['at','Specific point / address','at the door, at the station, at 42 MG Road'], false) +
+    trow(['on','Surface; floor; specific road','on the table, on the 3rd floor, on MG Road'], false) +
+    trow(['in','Enclosed space; city; country','in the room, in Delhi, in India, in the box'], false) +
+    trow(['above / below','Higher/lower position (not touching)','The fan is above the table. The bag is below the shelf.'], false) +
+    trow(['over / under','Covering / directly below','A bridge over the river. The cat hid under the bed.'], false) +
+    trow(['between','Two things/people','Sit between Aman and Priya.'], false) +
+    trow(['among','Three or more things/people','She distributed sweets among the children.'], false) +
+    trow(['beside / next to','By the side of','Sit beside me. The shop is next to the school.'], false) +
+    '</table></div>' +
+    '<p class="eng-h3">Common Verb + Preposition Collocations</p>' +
+    '<ul class="eng-list">' +
+    '<li>agree <strong>with</strong> (a person) / agree <strong>to</strong> (a proposal) / agree <strong>on</strong> (a point)</li>' +
+    '<li>apologise <strong>for</strong> / apologise <strong>to</strong> (a person)</li>' +
+    '<li>apply <strong>for</strong> (a job) / apply <strong>to</strong> (an institution)</li>' +
+    '<li>blame … <strong>for</strong> / believe <strong>in</strong> / belong <strong>to</strong></li>' +
+    '<li>care <strong>for</strong> / complain <strong>about</strong> / consist <strong>of</strong></li>' +
+    '<li>deal <strong>with</strong> / depend <strong>on</strong> / die <strong>of</strong> (disease) / die <strong>in</strong> (accident)</li>' +
+    '<li>good <strong>at</strong> / afraid <strong>of</strong> / interested <strong>in</strong> / proud <strong>of</strong> / satisfied <strong>with</strong></li>' +
+    '<li>listen <strong>to</strong> / look <strong>at</strong> (stare) / look <strong>for</strong> (search) / look <strong>after</strong> (care) / look <strong>into</strong> (investigate)</li>' +
+    '<li>married <strong>to</strong> / result <strong>in</strong> (leads to) / result <strong>from</strong> (caused by)</li>' +
+    '<li>similar <strong>to</strong> / suffer <strong>from</strong> / think <strong>about</strong> / wait <strong>for</strong></li>' +
+    '</ul>' +
+    '<div class="eng-rule"><strong>Exam tip:</strong> In editing/gap filling, preposition errors are very common. Always check: (1) Is it a time or place context? (2) Is there a fixed verb-preposition or adjective-preposition collocation?</div>'
+  );
+
+  var conjunctions = acc('Conjunctions — Coordinating, Subordinating &amp; Correlative',
+    '<p class="eng-h3">Coordinating Conjunctions (FANBOYS)</p>' +
+    '<div style="overflow-x:auto"><table class="eng-table">' +
+    trow(['Conjunction','Use','Example'], true) +
+    trow(['For','Reason (formal)','She stayed home, for she was ill.'], false) +
+    trow(['And','Addition','He likes cricket and football.'], false) +
+    trow(['Nor','Neither alternative (negative)','He neither came nor called.'], false) +
+    trow(['But','Contrast','She tried hard, but failed.'], false) +
+    trow(['Or','Alternative / Choice','Study now or regret later.'], false) +
+    trow(['Yet','Contrast (stronger than but)','He is rich, yet he is unhappy.'], false) +
+    trow(['So','Result / Consequence','It was raining, so we stayed inside.'], false) +
+    '</table></div>' +
+    '<p class="eng-h3">Subordinating Conjunctions (Common in Board Exams)</p>' +
+    '<div style="overflow-x:auto"><table class="eng-table">' +
+    trow(['Category','Conjunctions'], true) +
+    trow(['Time','when, while, before, after, since, until, as soon as, by the time, whenever'], false) +
+    trow(['Cause / Reason','because, since, as, now that'], false) +
+    trow(['Condition','if, unless, provided that, as long as, in case'], false) +
+    trow(['Contrast / Concession','although, though, even though, even if, whereas, while'], false) +
+    trow(['Purpose','so that, in order that, lest (+ should/might)'], false) +
+    trow(['Result','so…that, such…that'], false) +
+    '</table></div>' +
+    '<p class="eng-h3">Correlative Conjunctions (Always Paired)</p>' +
+    '<ul class="eng-list">' +
+    '<li><strong>both…and</strong>: She is both intelligent and hardworking.</li>' +
+    '<li><strong>either…or</strong>: Either come early or call ahead.</li>' +
+    '<li><strong>neither…nor</strong>: He neither studied nor revised.</li>' +
+    '<li><strong>not only…but also</strong>: She is not only a good singer but also an excellent dancer.</li>' +
+    '<li><strong>whether…or</strong>: I don\'t know whether to go or stay.</li>' +
+    '<li><strong>scarcely/hardly…when</strong>: Scarcely had she left when it started raining.</li>' +
+    '<li><strong>no sooner…than</strong>: No sooner did he arrive than the meeting started.</li>' +
+    '</ul>' +
+    '<div class="eng-note"><strong>Note:</strong> After "scarcely/hardly/no sooner," invert subject and auxiliary: <em>Scarcely had I sat down when…</em> (not "Scarcely I had sat")</div>'
+  );
+
+  var degrees = acc('Degrees of Comparison — All Transformation Rules',
+    '<div class="eng-note">Three degrees: <strong>Positive</strong> (simple quality), <strong>Comparative</strong> (between two), <strong>Superlative</strong> (among three or more). In board exams, you must transform sentences from one degree to another without changing meaning.</div>' +
+    '<p class="eng-h3">Formation Rules</p>' +
+    '<div style="overflow-x:auto"><table class="eng-table">' +
+    trow(['Type','Formation','Examples'], true) +
+    trow(['Short adjectives (1–2 syllables)','Add -er / -est','fast→faster→fastest, tall→taller→tallest, big→bigger→biggest'], false) +
+    trow(['Long adjectives (3+ syllables)','more / most + adjective','beautiful→more beautiful→most beautiful'], false) +
+    trow(['Irregular','No rule — memorise','good→better→best, bad→worse→worst, much/many→more→most, little→less→least'], false) +
+    '</table></div>' +
+    '<p class="eng-h3">Transformation: Positive ↔ Comparative ↔ Superlative</p>' +
+    '<div style="overflow-x:auto"><table class="eng-table">' +
+    trow(['Positive','Comparative','Superlative'], true) +
+    trow(['Iron is not as heavy as gold.','Gold is heavier than iron.','Gold is the heaviest of the two.'], false) +
+    trow(['No other metal is as heavy as gold. (among many)','Gold is heavier than any other metal.','Gold is the heaviest metal.'], false) +
+    trow(['She is as tall as her brother.','Her brother is not taller than her. / She is not shorter than her brother.','—'], false) +
+    trow(['Very few countries are as large as Russia.','Russia is larger than most other countries.','Russia is one of the largest countries in the world.'], false) +
+    '</table></div>' +
+    '<p class="eng-h3">Key Patterns to Remember</p>' +
+    '<ul class="eng-list">' +
+    '<li><strong>Positive → as…as:</strong> X is as + adj + as Y | Negative → not as/so…as</li>' +
+    '<li><strong>Comparative → than:</strong> X is + adj+er + than Y | No other + noun + is as…as | adj+er + than any other</li>' +
+    '<li><strong>Superlative → the…of/in:</strong> X is the + adj+est + of/in… | One of the + superlative + plural noun</li>' +
+    '<li>When comparing within a group: use "any other" not "any": ✗ She is taller than <u>any</u> girl ✓ She is taller than <u>any other</u> girl</li>' +
+    '</ul>'
+  );
+
+  var conditionals = acc('Conditionals — All 4 Types',
+    '<div style="overflow-x:auto"><table class="eng-table">' +
+    trow(['Type','Name','Structure','Use','Example'], true) +
+    trow(['Zero','Zero Conditional','If + Simple Present, Simple Present','Universal truth / scientific fact','If you heat water to 100°C, it boils.'], false) +
+    trow(['First','Real/Possible','If + Simple Present, will + V1','Likely/possible future situation','If it rains, we will cancel the match.'], false) +
+    trow(['Second','Unreal/Hypothetical','If + Simple Past, would + V1','Imaginary or unlikely present situation','If I were a bird, I would fly freely.'], false) +
+    trow(['Third','Past Unreal','If + Past Perfect, would have + V3','Imaginary past — something that did NOT happen','If she had studied, she would have passed.'], false) +
+    '</table></div>' +
+    '<p class="eng-h3">Special Points</p>' +
+    '<ul class="eng-list">' +
+    '<li>In Second Conditional: use <strong>"were"</strong> for all persons (not "was") — <em>If I were you, If he were here</em>. This is the grammatically correct form in formal writing.</li>' +
+    '<li>The "if clause" and "result clause" can be swapped: <em>We will cancel the match if it rains.</em> (no comma when if-clause is second)</li>' +
+    '<li>Instead of "if not," use <strong>unless</strong>: <em>Unless you study, you will fail. = If you do not study, you will fail.</em></li>' +
+    '<li>Mixed Conditional (Past condition + Present result): <em>If she had slept early, she would not be tired now.</em></li>' +
+    '</ul>' +
+    '<div class="eng-eg"><strong>Common exam transformation:</strong><br>' +
+    'Positive statement → Conditional: "She did not study, so she failed." → "If she had studied, she would have passed."<br>' +
+    'Advice → Conditional: "Work hard or you will fail." → "Unless you work hard, you will fail." / "If you do not work hard, you will fail."</div>'
+  );
+
+  var nonfinites = acc('Non-Finites — Infinitive, Gerund &amp; Participle',
+    '<div class="eng-note">Non-finite verbs do not change with the subject or tense. They are: <strong>Infinitive</strong> (to + V1), <strong>Gerund</strong> (V-ing used as noun), and <strong>Participle</strong> (V-ing / V3 used as adjective).</div>' +
+    '<p class="eng-h3">Infinitive (to + base form)</p>' +
+    '<ul class="eng-list">' +
+    '<li><strong>As noun (subject):</strong> <em>To err is human.</em></li>' +
+    '<li><strong>As object:</strong> <em>She wants to become a doctor.</em></li>' +
+    '<li><strong>To show purpose:</strong> <em>He went to the market to buy vegetables.</em></li>' +
+    '<li><strong>After adjectives:</strong> <em>It is easy to learn. She is eager to help.</em></li>' +
+    '<li><strong>After certain verbs:</strong> want, wish, hope, decide, refuse, agree, promise, plan, try, fail, manage + to V1</li>' +
+    '</ul>' +
+    '<p class="eng-h3">Gerund (V-ing as noun)</p>' +
+    '<ul class="eng-list">' +
+    '<li><strong>As subject:</strong> <em>Swimming is a great exercise.</em></li>' +
+    '<li><strong>As object:</strong> <em>She enjoys reading.</em></li>' +
+    '<li><strong>After prepositions:</strong> <em>He is good at painting. She left without saying goodbye.</em></li>' +
+    '<li><strong>After certain verbs:</strong> enjoy, avoid, consider, keep, suggest, mind, finish, admit, deny, regret + V-ing</li>' +
+    '</ul>' +
+    '<p class="eng-h3">Participle (V-ing or V3 as adjective)</p>' +
+    '<ul class="eng-list">' +
+    '<li><strong>Present Participle (V-ing):</strong> <em>The barking dog scared the child. Seeing the fire, she ran away.</em></li>' +
+    '<li><strong>Past Participle (V3):</strong> <em>The broken window was repaired. Exhausted after the race, he sat down.</em></li>' +
+    '<li><strong>Dangling Participle (common error):</strong> ✗ <em>Walking down the street, the trees looked beautiful.</em> (trees don\'t walk)<br>✓ <em>Walking down the street, she saw beautiful trees.</em></li>' +
+    '</ul>' +
+    '<p class="eng-h3">Verbs Followed by Infinitive vs Gerund</p>' +
+    '<div style="overflow-x:auto"><table class="eng-table">' +
+    trow(['Infinitive only','Gerund only','Both (different meaning)'], true) +
+    trow(['want, hope, wish, decide, plan, refuse, agree, promise, manage, fail','enjoy, avoid, finish, suggest, consider, keep, deny, regret (past), admit, mind','stop, remember, forget, try, regret'], false) +
+    '</table></div>' +
+    '<div class="eng-eg"><strong>Meaning changes:</strong><br>Stop <em>to smoke</em> = stop in order to smoke | Stop <em>smoking</em> = quit the habit<br>Remember <em>to lock</em> = don\'t forget (future task) | Remember <em>locking</em> = recall doing it (past action)<br>Try <em>to sleep</em> = attempt | Try <em>sleeping</em> = experiment with it</div>'
+  );
+
+  var transformation = acc('Sentence Transformation — Simple ↔ Compound ↔ Complex',
+    '<p class="eng-h3">Simple → Compound</p>' +
+    '<p style="font-size:.85rem;line-height:1.65">Join two simple sentences with a coordinating conjunction (and, but, or, so, yet).</p>' +
+    '<div class="eng-eg">Simple: He was tired. He kept working.<br>Compound: He was tired, <strong>but</strong> he kept working.<br><br>Simple: She studied hard. She passed the exam.<br>Compound: She studied hard, <strong>so</strong> she passed the exam.</div>' +
+    '<p class="eng-h3">Simple → Complex</p>' +
+    '<p style="font-size:.85rem;line-height:1.65">Turn one idea into a subordinate clause using a subordinating conjunction.</p>' +
+    '<div class="eng-eg">Simple: Despite being tired, he kept working.<br>Complex: <strong>Although</strong> he was tired, he kept working.<br><br>Simple: Being a doctor, she knew what to do.<br>Complex: <strong>As</strong>/<strong>Since</strong> she was a doctor, she knew what to do.</div>' +
+    '<p class="eng-h3">Other Common Transformations</p>' +
+    '<div style="overflow-x:auto"><table class="eng-table">' +
+    trow(['Original','Transformation','Result'], true) +
+    trow(['He is too weak to walk. (too…to)','So…that','He is so weak that he cannot walk.'], false) +
+    trow(['She is so clever that she can solve any problem. (so…that)','too…to','She is not too clever to solve any problem. / She is clever enough to solve any problem.'], false) +
+    trow(['She is not clever enough to solve this. (enough to)','too…to','She is too weak to solve this.'], false) +
+    trow(['As soon as she arrived, he left. (as soon as)','No sooner…than','No sooner had she arrived than he left.'], false) +
+    trow(['He is the best player in the team. (superlative)','Comparative','He is better than any other player in the team.'], false) +
+    trow(['Only Riya can do this. (only)','Negative','No one but Riya can do this.'], false) +
+    trow(['Everyone respects him. (affirmative)','Negative','Nobody does not respect him. / There is nobody who does not respect him.'], false) +
+    '</table></div>' +
+    '<div class="eng-rule"><strong>Exam tip:</strong> When transforming, MEANING must not change. Read the transformed sentence and ask: does it say the same thing? Only then is the transformation correct.</div>'
+  );
+
   return '<h2 class="section-title" style="margin-bottom:.25rem">Grammar</h2>' +
     '<p class="eng-sub">Click any topic to open full notes — all rules, tables and examples</p>' +
-    '<div class="eng-stack">' + tenses + articles + modals + sva + voice + speech + clauses + editing + '</div>';
+    '<div class="eng-stack">' + tenses + articles + modals + sva + voice + speech + clauses + editing + prepositions + conjunctions + degrees + conditionals + nonfinites + transformation + '</div>';
 }
 
 function buildReading() {
@@ -1944,9 +2118,154 @@ function buildReading() {
     '</div>'
   );
 
+  var databased = acc('Data-Based / Case-Based Passage — Full Strategy',
+    '<div class="eng-note">Q2 in the board exam is a <strong>case-based passage</strong> — it includes a graph, table, pie chart, infographic, or a real-world case study. All questions are MCQs. You must read the visual data carefully.</div>' +
+    '<p class="eng-h3">Step-by-Step Approach</p>' +
+    '<ol class="eng-list" style="padding-left:1.3rem">' +
+    '<li><strong>Read the heading / title of the graph or table first.</strong> It tells you what is being measured and compared.</li>' +
+    '<li><strong>Read axes labels</strong> (X-axis = horizontal, Y-axis = vertical) and note units (%, years, crore, etc.).</li>' +
+    '<li><strong>Read the legend</strong> (if a multi-line or multi-bar graph) — know which colour/pattern represents which category.</li>' +
+    '<li><strong>Identify the trend:</strong> Is something increasing, decreasing, fluctuating, or remaining stable?</li>' +
+    '<li><strong>Note the highest, lowest, and most dramatic change</strong> — these are almost always asked in MCQs.</li>' +
+    '<li><strong>Read the accompanying text/case study paragraph</strong> — some questions are based on this, not the visual.</li>' +
+    '</ol>' +
+    '<p class="eng-h3">Common Question Patterns</p>' +
+    '<ul class="eng-list">' +
+    '<li>"In which year was [value] the highest/lowest?" → Look for peak/trough in graph.</li>' +
+    '<li>"What was the approximate percentage of…?" → Read the value from the chart, choose closest option.</li>' +
+    '<li>"Which statement is TRUE/FALSE according to the data?" → Verify each option against the data carefully.</li>' +
+    '<li>"What can be inferred from the data?" → Look for the overall trend, not a single data point.</li>' +
+    '<li>"What is the ratio/difference between X and Y?" → Calculate from given values.</li>' +
+    '</ul>' +
+    '<div class="eng-rule"><strong>Common mistakes:</strong> (1) Confusing Y-axis values — always double-check units. (2) Choosing an option that sounds logically right but isn\'t supported by the data. Every MCQ answer must be traceable to the data given.</div>'
+  );
+
+  var tone = acc('Author\'s Tone, Attitude &amp; Purpose — How to Identify',
+    '<div class="eng-note">Board exam questions often ask: "What is the author\'s tone?" or "The author\'s attitude towards X is…" This tests your ability to read between the lines.</div>' +
+    '<p class="eng-h3">Common Tones &amp; Their Clues</p>' +
+    '<div style="overflow-x:auto"><table class="eng-table">' +
+    trow(['Tone','What it Means','Clue Words / Signals'], true) +
+    trow(['Critical / Disapproving','Author finds fault, expresses dissatisfaction','unfortunately, regrettably, fails, neglects, shameful, alarming, despite, however'], false) +
+    trow(['Appreciative / Admiring','Author praises or expresses admiration','commendable, remarkable, exceptional, praise, fortunately, successfully, admirably'], false) +
+    trow(['Neutral / Objective','No personal opinion — reports facts','it is observed, studies show, data indicates, according to, reportedly'], false) +
+    trow(['Persuasive / Argumentative','Author is trying to convince you','must, should, need to, it is essential, clearly, undoubtedly, there is no doubt'], false) +
+    trow(['Sarcastic / Ironic','Saying the opposite of what is meant','seemingly, supposedly, "great" (used for something bad)'], false) +
+    trow(['Nostalgic / Reflective','Looking back fondly or thoughtfully','once, used to, I remember, in those days, those were the times'], false) +
+    trow(['Humorous / Playful','Light-hearted, witty, amusing','funny, amusing, jokingly, playfully, light remarks'], false) +
+    trow(['Anxious / Concerned','Worried about an issue','alarming, dangerous, worrying, serious, urgent, immediate attention'], false) +
+    '</table></div>' +
+    '<p class="eng-h3">How to Answer "Tone" Questions</p>' +
+    '<ul class="eng-list">' +
+    '<li>Read the entire passage and note the <strong>overall mood</strong>, not just one sentence.</li>' +
+    '<li>Look at the adjectives and adverbs used — they reveal the author\'s feelings.</li>' +
+    '<li>Ask: Is the author FOR or AGAINST the topic? Is it emotional or factual? Personal or impersonal?</li>' +
+    '<li>If two options both seem correct (e.g., "critical" and "concerned"), pick the one that matches the <strong>primary</strong> emotion of the whole passage.</li>' +
+    '</ul>'
+  );
+
+  var vocabulary = acc('Vocabulary Building — Prefixes, Suffixes &amp; Word Roots',
+    '<p class="eng-h3">Common Prefixes</p>' +
+    '<div style="overflow-x:auto"><table class="eng-table">' +
+    trow(['Prefix','Meaning','Examples'], true) +
+    trow(['un-','Not / Opposite','unhappy, unfair, unable, unusual, unnecessary'], false) +
+    trow(['dis-','Not / Reverse','disagree, disappear, dishonest, discourage, disorder'], false) +
+    trow(['mis-','Wrongly / Badly','misunderstand, misuse, mislead, misspell, misplace'], false) +
+    trow(['pre-','Before','preview, prehistoric, predict, prevent, prepare'], false) +
+    trow(['re-','Again / Back','rewrite, review, return, rebuild, remember, recycle'], false) +
+    trow(['in- / im-','Not','incomplete, impossible, informal, improper, indirect'], false) +
+    trow(['over-','Too much / Above','overwork, overload, overcome, overlook, overconfident'], false) +
+    trow(['under-','Too little / Below','underestimate, underprivileged, understand (different meaning)'], false) +
+    trow(['inter-','Between / Among','international, interact, interview, interconnect'], false) +
+    trow(['sub-','Under / Below','submarine, subway, substandard, subtitle, subcontinent'], false) +
+    trow(['super-','Above / Beyond','superior, supernatural, superhero, superfluous'], false) +
+    trow(['anti-','Against','antibiotics, antisocial, anti-pollution, anticlimax'], false) +
+    '</table></div>' +
+    '<p class="eng-h3">Common Suffixes</p>' +
+    '<div style="overflow-x:auto"><table class="eng-table">' +
+    trow(['Suffix','Meaning / Converts to','Examples'], true) +
+    trow(['-tion / -sion',  'Noun (from verb)', 'education, pollution, decision, conclusion, confusion'], false) +
+    trow(['-ness',          'Noun (from adjective)', 'happiness, darkness, kindness, weakness, awareness'], false) +
+    trow(['-ment',          'Noun (from verb)', 'development, achievement, disappointment, government'], false) +
+    trow(['-ful',           'Adjective (having)', 'beautiful, powerful, hopeful, harmful, colourful'], false) +
+    trow(['-less',          'Adjective (without)', 'hopeless, careless, useless, fearless, speechless'], false) +
+    trow(['-ly',            'Adverb', 'quickly, carefully, beautifully, seriously, clearly'], false) +
+    trow(['-ous / -ious',   'Adjective', 'dangerous, famous, serious, glorious, ambitious'], false) +
+    trow(['-er / -or',      'Person / Doer', 'teacher, writer, director, actor, inspector'], false) +
+    trow(['-ify / -ize',    'Verb', 'classify, simplify, modernize, realize, organize'], false) +
+    trow(['-ance / -ence',  'Noun (state/quality)', 'importance, significance, confidence, patience'], false) +
+    '</table></div>' +
+    '<p class="eng-h3">Useful Word Families (Board Exam Vocabulary)</p>' +
+    '<ul class="eng-list">' +
+    '<li>pollute (v) → pollution (n) → polluted (adj) → pollutant (n)</li>' +
+    '<li>develop (v) → development (n) → developer (n) → developed/developing (adj)</li>' +
+    '<li>educate (v) → education (n) → educator (n) → educational (adj) → educationally (adv)</li>' +
+    '<li>conserve (v) → conservation (n) → conservative (adj) → conservationist (n)</li>' +
+    '<li>achieve (v) → achievement (n) → achiever (n) → achievable (adj)</li>' +
+    '</ul>' +
+    '<div class="eng-rule"><strong>Strategy for vocabulary MCQs:</strong> If you don\'t know the word, use the prefix/suffix to guess the meaning. Then substitute your guess back in the sentence. If it makes sense, you\'re likely right.</div>'
+  );
+
+  var noteEx = acc('Note-Making — Full Worked Example',
+    '<p class="eng-h3">Sample Passage</p>' +
+    '<p style="font-size:.84rem;line-height:1.72;border-left:3px solid var(--accent);padding:.7rem 1rem;background:rgba(91,71,222,.05);border-radius:var(--radius-sm)">' +
+    'Water is one of the most vital natural resources on Earth. Despite covering 71% of the planet\'s surface, only 2.5% of the world\'s water is fresh, and of that, less than 1% is accessible for human use. The growing human population and rapid industrialization have dramatically increased the demand for fresh water, while pollution and mismanagement have reduced its quality and availability. Agriculture consumes nearly 70% of all fresh water used globally, often through inefficient irrigation methods. Climate change is further aggravating the crisis by altering precipitation patterns, causing glaciers to melt, and making extreme droughts more frequent. Immediate steps such as rainwater harvesting, water recycling, drip irrigation, and stricter industrial regulations are urgently needed to ensure water security for future generations.' +
+    '</p>' +
+    '<p class="eng-h3">Model Notes</p>' +
+    '<div class="eng-format-box">' +
+    'Title: The Global Water Crisis: Causes and Solutions\n\n' +
+    '1. Water as a Resource\n' +
+    '   1.1 Covers 71% of Earth\'s surface\n' +
+    '   1.2 Only 2.5% fresh; less than 1% accessible\n\n' +
+    '2. Causes of Water Crisis\n' +
+    '   2.1 Growing pop. + rapid indus. → increased demand\n' +
+    '   2.2 Pollution + mismanagement → reduced quality\n' +
+    '   2.3 Agri. consumes ~70% of fresh water (inefficient irrig.)\n' +
+    '   2.4 Climate change → altered precipitation, glacial melt, droughts\n\n' +
+    '3. Solutions Needed\n' +
+    '   3.1 Rainwater harvesting\n' +
+    '   3.2 Water recycling\n' +
+    '   3.3 Drip irrigation\n' +
+    '   3.4 Stricter ind. regulations\n\n' +
+    'Abbreviations Used:\n' +
+    'pop. = population    indus. = industrialisation\n' +
+    'agri. = agriculture  irrig. = irrigation\n' +
+    'ind. = industrial    approx. = approximately' +
+    '</div>' +
+    '<p class="eng-h3">Model Summary (80 words)</p>' +
+    '<div class="eng-eg">Water is a critical but scarce resource — only 1% of the Earth\'s fresh water is accessible. Rising population, industrialisation, and poor agricultural practices have intensified the crisis. Climate change has worsened the situation through droughts and glacial melting. To address this, governments and individuals must adopt rainwater harvesting, water recycling, drip irrigation, and stricter regulations on industrial effluents. Immediate and collective action is essential to secure fresh water for generations to come.</div>'
+  );
+
+  var summaryEx = acc('Summary Writing — Techniques &amp; Worked Example',
+    '<div class="eng-note">A summary condenses a passage into about <strong>80 words</strong> in continuous prose. It captures the main idea and key supporting points — no personal opinion, no new examples.</div>' +
+    '<p class="eng-h3">The 5-Step Method</p>' +
+    '<ol class="eng-list" style="padding-left:1.3rem">' +
+    '<li><strong>Identify the theme</strong> — What is the passage mainly about? (1 concept)</li>' +
+    '<li><strong>List main points</strong> (from your notes) — 3 to 4 key ideas only; ignore examples and statistics that aren\'t essential.</li>' +
+    '<li><strong>Write in your own words</strong> — paraphrase; do not copy sentences from the passage.</li>' +
+    '<li><strong>Connect ideas with linking words</strong> — use transitions to make it flow as one paragraph.</li>' +
+    '<li><strong>Count words and trim</strong> — if over 90 words, remove adjectives and minor details.</li>' +
+    '</ol>' +
+    '<p class="eng-h3">What to Include vs. Exclude</p>' +
+    '<div style="overflow-x:auto"><table class="eng-table">' +
+    trow(['INCLUDE','EXCLUDE'], true) +
+    trow(['Main idea of the whole passage','Personal opinions or judgments'], false) +
+    trow(['Key supporting arguments/facts','Direct quotes from the passage'], false) +
+    trow(['Logical conclusion from the passage','Repetitive or redundant information'], false) +
+    trow(['Cause-effect relationships','Minor examples, statistics (usually)'], false) +
+    '</table></div>' +
+    '<p class="eng-h3">Linking Word Bank for Summaries</p>' +
+    '<div class="eng-eg">' +
+    '<strong>Opening:</strong> The passage discusses… / The article highlights… / The text examines…<br>' +
+    '<strong>Adding:</strong> furthermore, in addition, additionally, moreover, also<br>' +
+    '<strong>Contrast:</strong> however, on the other hand, nevertheless, despite this<br>' +
+    '<strong>Cause-Effect:</strong> consequently, as a result, therefore, hence, thus<br>' +
+    '<strong>Conclusion:</strong> in conclusion, ultimately, therefore, to sum up' +
+    '</div>'
+  );
+
   return '<h2 class="section-title" style="margin-bottom:.25rem">Reading Comprehension</h2>' +
     '<p class="eng-sub">Complete strategies for all passage types in board exam</p>' +
-    '<div class="eng-stack">' + pattern + strategy + qtypes + notemaking + summary + '</div>';
+    '<div class="eng-stack">' + pattern + strategy + qtypes + notemaking + summary + databased + tone + vocabulary + noteEx + summaryEx + '</div>';
 }
 
 function buildWriting() {
@@ -2092,9 +2411,168 @@ function buildWriting() {
     '</ul>'
   );
 
+  var debate = acc('Debate Writing — For &amp; Against',
+    '<div class="eng-note">A debate is a formal speech taking a clear position (for or against) on a given topic. You argue one side convincingly. Word limit: usually 150–200 words.</div>' +
+    '<p class="eng-h3">Format</p>' +
+    '<div class="eng-format-box">' +
+    'Respected Chair, honourable judges, and dear audience,\n\n' +
+    'I, [Name] from [Class], stand firmly [in favour of / against] the motion:\n"[Motion stated exactly as given]".\n\n' +
+    'Opening: Define/explain the topic briefly. State your position clearly.\n\n' +
+    'Argument 1: [Your strongest point with explanation/example]\n\n' +
+    'Argument 2: [Second point]\n\n' +
+    'Counter-argument: Acknowledge the opposing view and refute it:\n"While some argue that…, the fact remains that…"\n\n' +
+    'Conclusion: Restate position powerfully. End with a call to action or quote.\n\n' +
+    'Thank you.' +
+    '</div>' +
+    '<p class="eng-h3">Language for a Debate</p>' +
+    '<div class="eng-eg">' +
+    '<strong>Stating position:</strong> I firmly believe… / I am strongly of the opinion… / It is my firm conviction that…<br>' +
+    '<strong>Presenting arguments:</strong> To begin with… / Furthermore… / In addition to this… / Most importantly…<br>' +
+    '<strong>Refuting opposing views:</strong> While it may be argued… / Contrary to popular belief… / The opponents claim…, however…<br>' +
+    '<strong>Concluding:</strong> In conclusion… / For all these reasons… / I urge you all to…<br>' +
+    '<strong>Rhetorical questions:</strong> Can we afford to ignore this? / Is this really progress?' +
+    '</div>' +
+    '<div class="eng-rule"><strong>Marks are given for:</strong> Format (salutation, stance, vote of thanks), Content (at least 3 valid arguments), Language (varied vocabulary, sentence structures), Coherence (logical flow). Never forget to state which SIDE you are arguing.</div>'
+  );
+
+  var diary = acc('Diary Entry — Format, Rules &amp; Example',
+    '<div class="eng-note">A diary entry is a personal, informal record of your thoughts, experiences, or feelings on a particular day. It is written in first person and reflects the writer\'s emotions honestly.</div>' +
+    '<p class="eng-h3">Format</p>' +
+    '<div class="eng-format-box">' +
+    'Day, Date Month Year\n' +
+    'Time (optional): e.g., 9:00 p.m.\n\n' +
+    'Dear Diary,\n\n' +
+    'Opening line: What happened / where you are / how you feel.\n\n' +
+    'Body: Narrate the day\'s events / experience / feelings in detail.\n' +
+    'Include: What happened? Who was involved? How did it make you feel?\n' +
+    'Why is it significant? What have you learned?\n\n' +
+    'Closing: Reflect on the experience or express a wish/hope.\n\n' +
+    '[Your Name]' +
+    '</div>' +
+    '<p class="eng-h3">Key Features</p>' +
+    '<ul class="eng-list">' +
+    '<li>Always <strong>first person</strong> (I, me, my, we). Never "he/she said."</li>' +
+    '<li>Use <strong>past tense</strong> to describe events; present tense for current feelings.</li>' +
+    '<li>Informal, personal, honest tone — use contractions (I\'m, couldn\'t, it\'s).</li>' +
+    '<li>Show emotions vividly: "I was overwhelmed with joy", "My heart sank", "I couldn\'t believe my eyes".</li>' +
+    '<li>Word limit: 100–120 words (strictly follow exam instructions).</li>' +
+    '</ul>' +
+    '<div class="eng-eg"><strong>Model opening:</strong><br>' +
+    'Wednesday, 15 March 20XX, 10:30 p.m.<br>' +
+    'Dear Diary,<br>' +
+    'Today was perhaps the most memorable day of my school life. When my name was announced as the winner of the National Science Olympiad, I could hardly believe my ears. The hall erupted in applause and I felt a wave of emotions — relief, pride, and immense gratitude for my teachers who had guided me through months of preparation. My parents\' tearful smiles were worth every sleepless night. Today, I truly understood what hard work can achieve.<br>' +
+    '[Asha]</div>'
+  );
+
+  var email = acc('Formal Email — Format &amp; Complete Guide',
+    '<div class="eng-note">Formal emails follow a structure similar to formal letters but are shorter and more direct. In the board exam, you may be asked to write an email to a principal, teacher, editor, or official.</div>' +
+    '<p class="eng-h3">Format</p>' +
+    '<div class="eng-format-box">' +
+    'To: recipient@example.com\n' +
+    'From: yourname@example.com\n' +
+    'Subject: [Clear, specific subject — e.g., Request for Leave on 20 March]\n\n' +
+    'Dear Sir/Madam / Dear [Name],\n\n' +
+    'Opening: State who you are and the purpose of the email.\n' +
+    '(e.g., "I am a student of Class X, Section A. I am writing to request...")\n\n' +
+    'Body: Explain in detail — reason, background, specific request or complaint.\n\n' +
+    'Action line: What you want the reader to do.\n' +
+    '(e.g., "I would be grateful if you could grant me leave...")\n\n' +
+    'Closing: Express gratitude and end politely.\n\n' +
+    'Regards / Yours faithfully,\n' +
+    '[Your Full Name]\n' +
+    '[Class, Section, Roll No.]' +
+    '</div>' +
+    '<p class="eng-h3">Key Differences from Formal Letter</p>' +
+    '<ul class="eng-list">' +
+    '<li>No sender\'s postal address at the top — only email addresses.</li>' +
+    '<li>Subject line is <strong>mandatory</strong> and must be specific.</li>' +
+    '<li>Shorter paragraphs — 3 to 4 sentences each maximum.</li>' +
+    '<li>Same formal tone and vocabulary as a letter — no slang, abbreviations, or emojis.</li>' +
+    '<li>Closing: "Regards," "Yours faithfully," or "With warm regards," depending on familiarity.</li>' +
+    '</ul>' +
+    '<div class="eng-eg"><strong>Subject line examples:</strong><br>' +
+    '✓ Request for Medical Leave on 18–19 March 20XX<br>' +
+    '✓ Complaint Regarding Broken Streetlights in Block C<br>' +
+    '✓ Application for Participation in District Science Fair<br>' +
+    '✗ Leave (too vague) ✗ URGENT!!! (unprofessional)</div>'
+  );
+
+  var report = acc('Report Writing — Newspaper Report &amp; Factual Report',
+    '<div class="eng-note">Two types appear in board exams: (1) <strong>Newspaper Report</strong> — journalistic style for an event or incident. (2) <strong>Factual Report</strong> — formal document (submitted to an authority).</div>' +
+    '<p class="eng-h3">Newspaper Report Format</p>' +
+    '<div class="eng-format-box">' +
+    'HEADLINE (in CAPITALS — bold, catchy, present tense)\n\n' +
+    'Dateline: City Name, Date — [Reporter Name]\n\n' +
+    'Lead Paragraph (most important facts first):\n' +
+    '  WHO did WHAT, WHEN, WHERE, WHY in 2–3 sentences.\n\n' +
+    'Body Paragraphs:\n' +
+    '  Details, quotes from witnesses/officials, statistics.\n' +
+    '  Eyewitness account or expert comment.\n\n' +
+    'Closing Paragraph:\n' +
+    '  Future action / outcome / broader significance.' +
+    '</div>' +
+    '<p class="eng-h3">Newspaper Report Key Rules</p>' +
+    '<ul class="eng-list">' +
+    '<li>Headline: Short (5–8 words), present tense, action verb. e.g., <em>FIRE DESTROYS SCHOOL LIBRARY IN DELHI</em></li>' +
+    '<li>Third person, past tense for most of the report.</li>' +
+    '<li>Inverted pyramid: Most important info first, least important last.</li>' +
+    '<li>Include at least one direct quote or eyewitness account.</li>' +
+    '<li>Word limit: 100–125 words (check instructions).</li>' +
+    '</ul>' +
+    '<p class="eng-h3">Factual Report Format</p>' +
+    '<div class="eng-format-box">' +
+    'REPORT\n\n' +
+    'Title: Report on [Topic]\n' +
+    'Submitted by: [Name / Designation]\n' +
+    'Submitted to: [Name / Authority]\n' +
+    'Date: [Date]\n\n' +
+    '1. Purpose / Objective\n' +
+    '   [What the report is about and why it was prepared]\n\n' +
+    '2. Findings / Observations\n' +
+    '   [What was found, observed, measured — use bullet points]\n\n' +
+    '3. Conclusion / Recommendations\n' +
+    '   [What should be done / what was decided]\n\n' +
+    '[Signature]\n[Name &amp; Designation]' +
+    '</div>' +
+    '<div class="eng-eg"><strong>Headline Examples (Newspaper Report):</strong><br>' +
+    '✓ STUDENTS PLANT 500 TREES IN DRIVE AGAINST DEFORESTATION<br>' +
+    '✓ INTER-SCHOOL SCIENCE FAIR DRAWS RECORD PARTICIPATION IN PUNE<br>' +
+    '✓ CITY CELEBRATES WORLD ENVIRONMENT DAY WITH CLEANLINESS DRIVE</div>'
+  );
+
+  var writingTips = acc('Writing Skills — Common Errors &amp; Marks Scoring Tips',
+    '<p class="eng-h3">Most Common Mistakes That Cost Marks</p>' +
+    '<ul class="eng-list">' +
+    '<li><strong>Exceeding word limit:</strong> Examiners note it. Stay within ±10% of the given limit.</li>' +
+    '<li><strong>Missing format elements:</strong> Forgetting subject line (email), designation (notice/report), or salutation (letter) — each missing element loses marks.</li>' +
+    '<li><strong>Informal language in formal writing:</strong> Using "gonna", "wanna", short forms — heavily penalized.</li>' +
+    '<li><strong>Copying the question:</strong> Rephrase the topic given in the question; do not repeat it word-for-word as your opening line.</li>' +
+    '<li><strong>No coherence:</strong> Jumping between ideas without linking words makes the writing feel disconnected.</li>' +
+    '<li><strong>Poor handwriting / spelling:</strong> Affects overall impression. Practice common difficult spellings.</li>' +
+    '</ul>' +
+    '<p class="eng-h3">Vocabulary to Elevate Your Writing</p>' +
+    '<div style="overflow-x:auto"><table class="eng-table">' +
+    trow(['Instead of…','Use…'], true) +
+    trow(['good','excellent, commendable, remarkable, admirable, praiseworthy'], false) +
+    trow(['bad','detrimental, alarming, grave, deplorable, unfortunate'], false) +
+    trow(['big / large','enormous, substantial, considerable, vast, massive'], false) +
+    trow(['small','negligible, minimal, insignificant, marginal'], false) +
+    trow(['important','crucial, vital, indispensable, paramount, significant'], false) +
+    trow(['think','believe, opine, contend, hold the view, maintain'], false) +
+    trow(['show / prove','demonstrate, illustrate, substantiate, indicate, reveal'], false) +
+    trow(['very','extremely, tremendously, remarkably, profoundly, exceptionally'], false) +
+    '</table></div>' +
+    '<p class="eng-h3">Sentence Variety — Avoid Repetition</p>' +
+    '<ul class="eng-list">' +
+    '<li>Mix short and long sentences. A short punchy line after several long ones creates impact.</li>' +
+    '<li>Begin sentences differently — not always with "I" or "The". Try: "Having considered…", "It is evident that…", "Given the circumstances…"</li>' +
+    '<li>Use passive voice occasionally to add variety: "It has been widely acknowledged that…"</li>' +
+    '</ul>'
+  );
+
   return '<h2 class="section-title" style="margin-bottom:.25rem">Writing Skills</h2>' +
     '<p class="eng-sub">Complete formats, rules and model examples for every writing type</p>' +
-    '<div class="eng-stack">' + formalLetter + informalLetter + analytical + notice + article + speech + '</div>';
+    '<div class="eng-stack">' + formalLetter + informalLetter + analytical + notice + article + speech + debate + diary + email + report + writingTips + '</div>';
 }
 
 /* ══════════════════════════════════════
