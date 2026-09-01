@@ -25,7 +25,6 @@ const SUBJECT_TABS = {
     { id: 'formula-sheet', label: 'Formulas' },
     { id: 'maths-qbank',   label: 'Question Bank' },
     { id: 'pyqs',          label: 'PYQ Papers' },
-    { id: 'my-progress',   label: 'My Progress' }
   ],
   science: [
     { id: 'science-qbank',     label: 'Question Bank' },
@@ -34,7 +33,6 @@ const SUBJECT_TABS = {
     { id: 'pyqs',              label: 'PYQ Papers' },
     { id: 'most-important',    label: 'Most Important' },
     { id: 'ncert-solutions',   label: 'NCERT Solutions' },
-    { id: 'my-progress',       label: 'My Progress' }
   ],
   english: [
     { id: 'first-flight', label: 'First Flight' },
@@ -43,7 +41,6 @@ const SUBJECT_TABS = {
     { id: 'reading',      label: 'Reading' },
     { id: 'writing',      label: 'Writing' },
     { id: 'pyqs',         label: 'PYQ Papers' },
-    { id: 'my-progress',  label: 'My Progress' }
   ],
   social: [
     { id: 'social-notes',       label: 'Notes' },
@@ -51,7 +48,6 @@ const SUBJECT_TABS = {
     { id: 'social-qbank',       label: 'Question Bank' },
     { id: 'maps',               label: 'Map Work' },
     { id: 'pyqs',               label: 'PYQ Papers' },
-    { id: 'my-progress',        label: 'My Progress' }
   ]
 };
 
@@ -544,7 +540,6 @@ function renderTabContent(subject, tabId) {
       case 'social-qbank':      el.innerHTML = buildSocialQBank(subject); break;
       case 'maps':              el.innerHTML = buildMaps(); break;
       case 'summary':           el.innerHTML = buildSummary(subject); break;
-      case 'my-progress':       el.innerHTML = buildProgressTab(subject); break;
       default:                  el.innerHTML = buildComingSoon('This section', 'Content coming soon!'); break;
     }
     initReveal();
@@ -854,7 +849,6 @@ function pdfCards(subject, tab) {
           <div class="pdf-card-title">${escH(p.title)}</div>
           <div class="pdf-card-desc">${escH(p.desc || '')}</div>
         </div>
-        <button class="pdf-done-circle ${done ? 'done' : ''}" onclick="togglePDFDone(this,'${escH(p.url)}')" title="${done ? 'Mark as unread' : 'Mark as read'}">✓</button>
         <button class="pdf-open-btn" onclick="openPDF('${escH(p.url)}','${escH(p.title)}')">Open</button>
       </div>`;
     }).join('')}
@@ -1067,7 +1061,6 @@ function buildFormulaSheet(subject) {
             <div class="formula-chapter-title">
               <span class="formula-num" style="background:${color}">${ch.id}</span>
               <span style="flex:1;min-width:0">${ch.title}</span>
-              <button class="pdf-done-circle ${chDone ? 'done' : ''}" onclick="toggleChapterDone(this,'${dk}')" title="${chDone ? 'Mark as incomplete' : 'Mark as complete'}">✓</button>
             </div>
             <div class="formula-grid">
               ${ch.formulas.map(f => `<div class="formula-pill">${escH(f)}</div>`).join('')}
@@ -1180,7 +1173,6 @@ function buildScienceMCQCards(subject) {
           <div class="pdf-card-title">Ch ${ch.id}: ${escH(ch.title)}</div>
           <div class="pdf-card-desc">${count} MCQs &nbsp;${renderMasteryBadge(mastery)}</div>
         </div>
-        <button class="pdf-done-circle ${chDone ? 'done' : ''}" onclick="toggleChapterDone(this,'${chDoneKey}')" title="${chDone ? 'Mark as incomplete' : 'Mark as complete'}">✓</button>
         <button class="pdf-test-btn" onclick="openTestMode(${ch.id}, '${escH(ch.title)}', 'science')">Test</button>
         <button class="pdf-open-btn" onclick="openChapterMCQs(${ch.id}, '${escH(ch.title)}', 'science')">Open</button>
       </div>`;
@@ -1220,7 +1212,6 @@ function buildSocialMCQCards(subject) {
             <div class="pdf-card-title">${escH(ch.title)}</div>
             <div class="pdf-card-desc">${count} MCQs · ${s.key} &nbsp;${renderMasteryBadge(mastery)}</div>
           </div>
-          <button class="pdf-done-circle ${chDone ? 'done' : ''}" onclick="toggleChapterDone(this,'${chDoneKey}')" title="${chDone ? 'Mark as incomplete' : 'Mark as complete'}">✓</button>
           <button class="pdf-test-btn" onclick="openTestMode(${id}, '${escH(ch.title)}', 'social')">Test</button>
           <button class="pdf-open-btn" onclick="openChapterMCQs(${id}, '${escH(ch.title)}', 'social')">Open</button>
         </div>`;
@@ -1629,7 +1620,6 @@ function buildChapterAccordionHTML(ch, subjectId, numClass) {
           <div class="chapter-sub">${ch.subtitle}</div>
         </div>
         <span class="chapter-mastery-badge">${renderMasteryBadge((_cachedKnowledgeMap[subjectId + '_' + ch.id] || {}).mastery || 'not_started')}</span>
-        <button class="chapter-done-btn ${done ? 'done' : ''}" data-subject="${subjectId}" data-cid="${ch.id}" data-key="${subjectId}_chapter_${ch.id}" title="Mark chapter done" onclick="event.stopPropagation();toggleDone(this)">✓</button>
         <span class="chapter-toggle">▼</span>
       </div>
       <div class="chapter-body">
@@ -1786,7 +1776,6 @@ function buildScienceQBank() {
         <div class="pdf-card-title">${escH(ch.label)}</div>
         <div class="pdf-card-desc">${n2} short &nbsp;·&nbsp; ${n3} medium &nbsp;·&nbsp; ${n5} long</div>
       </div>
-      <button class="pdf-done-circle ${chDone ? 'done' : ''}" onclick="event.stopPropagation();toggleChapterDone(this,'${chDoneKey}')" title="${chDone ? 'Mark as incomplete' : 'Mark as complete'}">✓</button>
       <button class="pdf-open-btn" onclick="event.stopPropagation();openScienceQBank(${ch.id})">View</button>
     </div>`;
   }).join('');
@@ -1905,7 +1894,6 @@ function buildMathsQBank() {
         <div class="pdf-card-title">${escH(ch.label)}</div>
         <div class="pdf-card-desc">${n2} short &nbsp;·&nbsp; ${n3} medium &nbsp;·&nbsp; ${n5} long</div>
       </div>
-      <button class="pdf-done-circle ${chDone ? 'done' : ''}" onclick="event.stopPropagation();toggleChapterDone(this,'${chDoneKey}')" title="${chDone ? 'Mark as incomplete' : 'Mark as complete'}">✓</button>
       <button class="pdf-open-btn" onclick="event.stopPropagation();openMathsQBank(${ch.id})">View</button>
     </div>`;
   }).join('');
@@ -2029,7 +2017,6 @@ function buildSocialNotes(subject) {
                   <div class="pdf-card-title">${escH(p.title)}</div>
                   <div class="pdf-card-desc">${escH(p.desc)}</div>
                 </div>
-                <button class="pdf-done-circle ${done ? 'done' : ''}" onclick="togglePDFDone(this,'${escH(p.url)}')" title="${done ? 'Mark as unread' : 'Mark as read'}">✓</button>
                 <button class="pdf-open-btn" onclick="openPDF('${escH(p.url)}','${escH(p.title)}')">Open</button>
               </div>`;
             }).join('')}
@@ -2071,7 +2058,6 @@ function buildSocialQBank() {
                   <div class="pdf-card-title">${escH(d.title)}</div>
                   <div class="pdf-card-desc">${d.q2m.length} × 2M &nbsp;·&nbsp; ${d.q3m.length} × 3M &nbsp;·&nbsp; ${d.q5m.length} × 5M</div>
                 </div>
-                <button class="pdf-done-circle ${chDone ? 'done' : ''}" onclick="event.stopPropagation();toggleChapterDone(this,'${chDoneKey}')" title="${chDone ? 'Mark as incomplete' : 'Mark as complete'}">✓</button>
                 <button class="pdf-open-btn" onclick="event.stopPropagation();openSocialQBank('${s.key}','${chKey}')">View</button>
               </div>`;
             }).join('')}

@@ -50,7 +50,6 @@
     background: var(--bg);
     -webkit-font-smoothing: antialiased;
     overflow-x: hidden;
-    padding-bottom: 70px;
   }
 
   .skip-nav { position: absolute; left: -9999px; top: auto; }
@@ -399,30 +398,6 @@
   .btn-cta-white:hover { transform: translateY(-2px); box-shadow: 0 8px 28px rgba(0,0,0,.2); }
   .btn-cta-white:focus-visible { outline: 2.5px solid rgba(255,255,255,.8); outline-offset: 3px; }
 
-  /* ━━━━━━━━━━━━━━━━━━━━━━
-     BOTTOM NAV
-  ━━━━━━━━━━━━━━━━━━━━━━ */
-  .al-bnav {
-    position: fixed; bottom: 0; left: 0; right: 0; z-index: 500;
-    background: #fff; border-top: 1px solid #E8E4F8;
-    padding-bottom: env(safe-area-inset-bottom, 0);
-  }
-  .al-bnav-inner {
-    display: flex; align-items: stretch; height: 62px;
-    max-width: 600px; margin: 0 auto;
-  }
-  .al-btab {
-    flex: 1; display: flex; flex-direction: column;
-    align-items: center; justify-content: center; gap: 3px;
-    color: #9894C0; text-decoration: none; background: none; border: none;
-    cursor: pointer; font-family: var(--font);
-    transition: color .15s; -webkit-tap-highlight-color: transparent; padding: 0;
-  }
-  .al-btab.al-btab-active { color: #5B47DE; }
-  .al-btab-icon { display: flex; }
-  .al-btab-label { font-size: .66rem; font-weight: 500; }
-  .al-btab.al-btab-active .al-btab-label { font-weight: 700; }
-
   /* ━━ RESPONSIVE ━━ */
   @media (max-width: 900px) {
     .mission-grid { grid-template-columns: 1fr; }
@@ -696,41 +671,6 @@
   </div>
 </div>
 
-<!-- ━━ BOTTOM NAV ━━ -->
-<nav class="al-bnav" role="navigation" aria-label="App navigation">
-  <div class="al-bnav-inner">
-    <a href="dashboard.html" class="al-btab" aria-label="Home" onclick="return guardNav(event,'dashboard.html')">
-      <span class="al-btab-icon" aria-hidden="true">
-        <svg width="22" height="22" viewBox="0 0 22 22" fill="none"><path d="M3 9.2L11 3l8 6.2V19a1 1 0 01-1 1H14v-5.5H8V20H4a1 1 0 01-1-1V9.2z" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
-      </span>
-      <span class="al-btab-label">Home</span>
-    </a>
-    <a href="learn.html" class="al-btab" aria-label="Learn">
-      <span class="al-btab-icon" aria-hidden="true">
-        <svg width="22" height="22" viewBox="0 0 22 22" fill="none"><rect x="3" y="3" width="16" height="16" rx="2.5" stroke="currentColor" stroke-width="1.6"/><path d="M7 8h8M7 12h8M7 16h5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg>
-      </span>
-      <span class="al-btab-label">Learn</span>
-    </a>
-    <a href="learn.html?openSearch=1" class="al-btab" aria-label="Search">
-      <span class="al-btab-icon" aria-hidden="true">
-        <svg width="22" height="22" viewBox="0 0 22 22" fill="none"><circle cx="9.5" cy="9.5" r="6" stroke="currentColor" stroke-width="1.6"/><line x1="14.2" y1="14.2" x2="19" y2="19" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
-      </span>
-      <span class="al-btab-label">Search</span>
-    </a>
-    <a href="dashboard.html" class="al-btab" aria-label="Progress" onclick="return guardNav(event,'dashboard.html')">
-      <span class="al-btab-icon" aria-hidden="true">
-        <svg width="22" height="22" viewBox="0 0 22 22" fill="none"><path d="M4 17V12M8.5 17V9M13 17V7M17.5 17V4" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg>
-      </span>
-      <span class="al-btab-label">Progress</span>
-    </a>
-    <button class="al-btab" id="alProfileBtn" aria-label="Profile">
-      <span class="al-btab-icon" aria-hidden="true">
-        <svg width="22" height="22" viewBox="0 0 22 22" fill="none"><circle cx="11" cy="8" r="4" stroke="currentColor" stroke-width="1.6"/><path d="M3 19c0-3.87 3.58-7 8-7s8 3.13 8 7" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
-      </span>
-      <span class="al-btab-label">Profile</span>
-    </button>
-  </div>
-</nav>
 
 <!-- Scripts -->
 <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-app-compat.js"></script>
@@ -739,7 +679,7 @@
 <script src="js/firebase-config.js"></script>
 <script src="js/db.js?v=4"></script>
 <script src="js/data.js?v=1"></script>
-<script src="js/app.js?v=76"></script>
+<script src="js/app.js?v=77"></script>
 <script src="js/auth.js?v=32"></script>
 <script>
 (function(){
