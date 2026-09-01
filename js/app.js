@@ -1672,9 +1672,28 @@ function toggleDone(btn) {
 /* ══════════════════════════════════════
    GRAMMAR / READING / WRITING
 ══════════════════════════════════════ */
+
+/* Lazy-load registry: content is built as a string but only injected into DOM
+   when the user first opens that accordion section. Keeps initial render fast. */
+var _engCache = {};
+function _engOpen(el) {
+  if (el._alLoaded || !el.open) return;
+  var body = el.querySelector('.eng-acc-body');
+  var id = el.dataset.alId;
+  if (body && _engCache[id]) {
+    body.innerHTML = _engCache[id];
+    el._alLoaded = true;
+    delete _engCache[id]; // free memory after injection
+  }
+}
+
 function buildGrammar() {
+  var _i = 0;
   function acc(title, body) {
-    return '<details class="eng-acc"><summary>' + title + '</summary><div class="eng-acc-body">' + body + '</div></details>';
+    var id = 'gr_' + (_i++);
+    _engCache[id] = body;
+    return '<details class="eng-acc" data-al-id="' + id + '" ontoggle="_engOpen(this)">' +
+      '<summary>' + title + '</summary><div class="eng-acc-body"></div></details>';
   }
   function trow(cells, isHead) {
     var tag = isHead ? 'th' : 'td';
@@ -2031,8 +2050,12 @@ function buildGrammar() {
 }
 
 function buildReading() {
+  var _i = 0;
   function acc(title, body) {
-    return '<details class="eng-acc"><summary>' + title + '</summary><div class="eng-acc-body">' + body + '</div></details>';
+    var id = 'rd_' + (_i++);
+    _engCache[id] = body;
+    return '<details class="eng-acc" data-al-id="' + id + '" ontoggle="_engOpen(this)">' +
+      '<summary>' + title + '</summary><div class="eng-acc-body"></div></details>';
   }
   function trow(cells, isHead) {
     var tag = isHead ? 'th' : 'td';
@@ -2273,8 +2296,12 @@ function buildReading() {
 }
 
 function buildWriting() {
+  var _i = 0;
   function acc(title, body) {
-    return '<details class="eng-acc"><summary>' + title + '</summary><div class="eng-acc-body">' + body + '</div></details>';
+    var id = 'wr_' + (_i++);
+    _engCache[id] = body;
+    return '<details class="eng-acc" data-al-id="' + id + '" ontoggle="_engOpen(this)">' +
+      '<summary>' + title + '</summary><div class="eng-acc-body"></div></details>';
   }
   function trow(cells, isHead) {
     var tag = isHead ? 'th' : 'td';
