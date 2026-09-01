@@ -1786,23 +1786,32 @@ function buildScienceQBank() {
     </div>`;
 }
 
-function _buildQBankSection(qs, label, cls, startIdx) {
-  if (!qs.length) return '';
+function _buildQBankBody(d, activeMarks, tabFnPrefix) {
+  // tabFnPrefix: string prepended before ,'Xm') in each tab onclick
+  // e.g. "openScienceQBankSection(3" → onclick="openScienceQBankSection(3,'2m')"
+  const sections = [
+    { marks: '2m', label: '2 Marks', cls: 'qbank-badge-2m', activeCls: 'active-2m', qs: d.q2m },
+    { marks: '3m', label: '3 Marks', cls: 'qbank-badge-3m', activeCls: 'active-3m', qs: d.q3m },
+    { marks: '5m', label: '5 Marks', cls: 'qbank-badge-5m', activeCls: 'active-5m', qs: d.q5m },
+  ];
+  const active = sections.find(s => s.marks === activeMarks) || sections[0];
+  const tabs = sections.map(s => `
+    <button class="qbank-tab${s.marks === active.marks ? ' ' + s.activeCls : ''}" onclick="${tabFnPrefix},'${s.marks}')">
+      <span class="qbank-tab-label">${s.label}</span>
+      <span class="qbank-tab-count">${s.qs.length} Qs</span>
+    </button>`).join('');
+  const items = active.qs.length ? active.qs.map((q, i) => `
+    <div class="qb-item">
+      <span class="qb-num">${i + 1}</span>
+      <p class="qb-text">${escH(q)}</p>
+    </div>`).join('') : '<p style="color:var(--muted);font-size:.88rem;text-align:center;padding:1.5rem 0">No questions yet.</p>';
   return `
-    <div class="qbank-section">
-      <div class="qbank-section-hdr">
-        <div class="qbank-section-hdr-left">
-          <span class="qbank-badge ${cls}">${label}</span>
-        </div>
-        <span class="qbank-count">${qs.length} questions</span>
-      </div>
-      <div class="qbank-list">${qs.map((q, i) => `
-        <div class="qb-item">
-          <span class="qb-num">${startIdx + i + 1}</span>
-          <p class="qb-text">${escH(q)}</p>
-        </div>`).join('')}
-      </div>
-    </div>`;
+    <div class="qbank-tabs">${tabs}</div>
+    <div class="qbank-section-hdr">
+      <span class="qbank-badge ${active.cls}">${active.label}</span>
+      <span class="qbank-count">${active.qs.length} questions</span>
+    </div>
+    <div class="qbank-list">${items}</div>`;
 }
 
 function openScienceQBank(chId) {
@@ -1829,22 +1838,24 @@ function openScienceQBank(chId) {
     document.body.appendChild(modal);
     modal.addEventListener('click', e => { if (e.target === modal) closeQBankModal(); });
   }
-  const total = d.q2m.length + d.q3m.length + d.q5m.length;
   document.getElementById('qbankModalTitle').textContent = d.title;
-  document.getElementById('qbankModalMeta').textContent = `${total} questions`;
-  document.getElementById('qbankModalBody').innerHTML =
-    _buildQBankSection(d.q2m, '2 Marks', 'qbank-badge-2m', 0) +
-    _buildQBankSection(d.q3m, '3 Marks', 'qbank-badge-3m', d.q2m.length) +
-    _buildQBankSection(d.q5m, '5 Marks', 'qbank-badge-5m', d.q2m.length + d.q3m.length);
+  document.getElementById('qbankModalMeta').textContent = `${d.q2m.length + d.q3m.length + d.q5m.length} questions`;
+  document.getElementById('qbankModalBody').innerHTML = _buildQBankBody(d, '2m', `openScienceQBankSection(${chId}`);
   _lastModalTrigger = _lastModalTrigger || document.activeElement;
   modal.classList.add('open');
   _installFocusTrap(modal);
-  requestAnimationFrame(function() {
-    var closeBtn = modal.querySelector('.mcq-modal-close');
-    if (closeBtn) closeBtn.focus();
-  });
+  requestAnimationFrame(function() { var b = modal.querySelector('.mcq-modal-close'); if (b) b.focus(); });
   document.getElementById('qbankModalBody').scrollTop = 0;
   document.body.style.overflow = 'hidden';
+}
+
+function openScienceQBankSection(chId, marks) {
+  const d = (typeof SCIENCE_QBANK !== 'undefined') ? SCIENCE_QBANK[chId] : null;
+  if (!d) return;
+  const qs = marks === '3m' ? d.q3m : marks === '5m' ? d.q5m : d.q2m;
+  document.getElementById('qbankModalMeta').textContent = `${qs.length} questions`;
+  document.getElementById('qbankModalBody').innerHTML = _buildQBankBody(d, marks, `openScienceQBankSection(${chId}`);
+  document.getElementById('qbankModalBody').scrollTop = 0;
 }
 
 function closeQBankModal() {
@@ -1913,22 +1924,24 @@ function openMathsQBank(chId) {
     document.body.appendChild(modal);
     modal.addEventListener('click', e => { if (e.target === modal) closeMathsQBankModal(); });
   }
-  const total = d.q2m.length + d.q3m.length + d.q5m.length;
   document.getElementById('mathsQBankModalTitle').textContent = d.title;
-  document.getElementById('mathsQBankModalMeta').textContent = `${total} questions`;
-  document.getElementById('mathsQBankModalBody').innerHTML =
-    _buildQBankSection(d.q2m, '2 Marks', 'qbank-badge-2m', 0) +
-    _buildQBankSection(d.q3m, '3 Marks', 'qbank-badge-3m', d.q2m.length) +
-    _buildQBankSection(d.q5m, '5 Marks', 'qbank-badge-5m', d.q2m.length + d.q3m.length);
+  document.getElementById('mathsQBankModalMeta').textContent = `${d.q2m.length + d.q3m.length + d.q5m.length} questions`;
+  document.getElementById('mathsQBankModalBody').innerHTML = _buildQBankBody(d, '2m', `openMathsQBankSection(${chId}`);
   _lastModalTrigger = _lastModalTrigger || document.activeElement;
   modal.classList.add('open');
   _installFocusTrap(modal);
-  requestAnimationFrame(function() {
-    var closeBtn = modal.querySelector('.mcq-modal-close');
-    if (closeBtn) closeBtn.focus();
-  });
+  requestAnimationFrame(function() { var b = modal.querySelector('.mcq-modal-close'); if (b) b.focus(); });
   document.getElementById('mathsQBankModalBody').scrollTop = 0;
   document.body.style.overflow = 'hidden';
+}
+
+function openMathsQBankSection(chId, marks) {
+  const d = (typeof MATHS_QBANK_CH !== 'undefined') ? MATHS_QBANK_CH[chId] : null;
+  if (!d) return;
+  const qs = marks === '3m' ? d.q3m : marks === '5m' ? d.q5m : d.q2m;
+  document.getElementById('mathsQBankModalMeta').textContent = `${qs.length} questions`;
+  document.getElementById('mathsQBankModalBody').innerHTML = _buildQBankBody(d, marks, `openMathsQBankSection(${chId}`);
+  document.getElementById('mathsQBankModalBody').scrollTop = 0;
 }
 
 function closeMathsQBankModal() {
@@ -2043,13 +2056,9 @@ function openSocialQBank(subj, chKey) {
     document.body.appendChild(modal);
     modal.addEventListener('click', e => { if (e.target === modal) closeSocialQBankModal(); });
   }
-  const total = d.q2m.length + d.q3m.length + d.q5m.length;
   document.getElementById('socialQBankModalTitle').textContent = d.title;
-  document.getElementById('socialQBankModalMeta').textContent = `${total} questions`;
-  document.getElementById('socialQBankModalBody').innerHTML =
-    _buildQBankSection(d.q2m, '2 Marks', 'qbank-badge-2m', 0) +
-    _buildQBankSection(d.q3m, '3 Marks', 'qbank-badge-3m', d.q2m.length) +
-    _buildQBankSection(d.q5m, '5 Marks', 'qbank-badge-5m', d.q2m.length + d.q3m.length);
+  document.getElementById('socialQBankModalMeta').textContent = `${d.q2m.length + d.q3m.length + d.q5m.length} questions`;
+  document.getElementById('socialQBankModalBody').innerHTML = _buildQBankBody(d, '2m', `openSocialQBankSection('${subj}','${chKey}'`);
   _lastModalTrigger = _lastModalTrigger || document.activeElement;
   modal.classList.add('open');
   _installFocusTrap(modal);
@@ -2059,6 +2068,16 @@ function openSocialQBank(subj, chKey) {
   });
   document.getElementById('socialQBankModalBody').scrollTop = 0;
   document.body.style.overflow = 'hidden';
+}
+
+function openSocialQBankSection(subj, chKey, marks) {
+  const db = (typeof SOCIAL_QBANK_CH !== 'undefined') ? SOCIAL_QBANK_CH : null;
+  const d = db && db[subj] ? db[subj][chKey] : null;
+  if (!d) return;
+  const qs = marks === '3m' ? d.q3m : marks === '5m' ? d.q5m : d.q2m;
+  document.getElementById('socialQBankModalMeta').textContent = `${qs.length} questions`;
+  document.getElementById('socialQBankModalBody').innerHTML = _buildQBankBody(d, marks, `openSocialQBankSection('${subj}','${chKey}'`);
+  document.getElementById('socialQBankModalBody').scrollTop = 0;
 }
 
 function closeSocialQBankModal() {

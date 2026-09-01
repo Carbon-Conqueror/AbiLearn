@@ -966,14 +966,36 @@ input:focus-visible,select:focus-visible,textarea:focus-visible { outline:none; 
 /* ─── QBANK MODAL ─────────────────────────────── */
 #qbankModal,#mathsQBankModal,#socialQBankModal { display:none; position:fixed; inset:0; z-index:9998; }
 #qbankModal.open,#mathsQBankModal.open,#socialQBankModal.open { display:block; }
-.qbank-section { margin-bottom:2rem; }
-.qbank-section-hdr {
-  display:flex; align-items:center; gap:.6rem; justify-content:space-between;
-  margin-bottom:.9rem; padding:.6rem .85rem;
-  background:var(--surface-2); border-radius:var(--radius-sm);
-  border-left:3px solid var(--accent);
+/* ─── QBANK TABS ──────────────────────────────── */
+.qbank-tabs { display:flex; gap:.5rem; margin-bottom:1.1rem; }
+.qbank-tab {
+  flex:1; display:flex; flex-direction:column; align-items:center; gap:.15rem;
+  padding:.65rem .4rem; border-radius:var(--radius);
+  border:1.5px solid var(--border); background:var(--surface);
+  font-family:inherit; cursor:pointer; transition:border-color .15s, background .15s;
+  -webkit-tap-highlight-color:transparent;
 }
-.qbank-section-hdr-left { display:flex; align-items:center; gap:.6rem; }
+.qbank-tab-label { font-size:.78rem; font-weight:700; color:var(--muted); line-height:1; }
+.qbank-tab-count { font-size:.65rem; font-weight:600; color:var(--muted); opacity:.65; line-height:1; }
+.qbank-tab:hover:not(.active) { background:var(--surface-2); }
+.qbank-tab:hover:not(.active) .qbank-tab-label { color:var(--text); }
+.qbank-tab.active { border-color:var(--accent); background:rgba(91,71,222,.07); }
+.qbank-tab.active .qbank-tab-label { color:var(--accent); }
+.qbank-tab.active .qbank-tab-count { color:var(--accent); opacity:.75; }
+.qbank-tab.active-2m { border-color:var(--badge-2m-txt); background:var(--badge-2m-bg); }
+.qbank-tab.active-2m .qbank-tab-label { color:var(--badge-2m-txt); }
+.qbank-tab.active-2m .qbank-tab-count { color:var(--badge-2m-txt); }
+.qbank-tab.active-3m { border-color:var(--badge-3m-txt); background:var(--badge-3m-bg); }
+.qbank-tab.active-3m .qbank-tab-label { color:var(--badge-3m-txt); }
+.qbank-tab.active-3m .qbank-tab-count { color:var(--badge-3m-txt); }
+.qbank-tab.active-5m { border-color:var(--badge-5m-txt); background:var(--badge-5m-bg); }
+.qbank-tab.active-5m .qbank-tab-label { color:var(--badge-5m-txt); }
+.qbank-tab.active-5m .qbank-tab-count { color:var(--badge-5m-txt); }
+/* Section header below tabs */
+.qbank-section-hdr {
+  display:flex; align-items:center; justify-content:space-between;
+  margin-bottom:.8rem; padding-bottom:.55rem; border-bottom:1.5px solid var(--border);
+}
 .qbank-badge {
   font-size:.68rem; font-weight:800; letter-spacing:.05em;
   padding:.22rem .65rem; border-radius:4px; text-transform:uppercase;
@@ -981,15 +1003,12 @@ input:focus-visible,select:focus-visible,textarea:focus-visible { outline:none; 
 .qbank-badge-2m { background:var(--badge-2m-bg); color:var(--badge-2m-txt); }
 .qbank-badge-3m { background:var(--badge-3m-bg); color:var(--badge-3m-txt); }
 .qbank-badge-5m { background:var(--badge-5m-bg); color:var(--badge-5m-txt); }
-.qbank-section-hdr-left .qbank-badge-2m { border-left-color:var(--badge-2m-txt); }
-.qbank-section-hdr-left .qbank-badge-3m { border-left-color:var(--badge-3m-txt); }
-.qbank-section-hdr-left .qbank-badge-5m { border-left-color:var(--badge-5m-txt); }
 .qbank-count { font-size:.74rem; color:var(--muted); font-weight:600; }
 /* Question list */
-.qbank-list { display:flex; flex-direction:column; gap:.48rem; }
+.qbank-list { display:flex; flex-direction:column; gap:.45rem; }
 .qb-item {
   display:flex; align-items:flex-start; gap:.75rem;
-  padding:.9rem 1rem; background:var(--surface);
+  padding:.88rem 1rem; background:var(--surface);
   border:1px solid var(--border); border-radius:var(--radius-sm);
   transition:border-color .15s;
 }
@@ -998,7 +1017,7 @@ input:focus-visible,select:focus-visible,textarea:focus-visible { outline:none; 
   flex-shrink:0; width:1.8rem; height:1.8rem; border-radius:50%;
   background:rgba(91,71,222,.09); color:var(--accent);
   font-size:.68rem; font-weight:800; display:flex; align-items:center; justify-content:center;
-  line-height:1; margin-top:.08rem;
+  line-height:1; margin-top:.1rem;
 }
 .qb-text { flex:1; font-size:.875rem; line-height:1.68; color:var(--text); margin:0; }
 
