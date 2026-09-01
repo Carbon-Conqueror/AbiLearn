@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Question Bank</title>
+<link rel="stylesheet" href="css/style.css?v=56">
+<style>
+/* ── Page layout ── */
+body { min-height: 100vh; background: var(--bg); }
+.qbp-wrap { max-width: 780px; margin: 0 auto; padding: 0 1rem 4rem; }
+
+/* ── Back bar ── */
+.qbp-back-bar {
+  display: flex; align-items: center; gap: .6rem;
+  padding: 1rem 0 .5rem;
+}
+.qbp-back-btn {
+  display: inline-flex; align-items: center; gap: .4rem;
+  padding: .42rem .85rem; border-radius: 20px;
+  border: 1px solid var(--border); background: var(--surface);
+  color: var(--text); font-size: .83rem; font-weight: 600;
+  cursor: pointer; text-decoration: none; transition: background .15s;
+}
+.qbp-back-btn:hover { background: var(--surface-2, var(--border)); }
+.qbp-back-arrow { font-size: 1.05rem; }
+
+/* ── Chapter header ── */
+.qbp-hdr { padding: 1rem 0 1.2rem; border-bottom: 1px solid var(--border); }
+.qbp-subject-tag {
+  display: inline-block; font-size: .72rem; font-weight: 700; letter-spacing: .05em;
+  text-transform: uppercase; color: var(--accent); background: rgba(91,71,222,.1);
+  padding: .2rem .65rem; border-radius: 20px; margin-bottom: .55rem;
+}
+.qbp-chapter-title {
+  font-size: 1.15rem; font-weight: 800; line-height: 1.4;
+  color: var(--text); margin: 0 0 .35rem;
+}
+.qbp-total-count {
+  font-size: .82rem; color: var(--muted);
+}
+
+/* ── Mark-type section buttons ── */
+.qbp-mark-row {
+  display: grid; grid-template-columns: repeat(3, 1fr); gap: .75rem;
+  padding: 1.4rem 0 1rem;
+}
+.qbp-mark-btn {
+  display: flex; flex-direction: column; align-items: center; gap: .3rem;
+  padding: .95rem .5rem; border-radius: 12px;
+  border: 2px solid var(--border); background: var(--surface);
+  cursor: pointer; text-decoration: none; transition: all .18s;
+  color: var(--text);
+}
+.qbp-mark-btn:hover { border-color: var(--accent); transform: translateY(-1px); }
+.qbp-mark-label {
+  font-size: .88rem; font-weight: 800; letter-spacing: .01em;
+}
+.qbp-mark-count {
+  font-size: .75rem; font-weight: 500; color: var(--muted);
+}
+
+/* Active states per mark type */
+.qbp-mark-btn.active-2m {
+  border-color: #5B47DE; background: rgba(91,71,222,.08);
+}
+.qbp-mark-btn.active-2m .qbp-mark-label { color: #5B47DE; }
+.qbp-mark-btn.active-3m {
+  border-color: #0891B2; background: rgba(8,145,178,.08);
+}
+.qbp-mark-btn.active-3m .qbp-mark-label { color: #0891B2; }
+.qbp-mark-btn.active-5m {
+  border-color: #059669; background: rgba(5,150,105,.08);
+}
+.qbp-mark-btn.active-5m .qbp-mark-label { color: #059669; }
+
+/* ── Section header ── */
+.qbp-section-hdr {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: .8rem 1rem; border-radius: 10px;
+  background: var(--surface); border: 1px solid var(--border);
+  margin-bottom: 1rem;
+}
+.qbp-section-pill {
+  font-size: .8rem; font-weight: 800; letter-spacing: .04em;
+  padding: .25rem .8rem; border-radius: 20px; color: #fff;
+}
+.pill-2m { background: #5B47DE; }
+.pill-3m { background: #0891B2; }
+.pill-5m { background: #059669; }
+.qbp-section-n { font-size: .82rem; color: var(--muted); font-weight: 600; }
+
+/* ── Question list ── */
+.qbp-list { display: flex; flex-direction: column; gap: .7rem; }
+.qbp-item {
+  display: flex; align-items: flex-start; gap: .85rem;
+  background: var(--surface); border: 1px solid var(--border);
+  border-radius: 12px; padding: .9rem 1rem; transition: border-color .15s;
+}
+.qbp-item:hover { border-color: var(--accent); }
+.qbp-num {
+  flex-shrink: 0; width: 2rem; height: 2rem; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: .72rem; font-weight: 800; color: #fff;
+  font-variant-numeric: tabular-nums;
+}
+.num-2m { background: #5B47DE; }
+.num-3m { background: #0891B2; }
+.num-5m { background: #059669; }
+.qbp-text {
+  margin: 0; font-size: .9rem; line-height: 1.72;
+  color: var(--text); flex: 1;
+}
+
+/* ── Empty state ── */
+.qbp-empty {
+  text-align: center; padding: 3rem 1rem; color: var(--muted);
+  font-size: .9rem;
+}
+
+/* ── Desktop upscale ── */
+@media (min-width: 1025px) {
+  .qbp-wrap { padding: 0 2rem 5rem; }
+  .qbp-chapter-title { font-size: 1.35rem; }
+  .qbp-mark-label { font-size: 1rem; }
+  .qbp-mark-count { font-size: .82rem; }
+  .qbp-text { font-size: 1rem; line-height: 1.78; }
+  .qbp-num { width: 2.2rem; height: 2.2rem; font-size: .78rem; }
+  .qbp-item { padding: 1rem 1.2rem; gap: 1rem; }
+}
+</style>
+</head>
+<body>
+<div class="qbp-wrap" id="qbpWrap">
+  <div class="qbp-back-bar">
+    <a class="qbp-back-btn" id="qbpBackBtn" href="#">
+      <span class="qbp-back-arrow">←</span> Back
+    </a>
+  </div>
+  <div id="qbpContent">
+    <div class="qbp-empty">Loading…</div>
+  </div>
+</div>
+
+<script src="js/science-qbank.js?v=1"></script>
+<script src="js/maths-qbank-ch.js?v=1"></script>
+<script src="js/social-qbank-ch.js?v=1"></script>
+<script>
+(function () {
+  var p = new URLSearchParams(location.search);
+  var subject = p.get('s') || '';
+  var markType = p.get('m') || '2m';
+  var data = null, backHref = '#', subjectLabel = '';
+
+  /* ── Resolve data ── */
+  if (subject === 'science') {
+    var ch = parseInt(p.get('ch'), 10);
+    data = (typeof SCIENCE_QBANK !== 'undefined') ? SCIENCE_QBANK[ch] || null : null;
+    backHref = 'science.html';
+    subjectLabel = 'Science';
+  } else if (subject === 'maths') {
+    var ch = parseInt(p.get('ch'), 10);
+    data = (typeof MATHS_QBANK_CH !== 'undefined') ? MATHS_QBANK_CH[ch] || null : null;
+    backHref = 'maths.html';
+    subjectLabel = 'Mathematics';
+  } else if (subject === 'social') {
+    var subj = p.get('subj') || '';
+    var chKey = p.get('ch') || '';
+    if (typeof SOCIAL_QBANK_CH !== 'undefined' && SOCIAL_QBANK_CH[subj]) {
+      data = SOCIAL_QBANK_CH[subj][chKey] || null;
+    }
+    backHref = 'social.html';
+    var subjLabels = { history: 'History', geography: 'Geography', civics: 'Civics', economics: 'Economics' };
+    subjectLabel = subjLabels[subj] || 'Social Science';
+  }
+
+  document.getElementById('qbpBackBtn').href = backHref;
+
+  if (!data) {
+    document.getElementById('qbpContent').innerHTML =
+      '<div class="qbp-empty">Chapter not found. <a href="' + backHref + '">Go back</a></div>';
+    return;
+  }
+
+  var total = data.q2m.length + data.q3m.length + data.q5m.length;
+
+  /* ── URL param for mark switching ── */
+  function switchMark(m) {
+    var url = new URL(location.href);
+    url.searchParams.set('m', m);
+    history.replaceState({}, '', url.toString());
+    renderMark(m);
+  }
+
+  /* ── Escape HTML ── */
+  function esc(s) {
+    return String(s)
+      .replace(/&/g,'&amp;').replace(/</g,'&lt;')
+      .replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+  }
+
+  /* ── Render questions for a mark type ── */
+  function renderMark(m) {
+    var qs = m === '3m' ? data.q3m : m === '5m' ? data.q5m : data.q2m;
+    var label = m === '2m' ? '2 Marks' : m === '3m' ? '3 Marks' : '5 Marks';
+    var numCls = m === '2m' ? 'num-2m' : m === '3m' ? 'num-3m' : 'num-5m';
+    var pillCls = m === '2m' ? 'pill-2m' : m === '3m' ? 'pill-3m' : 'pill-5m';
+
+    /* Update button active states */
+    ['2m','3m','5m'].forEach(function(mk) {
+      var btn = document.getElementById('qbpBtn' + mk);
+      if (!btn) return;
+      btn.className = 'qbp-mark-btn' + (mk === m ? ' active-' + mk : '');
+    });
+
+    /* Build questions html */
+    var listHtml = '';
+    if (!qs.length) {
+      listHtml = '<div class="qbp-empty">No questions yet in this section.</div>';
+    } else {
+      listHtml = '<div class="qbp-list">' +
+        qs.map(function(q, i) {
+          return '<div class="qbp-item">' +
+            '<span class="qbp-num ' + numCls + '">' + (i + 1) + '</span>' +
+            '<p class="qbp-text">' + esc(q) + '</p>' +
+            '</div>';
+        }).join('') +
+        '</div>';
+    }
+
+    /* Section header */
+    var sectionHdr = '<div class="qbp-section-hdr">' +
+      '<span class="qbp-section-pill ' + pillCls + '">' + label + '</span>' +
+      '<span class="qbp-section-n">' + qs.length + ' question' + (qs.length !== 1 ? 's' : '') + '</span>' +
+      '</div>';
+
+    document.getElementById('qbpList').innerHTML = sectionHdr + listHtml;
+    window.scrollTo({ top: 0, behavior: 'instant' });
+  }
+
+  /* ── Initial render ── */
+  var markBtns = ['2m', '3m', '5m'].map(function(m) {
+    var n = m === '2m' ? data.q2m.length : m === '3m' ? data.q3m.length : data.q5m.length;
+    var label = m === '2m' ? '2 Marks' : m === '3m' ? '3 Marks' : '5 Marks';
+    return '<button id="qbpBtn' + m + '" class="qbp-mark-btn" onclick="switchMark(\'' + m + '\')">' +
+      '<span class="qbp-mark-label">' + label + '</span>' +
+      '<span class="qbp-mark-count">' + n + ' Qs</span>' +
+      '</button>';
+  }).join('');
+
+  document.getElementById('qbpContent').innerHTML =
+    '<div class="qbp-hdr">' +
+      '<div class="qbp-subject-tag">' + esc(subjectLabel) + '</div>' +
+      '<h1 class="qbp-chapter-title">' + esc(data.title) + '</h1>' +
+      '<div class="qbp-total-count">' + total + ' questions · Click a section below</div>' +
+    '</div>' +
+    '<div class="qbp-mark-row">' + markBtns + '</div>' +
+    '<div id="qbpList"></div>';
+
+  /* expose for button onclick */
+  window.switchMark = switchMark;
+  renderMark(markType);
+})();
+</script>
+</body>
+</html>

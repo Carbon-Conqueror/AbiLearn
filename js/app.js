@@ -2034,6 +2034,10 @@ function buildReading() {
   function acc(title, body) {
     return '<details class="eng-acc"><summary>' + title + '</summary><div class="eng-acc-body">' + body + '</div></details>';
   }
+  function trow(cells, isHead) {
+    var tag = isHead ? 'th' : 'td';
+    return '<tr>' + cells.map(function(c){ return '<' + tag + '>' + c + '</' + tag + '>'; }).join('') + '</tr>';
+  }
 
   var pattern = acc('Exam Pattern — Reading Section',
     '<div style="overflow-x:auto"><table class="eng-table">' +
@@ -2271,6 +2275,10 @@ function buildReading() {
 function buildWriting() {
   function acc(title, body) {
     return '<details class="eng-acc"><summary>' + title + '</summary><div class="eng-acc-body">' + body + '</div></details>';
+  }
+  function trow(cells, isHead) {
+    var tag = isHead ? 'th' : 'td';
+    return '<tr>' + cells.map(function(c){ return '<' + tag + '>' + c + '</' + tag + '>'; }).join('') + '</tr>';
   }
 
   var formalLetter = acc('Formal Letter — Application / Complaint / Editor',
@@ -2600,12 +2608,12 @@ function buildScienceQBank() {
     const chDoneKey = 'science_qbank_' + ch.id;
     const chDone = getChapterDone(chDoneKey);
     return `
-    <div class="pdf-card" style="cursor:pointer" onclick="openScienceQBank(${ch.id})">
+    <div class="pdf-card" style="cursor:pointer" onclick="location.href='qbank.html?s=science&ch=${ch.id}&m=2m'">
       <div class="pdf-card-info">
         <div class="pdf-card-title">${escH(ch.label)}</div>
         <div class="pdf-card-desc">${n2 + n3 + n5} questions</div>
       </div>
-      <button class="pdf-open-btn" onclick="event.stopPropagation();openScienceQBank(${ch.id})">View</button>
+      <a class="pdf-open-btn" href="qbank.html?s=science&ch=${ch.id}&m=2m">View</a>
     </div>`;
   }).join('');
   return `
@@ -2714,12 +2722,12 @@ function buildMathsQBank() {
     const chDoneKey = 'maths_qbank_' + ch.id;
     const chDone = getChapterDone(chDoneKey);
     return `
-    <div class="pdf-card" style="cursor:pointer" onclick="openMathsQBank(${ch.id})">
+    <div class="pdf-card" style="cursor:pointer" onclick="location.href='qbank.html?s=maths&ch=${ch.id}&m=2m'">
       <div class="pdf-card-info">
         <div class="pdf-card-title">${escH(ch.label)}</div>
         <div class="pdf-card-desc">${n2 + n3 + n5} questions</div>
       </div>
-      <button class="pdf-open-btn" onclick="event.stopPropagation();openMathsQBank(${ch.id})">View</button>
+      <a class="pdf-open-btn" href="qbank.html?s=maths&ch=${ch.id}&m=2m">View</a>
     </div>`;
   }).join('');
   return `
@@ -2846,12 +2854,12 @@ function buildSocialQBank() {
               const chDoneKey = 'social_qbank_' + s.key + '_' + chKey.replace(/[^a-zA-Z0-9_-]/g, '_');
               const chDone = getChapterDone(chDoneKey);
               return `
-              <div class="pdf-card" style="cursor:pointer" onclick="openSocialQBank('${s.key}','${chKey}')">
+              <div class="pdf-card" style="cursor:pointer" onclick="location.href='qbank.html?s=social&subj=${s.key}&ch=${chKey}&m=2m'">
                 <div class="pdf-card-info">
                   <div class="pdf-card-title">${escH(d.title)}</div>
                   <div class="pdf-card-desc">${d.q2m.length + d.q3m.length + d.q5m.length} questions</div>
                 </div>
-                <button class="pdf-open-btn" onclick="event.stopPropagation();openSocialQBank('${s.key}','${chKey}')">View</button>
+                <a class="pdf-open-btn" href="qbank.html?s=social&subj=${s.key}&ch=${chKey}&m=2m">View</a>
               </div>`;
             }).join('')}
           </div>
@@ -3518,6 +3526,18 @@ function renderAppTools() {
       name: 'Tips & Tricks',
       desc: 'Smart study strategies to help you score 90+ in your board exams.',
       href: 'learn-tips.html',
+      onclick: ''
+    },
+    {
+      name: 'Daily Quiz',
+      desc: '5 fresh questions every day across all subjects. Build exam habit, one day at a time.',
+      href: 'daily-quiz.html',
+      onclick: ''
+    },
+    {
+      name: 'Mind Maps',
+      desc: 'Visual concept maps for every chapter — see the big picture before diving into details.',
+      href: 'mind-maps.html',
       onclick: ''
     }
   ];
