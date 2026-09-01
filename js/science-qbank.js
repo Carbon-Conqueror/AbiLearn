@@ -6,7 +6,6 @@ const SCIENCE_QBANK = {
       "What is meant by a balanced chemical equation? Why should chemical equations be balanced?",
       "Name the type of chemical reaction that takes place when quicklime is added to water. Write the chemical equation for this reaction.",
       "Give the chemical name of the reactants and products of the following equation: HNO3 + Ca(OH)2 -> Ca(NO3)2 + H2O.",
-      "Assertion (A): Burning of natural gas is an exothermic process. Reason (R): Methane gas combines with oxygen to produce carbon dioxide and water. Choose the correct option and justify.",
       "What happens when potassium iodide solution is mixed with lead nitrate solution? Write the balanced chemical equation.",
       "What is a combination reaction? Give one example with a balanced chemical equation.",
       "What is a decomposition reaction? How is it opposite to a combination reaction? Give one example.",
@@ -72,7 +71,6 @@ const SCIENCE_QBANK = {
       "For each of the following reactions, identify the type, write the balanced chemical equation with state symbols, and state one observation: Iron nail placed in blue copper sulphate solution; Sodium sulphate + barium chloride solutions mixed; Silver chloride exposed to sunlight; Lime water + CO2; Lead nitrate crystals heated in test tube.",
       "Identify the substance oxidised, reduced, oxidising agent, and reducing agent in each of the following: CuO + H2 -> Cu + H2O; 2PbO + C -> 2Pb + CO2; MnO2 + 4HCl -> MnCl2 + 2H2O + Cl2; ZnO + C -> Zn + CO; Fe2O3 + 3CO -> 2Fe + 3CO2.",
       "Write the balanced equations for the following decomposition reactions. Classify each as thermal, electrolytic, or photolytic: Ferrous sulphate; Water (by electricity); Silver bromide (by light); Lead nitrate (by heat); Calcium carbonate (by heat).",
-      "Complete the following table by writing the balanced chemical equation, identifying the type, and naming the products: Mg + O2; Zn + CuSO4(aq); 2KBr + BaI2; 3Fe + 4H2O (steam); Na2SO4(aq) + BaCl2(aq).",
       "Write balanced chemical equations for the following. State the type of each reaction and one observation: Copper + 2AgNO3 solution; NaOH + HCl; CaCO3 heated strongly; BaCl2(aq) + H2SO4(aq); 2AgCl exposed to sunlight.",
       "A student performs the following experiments. For each, state what is observed, write a balanced chemical equation, and name the type of reaction: Iron nail placed in blue CuSO4 solution for 20 minutes; Zinc granules added to dilute H2SO4; Magnesium ribbon burnt in air; Few drops of NaOH added to FeSO4 solution; Silver nitrate + sodium chloride solutions mixed.",
       "Define corrosion and rancidity. Explain the chemical reactions involved in each. State two harmful effects of each and describe three methods to prevent each.",
@@ -83,7 +81,7 @@ const SCIENCE_QBANK = {
       "State what you observe and write the balanced chemical equation when: Copper powder is heated in a china dish; A silver article is left in air for several days; Iron is left in a moist atmosphere for a long time; Copper wire is dipped into silver nitrate solution; Ferrous sulphate crystals are heated in a dry test tube.",
       "Complete and balance the following chemical equations. Write the type of reaction and state one observation for each: Zn + H2SO4 ->; CaCO3 -> (heat); AgNO3(aq) + NaCl(aq) ->; Na + H2O ->; Al + CuCl2 ->.",
       "A student is given the following chemical reactions to analyse. For each, state the type, write the balanced equation, and answer the sub-question: Pb(NO3)2 heated — name the brown gas evolved; BaCl2 + H2SO4(aq) — name the white insoluble product; Mg ribbon burnt in air — name the type of oxide formed; Fe + dilute HCl — name the gas evolved; 2AgBr -> 2Ag + Br2 (light) — name one use of this reaction."
-    ],
+    ]
   },
   2: {
     title: "Ch 2 — Acids, Bases and Salts",
@@ -124,10 +122,8 @@ const SCIENCE_QBANK = {
     q3m: [
       "Write the balanced chemical equations for the reactions of dilute hydrochloric acid with the following: Iron (Fe); Marble chips (CaCO3); Sodium hydroxide (NaOH).",
       "Write the balanced chemical equations for the reactions of dilute sulphuric acid with the following: Zinc (Zn); Copper oxide (CuO); Sodium carbonate (Na2CO3).",
-      "Complete the following table showing reactions of bases with different substances: Acids (NaOH + HCl); Non-metallic oxide (NaOH + CO2); Metals (NaOH + Zn).",
       "Match the following salts with their chemical name, formula, and one use: Washing soda; Baking soda; Bleaching powder; Plaster of Paris.",
       "Write the balanced chemical equation and state the observation for each of the following reactions: Dilute HCl added to zinc granules; Dilute HCl added to sodium carbonate; Sodium hydroxide added to copper sulphate solution.",
-      "Fill in the following table about the pH of common substances and their nature: Human blood (7.4); Lemon juice (2-3); Milk of magnesia (10); Pure water (7); Gastric juice (HCl) (1-2).",
       "Write the balanced chemical equations for the preparation of the following salts: Sodium chloride (NaCl); Copper sulphate (CuSO4); Sodium sulphate (Na2SO4).",
       "Write the balanced chemical equations for the following and name the type of salt formed in each reaction: HCl + NaOH; H2SO4 + Ca(OH)2; HNO3 + KOH.",
       "What is the importance of pH in everyday life? Explain with any three examples.",
@@ -156,7 +152,6 @@ const SCIENCE_QBANK = {
     q5m: [
       "Write the balanced chemical equations for the reactions of dilute hydrochloric acid with the following. Also name the type of reaction in each case: Magnesium ribbon; Aluminium metal; Iron filings; Copper oxide (CuO); Sodium carbonate (Na2CO3).",
       "Write the balanced equations for the following reactions of bases with different substances. State one observation for each: Dilute HCl (acid); CO2 (non-metallic oxide); Zinc (metal); Aluminium (metal); Copper sulphate solution (CuSO4).",
-      "Complete the following table about important salts: their chemical names, formulas, preparation equations, and uses: Common salt; Washing soda; Baking soda; Bleaching powder; Plaster of Paris.",
       "Write balanced chemical equations for the following and identify the type of salt (acidic, basic, or neutral) formed in each: HCl + NaOH; H2SO4 + 2NaOH; HNO3 + KOH; HCl + NH4OH; CH3COOH + NaOH.",
       "Explain the importance of pH in everyday life with five different examples. Also state what happens when the pH of rain water falls below 5.6.",
       "Write the balanced chemical equations for the following reactions. Classify each reaction type and state one observation: Dilute HCl added to zinc granules; NaOH added to FeSO4 solution; Baking soda heated strongly; Excess CO2 passed through lime water; Dilute H2SO4 added to BaCl2 solution.",
@@ -169,7 +164,7 @@ const SCIENCE_QBANK = {
       "A student tests solutions A (pH 2), B (pH 7), C (pH 10), and D (pH 14) with litmus and universal indicator. Complete the table and answer the questions about nature, colour on universal indicator, effect on red litmus, and example substance for each.",
       "Write balanced chemical equations for the following reactions. State whether each reaction is exothermic or endothermic: H2SO4 dissolved in water; NaOH + HCl neutralisation; Thermal decomposition of NaHCO3; Ca(OH)2 + CO2 -> CaCO3 + H2O; Dilute HCl + Mg ribbon.",
       "Answer the following questions about water of crystallisation and important salts: What is water of crystallisation? Give one example. What happens when CuSO4.5H2O is heated? Write the equation. What is the chemical name and formula of Plaster of Paris? What happens when Plaster of Paris is mixed with water? Why does anhydrous CuSO4 turn blue when water is added?"
-    ],
+    ]
   },
   3: {
     title: "Ch 3 — Metals and Non-Metals",
@@ -248,14 +243,12 @@ const SCIENCE_QBANK = {
       "What is the reactivity series? Arrange the following metals in decreasing order of reactivity. Predict whether a reaction will occur between each pair and write the balanced equation if it does: Zinc with CuSO4 solution; Copper with ZnSO4 solution; Iron with CuSO4 solution; Copper with AgNO3 solution; Silver with CuSO4 solution.",
       "A student performs the following experiments. State the observation, write balanced equations, and name the type of reaction: Iron nail placed in blue CuSO4 solution; Sodium dropped in cold water; Magnesium ribbon burnt in oxygen; Thermite reaction: Al + Fe2O3 (heated); Zinc added to NaOH solution.",
       "Explain corrosion. Write the conditions required for rusting of iron. Write five methods to prevent corrosion with a brief explanation of each: Painting or varnishing; Galvanisation; Alloying; Electroplating; Oil and grease application.",
-      "Complete the following table about the occurrence and extraction of important metals: Iron (Fe); Aluminium (Al); Copper (Cu); Zinc (Zn); Sodium (Na) — including most common ore, formula of ore, method of extraction, and one important use.",
       "Write the balanced equations for the reactions of metals with water (cold water, hot water, and steam). State what is produced and how vigorously the reaction occurs: Potassium (K) with cold water; Sodium (Na) with cold water; Calcium (Ca) with cold water; Magnesium (Mg) with hot water/steam; Iron (Fe) with steam only.",
       "Write the electron-dot structures for the formation of the following ionic compounds. State the charge on each ion formed: Sodium chloride; Magnesium oxide; Calcium chloride; Aluminium oxide; Sodium oxide.",
       "Write the differences between the following pairs: Mineral and Ore (definition, contains metal profitably, example); Calcination and Roasting (definition, type of ore used, gas produced, balanced equation).",
       "Answer the following questions about metals and non-metals: Name two metals that float on water. Why? Why is aluminium extracted by electrolysis not by reduction with carbon? Why do sodium and potassium catch fire if kept in open air? Name the metal that is stored in water. Why? Why is diamond used as a cutting tool while graphite is used as a lubricant?",
-      "Write the balanced equations and give observations for the following. Also state what type of oxide is formed: Sulphur burns in oxygen; Nitrogen reacts with oxygen; Sodium reacts with oxygen; Aluminium reacts with oxygen; Carbon burns in excess oxygen.",
-      "Case Study: A student observes different metals reacting with dilute HCl, water, and oxygen. Complete the following table and answer the questions below for: Potassium (K); Magnesium (Mg); Zinc (Zn); Copper (Cu); Gold (Au) — covering reaction with dilute HCl, reaction with water/steam, reaction with oxygen, and position in reactivity series."
-    ],
+      "Write the balanced equations and give observations for the following. Also state what type of oxide is formed: Sulphur burns in oxygen; Nitrogen reacts with oxygen; Sodium reacts with oxygen; Aluminium reacts with oxygen; Carbon burns in excess oxygen."
+    ]
   },
   4: {
     title: "Ch 4 — Carbon and Its Compounds",
@@ -295,7 +288,6 @@ const SCIENCE_QBANK = {
     ],
     q3m: [
       "Define a homologous series. State three characteristics of a homologous series. Write the first four members of the alkane homologous series with their molecular formulae.",
-      "Complete the following table about functional groups and the corresponding homologous series, including: functional group, name of functional group, general formula, IUPAC suffix/prefix, and example (name + formula), for the functional groups -OH, -CHO, >C=O (ketone), -COOH, -Cl / -Br.",
       "Write the IUPAC names of the following compounds, and identify the functional group present in each: CH3-CH2-OH, CH3-CO-CH3, CH3-CH2-CHO, CH3-CH2-COOH, CH2=CH2.",
       "What are the four types of chemical reactions shown by carbon compounds? Write one balanced chemical equation and give one example for each type: Combustion, Oxidation, Addition, Substitution.",
       "Write the balanced chemical equations for the following reactions of ethanoic acid, and name the product(s) formed in each case: reaction with Sodium (Na) metal, Sodium carbonate (Na2CO3), Sodium hydroxide (NaOH), and Ethanol (C2H5OH).",
@@ -330,7 +322,6 @@ const SCIENCE_QBANK = {
       "What is a homologous series? Write three characteristics of a homologous series. Write the first four members and general formulae for the following series: Alkanes, Alkenes, Alkynes, Alcohols, Carboxylic Acids.",
       "Write the balanced chemical equations for all four types of reactions shown by carbon compounds. Give one example of each. Also state the conditions (temperature, catalyst, etc.) required, for: Combustion, Oxidation, Addition reaction, Substitution reaction.",
       "Write the balanced chemical equations for the following reactions of ethanoic acid and ethanol. State one observation for each: Ethanoic acid + Sodium metal, Ethanoic acid + Na2CO3, Ethanoic acid + NaOH, Ethanoic acid + Ethanol (H+ catalyst), Ethanol + Sodium metal, Ethanol + Acidified K2Cr2O7, Ethanol + Conc. H2SO4 at 170 C.",
-      "Complete the following table about important carbon compounds: their names, formulae, structural formulae, and uses, for: Methane, Ethylene, Acetylene, Ethanol, Acetic acid.",
       "Explain the cleansing action of soaps. Draw a labelled diagram of a micelle. Explain why soaps do not work in hard water. Compare soaps and detergents across five properties: prepared from, type of salt, works in hard water?, forms scum?, biodegradable?.",
       "A student is given an organic compound A with molecular formula C2H6O. Write the IUPAC name of A. Write the structural formula of A. What happens when A reacts with sodium? Write equation. What happens when A is oxidised with acidified K2Cr2O7? Write equation. What happens when A is heated with conc. H2SO4? Write equation.",
       "Write the IUPAC names and structural formulae for the following compounds. Also identify the functional group and class of compound in each: C3H7OH, C3H6O (aldehyde), C4H8O (ketone), C3H6O2, C4H6.",
@@ -338,10 +329,9 @@ const SCIENCE_QBANK = {
       "What is isomerism? Write the structural formulae and IUPAC names of all possible isomers of C4H10 and C4H8 (alkene). State the type of isomerism.",
       "Write the balanced chemical equations for the following reactions. State the type of reaction in each case and identify the functional group that undergoes the reaction: Ethene + H2 (Ni catalyst), Ethyne + Br2 (in CCl4), Methane + Cl2 (sunlight), Ethanol + Na, Ethanoic acid + NaOH.",
       "Describe the properties of ethanoic acid. Write balanced equations for its reactions with: (i) sodium (ii) sodium carbonate (iii) sodium hydroxide (iv) ethanol. Also state what happens when ethanoic acid is cooled below 16.6 degrees Celsius.",
-      "Case Study: A student is studying a compound X. It is a liquid at room temperature with a characteristic smell. When heated with conc. H2SO4 at 170 C it forms compound Y. When oxidised with acidified K2Cr2O7 it forms compound Z. Compound X reacts with Z in presence of H2SO4 to form a sweet-smelling compound W. Identify compound X (with molecular formula). Identify compound Y and write its molecular formula. Identify compound Z and write its molecular formula. Identify compound W and write the balanced equation for its formation. Name the type of reaction by which X forms Z.",
       "Write the structural formulae, molecular formulae, and IUPAC names for the first four members of each of the following homologous series: Alkanes (CnH2n+2), Alcohols (CnH2n+1OH), Carboxylic acids.",
       "What are soaps and detergents? Explain how soaps are made (saponification). Draw a labelled diagram of a soap molecule showing its hydrophilic and hydrophobic ends. Explain the micelle formation and how it helps in cleansing action. Why are detergents preferred over soaps in hard water?"
-    ],
+    ]
   },
   5: {
     title: "Ch 5 — Life Processes",
@@ -425,9 +415,8 @@ const SCIENCE_QBANK = {
       "Describe the nutrition in Amoeba. Draw a labelled diagram showing the process of ingestion in Amoeba. Explain how Amoeba engulfs, digests, and absorbs food. What is the role of the food vacuole?",
       "Answer the following questions related to life processes: What is the compensation point in plants? Why do desert plants keep their stomata closed during the day? What is the role of mucus in the stomach? Why is the small intestine longer than the large intestine? What would happen if there were no platelets in the blood?",
       "Describe the respiratory system in a fish. How do fish breathe? How is respiration in fish different from that in humans? Draw a labelled diagram of the gills of a fish and explain their role in gaseous exchange.",
-      "Case Study: A patient is suffering from kidney failure. His kidneys cannot filter blood properly. What is the function of the kidneys in a healthy person? Name the functional unit of the kidney and describe its structure. What waste products accumulate in the blood due to kidney failure? What is dialysis? How does it mimic kidney function? What is kidney transplant? Is it a permanent solution?",
       "Write a comprehensive note on the life process of nutrition covering: (i) definition and importance (ii) autotrophic nutrition with photosynthesis equation (iii) heterotrophic nutrition with three types and examples (iv) nutrition in Amoeba (v) digestion in humans, including an enzyme table covering site of digestion, secretion, enzyme(s), substrate, and product for the mouth, stomach, small intestine (pancreatic juice), small intestine (intestinal juice), and small intestine (bile)."
-    ],
+    ]
   },
   6: {
     title: "Ch 6 — Control and Coordination",
@@ -511,10 +500,9 @@ const SCIENCE_QBANK = {
       "Explain phototropism in detail. Describe the role of auxin in bending of shoots towards light and roots away from light. Draw a simple diagram to support your answer.",
       "Compare tropic movements and nastic movements in plants. Explain phototropism, geotropism, hydrotropism, chemotropism, thigmotropism, and the folding of Mimosa leaves.",
       "Write a comprehensive note on plant hormones covering auxins, gibberellins, cytokinins, abscisic acid, and ethylene. Mention their major functions in plant growth and development.",
-      "Case Study: A student kept a potted plant near a window. After a few days, the shoot bent towards the window while the roots continued growing downwards. Which movement is shown by the shoot? Which hormone is responsible for the bending of the shoot? Why does the shoot bend towards light? Which movement is shown by the root? How are these movements useful to the plant?",
       "Answer the following questions related to control and coordination: Why does a nerve impulse travel in one direction across a synapse? Why is the pituitary gland called the master gland? What would happen if insulin is not produced in sufficient amount? Why are hormones called chemical messengers? How is movement in Mimosa different from movement of a tendril?",
       "Draw and explain any two diagrams from this chapter: (i) neuron (ii) reflex arc (iii) human brain (iv) endocrine glands in humans. Also write the function of each labelled part."
-    ],
+    ]
   },
   7: {
     title: "Ch 7 — How do Organisms Reproduce?",
@@ -617,14 +605,12 @@ const SCIENCE_QBANK = {
       "Compare reproduction in plants and humans across five parameters: reproductive organs, gametes, fertilisation site, zygote development, and protection/nutrition of embryo.",
       "What are contraceptive methods? Explain barrier methods, chemical methods, intrauterine devices, and surgical methods. Mention their role in preventing pregnancy and reducing the spread of infections.",
       "Write a detailed note on reproductive health. Include personal hygiene, adolescent awareness, contraception, family planning, prevention of sexually transmitted infections, and responsible health practices.",
-      "Case Study: A flower is pollinated and the pollen grain germinates on the stigma. The pollen tube grows through the style and reaches the ovule. Answer: What is pollination? Why does the pollen tube grow towards the ovule? Where does fertilisation occur in the flower? What does the ovule become after fertilisation? What does the ovary become after fertilisation?",
-      "Case Study: A couple wants to avoid pregnancy for some time and also wants protection from infections. A doctor explains different contraceptive methods. Answer: Which contraceptive method can reduce the risk of infections? Name one chemical method of contraception. What is an IUCD? What are surgical contraceptive methods called in males and females? Why should contraception be used responsibly under proper guidance?",
       "Complete the following comparison table related to asexual reproduction, covering mode, organism, main feature, and advantage for: binary fission, multiple fission, fragmentation, budding, spore formation, and vegetative propagation.",
       "Complete the following comparison table related to human reproductive organs, covering organ, system, function, and important point for: testes, scrotum, vas deferens, ovaries, oviduct, uterus, and placenta.",
       "Answer the following questions related to reproduction: Why is variation important for a species? Why are testes present in the scrotum? Why is the uterus lining thickened every month? Why are spores useful for survival in unfavourable conditions? Why is cross-pollination generally better for variation?",
       "Distinguish between the following pairs with examples wherever required: (i) pollination and fertilisation (ii) zygote and embryo (iii) fission and budding (iv) menstruation and pregnancy (v) internal and external fertilisation.",
       "Write a complete centum-level answer on the chapter How do Organisms Reproduce covering: need for reproduction, DNA copying and variation, asexual methods, sexual reproduction in plants, human reproductive systems, fertilisation, placenta, menstruation, contraception, and reproductive health."
-    ],
+    ]
   },
   8: {
     title: "Ch 8 — Heredity",
@@ -727,14 +713,10 @@ const SCIENCE_QBANK = {
       "A woman has only daughters. A family member blames her for not having a son. Use biology to prove why this idea is wrong.",
       "Explain why variations are more common in sexually reproducing organisms than in asexually reproducing organisms. Mention the role of gamete formation and fertilisation.",
       "In an asexually reproducing population, trait A is present in 10% and trait B is present in 60%. Which trait is older? Explain the logic and connect it with variation and inheritance.",
-      "Case Study: In pea plants, round seed shape is dominant over wrinkled seed shape. A pure round plant is crossed with a wrinkled plant. The F1 plants are self-crossed. Answer: What are the genotypes of the parents? What is the phenotype of F1 generation? What gametes are produced by F1 plants? What is the F2 phenotypic ratio? Which Mendel law is shown here?",
-      "Case Study: In humans, females have XX chromosomes and males have XY chromosomes. A child receives one sex chromosome from each parent. Answer: What sex chromosome is always contributed by the mother? What two types of sex chromosomes can be contributed by the father? Which combination produces a female child? Which combination produces a male child? Why is sex determination a matter of chance?",
-      "Complete the following table for important heredity terms, with meaning and example, for: gene, allele, dominant trait, recessive trait, genotype, phenotype, homozygous, and heterozygous.",
-      "Complete the following table for Mendel's pea plant traits, giving the dominant trait and recessive trait for: plant height, seed shape, seed colour, flower colour, pod shape, pod colour, and flower position.",
       "Answer the following questions related to heredity: Why are gametes haploid? Why do body cells have chromosome pairs? Why does F1 show only dominant trait? Why does F2 show both dominant and recessive traits? Why is counting offspring important in genetics?",
       "Distinguish between the following pairs with examples: (i) genotype and phenotype (ii) dominant and recessive trait (iii) homozygous and heterozygous (iv) monohybrid and dihybrid cross (v) autosomes and sex chromosomes.",
       "Write a complete centum-level answer on the chapter Heredity covering: heredity, variation, inherited and acquired traits, DNA, genes, chromosomes, Mendel's experiments, monohybrid cross, dihybrid cross, laws of inheritance, Punnett square, and sex determination in humans."
-    ],
+    ]
   },
   9: {
     title: "Ch 9 — Light: Reflection and Refraction",
@@ -840,11 +822,9 @@ const SCIENCE_QBANK = {
       "Define power of a lens. Derive its relation with focal length in metre. Calculate the power of lenses of focal lengths +25 cm, -20 cm and +50 cm.",
       "Compare mirrors and lenses using a table. Include: phenomenon involved, types, formula, sign of focal length, nature of image, and common uses.",
       "A student is given a concave mirror, convex mirror, convex lens and concave lens. Explain how the student can identify each one using touch, image formation and behaviour of parallel rays.",
-      "Case Study: A student performs an experiment to find the focal length of a convex lens by obtaining a sharp image of a distant object on a screen. Answer: principle used, nature of image, precautions, reason for using distant object, and formula for power.",
-      "Case Study: A vehicle uses a convex mirror as rear-view mirror. Answer: type of image formed, reason for wide field of view, limitation of size estimation, sign of focal length and one safety advantage.",
       "Write a comprehensive note on Light - Reflection and Refraction covering: laws of reflection, spherical mirrors, mirror formula, refraction, glass slab, spherical lenses, lens formula, magnification and power of lens.",
       "Create a formula-based answer sheet for this chapter. Include mirror formula, lens formula, magnification of mirror, magnification of lens, relation between R and f, refractive index formula, power of lens formula, SI units, sign convention and one numerical example for each formula."
-    ],
+    ]
   },
   10: {
     title: "Ch 10 — The Human Eye and the Colourful World",
@@ -947,14 +927,10 @@ const SCIENCE_QBANK = {
       "Why does the sun appear reddish during sunrise and sunset? Explain the role of path length and scattering of shorter wavelengths.",
       "Explain why danger signals are red. Connect your answer with wavelength, scattering and visibility through fog or smoke.",
       "Compare dispersion, scattering and atmospheric refraction in detail with causes, examples and optical conditions.",
-      "Case Study: A person can read a newspaper clearly but cannot see distant road signs clearly. Identify the defect. Explain the cause, ray diagram and correction.",
-      "Case Study: A person can see distant objects clearly but cannot read a book held at 25 cm. Identify the defect. Explain the cause, ray diagram and correction.",
-      "Case Study: A narrow beam of sunlight entering a dusty room becomes visible, but the same beam is not visible in clean air. Explain the phenomenon and conditions required.",
-      "Case Study: During a rainy afternoon, a student observes a rainbow opposite the sun. Explain why the rainbow forms opposite the sun and why water droplets act like tiny prisms.",
       "Write a comprehensive note on the human eye covering image formation, accommodation, least distance of distinct vision, two common defects and their correction.",
       "Write a comprehensive note on colourful phenomena in nature covering dispersion, rainbow, atmospheric refraction, scattering, blue sky and red sunset.",
       "Answer the following in a table: (i) part of eye controlling light (ii) screen of eye (iii) nerve carrying signals (iv) defect corrected by concave lens (v) reason for blue sky."
-    ],
+    ]
   },
   11: {
     title: "Ch 11 — Electricity",
@@ -1059,12 +1035,10 @@ const SCIENCE_QBANK = {
       "Explain why domestic appliances are connected in parallel and not in series. Include voltage, independent switching, equivalent resistance and appliance safety.",
       "A fuse of 5 A is connected in a circuit. Can appliances of total power 1500 W be safely used on a 220 V supply? Calculate and justify.",
       "Draw a neat circuit diagram to study the dependence of current on potential difference. Label battery, key, rheostat, ammeter, resistor and voltmeter. Explain the role of each component.",
-      "Case Study: A student connects three resistors of 2 ohm, 4 ohm and 4 ohm in a circuit with a 12 V battery. Answer: (i) equivalent resistance in series (ii) current in series (iii) equivalent resistance in parallel (iv) total current in parallel (v) which combination draws more current and why.",
-      "Case Study: An electric kettle is rated 2000 W, 220 V. Answer: (i) meaning of rating (ii) current drawn (iii) resistance (iv) energy used in 30 minutes (v) why thick wires are used for high-power appliances.",
       "Answer the following numericals in one solution: (i) Find current when 24 C charge flows in 6 s. (ii) Find resistance when 10 V produces 2 A. (iii) Find heat when 3 A flows through 5 ohm for 20 s. (iv) Find power when 220 V draws 0.5 A.",
       "Write a comprehensive note on electricity covering: electric current, potential difference, resistance, Ohm's law, resistivity, series combination, parallel combination, heating effect and electric power with formulae.",
       "A circuit contains a 6 ohm resistor in series with a parallel combination of 3 ohm and 6 ohm. The circuit is connected to a 16 V battery. Calculate equivalent resistance, total current, voltage across series resistor and voltage across parallel branch."
-    ],
+    ]
   },
   12: {
     title: "Ch 12 — Magnetic Effects of Electric Current",
@@ -1172,9 +1146,8 @@ const SCIENCE_QBANK = {
       "Describe domestic electric wiring in detail. Explain live wire, neutral wire, earth wire, fuse, switch, sockets and parallel arrangement of appliances.",
       "Explain why domestic appliances are connected in parallel. Include potential difference, independent control, equivalent resistance and safety of appliances.",
       "What are short circuiting and overloading? Explain their causes, dangers and prevention using fuse/MCB and proper wiring.",
-      "Explain the importance of earthing. Describe how earthing protects a person from electric shock when the live wire touches the metallic body of an appliance.",
-      "Case Study: A family uses an electric iron, heater and geyser from the same socket. The fuse melts repeatedly. Answer: (i) name the fault (ii) cause (iii) protective device (iv) why fuse melts (v) two precautions."
-    ],
+      "Explain the importance of earthing. Describe how earthing protects a person from electric shock when the live wire touches the metallic body of an appliance."
+    ]
   },
   13: {
     title: "Ch 13 — Our Environment",
@@ -1274,8 +1247,6 @@ const SCIENCE_QBANK = {
       "Write a detailed note on waste management. Include segregation, composting, recycling, reuse and safe disposal of non-biodegradable waste.",
       "Explain the difference between natural and artificial ecosystems. Use forest, pond, crop field and aquarium as examples. Mention why artificial ecosystems need human maintenance.",
       "Describe the flow of energy and cycling of matter in an ecosystem. Why is energy flow unidirectional but materials are recycled?",
-      "Case Study: In a pond, algae are eaten by small fish, small fish are eaten by large fish, and large fish are eaten by birds. A pesticide enters the pond. Answer: (i) identify trophic levels (ii) explain biomagnification (iii) organism most affected (iv) why pesticide concentration increases (v) one preventive measure.",
-      "Case Study: A school canteen produces vegetable peels, paper cups, plastic wrappers and metal cans daily. Classify the wastes and prepare a scientific waste-management plan.",
       "A food chain is given: grass -> grasshopper -> frog -> snake -> eagle. Answer: (i) identify producer and consumers (ii) state trophic levels (iii) calculate energy reaching eagle if grass has 100,000 J (iv) explain energy loss (v) state one effect if frogs disappear.",
       "Explain how human activities disturb ecosystems. Include pesticide use, plastic waste, deforestation, overconsumption and improper waste disposal. Suggest corrective steps.",
       "Why is environmental conservation necessary? Explain using examples of food chains, ozone layer protection, waste management and responsible consumer behaviour.",
@@ -1284,6 +1255,6 @@ const SCIENCE_QBANK = {
       "Compare food chain, food web and trophic level in a table. Then explain why removal of one species can disturb the entire ecosystem.",
       "Write a centum-level answer on 'Our Environment' covering ecosystem, trophic levels, energy transfer, biomagnification, ozone layer and waste management.",
       "Answer the following in detail: (i) Why are producers essential? (ii) Why are decomposers essential? (iii) Why are non-biodegradable chemicals dangerous? (iv) Why should waste be segregated? (v) Why is ozone layer protection important?"
-    ],
-  },
+    ]
+  }
 };

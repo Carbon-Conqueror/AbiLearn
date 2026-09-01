@@ -98,7 +98,7 @@ const MATHS_QBANK_CH = {
       "The length, breadth, and height of a room are 8 m 25 cm, 6 m 75 cm, and 4 m 50 cm respectively. Find the length of the longest rod that can measure the dimensions of the room exactly.",
       "Prove that √3 + √5 is irrational. Hence state whether 2(√3 + √5) is rational or irrational.",
       "Show that the square of any positive integer is of the form 5m, 5m+1, or 5m+4 and hence prove that it can never be of the form 5m+2 or 5m+3."
-    ],
+    ]
   },
   2: {
     title: "Ch 2 — Polynomials",
@@ -205,10 +205,9 @@ const MATHS_QBANK_CH = {
       "Verify that 2, 3 and 1/2 are zeroes of the polynomial 2x³ − 9x² + 13x − 6. Also verify all three relationships between zeroes and coefficients of a cubic polynomial.",
       "Find all zeroes of x⁴ − 8x³ + 23x² − 28x + 12 if two of its zeroes are 1 and 2.",
       "If the zeroes of the cubic polynomial x³ − 6x² + 3x + 10 are a, a+b, a+2b, find the values of a and b. Hence find all zeroes.",
-      "Case Study: A student designs a rectangular garden whose area is represented by the polynomial p(x) = 6x² + 11x − 10. Find the zeroes of p(x) and verify the relationship. If one side of the garden is (2x − 1), find the other side and verify using division algorithm.",
       "Obtain all zeroes of 2x⁴ + x³ − 14x² − 19x − 6 if two of its zeroes are −2 and −1.",
       "Find all zeroes of x⁴ − 2x³ − 7x² + 8x + 12 if two zeroes are 3 and −2."
-    ],
+    ]
   },
   3: {
     title: "Ch 3 — Pair of Linear Equations in Two Variables",
@@ -318,7 +317,7 @@ const MATHS_QBANK_CH = {
       "Solve: (a+b)x + (a−b)y = a² − 2ab − b² and (a+b)(x+y) = a² + b².",
       "For what values of a and b will the following system of equations have infinitely many solutions: 2x + 3y = 7, (a−b)x + (a+b)y = 3a + b − 2.",
       "Draw the graph of x + y = 5 and x − y = 3. Find area of triangle formed by the two lines and y-axis. Also determine whether the pair has a unique solution."
-    ],
+    ]
   },
   4: {
     title: "Ch 4 — Quadratic Equations",
@@ -426,12 +425,11 @@ const MATHS_QBANK_CH = {
       "A right triangle whose sides (other than hypotenuse) are 3 cm and 4 cm is made to revolve about its hypotenuse. Find the volume and surface area of the double cone so formed. Also apply the quadratic equation formed while finding the altitude of the triangle on the hypotenuse.",
       "Find the roots of 4x² + 4bx − (a² − b²) = 0 by completing the square. Hence verify using the quadratic formula.",
       "Solve: 1/(x+4) − 1/(x−7) = 11/30, x ≠ −4, 7.",
-      "Case Study: The speed of a boat in still water is x km/hr and the speed of the stream is y km/hr. It goes 30 km upstream and 44 km downstream in 10 hours. If it also goes 40 km upstream and 55 km downstream in 13 hours, form a quadratic equation and find x and y. Hence verify using the discriminant.",
       "A pole has to be erected at a point on the boundary of a circular park of diameter 13 m such that the difference of its distances from two diametrically opposite fixed gates A and B is 7 m. Find the distances from the two gates.",
       "The sum of the squares of two consecutive odd numbers is 394. Find the numbers. Also verify that the numbers satisfy the original condition.",
       "A motor boat goes 10 km upstream and returns back to the starting point in 55 minutes. If the speed of the stream is 2 km/hr, find the speed of the motor boat in still water. Hence also find the total time taken if the speed of the stream increases to 3 km/hr.",
       "Three consecutive positive integers are such that the sum of the square of the first and the product of the other two is 46. Find the integers."
-    ],
+    ]
   },
   5: {
     title: "Ch 5 — Arithmetic Progressions",
@@ -544,7 +542,7 @@ const MATHS_QBANK_CH = {
       "An AP has 50 terms. The 2nd term is 14 and the 50th term is 110. Find the sum of last 30 terms.",
       "Find the sum of last 10 terms of the AP: 8, 10, 12, ..., 126.",
       "If Sn denotes the sum of first n terms of an AP, prove that S30 = 3(S20 − S10)."
-    ],
+    ]
   },
   7: {
     title: "Ch 7 — Coordinate Geometry",
@@ -637,10 +635,8 @@ const MATHS_QBANK_CH = {
       "The two opposite vertices of a square are (−1, 2) and (3, 2). Find the coordinates of the other two vertices.",
       "An equilateral triangle has two vertices at (0, 0) and (3, 0). Find the third vertex. Then find all three sides and verify the triangle is equilateral.",
       "The base QR of an equilateral triangle PQR lies on the x-axis. Q = (−4, 0) and the origin is the midpoint of QR. Find the coordinates of P and R.",
-      "If the distance of P(x, y) from A(3, 6) and B(−3, 4) are equal, show that 3x + y = 5. Hence find the point on the line 3x + y = 5 that is equidistant from A and B and also lies on the y-axis.",
-      "Case Study: The map of a triangular park has vertices at A(1, 7), B(−5, 5), and C(−1, −1). A lamp post is to be installed at the centroid of the park. Find: (i) the centroid (ii) the distance of centroid from each vertex (iii) which vertex is nearest to the centroid.",
-      "Case Study: A school building has corners at P(3, 4), Q(6, 7), R(9, 4), and S(6, 1). Find: (i) whether PQRS is a square or rhombus (ii) the length of diagonals (iii) ratio in which diagonal PR is divided by diagonal QS."
-    ],
+      "If the distance of P(x, y) from A(3, 6) and B(−3, 4) are equal, show that 3x + y = 5. Hence find the point on the line 3x + y = 5 that is equidistant from A and B and also lies on the y-axis."
+    ]
   },
   8: {
     title: "Ch 8 — Introduction to Trigonometry",
@@ -735,7 +731,7 @@ const MATHS_QBANK_CH = {
       "Evaluate step by step: [2 tan²45° + 3 cosec²30° − sec²60°] / [sin²30° + 4 cot²45° − sec²60°].",
       "Prove: cot θ/(cot θ − cot 3θ) + tan θ/(tan θ − tan 3θ) = 1.",
       "Prove: [(sin θ + cos θ)(1 − sin θ cos θ)] = sin³θ + cos³θ. Also verify for θ = 30°."
-    ],
+    ]
   },
   9: {
     title: "Ch 9 — Some Applications of Trigonometry",
@@ -760,12 +756,10 @@ const MATHS_QBANK_CH = {
       "Two poles of heights 6 m and 11 m stand on a plane ground. If the distance between the feet of the poles is 12 m, find the distance between their tops.",
       "From the top of a 120 m high tower, a man observes two cars on the opposite sides of the tower and in a straight line with the base of the tower with angles of depression 60° and 45° respectively. Find the distance between the two cars.",
       "The shadow of a vertical tower on a level ground increases by 10 m when the altitude of the sun changes from 45° to 30°. Find the height of the tower, using √3 = 1.73.",
-      "Case Study: An observer stands on the top of a 30 m high lighthouse. He observes a boat approaching the base of the lighthouse. The angle of depression of the boat changes from 30° to 60° as it moves towards the lighthouse. Find: (i) the initial distance of the boat from the base (ii) the distance moved by the boat towards the lighthouse (iii) the speed of the boat if it covers this distance in 2 minutes.",
       "A man on the top of a vertical tower observes a car moving at a uniform speed coming directly towards it. If it takes 12 seconds for the angle of depression to change from 30° to 45°, how long will the car take to reach the tower?",
       "Two stations are on either side of a hill. The angles of depression of two stations from the top of the hill are 30° and 45°. If the distance between the two stations is 100 m, find the height of the hill and the horizontal distance of each station from the foot of the hill.",
       "The angle of elevation of the top of a building from the foot of a tower is 30° and the angle of elevation of the top of the tower from the foot of the building is 60°. If the tower is 50 m high, find the height of the building. Also find the distance between the tower and the building.",
-      "Two ships A and B are sailing straight away from a cliff PQ of height h. The angles of depression of two ships from the top P of the cliff are α and β respectively. Show that the distance between the ships AB = h(tan α − tan β)/(tan α × tan β).",
-      "Case Study: A school organises a trip to a nature camp. Students observe a tall pine tree from two positions X and Y on the same side of the tree. From X, the angle of elevation of the top of the tree is 60°. From Y, which is 20 m closer to the tree, the angle of elevation is 45°. The height of the tree above the eye level is h metres. Find: (i) h (ii) the distance XY (iii) the distance of point Y from the base of the tree."
+      "Two ships A and B are sailing straight away from a cliff PQ of height h. The angles of depression of two ships from the top P of the cliff are α and β respectively. Show that the distance between the ships AB = h(tan α − tan β)/(tan α × tan β)."
     ],
     q5m: [
       "Two points A and B are on the same side of a tower and in the same straight line with its base. The angles of depression of these points from the top of the tower are 60° and 45° respectively. If the height of the tower is 15 m, find the distance between points A and B.",
@@ -787,13 +781,11 @@ const MATHS_QBANK_CH = {
       "Two poles of heights 6 m and 11 m stand on a plane ground. If the distance between the feet of the poles is 12 m, find the distance between their tops.",
       "From the top of a 120 m high tower, a man observes two cars on the opposite sides of the tower and in a straight line with the base of the tower with angles of depression 60° and 45° respectively. Find the distance between the two cars.",
       "The shadow of a vertical tower on a level ground increases by 10 m when the altitude of the sun changes from 45° to 30°. Find the height of the tower, using √3 = 1.73.",
-      "Case Study: An observer stands on the top of a 30 m high lighthouse. He observes a boat approaching the base of the lighthouse. The angle of depression of the boat changes from 30° to 60° as it moves towards the lighthouse. Find: (i) the initial distance of the boat from the base (ii) the distance moved by the boat towards the lighthouse (iii) the speed of the boat if it covers this distance in 2 minutes.",
       "A man on the top of a vertical tower observes a car moving at a uniform speed coming directly towards it. If it takes 12 seconds for the angle of depression to change from 30° to 45°, how long will the car take to reach the tower?",
       "Two stations are on either side of a hill. The angles of depression of two stations from the top of the hill are 30° and 45°. If the distance between the two stations is 100 m, find the height of the hill and the horizontal distance of each station from the foot of the hill.",
       "The angle of elevation of the top of a building from the foot of a tower is 30° and the angle of elevation of the top of the tower from the foot of the building is 60°. If the tower is 50 m high, find the height of the building. Also find the distance between the tower and the building.",
-      "Two ships A and B are sailing straight away from a cliff PQ of height h. The angles of depression of two ships from the top P of the cliff are α and β respectively. Show that the distance between the ships AB = h(tan α − tan β)/(tan α × tan β).",
-      "Case Study: A school organises a trip to a nature camp. Students observe a tall pine tree from two positions X and Y on the same side of the tree. From X, the angle of elevation of the top of the tree is 60°. From Y, which is 20 m closer to the tree, the angle of elevation is 45°. The height of the tree above the eye level is h metres. Find: (i) h (ii) the distance XY (iii) the distance of point Y from the base of the tree."
-    ],
+      "Two ships A and B are sailing straight away from a cliff PQ of height h. The angles of depression of two ships from the top P of the cliff are α and β respectively. Show that the distance between the ships AB = h(tan α − tan β)/(tan α × tan β)."
+    ]
   },
   11: {
     title: "Ch 11 — Areas Related to Circles",
@@ -894,23 +886,20 @@ const MATHS_QBANK_CH = {
       "Find the area of the shaded region in the figure enclosed between two concentric circles of radii 7 cm and 14 cm where ∠AOC = 40°. Also find the perimeter of the shaded region.",
       "ABC is a quadrant of a circle of radius 14 cm and a semicircle is drawn with BC as diameter. Find the area of the shaded region. Verify your answer by an alternative method.",
       "In the figure, two concentric circles of radii a and b (a > b) are given. A chord AB of the larger circle touches the smaller circle at C. Find the area of the shaded region between the two circles in terms of AB.",
-      "Case Study: A pookalam is a flower arrangement made in circular rings of alternate colours. Rings of flowers are placed at radii 5 cm, 10 cm, 15 cm, and 20 cm from the centre. Find: (i) area of innermost circle (ii) area of each ring (iii) total area of the pookalam (iv) area of the outermost ring as a fraction of total area.",
       "The area of an equilateral triangle ABC is 17320.5 cm². With each vertex as centre and radius equal to half the length of each side, circles are drawn. Find the area of the shaded region. (Use π = 3.14, √3 = 1.73205)",
       "On a square handkerchief, nine circular designs each of radius 7 cm are made. Find the area of the remaining portion of the handkerchief.",
       "In a circular table cover of radius 32 cm, a design is formed leaving an equilateral triangle ABC in the middle. Find the area of the design.",
       "Four equal circles, each of radius 5 cm, touch each other as shown in the figure. Find the area of the region between them.",
       "A chord PQ of length 12 cm subtends an angle of 120° at the centre of a circle. Find the area of the minor segment cut off by the chord PQ. Also find the area of the major segment and verify that their sum equals the area of the complete circle.",
-      "Case Study: A garden is designed in the shape of a rectangle PQRS with PQ = 30 m and QR = 20 m. Semicircles are drawn on each shorter side. A horse is tied at the midpoint M of PQ with a rope of 14 m. Find: (i) area grazeable inside the garden (ii) area grazeable outside (iii) total area grazeable (iv) area of the garden not grazed.",
       "A footpath of uniform width runs all around the inside of a rectangular field 54 m long and 35 m wide. If the area of the path is 420 m², find the width of the path. Also find the area of the inner rectangle.",
       "The area of an equilateral triangle is 49√3 cm². Taking each angular point as centre, circles are drawn with radius equal to half the length of the side of the triangle. Find the area of the triangle not covered by the circles.",
       "In the figure, a decorative block is made of two solids. The block has a circular base of radius 3.5 cm and total height 6.5 cm. A cone of height 2.5 cm is surmounted on a cylinder of height 4 cm. Find: (i) the area of the circular base (ii) the curved surface area of the cylindrical part (iii) the curved surface area of the conical part (iv) total surface area of the block.",
       "Find the area of the shaded region in the figure, if ABCD is a square of side 28 cm, and arcs are drawn with each vertex as centre and radius equal to half the side of the square. Also find the perimeter of the shaded region.",
-      "Case Study: An architect designs a circular park of radius 21 m. Inside the park, an equilateral triangular path is made. Flower beds in the shape of segments are made between the triangle and the circle. Find: (i) the side of the equilateral triangle (ii) the area of the triangle (iii) the area of each flower bed segment (iv) the total area of all three flower beds (v) the cost of planting flowers at Rs. 50 per m².",
       "Two circles touch externally. The sum of their areas is 130π cm² and the distance between their centres is 14 cm. Find the radii of the two circles. Also find the perimeter of the figure formed by the two circles.",
       "In the figure, PSR, RTQ, and PAQ are three semicircles of diameters 10 cm, 3 cm, and 7 cm respectively. Find the area of the shaded region. Also find the perimeter of the shaded region.",
       "A circular disc of radius 6 cm is divided into three sectors with central angles 90°, 120°, and 150°. Find the ratio of the areas of three sectors. Also find the ratio of arc lengths of the three sectors.",
       "The minute hand of a clock is 12 cm long. Find the area swept by the minute hand between 9:00 AM and 9:35 AM. Also find the distance travelled by the tip of the minute hand in this duration."
-    ],
+    ]
   },
   12: {
     title: "Ch 12 — Surface Areas and Volumes",
@@ -990,24 +979,20 @@ const MATHS_QBANK_CH = {
       "A vessel in the form of a hemisphere is surmounted by a hollow cylinder of same radius. The total height of the vessel is 13 cm and the diameter is 14 cm. Find the inner surface area. Also find the volume of water it can hold.",
       "A hemispherical tank full of water is emptied by a pipe at 25/7 litres per second. The tank has a diameter of 3 m. How much time will it take to empty the tank?",
       "An oil funnel is a combination of a cylinder of height 2 cm and diameter 4 cm and a cone of slant height 12 cm and radius same as the cylinder. Find the total surface area of the funnel and the volume of oil it can hold.",
-      "Case Study: A school designs a model trophy in the shape of a cylinder surmounted by a hemisphere. The diameter of both is 7 cm. The cylinder's height is 13.5 cm. Find: (i) the curved surface area of the cylinder (ii) the curved surface area of the hemisphere (iii) the total surface area of the trophy (iv) the volume of the trophy.",
       "A solid consisting of a right circular cone of height 120 cm and radius 60 cm standing on a hemisphere of radius 60 cm is placed in a cylinder full of water such that it touches the bottom. If the cylinder's radius is 60 cm and height is 180 cm, find the volume of water left in the cylinder.",
       "Water flows at 10 km/hr through a pipe of internal diameter 7 cm into a rectangular tank of dimensions 50 m × 44 m. Find the time for the level to rise by 21 cm.",
       "A well of diameter 14 m is dug 15 m deep. The earth dug out is spread to form a platform 44 m long and 27 m wide. Find the height of the platform.",
-      "Case Study: A municipality collects rainwater. A cylindrical tank of radius 60 cm and height 2 m is kept on the roof. Rainwater flows from a square roof of side 10 m. Find: (i) the volume of the tank (ii) the amount of rainfall in mm needed to completely fill the tank (iii) if rainfall is 2 cm, find the volume of water collected on the roof (iv) the number of such full tanks this volume can fill.",
       "A bucket is in the shape of a cylinder of height 28 cm with a hemispherical depression at the bottom. The base radius is 7 cm. Find the inner surface area of the bucket and the volume of water it can hold.",
       "Milk in a cylindrical container of radius 30 cm and height 40 cm is transferred to two containers simultaneously — one conical of radius 10 cm and height 18 cm, and one spherical of radius 6 cm. After filling both, find the height of milk remaining in the cylindrical container.",
       "A solid iron pole consists of a cylinder of height 1.8 m and base diameter 28 cm. On the top is a hemisphere of same radius. Find the volume of iron used and the mass if density is 8 g/cm³.",
       "The interior of a building is in the form of a right circular cylinder of diameter 4.3 m and height 3.8 m surmounted by a cone whose vertical angle is 90°. Find the area of the surface, the floor is excluded, to be painted at the rate of Rs. 25 per m².",
       "A spherical ball of diameter 21 cm is melted and recasted into small cones of height 3 cm and base radius 1.5 cm. Find the number of cones obtained and the ratio of the surface area of the sphere to the total surface area of all the cones.",
-      "Case Study: A toy factory makes toys of the following description — a solid hemisphere of radius 3.5 cm is placed on a cylindrical base of radius 3.5 cm and height 5 cm with a conical hat of radius 3.5 cm and height 4 cm on top. Find: (i) the total height of the toy (ii) the volume of each part (iii) the total volume (iv) the total surface area.",
       "A well of diameter 4 m and depth 21 m is dug. The earth taken out is spread uniformly to form a circular ring-shaped embankment of inner diameter 4 m and width 3 m. Find the height of the embankment.",
       "A school supplies 120 students with cylindrical pencils of length 25 cm and circumference 1.5 cm. The pencils are coloured on the curved surface at Rs. 0.05 per dm². Find the total cost of colouring all pencils.",
       "A solid is composed of a cylinder of height 12 cm and radius 6 cm with a hemisphere of radius 6 cm attached at the top and a cone of radius 6 cm and height 8 cm attached at the bottom. Find the total surface area and volume of the composite solid.",
       "An overhead water tank in the form of a cylinder of radius 70 cm and height 1.5 m is to be painted on the outside including the top and bottom. Find the cost of painting at Rs. 15 per 100 cm².",
-      "In a hospital, a patient is given medicine in a cylindrical container of radius 1 cm and height 5 cm. He empties it into a conical vessel of radius 2 cm and height x cm. If the conical vessel is exactly full, find x. What does this tell us about the relationship between volumes of the two vessels?",
-      "Case Study: An architect designs a decorative pillar consisting of four parts — a square base of side 20 cm and height 10 cm, a cylinder of radius 7 cm and height 60 cm, a hemisphere of radius 7 cm on top, and an inverted cone with base radius 7 cm and height 10 cm at the very top for aesthetics but solid. Find: (i) the volume of each part (ii) the total volume (iii) if the entire pillar is made of marble at Rs. 5 per cm³, find the total cost."
-    ],
+      "In a hospital, a patient is given medicine in a cylindrical container of radius 1 cm and height 5 cm. He empties it into a conical vessel of radius 2 cm and height x cm. If the conical vessel is exactly full, find x. What does this tell us about the relationship between volumes of the two vessels?"
+    ]
   },
   13: {
     title: "Ch 13 — Statistics",
@@ -1080,7 +1065,6 @@ const MATHS_QBANK_CH = {
     q5m: [
       "Draw a less-than type ogive for the following data. Hence obtain the median from the graph and verify using the median formula: Upper Limit (Less than): 10, 20, 30, 40, 50, 60; Cumulative Frequency: 5, 12, 22, 35, 45, 53.",
       "The following data gives the observed lifetimes of 225 electrical components. Draw a less-than type ogive and find the median graphically: Upper Limit (Less than): 20, 40, 60, 80, 100, 120; Cumulative Frequency: 10, 45, 97, 158, 196, 225.",
-      "The following table shows marks obtained by 100 students. Draw a less-than type ogive. Find: (i) the median graphically (ii) the number of students who scored more than 75 marks: Upper Limit (Less than): 20, 40, 60, 80, 100; Cumulative Frequency: 5, 15, 45, 85, 100.",
       "Draw a less-than type ogive for the following distribution. Locate the median on the graph and verify using the formula: Upper Limit (Less than): 10, 20, 30, 40, 50, 60, 70; Cumulative Frequency: 8, 25, 50, 70, 85, 92, 100.",
       "Draw a more-than type ogive for the following data and find the median graphically. Verify using the formula: Lower Limit (More than): 0, 10, 20, 30, 40, 50; Cumulative Frequency: 100, 92, 75, 50, 25, 8.",
       "The following data gives the production yield of 100 farms. Draw a more-than type ogive and find the median: Lower Limit (More than): 50, 55, 60, 65, 70, 75; Cumulative Frequency: 100, 98, 90, 78, 54, 16.",
@@ -1092,7 +1076,6 @@ const MATHS_QBANK_CH = {
       "Find the missing frequencies p and q if the median = 46 and total frequency = 230: Class: 10-20, 20-30, 30-40, 40-50, 50-60, 60-70, 70-80; Frequency: 12, 30, p, 65, q, 25, 18.",
       "Find mean, median, and mode. Draw both ogives and verify the median graphically: Height (cm): 140-145, 145-150, 150-155, 155-160, 160-165; Students: 8, 7, 18, 12, 8.",
       "Find the daily pocket allowance mean (assumed mean method) and the missing frequency. Given: Mean = 18: Allowance (Rs.): 11-13, 13-15, 15-17, 17-19, 19-21, 21-23, 23-25; Children: 7, 6, 9, 13, f, 5, 4.",
-      "Case Study: A school conducted a survey of 100 students scores in a test. Find: (i) mean using step-deviation method (ii) modal class and mode (iii) median class and median (iv) verify: 3 Median = Mode + 2 Mean approximately. Marks: 0-20, 20-40, 40-60, 60-80, 80-100; Students: 7, 13, 35, 30, 15.",
       "Find the mean wage (assumed mean method), modal wage, and draw a less-than ogive to find the median wage: Wages (Rs.): 100-150, 150-200, 200-250, 250-300, 300-350, 350-400; Workers: 20, 22, 28, 24, 16, 10.",
       "Find the mean, mode, and median of the following data and comment on the skewness of the distribution: Class: 10-20, 20-30, 30-40, 40-50, 50-60, 60-70; Frequency: 8, 11, 17, 15, 10, 9.",
       "Find mean, median, and mode. Verify the empirical relation. Draw less-than ogive and find the median graphically: Class: 0-10, 10-20, 20-30, 30-40, 40-50; Frequency: 6, 10, 14, 8, 2.",
@@ -1103,7 +1086,7 @@ const MATHS_QBANK_CH = {
       "Following is the age distribution of a group of students. Draw both ogives and find the median age. Verify using the formula: Age: 4-5, 5-6, 6-7, 7-8, 8-9, 9-10; Students: 90, 150, 75, 225, 210, 105.",
       "Find the mean of the following distribution using all three methods and verify they give the same result: Class: 0-20, 20-40, 40-60, 60-80, 80-100; Frequency: 5, 10, 20, 10, 5.",
       "Find the monthly wages mean, median, and mode of the workers. Draw a more-than ogive and verify the median graphically: Wages (Rs.): 100-150, 150-200, 200-250, 250-300, 300-350, 350-400; Workers: 20, 22, 28, 24, 16, 10."
-    ],
+    ]
   },
   14: {
     title: "Ch 14 — Probability",
@@ -1193,18 +1176,15 @@ const MATHS_QBANK_CH = {
       "Numbers 1 to 50 are written on separate slips (one number on each slip), kept in a box, and mixed well. One slip is drawn from the box. Find the probability of getting: (i) a number divisible by 5 (ii) a perfect cube (iii) a prime number between 10 and 30 (iv) a number not divisible by 3 (v) a two-digit number.",
       "A number is chosen at random from the numbers −3, −2, −1, 0, 1, 2, 3. Find the probability that the number is: (i) negative (ii) zero (iii) a non-negative number (iv) a number less than 3 (v) a number greater than −2.",
       "Two dice are thrown simultaneously. Find the probability of getting: (i) the sum as a prime number (ii) a total of at least 10 (iii) a doublet of even numbers (iv) a multiple of 2 on one die and a multiple of 3 on the other (v) same number on both dice.",
-      "Case Study: A game at a fair involves spinning a wheel with equal sections numbered 1 to 8. Find the probability of: (i) getting an even number (ii) getting a number greater than 5 (iii) getting a multiple of 3 (iv) getting a prime number (v) getting the number 8.",
       "A box contains 100 envelopes of which 20 contain Rs. 100, 35 contain Rs. 50, 30 contain Rs. 20, and 15 are empty. An envelope is drawn at random. Find the probability of getting an envelope that contains: (i) Rs. 100 (ii) Rs. 50 (iii) more than Rs. 20 (iv) money (v) nothing.",
       "There are 1000 sealed envelopes in a box, 10 of them contain a cash prize of Rs. 100 each, 100 of them contain a cash prize of Rs. 50 each, and 200 of them contain a cash prize of Rs. 10 each, and the rest do not contain any cash prize. If they are well shuffled and an envelope is picked up, find the probability of getting: (i) a cash prize (ii) a cash prize of Rs. 10 (iii) no cash prize (iv) a cash prize of Rs. 100 (v) a prize of more than Rs. 50.",
       "Cards marked with numbers 3 to 102 are placed in a box and mixed thoroughly. A card is drawn at random. Find the probability that the number on the card is: (i) a perfect square (ii) a multiple of 9 (iii) divisible by 10 and 6 both (iv) a prime number less than 25 (v) a two-digit number less than 30.",
       "A survey of 364 children aged 19–36 months was taken to determine the relationship between breast-feeding and respiratory illness. The data is tabulated: Breast-fed with Respiratory illness: 42, Breast-fed with No respiratory illness: 150, Not breast-fed with Respiratory illness: 90, Not breast-fed with No respiratory illness: 82. Find the probability that a randomly selected child: (i) had respiratory illness (ii) was not breast-fed (iii) was breast-fed and had no respiratory illness (iv) had no respiratory illness (v) was breast-fed.",
       "A number is selected randomly from 1 to 100. Find the probability that it is: (i) divisible by 10 (ii) a perfect square (iii) a prime number less than 50 (iv) divisible by 4 and 6 both (v) not divisible by 5.",
       "A bag contains 18 balls out of which x balls are red. (i) If one ball is drawn at random, what is the probability that it is a red ball? (ii) If 2 more red balls are put in the bag, find the new probability of getting a red ball. (iii) If the second probability is double the first, find x. (iv) Find the probability of getting a non-red ball after adding 2 more balls. (v) Verify P(E) + P(not E) = 1.",
-      "Case Study: Fifteen cards numbered 1 to 15 are placed in a bag. A card is drawn at random. Find the probability that the card drawn has: (i) a number less than 10 (ii) a prime number (iii) an odd number divisible by 3 (iv) a composite number less than 12 (v) a number which is neither prime nor composite.",
       "A box contains 90 discs which are numbered from 1 to 90. If one disc is drawn at random from the box, find the probability that it bears: (i) a two-digit number (ii) a perfect square (iii) a number divisible by 5 (iv) a prime number less than 23 (v) a number divisible by both 5 and 3.",
       "A piggy bank contains 100 fifty-paise coins, 50 one-rupee coins, 20 two-rupee coins, and 10 five-rupee coins. If it is equally likely that one of the coins will fall out when the bank is turned upside down, find the probability that the coin which falls out: (i) will be a fifty-paise coin (ii) will be of value more than Rs. 1 (iii) will be of value less than Rs. 5 (iv) will be of value Rs. 1 or Rs. 2 (v) will not be a five-rupee coin.",
-      "A game consists of tossing a one-rupee coin 3 times and noting the outcome each time. Ramesh wins Rs. 5 if he gets a head on the first toss and loses Rs. 1 otherwise. Deepak wins Rs. 3 if he gets 3 heads and loses Rs. 2 otherwise. Find: (i) the sample space (ii) P(Ramesh wins) (iii) P(Deepak wins) (iv) P(both win) (v) P(neither wins).",
-      "Case Study: During a medical camp, blood groups of 400 people were recorded: Blood Group A: 130, B: 110, AB: 80, O: 80. A person is selected at random. Find the probability that the person has blood group: (i) A (ii) B (iii) AB (iv) O (v) not AB."
-    ],
-  },
+      "A game consists of tossing a one-rupee coin 3 times and noting the outcome each time. Ramesh wins Rs. 5 if he gets a head on the first toss and loses Rs. 1 otherwise. Deepak wins Rs. 3 if he gets 3 heads and loses Rs. 2 otherwise. Find: (i) the sample space (ii) P(Ramesh wins) (iii) P(Deepak wins) (iv) P(both win) (v) P(neither wins)."
+    ]
+  }
 };

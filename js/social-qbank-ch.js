@@ -19,7 +19,6 @@ const SOCIAL_QBANK_CH = {
         "What was the Frankfurt Parliament of 1848? Why did it fail?",
         "Who was Giuseppe Mazzini? Name one organisation he founded.",
         "What is meant by 'Romanticism' in the context of 19th century European nationalism?",
-        "Assertion: The most serious source of nationalist tension in Europe after 1871 was the Balkans. Reason: A large part of Balkans was under Ottoman control. Are both correct? Is R the explanation of A?",
         "What were the characteristics of Cavour as an Italian statesman?",
         "What did the tricolour flag introduced during the French Revolution represent?",
         "What is meant by 'concentration camps'?"
@@ -82,7 +81,7 @@ const SOCIAL_QBANK_CH = {
         "What were the social, economic, and political ideas supported by the liberals in the 1848 revolution in Europe? Explain each in detail.",
         "How was the history of nationalism in Britain different from the rest of Europe? Explain with reference to the Acts of Union and treatment of Ireland.",
         "Describe the role of the Zollverein in promoting German economic nationalism. How did railways and a common currency strengthen national unity?"
-      ],
+      ]
     },
     "h2": {
       title: "Ch 2 — Nationalism in India",
@@ -191,7 +190,7 @@ const SOCIAL_QBANK_CH = {
         "\"The Non-Cooperation Movement was the first true mass movement in India's freedom struggle.\" Justify this statement with five supporting points covering different sections of society.",
         "How did the Indian National Congress evolve from a limited elite organisation to a mass-based national movement through the 1920s and 1930s? Trace the role of Gandhiji.",
         "Explain the three local satyagrahas launched by Gandhiji — Champaran (1917), Kheda (1917), and Ahmedabad (1918). How did they prepare the ground for the Non-Cooperation Movement?"
-      ],
+      ]
     },
     "h5": {
       title: "Ch 5 — Print Culture and the Modern World",
@@ -300,8 +299,8 @@ const SOCIAL_QBANK_CH = {
         "Trace the history of print culture in India from the arrival of the Portuguese printing press to the growth of the nationalist press in the 20th century.",
         "How did print culture give rise to new kinds of literature — novels, pamphlets, newspapers — in Europe? Explain the social significance of each.",
         "\"Censorship of print by both colonial and religious authorities showed how powerful the printed word had become.\" Justify this statement with five examples from Europe and India."
-      ],
-    },
+      ]
+    }
   },
   "geography": {
     "g1": {
@@ -413,7 +412,7 @@ const SOCIAL_QBANK_CH = {
         "Describe the various categories of land use in India. How has urbanisation and industrialisation affected the land use pattern over the decades?",
         "Explain the role of the Rio de Janeiro Earth Summit and Agenda 21 in shaping global and Indian resource conservation policies.",
         "Describe the importance of resource conservation. How can individuals, communities, and the government contribute to conserving resources?"
-      ],
+      ]
     },
     "g2": {
       title: "Ch 2 — Forest and Wildlife Resources",
@@ -521,7 +520,7 @@ const SOCIAL_QBANK_CH = {
         "Explain the role of traditional knowledge and indigenous practices of tribal communities in conserving India's biodiversity. Give five examples.",
         "How has uncontrolled and inequitable resource use led to environmental degradation in India? What steps can ensure more equitable and sustainable resource use?",
         "Describe the characteristics of India's major forest types tropical evergreen, tropical deciduous, and mountain forests. How do they contribute to India's biodiversity?"
-      ],
+      ]
     },
     "g3": {
       title: "Ch 3 — Water Resources",
@@ -625,7 +624,7 @@ const SOCIAL_QBANK_CH = {
         "How has India's growing demand for food led to over-exploitation of water resources? Explain the link between agriculture, irrigation, and water scarcity with five points.",
         "Explain the significance of the hydrological cycle in maintaining the availability of freshwater on earth. How does human interference disrupt this cycle?",
         "Describe the role of traditional communities and local knowledge systems in water conservation across different regions of India. Give five examples."
-      ],
+      ]
     },
     "g4": {
       title: "Ch 4 — Agriculture",
@@ -735,7 +734,7 @@ const SOCIAL_QBANK_CH = {
         "Explain how India has moved from food scarcity to food surplus after independence. What role did the Green Revolution, irrigation, and government policy play?",
         "Describe the distribution and significance of oilseed crops in India — groundnut, mustard, soyabean, and sunflower. Where are they mainly grown and why?",
         "Explain the relationship between agriculture and industry in India. How do raw materials from agriculture support major industries?"
-      ],
+      ]
     },
     "g5": {
       title: "Ch 5 — Minerals and Energy Resources",
@@ -830,7 +829,7 @@ const SOCIAL_QBANK_CH = {
         "Describe the role of minerals in India's industrial development. Give five specific minerals and their industrial uses.",
         "Explain the environmental problems caused by mining and mineral extraction. Suggest five measures to minimise them.",
         "Compare conventional and non-conventional sources of energy in India. Which is more suitable for sustainable development and why?"
-      ],
+      ]
     },
     "g6": {
       title: "Ch 6 — Manufacturing Industries",
@@ -939,8 +938,8 @@ const SOCIAL_QBANK_CH = {
         "How has globalisation impacted Indian manufacturing industries? Explain the positive and negative effects with five examples from different sectors.",
         "Explain the concept of sustainable industrial development. What measures can industries take to balance economic growth with environmental conservation?",
         "Describe the growth and importance of the chemical and fertiliser industries in India. How do they support agriculture and other manufacturing sectors?"
-      ],
-    },
+      ]
+    }
   },
   "civics": {
     "c1": {
@@ -969,7 +968,6 @@ const SOCIAL_QBANK_CH = {
         "What are the two main reasons why power sharing is considered essential in modern democracies?",
         "Name the four forms of power sharing arrangements in modern democracies.",
         "What is a coalition government? How does it represent power sharing?",
-        "Assertion: Belgium shifted from a unitary to a federal form of government. Reason: Belgium wanted to accommodate the interests of different linguistic communities. Are both correct? Is R the correct explanation of A?",
         "What is the difference between power sharing among organs of government and power sharing among levels of government?",
         "In India, how is power shared among social groups like SCs, STs, and OBCs? Give two examples.",
         "What is undivided political power? Why is it considered dangerous in a democracy?",
@@ -1049,7 +1047,7 @@ const SOCIAL_QBANK_CH = {
         "Explain the significance of checks and balances in a democracy. How does the separation of powers among the legislature, executive, and judiciary prevent the abuse of power? Give five examples.",
         "Why is power sharing considered essential for political stability and national unity? Explain with five examples from countries that have both succeeded and failed in managing diversity.",
         "Explain how pressure groups, trade unions, media, and civil society organisations contribute to power sharing in a democracy. Why is their role important?"
-      ],
+      ]
     },
     "c2": {
       title: "Ch 2 — Federalism",
@@ -1157,7 +1155,7 @@ const SOCIAL_QBANK_CH = {
         "Explain the role of the judiciary in maintaining India's federal structure. How does the Supreme Court resolve Centre-state conflicts? Give five examples.",
         "\"True federalism requires not just constitutional division of powers but also financial autonomy for states.\" Explain this statement with five points covering taxation, grants, and financial relations between Centre and states in India.",
         "Describe the Gram Sabha and Gram Panchayat system in India. How do they function? What powers do they have? What are the challenges they face in practice?"
-      ],
+      ]
     },
     "c3": {
       title: "Ch 3 — Democracy and Diversity",
@@ -1264,7 +1262,7 @@ const SOCIAL_QBANK_CH = {
         "Explain how women's reservation in Panchayati Raj institutions has changed political participation at the grassroots level in India. What are its achievements and limitations?",
         "Describe the three major social divisions covered in this chapter — gender, religion, and caste. Explain how each affects democratic politics in India and what measures have been taken to address each.",
         "\"Democracy is about more than just elections — it is about ensuring equal dignity and rights for all social groups.\" Justify this statement with reference to gender equality, secularism, and caste justice in India."
-      ],
+      ]
     },
     "c4": {
       title: "Ch 4 — Gender, Religion and Caste",
@@ -1371,7 +1369,7 @@ const SOCIAL_QBANK_CH = {
         "Explain the problem of criminalisation of politics in India. Why do parties give tickets to candidates with criminal records? What reforms are needed?",
         "\"Women are severely underrepresented in Indian political parties and legislatures.\" Explain this with five points and suggest measures to improve women's political representation.",
         "Explain how political parties perform the dual function of government formation and representation of social groups. Give five examples showing how parties try to represent different sections of Indian society."
-      ],
+      ]
     },
     "c5": {
       title: "Ch 5 — Popular Struggles and Movements",
@@ -1398,7 +1396,6 @@ const SOCIAL_QBANK_CH = {
         "Give one reason why some people argue that dictatorship is better for economic growth.",
         "What does the principle of majority rule mean in a democracy? What is its limitation?",
         "Name two countries where democracy has failed to reduce inequality and poverty significantly.",
-        "Assertion: Democracy is an accountable, responsive, and legitimate government. Reason: Democracies have regular, free, and fair elections and decision-making is based on norms and procedures. Are both correct? Is R the correct explanation of A?",
         "What is the difference between an outcome expected from democracy and an outcome actually delivered by it?",
         "Name two social outcomes that democracy is expected to achieve.",
         "\"Democracy stands much superior to any other form in promoting dignity and freedom of people.\" Give two supporting points.",
@@ -1478,8 +1475,8 @@ const SOCIAL_QBANK_CH = {
         "How has the experience of Zimbabwe under Mugabe shown that non-democratic governance leads to economic collapse? Compare it with India's democratic development.",
         "Explain the concept of legitimate government in democracy. Why do people trust and accept a democratically elected government more than an authoritarian one? Give five reasons.",
         "\"Democracy promotes the idea that mistakes can be corrected and improvements can be made through public debate and accountability.\" Justify this statement with five examples of democratic self-correction in India."
-      ],
-    },
+      ]
+    }
   },
   "economics": {
     "e1": {
@@ -1590,7 +1587,7 @@ const SOCIAL_QBANK_CH = {
         "Explain why sustainability is considered the most important dimension of development in the 21st century. Give five specific environmental and resource-related challenges that threaten sustainable development.",
         "\"Development is a complex and multi-dimensional concept.\" Justify this statement by explaining five different dimensions of development — economic, social, political, environmental, and cultural — with examples.",
         "Explain the developmental goals of different sections of Indian society and show how government policies on health, education, PDS, and employment try to address multiple development goals simultaneously."
-      ],
+      ]
     },
     "e2": {
       title: "Ch 2 — Sectors of the Indian Economy",
@@ -1699,7 +1696,7 @@ const SOCIAL_QBANK_CH = {
         "\"Both organised and unorganised sectors are necessary for India's economy.\" Do you agree? Justify with five points covering employment, GDP contribution, and challenges.",
         "Explain how the activities of the primary, secondary, and tertiary sectors are interdependent using the example of cotton cultivation, cotton textile manufacturing, and the services required at each stage.",
         "What is meant by sectors of the economy? Describe all sectors classified on the basis of nature of activity, ownership, and working conditions. Give two examples of each."
-      ],
+      ]
     },
     "e3": {
       title: "Ch 3 — Money and Credit",
@@ -1767,7 +1764,6 @@ const SOCIAL_QBANK_CH = {
         "Explain three steps that can be taken to reduce the dependence of rural households on moneylenders.",
         "Describe the working of the Grameen Bank of Bangladesh. What lessons can India learn from it?",
         "Explain the concept of a demand deposit. How does it function as money? Why is cheque payment more convenient than cash?",
-        "Case study: Salim needs Rs. 20,000 for machine repair. A bank requires collateral and documents and will take one month. A trader offers the same day at 5% monthly interest. What should Salim do? Analyse.",
         "Explain three ways in which the RBI ensures that banks give loans not only to profitable businesses but also to small farmers and borrowers.",
         "Explain why the rate of interest charged by informal lenders is much higher than that of formal lenders. What are the consequences?",
         "How does the agricultural labourer Mohan fall into a debt trap when he borrows from his landlord at 5% per month and repays through physical labour?",
@@ -1807,7 +1803,7 @@ const SOCIAL_QBANK_CH = {
         "\"Absence of collateral is one of the biggest barriers to formal credit for the rural poor.\" Explain this with five points and suggest how microfinance and SHGs help overcome this barrier.",
         "Explain the importance of financial inclusion in India. What steps has the government taken to bring the unbanked population into the formal credit system? Give five examples.",
         "Describe a situation where a rural household is forced to borrow from a moneylender despite high interest rates. Trace how this leads to a debt trap and explain what could have prevented it."
-      ],
+      ]
     },
     "e4": {
       title: "Ch 4 — Globalisation and the Indian Economy",
@@ -1915,7 +1911,7 @@ const SOCIAL_QBANK_CH = {
         "Explain the role of the government in ensuring that globalisation is fair and beneficial for all sections of Indian society. Give five specific policy measures.",
         "How have Indian companies like Tata Motors, Infosys, Wipro, and Ranbaxy become global players? What does this tell us about the impact of globalisation on Indian business?",
         "Describe the working of a global supply chain by taking the example of an MNC like Samsung or Ford. How are different stages of production spread across countries to minimise costs?"
-      ],
-    },
-  },
+      ]
+    }
+  }
 };
