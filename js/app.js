@@ -1673,77 +1673,428 @@ function toggleDone(btn) {
    GRAMMAR / READING / WRITING
 ══════════════════════════════════════ */
 function buildGrammar() {
-  const topics = [
-    { title: 'Tenses', desc: 'Present, Past, Future Simple, Continuous, Perfect, Perfect Continuous. Tense rules with examples.' },
-    { title: 'Determiners & Articles', desc: 'Use of a, an, the, some, any, each, every, much, many with rules and exercises.' },
-    { title: 'Modals', desc: 'Can, could, may, might, shall, should, will, would, must, need, dare, used to, ought to.' },
-    { title: 'Subject-Verb Agreement', desc: 'Rules for singular and plural verbs with different subjects including collective nouns.' },
-    { title: 'Active and Passive Voice', desc: 'Transformations across all tenses with rules, exceptions and practice sentences.' },
-    { title: 'Direct & Indirect Speech', desc: 'Reporting statements, questions, commands. Changes in pronouns and tenses.' },
-    { title: 'Clauses', desc: 'Noun clause, Adjective clause, Adverb clause identification and usage in sentences.' },
-    { title: 'Editing / Omission / Gap Filling', desc: 'Board exam question types spotting errors, filling blanks with correct forms.' }
-  ];
-  return `<h2 class="section-title" style="margin-bottom:0.5rem">Grammar</h2>
-    <p style="color:var(--muted);margin-bottom:1.5rem;font-size:0.88rem">CBSE Class 10 English Grammar Topics</p>
-    <div style="display:grid;gap:1rem">
-      ${topics.map(t => `
-        <div class="skill-card reveal">
-          <h3>${t.title}</h3>
-          <p>${t.desc}</p>
-          <div style="margin-top:1rem">
-          </div>
-        </div>`).join('')}
-    </div>`;
+  function acc(title, body) {
+    return '<details class="eng-acc"><summary>' + title + '</summary><div class="eng-acc-body">' + body + '</div></details>';
+  }
+  function trow(cells, isHead) {
+    var tag = isHead ? 'th' : 'td';
+    return '<tr>' + cells.map(function(c){ return '<' + tag + '>' + c + '</' + tag + '>'; }).join('') + '</tr>';
+  }
+
+  var tenses = acc('Tenses — All 12 Types',
+    '<div style="overflow-x:auto"><table class="eng-table">' +
+    trow(['Tense','Formula','Signal Words','Example'], true) +
+    [
+      ['Simple Present','S + V1 / Vs','always, usually, every day, often','She reads the newspaper every morning.'],
+      ['Present Continuous','S + is/am/are + V‑ing','now, at present, currently, look!','They are playing cricket right now.'],
+      ['Present Perfect','S + has/have + V3','just, already, yet, ever, never, since, for','I have finished all my homework.'],
+      ['Present Perfect Continuous','S + has/have + been + V‑ing','for (duration), since (start point)','She has been studying for three hours.'],
+      ['Simple Past','S + V2','yesterday, last week/month, ago, in 2010','He played football yesterday evening.'],
+      ['Past Continuous','S + was/were + V‑ing','while, when (background action)','She was reading when I called her.'],
+      ['Past Perfect','S + had + V3','before, after, by the time, already','They had left before she arrived.'],
+      ['Past Perfect Continuous','S + had + been + V‑ing','for, since (before a past moment)','He had been waiting for two hours when I reached.'],
+      ['Simple Future','S + will + V1','tomorrow, next week, soon, in future','She will visit us next Sunday.'],
+      ['Future Continuous','S + will + be + V‑ing','at this time tomorrow, at 8 pm tonight','I will be studying at 8 pm.'],
+      ['Future Perfect','S + will + have + V3','by tomorrow, by the end of, before','They will have finished by noon.'],
+      ['Future Perfect Continuous','S + will + have + been + V‑ing','for + duration (future)','She will have been teaching for 20 years by 2026.'],
+    ].map(function(r){ return trow(r, false); }).join('') +
+    '</table></div>' +
+    '<div class="eng-note"><strong>Exam tip:</strong> In gap-filling, look for signal words first — they almost always tell you which tense to use. Present Perfect = just/already/yet/ever/never/since/for. Past Perfect = before/after/by the time (comparing two past events).</div>'
+  );
+
+  var articles = acc('Articles &amp; Determiners',
+    '<p class="eng-h3">Articles: a / an / the</p>' +
+    '<div style="overflow-x:auto"><table class="eng-table">' +
+    trow(['Article','When to use','Examples'], true) +
+    trow(['a','Before singular countable nouns beginning with a consonant sound','a book, a university (u = /j/ sound), a one-way street (o = /w/ sound)'], false) +
+    trow(['an','Before singular countable nouns beginning with a vowel sound','an apple, an honest man (silent H), an hour, an MBA'], false) +
+    trow(['the','Specific/particular noun; unique things; second mention; musical instruments; names of rivers/mountain ranges/deserts/oceans','the Sun, the Ganges, the Himalayas, the Pacific, the piano'], false) +
+    trow(['Zero (no article)','Proper nouns; uncountable nouns in general sense; plural nouns in general sense','Water is essential. Dogs are loyal. India is a country. She plays chess.'], false) +
+    '</table></div>' +
+    '<p class="eng-h3">Key Determiners</p>' +
+    '<ul class="eng-list"><li><strong>some / any</strong> — some (affirmative), any (negative/questions): <em>I have some milk. Do you have any sugar?</em></li>' +
+    '<li><strong>much / many</strong> — much + uncountable, many + countable: <em>much water, many books</em></li>' +
+    '<li><strong>little / few</strong> — negative sense (not enough): <em>little hope, few friends</em></li>' +
+    '<li><strong>a little / a few</strong> — positive sense (some): <em>a little sugar, a few friends</em></li>' +
+    '<li><strong>each / every</strong> — both singular, each = individually, every = all collectively: <em>Each student has a book. Every student passed.</em></li>' +
+    '<li><strong>either / neither</strong> — either (one of two), neither (not one of two): <em>Either road leads to the station. Neither answer is correct.</em></li></ul>'
+  );
+
+  var modals = acc('Modals — Uses &amp; Examples',
+    '<div style="overflow-x:auto"><table class="eng-table">' +
+    trow(['Modal','Primary Use','Example'], true) +
+    [
+      ['can','Ability / Permission (informal)','She can speak three languages. / Can I leave early?'],
+      ['could','Past ability / Polite request / Possibility','He could run fast as a child. / Could you help me? / It could rain today.'],
+      ['may','Formal permission / Possibility','May I come in? / It may snow tonight.'],
+      ['might','Remote possibility (less sure than may)','She might be at home. / He might not come.'],
+      ['will','Definite future / Willingness','I will call you tomorrow. / I will help you.'],
+      ['would','Polite request / Hypothetical / Past habit','Would you close the door? / I would go if I could. / He would visit every Sunday.'],
+      ['shall','Formal future (I/We) / Suggestion','I shall return. / Shall we begin?'],
+      ['should','Duty / Advice / Expectation','You should exercise daily. / He should have called.'],
+      ['must','Strong obligation / Logical certainty','You must wear a seatbelt. / She must be tired.'],
+      ['ought to','Moral obligation (weaker than must)','You ought to respect elders.'],
+      ['need','Necessity (need not = no obligation)','You need not come early. / Need I attend?'],
+      ['dare','Courage to do something','How dare he say that! / She dare not speak.'],
+      ['used to','Past habit (no longer done)','He used to wake up at 5 am.'],
+    ].map(function(r){ return trow(r, false); }).join('') +
+    '</table></div>' +
+    '<div class="eng-rule"><strong>Remember:</strong> Modals are always followed by V1 (base form). Never add -s, -ing, or -ed after a modal. ✗ She can goes. ✓ She can go.</div>'
+  );
+
+  var sva = acc('Subject-Verb Agreement',
+    '<ul class="eng-list">' +
+    '<li><strong>Singular subject → singular verb:</strong> The dog <u>barks</u>. She <u>plays</u>.</li>' +
+    '<li><strong>Plural subject → plural verb:</strong> The dogs <u>bark</u>. They <u>play</u>.</li>' +
+    '<li><strong>Either…or / Neither…nor:</strong> Verb agrees with the nearer subject. <em>Neither the teacher nor the students <u>were</u> present.</em></li>' +
+    '<li><strong>Collective nouns:</strong> Singular when acting as one unit, plural when acting individually. <em>The team <u>has</u> won. The team <u>are</u> arguing among themselves.</em></li>' +
+    '<li><strong>Indefinite pronouns (always singular):</strong> everyone, everyone, anyone, no one, someone, each, either, neither. <em>Everyone <u>is</u> ready.</em></li>' +
+    '<li><strong>Words that look plural but are singular:</strong> news, mathematics, physics, economics, measles, politics. <em>The news <u>is</u> shocking.</em></li>' +
+    '<li><strong>Uncountable nouns:</strong> always singular — furniture, information, luggage, advice, knowledge. <em>The information <u>was</u> useful.</em></li>' +
+    '<li><strong>"A number of" = plural; "The number of" = singular:</strong> <em>A number of students <u>were</u> absent. The number of students <u>is</u> increasing.</em></li>' +
+    '<li><strong>With "as well as", "together with", "along with":</strong> verb agrees with the first subject only. <em>The principal, as well as teachers, <u>was</u> present.</em></li>' +
+    '</ul>'
+  );
+
+  var voice = acc('Active &amp; Passive Voice',
+    '<div class="eng-note" style="margin-bottom:.9rem">Active → Passive: Object becomes subject. Use appropriate form of <strong>to be</strong> + <strong>V3</strong>. Agent (by + doer) is optional.</div>' +
+    '<div style="overflow-x:auto"><table class="eng-table">' +
+    trow(['Tense','Active','Passive'], true) +
+    [
+      ['Simple Present','She writes a letter.','A letter is written by her.'],
+      ['Present Continuous','She is writing a letter.','A letter is being written by her.'],
+      ['Present Perfect','She has written a letter.','A letter has been written by her.'],
+      ['Simple Past','She wrote a letter.','A letter was written by her.'],
+      ['Past Continuous','She was writing a letter.','A letter was being written by her.'],
+      ['Past Perfect','She had written a letter.','A letter had been written by her.'],
+      ['Simple Future','She will write a letter.','A letter will be written by her.'],
+      ['Future Perfect','She will have written a letter.','A letter will have been written by her.'],
+      ['Modal (can/may/must…)','She can write a letter.','A letter can be written by her.'],
+    ].map(function(r){ return trow(r, false); }).join('') +
+    '</table></div>' +
+    '<div class="eng-rule"><strong>Pronoun changes in passive:</strong> I→me/by me, we→us, he→him, she→her, they→them. The object pronoun becomes the subject in passive: <em>He helped me → I was helped by him.</em></div>'
+  );
+
+  var speech = acc('Direct &amp; Indirect Speech',
+    '<p class="eng-h3">Tense Backshift (when reporting verb is in Past)</p>' +
+    '<div style="overflow-x:auto"><table class="eng-table">' +
+    trow(['Direct Speech Tense','→ Indirect Speech Tense'], true) +
+    [
+      ['Simple Present (V1/Vs)','→ Simple Past (V2)'],
+      ['Present Continuous (is/am/are + V-ing)','→ Past Continuous (was/were + V-ing)'],
+      ['Present Perfect (has/have + V3)','→ Past Perfect (had + V3)'],
+      ['Simple Past (V2)','→ Past Perfect (had + V3)'],
+      ['Past Continuous (was/were + V-ing)','→ Past Perfect Continuous (had been + V-ing)'],
+      ['will','→ would'],
+      ['can','→ could'],
+      ['may','→ might'],
+      ['shall','→ should'],
+      ['must','→ must / had to'],
+    ].map(function(r){ return trow(r, false); }).join('') +
+    '</table></div>' +
+    '<p class="eng-h3">Pronoun &amp; Time/Place Changes</p>' +
+    '<ul class="eng-list">' +
+    '<li>I → he/she | we → they | you → he/she/they | my → his/her | our → their</li>' +
+    '<li>this → that | these → those | here → there | now → then</li>' +
+    '<li>today → that day | yesterday → the previous day | tomorrow → the next day/the following day</li>' +
+    '<li>last week → the previous week | next week → the following week | ago → before</li>' +
+    '</ul>' +
+    '<p class="eng-h3">Question Types in Indirect Speech</p>' +
+    '<div class="eng-eg">Yes/No question: He said, "Are you ready?" → He asked if/whether I was ready.<br>' +
+    'Wh-question: She said, "Where do you live?" → She asked where I lived.<br>' +
+    'Command: She said, "Open the window." → She told/ordered him to open the window.<br>' +
+    'Request: She said, "Please help me." → She requested him to help her.<br>' +
+    'Exclamation: He said, "What a beautiful painting!" → He exclaimed that it was a very beautiful painting.</div>'
+  );
+
+  var clauses = acc('Clauses — Noun, Adjective &amp; Adverb',
+    '<p class="eng-h3">Noun Clause</p>' +
+    '<p style="font-size:.85rem;line-height:1.65">Functions as Subject, Object, or Complement. Introduced by: <strong>that, if/whether, who, what, when, where, why, how</strong>.</p>' +
+    '<div class="eng-eg">That he lied is surprising. (Subject) | She knows <u>that I am right</u>. (Object) | The truth is <u>that nobody came</u>. (Complement)</div>' +
+    '<p class="eng-h3">Adjective (Relative) Clause</p>' +
+    '<p style="font-size:.85rem;line-height:1.65">Modifies a noun. Introduced by: <strong>who</strong> (persons, subject), <strong>whom</strong> (persons, object), <strong>which</strong> (things), <strong>that</strong> (persons/things), <strong>whose</strong> (possession), <strong>where/when</strong>.</p>' +
+    '<div class="eng-eg">The girl <u>who won the prize</u> is my sister. | The book <u>which I read</u> was interesting. | This is the house <u>where he was born</u>.</div>' +
+    '<p class="eng-h3">Adverb Clause</p>' +
+    '<div style="overflow-x:auto"><table class="eng-table">' +
+    trow(['Type','Conjunctions','Example'], true) +
+    [
+      ['Time','when, while, before, after, since, until, as soon as','She was reading <u>when I entered</u>.'],
+      ['Cause/Reason','because, since, as','He stayed home <u>because he was ill</u>.'],
+      ['Condition','if, unless, provided that','<u>If it rains</u>, we will stay inside.'],
+      ['Concession','although, though, even though','<u>Although she was tired</u>, she worked.'],
+      ['Purpose','so that, in order that, lest','Study hard <u>so that you may pass</u>.'],
+      ['Result','so…that, such…that','It was <u>so hot that</u> we stayed inside.'],
+      ['Comparison','than, as…as','She runs faster <u>than I do</u>.'],
+    ].map(function(r){ return trow(r, false); }).join('') +
+    '</table></div>'
+  );
+
+  var editing = acc('Editing, Omission &amp; Gap Filling — Exam Techniques',
+    '<p class="eng-h3">Editing (Spot the Error)</p>' +
+    '<p style="font-size:.85rem;line-height:1.65">Each line has exactly one grammatical error. Common errors to watch for:</p>' +
+    '<ul class="eng-list">' +
+    '<li><strong>Wrong article:</strong> a/an/the confusion, missing article, extra article</li>' +
+    '<li><strong>Wrong tense:</strong> inconsistent tense across sentences</li>' +
+    '<li><strong>Subject-verb disagreement:</strong> singular/plural mismatch</li>' +
+    '<li><strong>Wrong preposition:</strong> in/on/at/by/for/since confusion</li>' +
+    '<li><strong>Wrong form of adjective/adverb:</strong> comparative/superlative errors</li>' +
+    '<li><strong>Wrong pronoun case:</strong> I/me, he/him, she/her, they/them</li>' +
+    '</ul>' +
+    '<p class="eng-h3">Omission (Insert Missing Word)</p>' +
+    '<p style="font-size:.85rem;line-height:1.65">A word is missing in each line. Common missing words: articles (a, an, the), prepositions (in, on, at, by, of, to), auxiliary verbs (is, are, was, were, has, have, had).</p>' +
+    '<div class="eng-eg">He is going __ school. → He is going <strong>to</strong> school.<br>She was standing __ the corner. → She was standing <strong>at</strong> the corner.</div>' +
+    '<p class="eng-h3">Gap Filling Tips</p>' +
+    '<ul class="eng-list">' +
+    '<li>Read the entire sentence before filling — context determines the answer</li>' +
+    '<li>Check for signal words (tense), collocations (verb + preposition), and grammar rules</li>' +
+    '<li>Common verbs + prepositions: believe <em>in</em>, depend <em>on</em>, consist <em>of</em>, interested <em>in</em>, afraid <em>of</em>, good <em>at</em>, listen <em>to</em></li>' +
+    '</ul>'
+  );
+
+  return '<h2 class="section-title" style="margin-bottom:.25rem">Grammar</h2>' +
+    '<p class="eng-sub">Click any topic to open full notes — all rules, tables and examples</p>' +
+    '<div class="eng-stack">' + tenses + articles + modals + sva + voice + speech + clauses + editing + '</div>';
 }
 
 function buildReading() {
-  return `
-    <h2 class="section-title" style="margin-bottom:0.5rem">📖 Reading Comprehension</h2>
-    <p style="color:var(--muted);margin-bottom:1.5rem;font-size:0.88rem">Strategies and practice for CBSE Board reading passages</p>
-    <div style="display:grid;gap:1rem">
-      <div class="skill-card reveal">
-        <h3>🎯 How to Attempt Reading Passages</h3>
-        <p>1. Read the questions FIRST before reading the passage.<br>
-        2. Skim the passage to understand the main idea (30 seconds).<br>
-        3. Read carefully, underlining key information related to questions.<br>
-        4. Answers are ALWAYS in the passage never guess from outside knowledge.<br>
-        5. Use your own words for "In your own words" questions.<br>
-        6. Check spelling and grammar in your answers.</p>
-      </div>
-      <div class="skill-card reveal reveal-d2">
-        <h3>Types of Questions in CBSE Board</h3>
-        <p>• <strong>Factual questions</strong> directly from the passage<br>
-        • <strong>Inferential questions</strong> reading between the lines<br>
-        • <strong>Vocabulary questions</strong> find word similar in meaning<br>
-        • <strong>Title/Heading</strong> summarize in a few words<br>
-        • <strong>Note-making</strong> organized point format</p>
-      </div>
-      <div class="coming-soon" style="margin-top:0.5rem">
-        <div class="cs-icon">📄</div>
-        <h3>Practice Passages</h3>
-        <p>CBSE-style reading passages with questions and model answers will be added here. Check back soon!</p>
-      </div>
-    </div>`;
+  function acc(title, body) {
+    return '<details class="eng-acc"><summary>' + title + '</summary><div class="eng-acc-body">' + body + '</div></details>';
+  }
+
+  var pattern = acc('Exam Pattern — Reading Section',
+    '<div style="overflow-x:auto"><table class="eng-table">' +
+    '<tr><th>Question</th><th>Type</th><th>Marks</th><th>What to do</th></tr>' +
+    '<tr><td><strong>Q1</strong></td><td>Factual / Discursive Passage</td><td>10 marks</td><td>Multiple Choice + Short Answer + Vocabulary</td></tr>' +
+    '<tr><td><strong>Q2</strong></td><td>Case-based / Data-based Passage</td><td>10 marks</td><td>MCQs based on graph, table, or case study</td></tr>' +
+    '</table></div>' +
+    '<div class="eng-note"><strong>Time allocation:</strong> Spend ~10 min on Q1 passage, ~10 min on Q2. Always read questions first before the passage — saves time and guides focus.</div>'
+  );
+
+  var strategy = acc('How to Attempt Any Passage — Step by Step',
+    '<ol class="eng-list" style="padding-left:1.3rem">' +
+    '<li><strong>Read all questions first</strong> (2 min) — underline keywords in each question.</li>' +
+    '<li><strong>Skim the passage</strong> (1–2 min) — identify topic, tone, and structure.</li>' +
+    '<li><strong>Read carefully</strong>, marking portions that answer questions.</li>' +
+    '<li><strong>Answer factual questions directly</strong> — copy key phrases, paraphrase slightly. Never invent.</li>' +
+    '<li><strong>Inferential questions</strong> — the answer is implied. Look for cause-effect, contrast, or author\'s opinion.</li>' +
+    '<li><strong>Vocabulary questions</strong> — use context clues (surrounding words/sentences).</li>' +
+    '<li><strong>Check length</strong> — 1-mark answer = 1 sentence, 2-mark = 2–3 sentences.</li>' +
+    '</ol>' +
+    '<div class="eng-rule"><strong>Never guess from general knowledge.</strong> Every answer must be traceable to the passage — quote the relevant line in your mind before writing.</div>'
+  );
+
+  var qtypes = acc('Types of Questions &amp; How to Answer Each',
+    '<p class="eng-h3">1. Factual / Direct Questions</p>' +
+    '<p style="font-size:.85rem;line-height:1.65">Answer is clearly stated in the passage. Strategy: Locate the relevant sentence, paraphrase in your own words, avoid copying whole sentences.</p>' +
+    '<p class="eng-h3">2. Inferential Questions</p>' +
+    '<p style="font-size:.85rem;line-height:1.65">Answer is implied but not directly stated. Look for: cause–effect relationships, comparisons, contrasts, author\'s tone (critical, appreciative, neutral).</p>' +
+    '<div class="eng-eg">Signal phrases: "It can be inferred…", "The author suggests…", "According to the passage, why…"</div>' +
+    '<p class="eng-h3">3. Vocabulary Questions</p>' +
+    '<p style="font-size:.85rem;line-height:1.65">Find a word/phrase meaning the same as the given word, or find the meaning of a word used in the passage.</p>' +
+    '<ul class="eng-list"><li>Look at the words immediately before and after the target word</li><li>Identify if the word is positive, negative, or neutral in context</li><li>Substitute your answer back in the sentence to verify it makes sense</li></ul>' +
+    '<p class="eng-h3">4. Title / Heading Questions</p>' +
+    '<p style="font-size:.85rem;line-height:1.65">The title must cover the main idea of the <em>entire</em> passage — not just one paragraph. It should be concise, specific, and not too broad or narrow.</p>' +
+    '<p class="eng-h3">5. MCQ Questions (Case-based Passage)</p>' +
+    '<ul class="eng-list"><li>Eliminate obviously wrong options first</li><li>Verify your chosen answer against the passage</li><li>For graphs/tables: read the title, axes, legend before answering</li></ul>'
+  );
+
+  var notemaking = acc('Note-Making — Format &amp; Complete Guide',
+    '<div class="eng-note">Note-making is a structured summary. You must use a specific format with a title, abbreviations, and sub-points. Marks are awarded for format + content.</div>' +
+    '<p class="eng-h3">Format</p>' +
+    '<div class="eng-format-box">' +
+    'Title: ________________________\n\n' +
+    '1. Main Point\n' +
+    '   1.1 Sub-point\n' +
+    '   1.2 Sub-point\n' +
+    '2. Second Main Point\n' +
+    '   2.1 Sub-point\n' +
+    '   2.2 Sub-point\n' +
+    '3. Third Main Point\n' +
+    '   3.1 Sub-point\n\n' +
+    'Abbreviations Used:\n' +
+    'e.g. = for example    govt. = government    imp. = important\n' +
+    'dev. = development    env. = environment    tech. = technology' +
+    '</div>' +
+    '<p class="eng-h3">Rules</p>' +
+    '<ul class="eng-list">' +
+    '<li>Use short phrases — not full sentences</li>' +
+    '<li>Use at least <strong>4 abbreviations</strong> (list them at the bottom)</li>' +
+    '<li>Have a clear heading/title for the entire notes</li>' +
+    '<li>Minimum 2 main points, each with at least 2 sub-points</li>' +
+    '<li>Do not include personal opinions — only information from the passage</li>' +
+    '</ul>'
+  );
+
+  var summary = acc('Summary Writing — How to Write',
+    '<div class="eng-note">In CBSE board, you may be asked to write a summary of the note-making passage in about 80 words. The summary must be in continuous prose (not bullet points).</div>' +
+    '<p class="eng-h3">Steps</p>' +
+    '<ol class="eng-list" style="padding-left:1.3rem">' +
+    '<li>Use your notes (main points) as the skeleton of the summary.</li>' +
+    '<li>Write complete sentences, connecting ideas with linking words.</li>' +
+    '<li>Use third person and past/present tense consistently.</li>' +
+    '<li>Do NOT add your opinion or examples not in the original passage.</li>' +
+    '<li>Stay within 80 words (±10% allowed). Count your words.</li>' +
+    '</ol>' +
+    '<p class="eng-h3">Useful Linking Words</p>' +
+    '<div class="eng-eg">' +
+    '<strong>Addition:</strong> furthermore, moreover, in addition, also, besides<br>' +
+    '<strong>Contrast:</strong> however, on the other hand, nevertheless, although, yet<br>' +
+    '<strong>Cause/Effect:</strong> therefore, consequently, as a result, thus, hence<br>' +
+    '<strong>Sequence:</strong> firstly, secondly, finally, then, subsequently' +
+    '</div>'
+  );
+
+  return '<h2 class="section-title" style="margin-bottom:.25rem">Reading Comprehension</h2>' +
+    '<p class="eng-sub">Complete strategies for all passage types in board exam</p>' +
+    '<div class="eng-stack">' + pattern + strategy + qtypes + notemaking + summary + '</div>';
 }
 
 function buildWriting() {
-  const types = [
-    { title: 'Formal Letter', desc: 'Letter to editor, principal, authority. Format: Sender → Date → Receiver → Subject → Body → Closing.' },
-    { title: 'Article Writing', desc: 'Format: Title → By (name) → Introduction → Body paragraphs → Conclusion. Use subheadings.' },
-    { title: 'Notice Writing', desc: 'Short, formal announcement. Format: Organization Name → NOTICE → Date → Title → Body → Name/Designation.' },
-    { title: 'Informal Letter', desc: 'Letter to friend/relative. Casual tone, sharing news/experiences. No strict format needed.' },
-    { title: 'Speech Writing', desc: 'Respectful opening → Main points → Examples → Conclusion. Engaging, persuasive language.' },
-    { title: 'Story Writing', desc: 'Plot (beginning-middle-end), character development, moral. Use vivid language and dialogue.' }
-  ];
-  return `<h2 class="section-title" style="margin-bottom:0.5rem">Writing Skills</h2>
-    <p style="color:var(--muted);margin-bottom:1.5rem;font-size:0.88rem">CBSE Board exam writing formats and tips</p>
-    <div style="display:grid;gap:1rem">
-      ${types.map(t => `
-        <div class="skill-card reveal">
-          <h3>${t.title}</h3>
-          <p>${t.desc}</p>
-        </div>`).join('')}
-    </div>`;
+  function acc(title, body) {
+    return '<details class="eng-acc"><summary>' + title + '</summary><div class="eng-acc-body">' + body + '</div></details>';
+  }
+
+  var formalLetter = acc('Formal Letter — Application / Complaint / Editor',
+    '<p class="eng-h3">Format</p>' +
+    '<div class="eng-format-box">' +
+    'Sender\'s Address\n' +
+    'Date\n\n' +
+    'The Recipient\'s Name/Designation\n' +
+    'Organization Name\n' +
+    'Address\n\n' +
+    'Subject: ________________________\n\n' +
+    'Sir/Madam,\n\n' +
+    'Opening paragraph: State purpose clearly.\n\n' +
+    'Body paragraph(s): Details, facts, reasons, or request.\n\n' +
+    'Closing paragraph: Summarize request / express hope for action.\n\n' +
+    'Yours faithfully,\n' +
+    'Signature\n' +
+    'Name (in capitals)' +
+    '</div>' +
+    '<p class="eng-h3">Key Rules</p>' +
+    '<ul class="eng-list">' +
+    '<li>Use <strong>Yours faithfully</strong> when you don\'t know the person\'s name; <strong>Yours sincerely</strong> when you do.</li>' +
+    '<li>Tone must be formal and polite — never rude even in a complaint.</li>' +
+    '<li>Subject line must be clear and specific: "Regarding installation of street lights in Sector 5."</li>' +
+    '<li>Paragraphs: Introduction (purpose) → Body (details) → Conclusion (request/action).</li>' +
+    '</ul>' +
+    '<div class="eng-eg"><strong>Letter to the Editor opening:</strong><br>The Editor<br>The Hindustan Times<br>New Delhi<br><br>Subject: Menace of plastic pollution in urban parks<br><br>Sir,<br>Through the columns of your esteemed newspaper, I wish to draw the attention of the concerned authorities towards the increasing menace of plastic pollution in public parks...</div>'
+  );
+
+  var informalLetter = acc('Informal Letter — Friend / Relative',
+    '<p class="eng-h3">Format</p>' +
+    '<div class="eng-format-box">' +
+    'Your Address\n' +
+    'Date\n\n' +
+    'Dear [Name],\n\n' +
+    'Opening: Greet and mention why you\'re writing.\n\n' +
+    'Body: Main message — news, experience, invitation, advice etc.\n\n' +
+    'Closing: Regards to family, end warmly.\n\n' +
+    'Yours lovingly/affectionately/sincerely,\n' +
+    'Your Name' +
+    '</div>' +
+    '<p class="eng-h3">Key Rules</p>' +
+    '<ul class="eng-list">' +
+    '<li>Conversational, warm tone — you may use contractions (I\'m, you\'re, it\'s).</li>' +
+    '<li>No subject line needed.</li>' +
+    '<li>Address the friend by first name: Dear Priya, Dear Rahul.</li>' +
+    '<li>Closing: "Yours lovingly" (close family), "Yours affectionately" (close friend).</li>' +
+    '</ul>'
+  );
+
+  var analytical = acc('Analytical Paragraph — Based on Outline / Chart / Data',
+    '<div class="eng-note">An analytical paragraph is a single, well-organized paragraph (100–120 words) that analyses a given outline, graph, table, or data. It must have a clear topic sentence, supporting details with data, and a conclusion.</div>' +
+    '<p class="eng-h3">Structure</p>' +
+    '<div class="eng-format-box">' +
+    '[Topic Sentence — state what the data/outline is about]\n' +
+    '[2–3 Supporting sentences with specific figures/facts from the data]\n' +
+    '[Comparison or trend analysis]\n' +
+    '[Concluding sentence — inference or summary]' +
+    '</div>' +
+    '<p class="eng-h3">Useful Language</p>' +
+    '<div class="eng-eg">' +
+    '<strong>Describing increase:</strong> rose, increased, grew, went up, surged, climbed<br>' +
+    '<strong>Describing decrease:</strong> fell, declined, dropped, decreased, plummeted<br>' +
+    '<strong>Comparing:</strong> compared to, whereas, while, on the other hand, in contrast<br>' +
+    '<strong>Drawing inferences:</strong> this indicates, it is evident that, the data suggests, clearly' +
+    '</div>' +
+    '<p class="eng-h3">Example Opening Sentences</p>' +
+    '<div class="eng-eg">' +
+    'The bar graph illustrates the mode of transport used by students to reach school.<br>' +
+    'The table depicts the rise in India\'s literacy rate from 2001 to 2021.<br>' +
+    'The data reveals a significant shift in the reading habits of urban youth.' +
+    '</div>'
+  );
+
+  var notice = acc('Notice Writing',
+    '<p class="eng-h3">Format</p>' +
+    '<div class="eng-format-box">' +
+    'NAME OF SCHOOL / ORGANIZATION\n\n' +
+    'NOTICE\n\n' +
+    'Date:\n\n' +
+    'TITLE (e.g., ANNUAL SPORTS DAY)\n\n' +
+    'Body: Who, What, When, Where, Why in short sentences.\n' +
+    'Additional details: items to bring, registration deadline.\n\n' +
+    'Name\n' +
+    'Designation' +
+    '</div>' +
+    '<p class="eng-h3">Key Rules</p>' +
+    '<ul class="eng-list">' +
+    '<li>Keep within <strong>50 words</strong> (school notices).</li>' +
+    '<li>Use formal, impersonal language — passive voice where appropriate.</li>' +
+    '<li>NOTICE and TITLE in CAPITALS.</li>' +
+    '<li>Must answer: What is happening? When? Where? Who should attend? What should they do?</li>' +
+    '</ul>' +
+    '<div class="eng-eg"><strong>Model:</strong><br>GREENWOOD PUBLIC SCHOOL<br><br>NOTICE<br>12 March 20XX<br><br>ANNUAL SCIENCE EXHIBITION<br><br>All students of Classes IX and X are informed that the Annual Science Exhibition will be held on 20 March 20XX in the school auditorium from 10:00 a.m. to 2:00 p.m. Interested students must register their project topics with their respective class teachers by 15 March.<br><br>Riya Sharma<br>Head Girl</div>'
+  );
+
+  var article = acc('Article Writing',
+    '<p class="eng-h3">Format</p>' +
+    '<div class="eng-format-box">' +
+    'Title: ________________________\n' +
+    'By: [Author Name]\n\n' +
+    'Introduction (Hook + Topic introduction — 2–3 sentences)\n\n' +
+    'Body Paragraph 1: First main point with explanation and example\n\n' +
+    'Body Paragraph 2: Second main point\n\n' +
+    'Body Paragraph 3: Third point / Counterpoint\n\n' +
+    'Conclusion: Summary + Call to action / Final thought (2–3 sentences)' +
+    '</div>' +
+    '<p class="eng-h3">Key Rules</p>' +
+    '<ul class="eng-list">' +
+    '<li>Word limit: usually <strong>100–120 words</strong> (strictly follow instructions).</li>' +
+    '<li>Begin with an interesting hook — a question, quote, or surprising fact.</li>' +
+    '<li>Use subheadings within the body if the article is long.</li>' +
+    '<li>Write in third person or first person depending on the topic.</li>' +
+    '<li>Avoid very casual language; maintain a semi-formal tone.</li>' +
+    '</ul>'
+  );
+
+  var speech = acc('Speech Writing',
+    '<p class="eng-h3">Format</p>' +
+    '<div class="eng-format-box">' +
+    'Respected [Principal/Teachers/Judges], dear [friends/fellow students],\n\n' +
+    'Good morning/afternoon! I, [Name], [Class], stand before you to speak on "[Topic]".\n\n' +
+    'Introduction: Define or introduce the topic (1–2 sentences).\n\n' +
+    'Main Points (2–3 paragraphs):\n' +
+    '  — Point 1 with explanation/example\n' +
+    '  — Point 2 with example\n' +
+    '  — Counter argument / broader perspective\n\n' +
+    'Conclusion: Summarize + call to action / inspiring close.\n\n' +
+    'Thank you.' +
+    '</div>' +
+    '<p class="eng-h3">Techniques for an Effective Speech</p>' +
+    '<ul class="eng-list">' +
+    '<li><strong>Rhetorical questions:</strong> "Have you ever wondered why…?" — engages the audience.</li>' +
+    '<li><strong>Tripling:</strong> "We must act now, act together, and act decisively."</li>' +
+    '<li><strong>Anaphora (repetition):</strong> "We need cleaner cities. We need cleaner rivers. We need cleaner air."</li>' +
+    '<li><strong>Statistics/facts:</strong> Make the speech credible and specific.</li>' +
+    '<li><strong>Inclusive language:</strong> "We", "our", "together" — makes audience feel part of the message.</li>' +
+    '</ul>'
+  );
+
+  return '<h2 class="section-title" style="margin-bottom:.25rem">Writing Skills</h2>' +
+    '<p class="eng-sub">Complete formats, rules and model examples for every writing type</p>' +
+    '<div class="eng-stack">' + formalLetter + informalLetter + analytical + notice + article + speech + '</div>';
 }
 
 /* ══════════════════════════════════════
@@ -2690,19 +3041,6 @@ function renderAppTools() {
       desc: 'Smart study strategies to help you score 90+ in your board exams.',
       href: 'learn-tips.html',
       onclick: ''
-    },
-    {
-      name: 'Mistake Bank',
-      desc: 'Questions you got wrong — review them until they stick.',
-      href: 'mistakes.html',
-      onclick: 'return guardNav(event,\'mistakes.html\')',
-      badgeId: 'toolMistakeBadge'
-    },
-    {
-      name: 'My Progress',
-      desc: 'Chapter mastery, study streak and readiness across all four subjects.',
-      href: 'dashboard.html',
-      onclick: 'return guardNav(event,\'dashboard.html\')'
     }
   ];
   grid.innerHTML = tools.map(function(t) {
@@ -2716,22 +3054,6 @@ function renderAppTools() {
     '</a>';
   }).join('');
 
-  /* Show mistake count if available */
-  setTimeout(showMistakeBadge, 800);
-}
-
-function showMistakeBadge() {
-  var badge = document.getElementById('toolMistakeBadge');
-  if (!badge) return;
-  var user = (typeof getUser === 'function') ? getUser() : null;
-  if (!user || typeof DB === 'undefined') return;
-  DB.getMistakes(user.uid).then(function(mistakes) {
-    var count = Object.keys(mistakes || {}).length;
-    if (count > 0) {
-      badge.textContent = count + ' to review';
-      badge.style.display = 'inline-block';
-    }
-  }).catch(function() {});
 }
 
 /* Show the most recently studied chapter as "Continue Learning" */

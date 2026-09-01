@@ -1020,6 +1020,53 @@ input:focus-visible,select:focus-visible,textarea:focus-visible { outline:none; 
   line-height:1; margin-top:.1rem;
 }
 .qb-text { flex:1; font-size:.875rem; line-height:1.68; color:var(--text); margin:0; }
+/* Desktop: larger font for question bank */
+@media (min-width:1025px) {
+  .qb-text { font-size:1.02rem; line-height:1.72; }
+  .qb-num { width:2.1rem; height:2.1rem; font-size:.78rem; }
+  .qbank-tab-label { font-size:.92rem; }
+  .qbank-tab-count { font-size:.76rem; }
+  .qbank-tabs { gap:.65rem; margin-bottom:1.3rem; }
+  .qbank-tab { padding:.75rem .6rem; }
+}
+
+/* ─── ENGLISH NOTES (Grammar / Reading / Writing) ─── */
+.eng-stack { display:flex; flex-direction:column; gap:.65rem; }
+.eng-sub { color:var(--muted); font-size:.84rem; margin-bottom:1.1rem; }
+.eng-acc { background:var(--surface); border:1px solid var(--border); border-radius:var(--radius); overflow:hidden; }
+.eng-acc summary {
+  padding:.9rem 1rem; font-size:.93rem; font-weight:700; color:var(--text);
+  cursor:pointer; list-style:none; display:flex; align-items:center; justify-content:space-between;
+  user-select:none; -webkit-tap-highlight-color:transparent;
+}
+.eng-acc summary::-webkit-details-marker { display:none; }
+.eng-acc summary::after { content:'›'; font-size:1.1rem; color:var(--muted); transform:rotate(90deg); transition:transform .2s; flex-shrink:0; }
+.eng-acc[open] summary::after { transform:rotate(270deg); }
+.eng-acc[open] summary { border-bottom:1px solid var(--border); color:var(--accent); }
+.eng-acc-body { padding:1rem 1rem 1.1rem; }
+.eng-table { width:100%; border-collapse:collapse; font-size:.82rem; }
+.eng-table th, .eng-table td { padding:.42rem .65rem; border:1px solid var(--border); vertical-align:top; }
+.eng-table th { background:rgba(91,71,222,.07); font-weight:700; text-align:left; }
+.eng-table tr:nth-child(even) td { background:rgba(91,71,222,.025); }
+.eng-note { background:rgba(91,71,222,.06); padding:.65rem .88rem; border-radius:var(--radius-sm); border-left:3px solid var(--accent); font-size:.83rem; margin-top:.9rem; line-height:1.6; }
+.eng-rule { background:rgba(245,158,11,.07); padding:.65rem .88rem; border-radius:var(--radius-sm); border-left:3px solid #F59E0B; font-size:.83rem; margin-top:.75rem; line-height:1.6; }
+.eng-eg { background:rgba(4,120,87,.07); padding:.65rem .88rem; border-radius:var(--radius-sm); border-left:3px solid #059669; font-size:.83rem; margin-top:.75rem; line-height:1.6; font-style:italic; }
+.eng-h3 { font-size:.88rem; font-weight:800; color:var(--text); margin:.9rem 0 .35rem; letter-spacing:.01em; }
+.eng-h3:first-child { margin-top:0; }
+.eng-list { padding-left:1.1rem; margin:.3rem 0; font-size:.84rem; line-height:1.7; }
+.eng-format-box { font-family:monospace; background:var(--surface-2); border:1px solid var(--border); border-radius:var(--radius-sm); padding:.75rem 1rem; font-size:.82rem; line-height:1.8; margin-top:.65rem; white-space:pre-wrap; }
+.eng-badge { display:inline-block; font-size:.65rem; font-weight:800; letter-spacing:.06em; text-transform:uppercase; padding:.15rem .5rem; border-radius:3px; margin-right:.3rem; vertical-align:middle; }
+.eng-badge-blue { background:rgba(59,130,246,.1); color:#2563EB; }
+.eng-badge-green { background:rgba(4,120,87,.1); color:#059669; }
+.eng-badge-orange { background:rgba(245,158,11,.1); color:#D97706; }
+.eng-badge-red { background:rgba(220,38,38,.1); color:#DC2626; }
+@media (min-width:1025px) {
+  .eng-acc summary { font-size:1.02rem; padding:1rem 1.15rem; }
+  .eng-table th, .eng-table td { padding:.5rem .75rem; font-size:.9rem; }
+  .eng-note, .eng-rule, .eng-eg { font-size:.92rem; }
+  .eng-list { font-size:.92rem; }
+  .eng-format-box { font-size:.9rem; }
+}
 
 /* ─── PDF MODALS ──────────────────────────────── */
 #pdfModal { display:none; position:fixed; inset:0; z-index:9999; }
