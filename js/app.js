@@ -570,7 +570,6 @@ const PDFS = {
       { title: 'Ch 14 Probability',                    desc: 'Question Bank · 2M + 3M + 5M', url: 'pdfs/maths/qbank/ch14-probability.pdf' }
     ],
     formula: [
-      { title: 'Ch 14 Probability Formula Sheet',            desc: 'Probability · CBSE Class 10 Maths · PDF',        url: 'pdfs/maths/complete-formula-sheet.pdf' },
       { title: 'Ch 1 Real Numbers',                        desc: 'Number systems, HCF, LCM, Euclid\'s lemma',     url: 'assets/formula/ch01-real-numbers.png' },
       { title: 'Ch 2 Polynomials',                         desc: 'Zeros, factor theorem, division algorithm',      url: 'assets/formula/ch02-polynomials.png' },
       { title: 'Ch 3 Pair of Linear Equations',            desc: 'Methods: graphical, substitution, elimination',  url: 'assets/formula/ch03-linear-equations.png' },
@@ -583,7 +582,8 @@ const PDFS = {
       { title: 'Ch 10 Circles',                            desc: 'Tangent, secant, arc, sector formulas',         url: 'assets/formula/ch10-circles.png' },
       { title: 'Ch 11 Areas Related to Circles',           desc: 'Area of sector, segment, ring formulas',        url: 'assets/formula/ch11-areas-related-to-circles.png' },
       { title: 'Ch 13 Surface Areas and Volumes',          desc: 'Cuboid, cylinder, cone, sphere formulas',       url: 'assets/formula/ch13-surface-areas-volumes.png' },
-      { title: 'Ch 14 Statistics',                         desc: 'Mean, median, mode for grouped data',           url: 'assets/formula/ch14-statistics.png' }
+      { title: 'Ch 14 Statistics',                         desc: 'Mean, median, mode for grouped data',           url: 'assets/formula/ch14-statistics.png' },
+      { title: 'Ch 14 Probability Formula Sheet',          desc: 'Probability · CBSE Class 10 Maths · PDF',      url: 'pdfs/maths/complete-formula-sheet.pdf' }
     ],
     notes: [],
     pyqs: [
@@ -1173,7 +1173,6 @@ function buildScienceMCQCards(subject) {
           <div class="pdf-card-title">Ch ${ch.id}: ${escH(ch.title)}</div>
           <div class="pdf-card-desc">${count} MCQs &nbsp;${renderMasteryBadge(mastery)}</div>
         </div>
-        <button class="pdf-test-btn" onclick="openTestMode(${ch.id}, '${escH(ch.title)}', 'science')">Test</button>
         <button class="pdf-open-btn" onclick="openChapterMCQs(${ch.id}, '${escH(ch.title)}', 'science')">Open</button>
       </div>`;
   }).join('');
@@ -1212,7 +1211,6 @@ function buildSocialMCQCards(subject) {
             <div class="pdf-card-title">${escH(ch.title)}</div>
             <div class="pdf-card-desc">${count} MCQs · ${s.key} &nbsp;${renderMasteryBadge(mastery)}</div>
           </div>
-          <button class="pdf-test-btn" onclick="openTestMode(${id}, '${escH(ch.title)}', 'social')">Test</button>
           <button class="pdf-open-btn" onclick="openChapterMCQs(${id}, '${escH(ch.title)}', 'social')">Open</button>
         </div>`;
     }).join('');
@@ -3311,9 +3309,8 @@ function buildProgressTab(subject) {
 
   return mcqSummaryStrip +
     overallBar +
-    '<div style="display:flex;align-items:center;justify-content:space-between;margin:1.5rem 0 0.75rem;flex-wrap:wrap;gap:0.5rem">' +
+    '<div style="margin:1.5rem 0 0.75rem">' +
       '<h3 style="margin:0;font-size:1rem;font-weight:800">Chapter Breakdown</h3>' +
-      '<a href="mistakes.html" class="btn btn-secondary" style="font-size:0.82rem;padding:0.35rem 0.9rem">Mistake Bank</a>' +
     '</div>' +
     '<div class="progress-grid">' + cardsHTML + '</div>';
 }
