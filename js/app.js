@@ -1188,23 +1188,6 @@ function buildScienceMCQCards(subject) {
 /* ══════════════════════════════════════
    MATHS MCQ CHAPTER CARDS
 ══════════════════════════════════════ */
-const MATHS_CH_ICONS = {
-  1:  '<svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><text x="2" y="15" font-size="13" font-family="serif" fill="currentColor" stroke="none">ℝ</text></svg>',
-  2:  '<svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M2 16 Q6 4 10 10 Q14 16 18 4"/></svg>',
-  3:  '<svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><line x1="2" y1="6" x2="18" y2="6"/><line x1="2" y1="14" x2="18" y2="14"/></svg>',
-  4:  '<svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M3 17 Q10 2 17 17"/></svg>',
-  5:  '<svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><line x1="3" y1="16" x2="17" y2="4"/><circle cx="5" cy="14" r="1.5" fill="currentColor" stroke="none"/><circle cx="10" cy="9" r="1.5" fill="currentColor" stroke="none"/><circle cx="15" cy="5" r="1.5" fill="currentColor" stroke="none"/></svg>',
-  6:  '<svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><polygon points="10,2 18,18 2,18"/></svg>',
-  7:  '<svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"><line x1="2" y1="18" x2="18" y2="18"/><line x1="2" y1="2" x2="2" y2="18"/><circle cx="8" cy="10" r="2" fill="currentColor" stroke="none" opacity=".8"/><circle cx="14" cy="5" r="2" fill="currentColor" stroke="none" opacity=".8"/></svg>',
-  8:  '<svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><path d="M2 10 Q6 2 10 10 Q14 18 18 10"/></svg>',
-  9:  '<svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><line x1="3" y1="17" x2="17" y2="17"/><line x1="10" y1="3" x2="10" y2="17"/><line x1="3" y1="17" x2="10" y2="3"/><line x1="3" y1="17" x2="17" y2="8"/></svg>',
-  10: '<svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="10" cy="10" r="7"/><line x1="10" y1="10" x2="15.5" y2="5.5" stroke-linecap="round"/></svg>',
-  11: '<svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="10" cy="10" r="7"/><path d="M10 10 L17 10 A7 7 0 0 1 10 17 Z" fill="currentColor" opacity=".25" stroke="none"/></svg>',
-  12: '<svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="8" width="12" height="10"/><path d="M4 8 L8 4 L20 4 L16 8"/><line x1="16" y1="8" x2="16" y2="18"/></svg>',
-  13: '<svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><rect x="3" y="14" width="3" height="4" rx="1" fill="currentColor" opacity=".6" stroke="none"/><rect x="8" y="9" width="3" height="9" rx="1" fill="currentColor" opacity=".6" stroke="none"/><rect x="13" y="5" width="3" height="13" rx="1" fill="currentColor" opacity=".6" stroke="none"/><line x1="2" y1="18" x2="18" y2="18"/></svg>',
-  14: '<svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="14" height="14" rx="3"/><circle cx="7" cy="7" r="1" fill="currentColor" stroke="none"/><circle cx="13" cy="7" r="1" fill="currentColor" stroke="none"/><circle cx="7" cy="13" r="1" fill="currentColor" stroke="none"/><circle cx="13" cy="13" r="1" fill="currentColor" stroke="none"/><circle cx="10" cy="10" r="1" fill="currentColor" stroke="none"/></svg>'
-};
-
 function buildMathsMCQCards(subject) {
   const chapters = subject.chapters || [];
   const cards = chapters.map(ch => {
@@ -1213,10 +1196,8 @@ function buildMathsMCQCards(subject) {
     const mastery = (_cachedKnowledgeMap['maths_' + ch.id] || {}).mastery || 'not_started';
     const chDoneKey = 'maths_mcq_' + ch.id;
     const chDone = getChapterDone(chDoneKey);
-    const icon = MATHS_CH_ICONS[ch.id] || '';
     return `
       <div class="pdf-card">
-        <div class="pdf-card-icon mcq-svg-icon" style="display:flex;align-items:center;justify-content:center;width:2rem;height:2rem;border-radius:8px;background:rgba(91,71,222,.1);color:var(--accent);flex-shrink:0">${icon}</div>
         <div class="pdf-card-info">
           <div class="pdf-card-title">Ch ${ch.id}: ${escH(ch.title)}</div>
           <div class="pdf-card-desc">${count} MCQs &nbsp;${renderMasteryBadge(mastery)}</div>
@@ -3558,6 +3539,14 @@ function initLearnPage() {
   setTimeout(renderContinueLearning, 1800);
 }
 
+/* SVG icons for each subject tile */
+var _SUBJECT_SVGS = {
+  maths: '<svg viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg" width="28" height="28"><rect x="4" y="4" width="32" height="32" rx="6" stroke="currentColor" stroke-width="2"/><text x="20" y="27" text-anchor="middle" font-size="18" font-weight="700" font-family="Georgia,serif" fill="currentColor">π</text></svg>',
+  science: '<svg viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg" width="28" height="28"><circle cx="20" cy="20" r="5" stroke="currentColor" stroke-width="2"/><ellipse cx="20" cy="20" rx="16" ry="7" stroke="currentColor" stroke-width="1.8"/><ellipse cx="20" cy="20" rx="16" ry="7" stroke="currentColor" stroke-width="1.8" transform="rotate(60 20 20)"/><ellipse cx="20" cy="20" rx="16" ry="7" stroke="currentColor" stroke-width="1.8" transform="rotate(120 20 20)"/></svg>',
+  english: '<svg viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg" width="28" height="28"><rect x="6" y="5" width="22" height="30" rx="3" stroke="currentColor" stroke-width="2"/><rect x="10" y="5" width="22" height="30" rx="3" stroke="currentColor" stroke-width="2" fill="none"/><line x1="14" y1="14" x2="24" y2="14" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/><line x1="14" y1="19" x2="26" y2="19" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/><line x1="14" y1="24" x2="22" y2="24" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>',
+  social: '<svg viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg" width="28" height="28"><circle cx="20" cy="20" r="14" stroke="currentColor" stroke-width="2"/><ellipse cx="20" cy="20" rx="7" ry="14" stroke="currentColor" stroke-width="1.8"/><line x1="6" y1="20" x2="34" y2="20" stroke="currentColor" stroke-width="1.8"/><line x1="8" y1="13" x2="32" y2="13" stroke="currentColor" stroke-width="1.5"/><line x1="8" y1="27" x2="32" y2="27" stroke="currentColor" stroke-width="1.5"/></svg>'
+};
+
 /* Render 4 subject tiles in learn.html */
 function renderAppSubjects() {
   var grid = document.getElementById('appSubjectsGrid');
@@ -3565,8 +3554,9 @@ function renderAppSubjects() {
   var urlMap = { maths:'maths.html', science:'science.html', english:'english.html', social:'social.html' };
   grid.innerHTML = DATA.subjects.map(function(sub) {
     var pct = getSubjectPct(sub.id);
+    var svg = _SUBJECT_SVGS[sub.id] || '';
     return '<a href="' + urlMap[sub.id] + '" onclick="return guardNav(event,\'' + urlMap[sub.id] + '\')" class="app-subject-tile ' + sub.id + '">' +
-      '<div class="app-tile-icon ' + sub.id + '"><div class="app-tile-icon-mark"></div></div>' +
+      '<div class="app-tile-icon ' + sub.id + '"><div class="app-tile-icon-mark">' + svg + '</div></div>' +
       '<div class="app-tile-name">' + sub.name + '</div>' +
       '<div class="app-tile-meta">' + sub.chapters.length + ' chapters</div>' +
       '<div class="app-tile-bar"><div class="app-tile-fill" data-w="' + pct + '" style="width:0%"></div></div>' +

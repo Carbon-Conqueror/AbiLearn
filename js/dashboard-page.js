@@ -264,9 +264,7 @@
         buildStatsHTML(stats, profile) +
 
         /* Footer link */
-        '<div style="text-align:center;margin-top:0.5rem">' +
-          '<a href="mistakes.html" class="btn btn-secondary" style="font-size:0.85rem">📋 Mistake Bank</a>' +
-        '</div>';
+        '';
   }
 
   /* ── Main Render ── */
