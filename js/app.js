@@ -3539,14 +3539,6 @@ function initLearnPage() {
   setTimeout(renderContinueLearning, 1800);
 }
 
-/* SVG icons for each subject tile */
-var _SUBJECT_SVGS = {
-  maths: '<svg viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg" width="28" height="28"><rect x="4" y="4" width="32" height="32" rx="6" stroke="currentColor" stroke-width="2"/><text x="20" y="27" text-anchor="middle" font-size="18" font-weight="700" font-family="Georgia,serif" fill="currentColor">π</text></svg>',
-  science: '<svg viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg" width="28" height="28"><circle cx="20" cy="20" r="5" stroke="currentColor" stroke-width="2"/><ellipse cx="20" cy="20" rx="16" ry="7" stroke="currentColor" stroke-width="1.8"/><ellipse cx="20" cy="20" rx="16" ry="7" stroke="currentColor" stroke-width="1.8" transform="rotate(60 20 20)"/><ellipse cx="20" cy="20" rx="16" ry="7" stroke="currentColor" stroke-width="1.8" transform="rotate(120 20 20)"/></svg>',
-  english: '<svg viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg" width="28" height="28"><rect x="6" y="5" width="22" height="30" rx="3" stroke="currentColor" stroke-width="2"/><rect x="10" y="5" width="22" height="30" rx="3" stroke="currentColor" stroke-width="2" fill="none"/><line x1="14" y1="14" x2="24" y2="14" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/><line x1="14" y1="19" x2="26" y2="19" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/><line x1="14" y1="24" x2="22" y2="24" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>',
-  social: '<svg viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg" width="28" height="28"><circle cx="20" cy="20" r="14" stroke="currentColor" stroke-width="2"/><ellipse cx="20" cy="20" rx="7" ry="14" stroke="currentColor" stroke-width="1.8"/><line x1="6" y1="20" x2="34" y2="20" stroke="currentColor" stroke-width="1.8"/><line x1="8" y1="13" x2="32" y2="13" stroke="currentColor" stroke-width="1.5"/><line x1="8" y1="27" x2="32" y2="27" stroke="currentColor" stroke-width="1.5"/></svg>'
-};
-
 /* Render 4 subject tiles in learn.html */
 function renderAppSubjects() {
   var grid = document.getElementById('appSubjectsGrid');
@@ -3554,9 +3546,8 @@ function renderAppSubjects() {
   var urlMap = { maths:'maths.html', science:'science.html', english:'english.html', social:'social.html' };
   grid.innerHTML = DATA.subjects.map(function(sub) {
     var pct = getSubjectPct(sub.id);
-    var svg = _SUBJECT_SVGS[sub.id] || '';
     return '<a href="' + urlMap[sub.id] + '" onclick="return guardNav(event,\'' + urlMap[sub.id] + '\')" class="app-subject-tile ' + sub.id + '">' +
-      '<div class="app-tile-icon ' + sub.id + '"><div class="app-tile-icon-mark">' + svg + '</div></div>' +
+      '<div class="app-tile-icon ' + sub.id + '"><img src="assets/subjects/' + sub.id + '.jpg" alt="" class="app-tile-subject-img" loading="lazy"></div>' +
       '<div class="app-tile-name">' + sub.name + '</div>' +
       '<div class="app-tile-meta">' + sub.chapters.length + ' chapters</div>' +
       '<div class="app-tile-bar"><div class="app-tile-fill" data-w="' + pct + '" style="width:0%"></div></div>' +

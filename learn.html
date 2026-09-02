@@ -794,33 +794,22 @@
 
   /* Icon container */
   .app-tile-icon {
-    width: 50px; height: 50px;
+    width: 56px; height: 56px;
     border-radius: var(--lh-r);
-    display: flex;
-    align-items: center;
-    justify-content: center;
+    overflow: hidden;
     flex-shrink: 0;
     transition: transform .22s var(--lh-ease);
   }
   .app-subject-tile:hover .app-tile-icon { transform: scale(1.06); }
 
-  .app-tile-icon.maths   { background: rgba(124,58,237,.12); }
-  .app-tile-icon.science { background: rgba(8,145,178,.1); }
-  .app-tile-icon.english { background: rgba(180,83,9,.1); }
-  .app-tile-icon.social  { background: rgba(4,120,87,.1); }
-
-  /* Icon symbol */
-  .app-tile-icon-mark {
-    width: 32px; height: 32px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    line-height: 1;
+  /* Subject image fills the icon tile */
+  .app-tile-subject-img {
+    width: 100%; height: 100%;
+    object-fit: cover;
+    object-position: center;
+    border-radius: var(--lh-r);
+    display: block;
   }
-  .app-tile-icon.maths   .app-tile-icon-mark { color: var(--math-c); }
-  .app-tile-icon.science .app-tile-icon-mark { color: var(--sci-c); }
-  .app-tile-icon.english .app-tile-icon-mark { color: var(--eng-c); }
-  .app-tile-icon.social  .app-tile-icon-mark { color: #047857; }
 
   /* Name */
   .app-tile-name {
