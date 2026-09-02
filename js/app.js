@@ -22,9 +22,10 @@
 /* ── SUBJECT TAB CONFIGS ── */
 const SUBJECT_TABS = {
   maths: [
-    { id: 'formula-sheet', label: 'Formulas' },
-    { id: 'maths-qbank',   label: 'Question Bank' },
-    { id: 'pyqs',          label: 'PYQ Papers' },
+    { id: 'formula-sheet',     label: 'Formulas' },
+    { id: 'maths-qbank',       label: 'Question Bank' },
+    { id: 'practice-questions', label: 'MCQ Practice' },
+    { id: 'pyqs',              label: 'PYQ Papers' },
   ],
   science: [
     { id: 'science-qbank',     label: 'Question Bank' },
@@ -518,6 +519,8 @@ function renderTabContent(subject, tabId) {
       case 'practice-questions':
         if (subject && subject.id === 'science' && typeof SCIENCE_MCQS !== 'undefined') {
           el.innerHTML = buildScienceMCQCards(subject);
+        } else if (subject && subject.id === 'maths' && typeof MATHS_MCQS !== 'undefined') {
+          el.innerHTML = buildMathsMCQCards(subject);
         } else if (subject && subject.id === 'social') {
           el.innerHTML = buildSocialMCQCards(subject);
         } else {
@@ -1183,6 +1186,51 @@ function buildScienceMCQCards(subject) {
 }
 
 /* ══════════════════════════════════════
+   MATHS MCQ CHAPTER CARDS
+══════════════════════════════════════ */
+const MATHS_CH_ICONS = {
+  1:  '<svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><text x="2" y="15" font-size="13" font-family="serif" fill="currentColor" stroke="none">ℝ</text></svg>',
+  2:  '<svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M2 16 Q6 4 10 10 Q14 16 18 4"/></svg>',
+  3:  '<svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><line x1="2" y1="6" x2="18" y2="6"/><line x1="2" y1="14" x2="18" y2="14"/></svg>',
+  4:  '<svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M3 17 Q10 2 17 17"/></svg>',
+  5:  '<svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><line x1="3" y1="16" x2="17" y2="4"/><circle cx="5" cy="14" r="1.5" fill="currentColor" stroke="none"/><circle cx="10" cy="9" r="1.5" fill="currentColor" stroke="none"/><circle cx="15" cy="5" r="1.5" fill="currentColor" stroke="none"/></svg>',
+  6:  '<svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><polygon points="10,2 18,18 2,18"/></svg>',
+  7:  '<svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"><line x1="2" y1="18" x2="18" y2="18"/><line x1="2" y1="2" x2="2" y2="18"/><circle cx="8" cy="10" r="2" fill="currentColor" stroke="none" opacity=".8"/><circle cx="14" cy="5" r="2" fill="currentColor" stroke="none" opacity=".8"/></svg>',
+  8:  '<svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><path d="M2 10 Q6 2 10 10 Q14 18 18 10"/></svg>',
+  9:  '<svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><line x1="3" y1="17" x2="17" y2="17"/><line x1="10" y1="3" x2="10" y2="17"/><line x1="3" y1="17" x2="10" y2="3"/><line x1="3" y1="17" x2="17" y2="8"/></svg>',
+  10: '<svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="10" cy="10" r="7"/><line x1="10" y1="10" x2="15.5" y2="5.5" stroke-linecap="round"/></svg>',
+  11: '<svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="10" cy="10" r="7"/><path d="M10 10 L17 10 A7 7 0 0 1 10 17 Z" fill="currentColor" opacity=".25" stroke="none"/></svg>',
+  12: '<svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="8" width="12" height="10"/><path d="M4 8 L8 4 L20 4 L16 8"/><line x1="16" y1="8" x2="16" y2="18"/></svg>',
+  13: '<svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><rect x="3" y="14" width="3" height="4" rx="1" fill="currentColor" opacity=".6" stroke="none"/><rect x="8" y="9" width="3" height="9" rx="1" fill="currentColor" opacity=".6" stroke="none"/><rect x="13" y="5" width="3" height="13" rx="1" fill="currentColor" opacity=".6" stroke="none"/><line x1="2" y1="18" x2="18" y2="18"/></svg>',
+  14: '<svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="14" height="14" rx="3"/><circle cx="7" cy="7" r="1" fill="currentColor" stroke="none"/><circle cx="13" cy="7" r="1" fill="currentColor" stroke="none"/><circle cx="7" cy="13" r="1" fill="currentColor" stroke="none"/><circle cx="13" cy="13" r="1" fill="currentColor" stroke="none"/><circle cx="10" cy="10" r="1" fill="currentColor" stroke="none"/></svg>'
+};
+
+function buildMathsMCQCards(subject) {
+  const chapters = subject.chapters || [];
+  const cards = chapters.map(ch => {
+    const count = (MATHS_MCQS[ch.id] || []).length;
+    if (!count) return '';
+    const mastery = (_cachedKnowledgeMap['maths_' + ch.id] || {}).mastery || 'not_started';
+    const chDoneKey = 'maths_mcq_' + ch.id;
+    const chDone = getChapterDone(chDoneKey);
+    const icon = MATHS_CH_ICONS[ch.id] || '';
+    return `
+      <div class="pdf-card">
+        <div class="pdf-card-icon mcq-svg-icon" style="display:flex;align-items:center;justify-content:center;width:2rem;height:2rem;border-radius:8px;background:rgba(91,71,222,.1);color:var(--accent);flex-shrink:0">${icon}</div>
+        <div class="pdf-card-info">
+          <div class="pdf-card-title">Ch ${ch.id}: ${escH(ch.title)}</div>
+          <div class="pdf-card-desc">${count} MCQs &nbsp;${renderMasteryBadge(mastery)}</div>
+        </div>
+        <button class="pdf-open-btn" onclick="openChapterMCQs(${ch.id}, '${escH(ch.title)}', 'maths')">Open</button>
+      </div>`;
+  }).join('');
+  return `
+    <h2 class="section-title" style="margin-bottom:0.3rem">🧠 Chapter MCQs</h2>
+    <p style="color:var(--muted);margin-bottom:1.5rem;font-size:0.88rem">NCERT 2026 · PYQs · Important · Slightly Advanced</p>
+    <div class="pdf-list">${cards}</div>`;
+}
+
+/* ══════════════════════════════════════
    SOCIAL SCIENCE MCQ CHAPTER CARDS
 ══════════════════════════════════════ */
 const SOCIAL_SUBJECTS = [
@@ -1233,7 +1281,9 @@ function buildSocialMCQCards(subject) {
 function openChapterMCQs(chId, title, subject) {
   const bank = subject === 'social'
     ? (typeof SOCIAL_MCQS !== 'undefined' && SOCIAL_MCQS[chId])
-    : (typeof SCIENCE_MCQS !== 'undefined' && SCIENCE_MCQS[chId]);
+    : subject === 'maths'
+      ? (typeof MATHS_MCQS !== 'undefined' && MATHS_MCQS[chId])
+      : (typeof SCIENCE_MCQS !== 'undefined' && SCIENCE_MCQS[chId]);
   const mcqs = bank || [];
   if (!mcqs.length) return;
   const letters = ['A', 'B', 'C', 'D'];
