@@ -570,7 +570,7 @@ const PDFS = {
       { title: 'Ch 14 Probability',                    desc: 'Question Bank · 2M + 3M + 5M', url: 'pdfs/maths/qbank/ch14-probability.pdf' }
     ],
     formula: [
-      { title: '📄 Complete Formula Sheet',                desc: 'All chapters · CBSE Class 10 Maths · PDF',       url: 'pdfs/maths/complete-formula-sheet.pdf' },
+      { title: 'Ch 14 Probability Formula Sheet',            desc: 'Probability · CBSE Class 10 Maths · PDF',        url: 'pdfs/maths/complete-formula-sheet.pdf' },
       { title: 'Ch 1 Real Numbers',                        desc: 'Number systems, HCF, LCM, Euclid\'s lemma',     url: 'assets/formula/ch01-real-numbers.png' },
       { title: 'Ch 2 Polynomials',                         desc: 'Zeros, factor theorem, division algorithm',      url: 'assets/formula/ch02-polynomials.png' },
       { title: 'Ch 3 Pair of Linear Equations',            desc: 'Methods: graphical, substitution, elimination',  url: 'assets/formula/ch03-linear-equations.png' },
@@ -1340,8 +1340,6 @@ function openChapterMCQs(chId, title, subject) {
         '<div class="summary-score-big">' + correct2 + ' / ' + mcqs.length + '</div>' +
         '<div class="summary-accuracy">' + accuracy + '% accuracy</div>' +
         '<div style="margin:0.75rem 0">' + renderMasteryBadge(sm) + '</div>' +
-        '<div class="summary-message">' + escH(msgs[sm]) + '</div>' +
-        (correct2 < mcqs.length ? '<a href="mistakes.html" class="btn btn-secondary" style="margin-top:1rem;display:inline-block;margin-right:0.5rem">Review Mistakes</a>' : '') +
         '<button class="btn btn-primary" style="margin-top:1rem" onclick="closeMCQModal()">Done</button>';
       body.appendChild(summEl);
       summEl.scrollIntoView({ behavior: 'smooth', block: 'end' });
@@ -3447,15 +3445,12 @@ function openTestMode(chId, title, subject) {
       if (_testTimer) { clearInterval(_testTimer); _testTimer = null; }
       var accuracy = Math.round((correct2 / testMCQs.length) * 100);
       var sm = (accuracy >= 85 && testMCQs.length >= 10) ? 'mastered' : accuracy >= 70 ? 'proficient' : accuracy >= 50 ? 'developing' : 'learning';
-      var msgs = { mastered: '🏆 Test passed! Chapter mastered.', proficient: '👍 Solid performance!', developing: '📚 Review weak areas and retest.', learning: '🔄 More practice needed.' };
       var summEl = document.createElement('div');
       summEl.className = 'mcq-session-summary';
       summEl.innerHTML =
         '<div class="summary-score-big">' + correct2 + ' / ' + testMCQs.length + '</div>' +
         '<div class="summary-accuracy">' + accuracy + '% accuracy</div>' +
         '<div style="margin:0.75rem 0">' + renderMasteryBadge(sm) + '</div>' +
-        '<div class="summary-message">' + escH(msgs[sm]) + '</div>' +
-        (correct2 < testMCQs.length ? '<a href="mistakes.html" class="btn btn-secondary" style="margin-top:1rem;display:inline-block;margin-right:0.5rem">Review Mistakes</a>' : '') +
         '<button class="btn btn-primary" style="margin-top:1rem" onclick="closeTestModal()">Done</button>';
       body.appendChild(summEl);
       summEl.scrollIntoView({ behavior: 'smooth', block: 'end' });
