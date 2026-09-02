@@ -473,7 +473,9 @@ function renderSubjectShell(subject) {
   el.innerHTML = `
     <div class="subject-header ${subject.id}">
       <div class="subject-header-inner">
-        <div class="subject-header-icon">${subject.icon}</div>
+        <div class="subject-header-icon" style="overflow:hidden;padding:0;flex-shrink:0">
+          <img src="assets/subjects/${subject.id}.jpg" alt="${subject.name}" style="width:100%;height:100%;object-fit:cover;display:block;border-radius:inherit">
+        </div>
         <div>
           <div class="subject-breadcrumb">
             <a href="index.html">Home</a> / ${subject.name}
@@ -1174,7 +1176,7 @@ function buildScienceMCQCards(subject) {
         <div class="pdf-card-icon">🧪</div>
         <div class="pdf-card-info">
           <div class="pdf-card-title">Ch ${ch.id}: ${escH(ch.title)}</div>
-          <div class="pdf-card-desc">${count} MCQs &nbsp;${renderMasteryBadge(mastery)}</div>
+          <div class="pdf-card-desc">${count} MCQs</div>
         </div>
         <button class="pdf-open-btn" onclick="openChapterMCQs(${ch.id}, '${escH(ch.title)}', 'science')">Open</button>
       </div>`;
@@ -1200,7 +1202,7 @@ function buildMathsMCQCards(subject) {
       <div class="pdf-card">
         <div class="pdf-card-info">
           <div class="pdf-card-title">Ch ${ch.id}: ${escH(ch.title)}</div>
-          <div class="pdf-card-desc">${count} MCQs &nbsp;${renderMasteryBadge(mastery)}</div>
+          <div class="pdf-card-desc">${count} MCQs</div>
         </div>
         <button class="pdf-open-btn" onclick="openChapterMCQs(${ch.id}, '${escH(ch.title)}', 'maths')">Open</button>
       </div>`;
@@ -1238,7 +1240,7 @@ function buildSocialMCQCards(subject) {
           <div class="pdf-card-icon">${s.icon}</div>
           <div class="pdf-card-info">
             <div class="pdf-card-title">${escH(ch.title)}</div>
-            <div class="pdf-card-desc">${count} MCQs · ${s.key} &nbsp;${renderMasteryBadge(mastery)}</div>
+            <div class="pdf-card-desc">${count} MCQs · ${s.key}</div>
           </div>
           <button class="pdf-open-btn" onclick="openChapterMCQs(${id}, '${escH(ch.title)}', 'social')">Open</button>
         </div>`;
@@ -1368,7 +1370,6 @@ function openChapterMCQs(chId, title, subject) {
       summEl.innerHTML =
         '<div class="summary-score-big">' + correct2 + ' / ' + mcqs.length + '</div>' +
         '<div class="summary-accuracy">' + accuracy + '% accuracy</div>' +
-        '<div style="margin:0.75rem 0">' + renderMasteryBadge(sm) + '</div>' +
         '<button class="btn btn-primary" style="margin-top:1rem" onclick="closeMCQModal()">Done</button>';
       body.appendChild(summEl);
       summEl.scrollIntoView({ behavior: 'smooth', block: 'end' });
@@ -1646,7 +1647,6 @@ function buildChapterAccordionHTML(ch, subjectId, numClass) {
           <div class="chapter-title">${ch.title}</div>
           <div class="chapter-sub">${ch.subtitle}</div>
         </div>
-        <span class="chapter-mastery-badge">${renderMasteryBadge((_cachedKnowledgeMap[subjectId + '_' + ch.id] || {}).mastery || 'not_started')}</span>
         <span class="chapter-toggle">▼</span>
       </div>
       <div class="chapter-body">
@@ -3306,7 +3306,6 @@ function buildProgressTab(subject) {
     return '<div class="progress-chapter-card' + (isDue ? ' due-for-revision' : '') + '">' +
       '<div class="progress-ch-header">' +
         '<div class="progress-ch-name">Ch ' + ch.id + ': ' + escH(ch.title) + '</div>' +
-        (hasMCQData ? renderMasteryBadge(mastery) : '') +
       '</div>' +
       (isDue ? '<div class="revision-due-badge">Due for revision</div>' : '') +
       (pips ? '<div class="progress-tick-pips">' + pips + '</div>' : '') +
@@ -3550,15 +3549,8 @@ function renderAppSubjects() {
       '<div class="app-tile-icon ' + sub.id + '"><img src="assets/subjects/' + sub.id + '.jpg" alt="" class="app-tile-subject-img" loading="lazy"></div>' +
       '<div class="app-tile-name">' + sub.name + '</div>' +
       '<div class="app-tile-meta">' + sub.chapters.length + ' chapters</div>' +
-      '<div class="app-tile-bar"><div class="app-tile-fill" data-w="' + pct + '" style="width:0%"></div></div>' +
     '</a>';
   }).join('');
-
-  setTimeout(function() {
-    grid.querySelectorAll('.app-tile-fill[data-w]').forEach(function(el) {
-      el.style.width = el.dataset.w + '%';
-    });
-  }, 100);
 }
 
 /* Render 4 study tool cards in learn.html */
@@ -3646,8 +3638,7 @@ function renderContinueLearning() {
       '<div class="continue-body">' +
         '<div class="continue-label">Continue Learning &nbsp;·&nbsp; ' + subject.name + '</div>' +
         '<div class="continue-title">Ch ' + chapter.id + ' &middot; ' + escH(chapter.title) + '</div>' +
-        '<div class="continue-sub">' + (masteryLabel ? masteryLabel + ' · ' : '') + pct + '% accuracy</div>' +
-        (pct > 0 ? '<div class="continue-progress"><div class="continue-pfill" style="width:' + pct + '%"></div></div>' : '') +
+        '<div class="continue-sub">Continue where you left off</div>' +
       '</div>' +
       '<span class="continue-arrow">&#8594;</span>' +
     '</a>';
