@@ -178,9 +178,9 @@ input:focus-visible,select:focus-visible,textarea:focus-visible { outline:none; 
   padding:0 2rem; position:sticky; top:0; z-index:1000;
   transition:transform .3s ease;
 }
-.logo { display:flex; align-items:center; gap:.6rem; }
-.logo-img { width:32px; height:32px; object-fit:contain; border-radius:6px; }
-.logo-text { font-size:1.15rem; font-weight:800; color:var(--text); letter-spacing:-.3px; }
+.logo { display:flex; align-items:center; gap:.65rem; }
+.logo-img { width:40px; height:40px; object-fit:cover; border-radius:8px; }
+.logo-text { font-size:1.35rem; font-weight:800; color:var(--text); letter-spacing:-.3px; }
 .logo-text span { color:var(--accent); }
 
 .nav-links { display:flex; gap:.1rem; list-style:none; align-items:center; }
@@ -1519,8 +1519,9 @@ footer {
   .pdf-cards-grid { display:grid; grid-template-columns:1fr 1fr; gap:.65rem; }
 }
 @media (max-width:768px) {
-  .navbar { padding:0 1rem; height:54px; overflow:visible; flex-wrap:nowrap; }
-  .logo-text { font-size:.95rem; }
+  .navbar { padding:0 1rem; height:56px; overflow:visible; flex-wrap:nowrap; }
+  .logo-img { width:34px; height:34px; }
+  .logo-text { font-size:1.1rem; }
   .nav-links { display:none !important; }
   .nav-right  { display:none !important; }
   .hamburger  { display:flex !important; }

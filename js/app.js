@@ -611,6 +611,7 @@ const PDFS = {
   science: {
     formula: [],
     notes: [
+      { title: 'Ch 1 · Complete All Sections',             desc: 'Chemical Reactions and Equations · Complete Notes', url: 'pdfs/science/notes/ch1-complete-all-sections.pdf' },
       { title: 'Ch 2 Acids, Bases and Salts',             desc: 'Complete Notes', url: 'pdfs/science/notes/ch2-acids-bases-salts.pdf' },
       { title: 'Ch 3 Metals and Non-Metals',              desc: 'Complete Notes', url: 'pdfs/science/notes/ch3-metals-and-non-metals.pdf' },
       { title: 'Ch 4 Carbon and Its Compounds',           desc: 'Complete Notes', url: 'pdfs/science/notes/ch4-carbon-and-compounds.pdf' },
