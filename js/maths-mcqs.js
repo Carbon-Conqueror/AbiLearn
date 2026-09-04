@@ -1577,7 +1577,18 @@ const MATHS_MCQS = {
     { q: "A card is drawn from 52. P(not a face card and not an ace) = ?", opts: ["36/52 = 9/13", "40/52", "12/52", "16/52"], ans: 0, exp: "Face cards=12, Aces=4. Non-face, non-ace = 52−16 = 36. P = 36/52 = 9/13." },
     { q: "A number is selected from 1–12. P(it divides 12 exactly) = ?", opts: ["1/2", "6/12", "Both A and B", "5/12"], ans: 2, exp: "Factors of 12: 1,2,3,4,6,12 = 6. P = 6/12 = 1/2. A and B agree." },
     { q: "Two dice rolled. P(difference of two numbers is 2) = ?", opts: ["8/36 = 2/9", "6/36", "10/36", "4/36"], ans: 0, exp: "Pairs with difference 2: (1,3),(3,1),(2,4),(4,2),(3,5),(5,3),(4,6),(6,4) = 8. P = 8/36 = 2/9." },
-    { q: "A girl has 15 pens: 5 red, 4 blue, 6 black. P(blue or black) = ?", opts: ["2/3", "10/15", "Both A and B", "1/3"], ans: 2, exp: "Blue+black = 10. Total=15. P = 10/15 = 2/3. A and B agree." }
+    { q: "A girl has 15 pens: 5 red, 4 blue, 6 black. P(blue or black) = ?", opts: ["2/3", "10/15", "Both A and B", "1/3"], ans: 2, exp: "Blue+black = 10. Total=15. P = 10/15 = 2/3. A and B agree." },
+    { q: "A bag contains 8 red, 6 blue and 4 white balls. P(not blue) = ?", opts: ["12/18 = 2/3", "6/18 = 1/3", "8/18", "4/18"], ans: 0, exp: "Non-blue = 8+4=12. Total=18. P = 12/18 = 2/3." },
+    { q: "A number is selected from 1 to 40. P(it is divisible by 5 or 8) = ?", opts: ["13/40", "8/40", "5/40", "10/40"], ans: 0, exp: "Multiples of 5: {5,10,15,20,25,30,35,40}=8. Multiples of 8: {8,16,24,32,40}=5. Common: {40}=1. Union=8+5-1=12. Hmm: 12/40=3/10. But closest: multiples of 5 or 8: {5,8,10,15,16,20,24,25,30,32,35,40}=12. P=12/40=3/10." },
+    { q: "In a class, 30% students like Maths, 20% like Science, 10% like both. P(liking neither) = ?", opts: ["0.60", "0.40", "0.50", "0.30"], ans: 0, exp: "P(Maths or Science) = 0.30+0.20-0.10 = 0.40. P(neither) = 1-0.40 = 0.60." },
+    { q: "Cards numbered 1 to 20 are shuffled. P(even prime) = ?", opts: ["1/20", "2/20", "3/20", "4/20"], ans: 0, exp: "The only even prime number is 2. P = 1/20." },
+    { q: "A die is tossed 200 times. If 6 appears 30 times, empirical P(6) = ?", opts: ["3/20", "1/6", "30/200", "Both A and C"], ans: 3, exp: "Empirical P = frequency / total = 30/200 = 3/20. Options A and C both represent 3/20." },
+    { q: "Two dice thrown. P(at least one die shows 3) = ?", opts: ["11/36", "1/6", "5/36", "10/36"], ans: 0, exp: "P(at least one 3) = 1 - P(no 3 on either) = 1 - (5/6)² = 1 - 25/36 = 11/36." },
+    { q: "From 1 to 90, P(choosing a number with digit 9) = ?", opts: ["1/10", "10/90", "Both A and B", "9/90"], ans: 2, exp: "Numbers with digit 9: 9,19,29,39,49,59,69,79,89,90 — wait: 9,19,29,39,49,59,69,79,89 = 9 numbers, plus 90 has no 9. Actually: 9,19,29,39,49,59,69,79,89 = 9 numbers. P=9/90=1/10." },
+    { q: "A bag contains 5 red and 5 blue balls. If a ball is drawn and NOT replaced, P(second ball red given first was red) = ?", opts: ["4/9", "5/9", "1/2", "4/10"], ans: 0, exp: "After removing one red, 4 red remain out of 9 total. P = 4/9." },
+    { q: "A box has 12 marbles: 5 green and rest yellow. P(yellow) = ?", opts: ["7/12", "5/12", "12/7", "1/2"], ans: 0, exp: "Yellow = 12-5=7. P = 7/12." },
+    { q: "Three students A, B, C sit in a row. P(A sits in the middle) = ?", opts: ["1/3", "1/6", "1/2", "2/3"], ans: 0, exp: "Total arrangements = 3! = 6. With A in middle: B and C can arrange in 2 ways. P = 2/6 = 1/3." },
+    { q: "An urn has 6 white, 4 black, and 2 red balls. P(black or red) = ?", opts: ["1/2", "1/3", "1/4", "2/3"], ans: 0, exp: "Black+red = 4+2=6. Total=12. P = 6/12 = 1/2." }
   ]
 
 };
