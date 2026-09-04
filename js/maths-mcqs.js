@@ -1037,7 +1037,7 @@ const MATHS_MCQS = {
   10: [
     { q: "A tangent to a circle touches it at:", opts: ["No point", "Exactly one point", "Two points", "Infinitely many points"], ans: 1, exp: "By definition a tangent meets the circle at exactly one point, called the point of contact." },
     { q: "A secant of a circle intersects it at:", opts: ["One point", "Two points", "Three points", "No point"], ans: 1, exp: "A secant is a line that cuts the circle in two distinct points." },
-    { q: "The tangent at any point of a circle is ______ to the radius through the point of contact.", opts: ["Parallel", "Perpendicular", "Equal", "Inclined at 45°"], ans: 1, exp: "This is the fundamental tangent theorem: the radius drawn to the point of contact is perpendicular to the tangent." },
+    { q: "The tangent at any point of a circle is _____ to the radius through the point of contact.", opts: ["Parallel", "Perpendicular", "Equal", "Inclined at 45°"], ans: 1, exp: "This is the fundamental tangent theorem: the radius drawn to the point of contact is perpendicular to the tangent." },
     { q: "The number of tangents that can be drawn to a circle from a point outside it is:", opts: ["0", "1", "2", "Infinitely many"], ans: 2, exp: "Exactly two tangents can be drawn from any external point." },
     { q: "The number of tangents from a point on the circle is:", opts: ["0", "1", "2", "Infinitely many"], ans: 1, exp: "At a point lying on the circle, exactly one tangent exists." },
     { q: "The number of tangents from a point inside a circle is:", opts: ["0", "1", "2", "Infinitely many"], ans: 0, exp: "Every line through an interior point cuts the circle twice, so no tangent exists." },

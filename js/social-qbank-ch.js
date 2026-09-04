@@ -1158,7 +1158,7 @@ const SOCIAL_QBANK_CH = {
       ]
     },
     "c3": {
-      title: "Ch 3 — Democracy and Diversity",
+      title: "Ch 3 — Gender, Religion and Caste",
       q2m: [
         "What is sexual division of labour? Give two examples.",
         "What is a feminist? What do feminist movements aim at?",
@@ -1265,7 +1265,7 @@ const SOCIAL_QBANK_CH = {
       ]
     },
     "c4": {
-      title: "Ch 4 — Gender, Religion and Caste",
+      title: "Ch 4 — Political Parties",
       q2m: [
         "What is a political party? Name its three components.",
         "Who is a partisan? What is partisanship?",
@@ -1372,7 +1372,7 @@ const SOCIAL_QBANK_CH = {
       ]
     },
     "c5": {
-      title: "Ch 5 — Popular Struggles and Movements",
+      title: "Ch 5 — Outcomes of Democracy",
       q2m: [
         "Read the statements and choose which correctly describe features of democracy: (I) Promotes equality among citizens (II) Government by few individuals (III) Protection of human rights (IV) Ensures checks and balance system.",
         "What is the most basic outcome of democracy?",
