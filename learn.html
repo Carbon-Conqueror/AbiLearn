@@ -927,8 +927,7 @@
   /* Tips & Tricks */
   .app-tools-grid .app-tool-card:nth-child(2) .app-tool-icon { background: rgba(245,158,11,.1); }
   .app-tools-grid .app-tool-card:nth-child(2) .app-tool-icon-dot::before {
-    content: '💡';
-    font-size: 1.2rem;
+    content: '';
   }
 
 
@@ -1584,7 +1583,7 @@
              placeholder="Search chapters, topics, formulas…"
              autocomplete="off" autocorrect="off" spellcheck="false"
              aria-label="Search AbiLearn">
-      <button class="app-search-close" onclick="closeAppSearch()" aria-label="Close search">✕</button>
+      <button class="app-search-close" onclick="closeAppSearch()" aria-label="Close search">×</button>
     </div>
     <div class="app-search-results" id="appSearchResults" role="list" aria-live="polite"></div>
   </div>
@@ -1655,7 +1654,7 @@ if (location.search.indexOf('openSearch=1') !== -1) {
   var u = (typeof getUser === 'function') ? getUser() : null;
   if (u) {
     var firstName = u.name.split(' ')[0];
-    chip.textContent = 'Hi, ' + firstName + ' 👋';
+    chip.textContent = 'Hi, ' + firstName;
     chip.style.display = 'block';
   } else {
     setTimeout(waitForGreeting, 350);

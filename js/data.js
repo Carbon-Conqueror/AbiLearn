@@ -4,7 +4,7 @@ const DATA = {
     {
       id: 'maths',
       name: 'Mathematics',
-      icon: '📐',
+      icon: '',
       color: 'maths',
       description: 'Algebra, Geometry, Trigonometry & Statistics',
       chapters: [
@@ -27,7 +27,7 @@ const DATA = {
     {
       id: 'science',
       name: 'Science',
-      icon: '🔬',
+      icon: '',
       color: 'science',
       description: 'Physics, Chemistry & Biology',
       chapters: [
@@ -374,7 +374,7 @@ const DATA = {
     {
       id: 'english',
       name: 'English',
-      icon: '📖',
+      icon: '',
       color: 'english',
       description: 'First Flight, Footprints Without Feet & Grammar',
       chapters: [
@@ -394,7 +394,7 @@ const DATA = {
     {
       id: 'social',
       name: 'Social Science',
-      icon: '🌍',
+      icon: '',
       color: 'social',
       description: 'History, Geography, Civics & Economics',
       chapters: [
@@ -426,12 +426,12 @@ const DATA = {
 };
 
 const STUDY_TIPS = [
-  { icon: '⏰', title: 'Pomodoro Technique', text: 'Study for 25 minutes, take a 5-minute break. After 4 cycles, take a 30-minute break.' },
-  { icon: '📝', title: 'Active Recall', text: 'After reading a chapter, close the book and write what you remember. This boosts memory significantly.' },
-  { icon: '🔄', title: 'Spaced Repetition', text: 'Revise topics at increasing intervals: 1 day, 3 days, 7 days, 21 days after first study.' },
-  { icon: '🗺️', title: 'Mind Mapping', text: 'Draw diagrams linking concepts. Visual learning helps remember complex topics like Science and History.' },
-  { icon: '📚', title: 'NCERT First', text: 'Always master NCERT textbooks first. Board exams are mostly based on NCERT — 80% questions come from it.' },
-  { icon: '✍️', title: 'Practice Writing', text: 'Maths needs daily problem solving. Write formulas and derivations by hand — muscle memory helps in exams.' },
-  { icon: '🎯', title: 'Previous Year Papers', text: 'Solve last 5 years CBSE board papers in exam conditions. This is the single best exam preparation.' },
-  { icon: '💡', title: 'Teach Others', text: 'Explain concepts to friends or family. Teaching is the best way to identify gaps in your own understanding.' }
+  { icon: '', title: 'Pomodoro Technique', text: 'Study for 25 minutes, take a 5-minute break. After 4 cycles, take a 30-minute break.' },
+  { icon: '', title: 'Active Recall', text: 'After reading a chapter, close the book and write what you remember. This boosts memory significantly.' },
+  { icon: '', title: 'Spaced Repetition', text: 'Revise topics at increasing intervals: 1 day, 3 days, 7 days, 21 days after first study.' },
+  { icon: '', title: 'Mind Mapping', text: 'Draw diagrams linking concepts. Visual learning helps remember complex topics like Science and History.' },
+  { icon: '', title: 'NCERT First', text: 'Always master NCERT textbooks first. Board exams are mostly based on NCERT — 80% questions come from it.' },
+  { icon: '', title: 'Practice Writing', text: 'Maths needs daily problem solving. Write formulas and derivations by hand — muscle memory helps in exams.' },
+  { icon: '', title: 'Previous Year Papers', text: 'Solve last 5 years CBSE board papers in exam conditions. This is the single best exam preparation.' },
+  { icon: '', title: 'Teach Others', text: 'Explain concepts to friends or family. Teaching is the best way to identify gaps in your own understanding.' }
 ];

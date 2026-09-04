@@ -435,7 +435,7 @@ function renderTips() {
   if (!g) return;
   g.innerHTML = STUDY_TIPS.map(t => `
     <div class="tip-card reveal">
-      <div class="tip-icon">${t.icon}</div>
+      <div class="tip-icon"></div>
       <h4>${t.title}</h4>
       <p>${t.text}</p>
     </div>`).join('');
@@ -892,7 +892,7 @@ function openPDF(url, title) {
     modal.setAttribute('aria-label', 'Document viewer');
     modal.innerHTML = `
       <div class="pdf-modal-box">
-        <button class="pdf-float-close" aria-label="Close document" onclick="closePDF()">✕</button>
+        <button class="pdf-float-close" aria-label="Close document" onclick="closePDF()">×</button>
         <div class="pdf-float-zoom">
           <button class="pdf-zoom-btn" onclick="zoomPDF(-0.25)">−</button>
           <span id="pdfZoomLevel">100%</span>
@@ -1055,9 +1055,9 @@ function buildFormulaSheet(subject) {
   if (!chapters.length && !cards) return buildComingSoon('Formula Sheet', 'Formulas will be added here soon.');
 
   return `
-    ${cards ? `<h2 class="section-title" style="margin-bottom:1rem">📐 Formula Sheets</h2>${cards}` : ''}
+    ${cards ? `<h2 class="section-title" style="margin-bottom:1rem">Formula Sheets</h2>${cards}` : ''}
     ${chapters.length ? `
-      <h2 class="section-title" style="margin-bottom:1.5rem;margin-top:${cards ? '2rem' : '0'}">📐 Formula Sheet ${subject.name}</h2>
+      <h2 class="section-title" style="margin-bottom:1.5rem;margin-top:${cards ? '2rem' : '0'}">Formula Sheet ${subject.name}</h2>
       <div class="formula-sheet">
         ${chapters.map(ch => {
           const dk = subject.id + '_formula_' + ch.id;
@@ -1097,7 +1097,7 @@ function buildPracticeQuestions(subject) {
   });
   if (!allMCQs.length) return buildComingSoon('Practice Questions', 'Questions will be added here soon.');
   const letters = ['A', 'B', 'C', 'D'];
-  return `<h2 class="section-title" style="margin-bottom:0.5rem">✏️ Practice Questions</h2>
+  return `<h2 class="section-title" style="margin-bottom:0.5rem">Practice Questions</h2>
     <p style="color:var(--muted);margin-bottom:1.5rem;font-size:0.88rem">Tap an option to check your answer</p>
     <div class="mcq-grid">
       ${allMCQs.map((q, qi) => `
@@ -1131,8 +1131,8 @@ function initMCQHandlers(container, subjectId) {
     if (fb) {
       fb.classList.add('show', chosen === correct ? 'correct' : 'wrong');
       fb.innerHTML = chosen === correct
-        ? `✅ <strong>Correct!</strong> ${escH(card.dataset.exp)}`
-        : `❌ <strong>Wrong.</strong> Correct answer: <strong>${escH(card.dataset.explbl)}</strong>. ${escH(card.dataset.exp)}`;
+        ? `Correct! ${escH(card.dataset.exp)}`
+        : `Wrong. Correct answer: <strong>${escH(card.dataset.explbl)}</strong>. ${escH(card.dataset.exp)}`;
     }
     // Record attempt in Firestore
     var user = (typeof getUser === 'function') ? getUser() : null;
@@ -1174,7 +1174,7 @@ function buildScienceMCQCards(subject) {
     const chDone = getChapterDone(chDoneKey);
     return `
       <div class="pdf-card">
-        <div class="pdf-card-icon">🧪</div>
+        <div class="pdf-card-icon"></div>
         <div class="pdf-card-info">
           <div class="pdf-card-title">Ch ${ch.id}: ${escH(ch.title)}</div>
           <div class="pdf-card-desc">${count} MCQs</div>
@@ -1183,7 +1183,7 @@ function buildScienceMCQCards(subject) {
       </div>`;
   }).join('');
   return `
-    <h2 class="section-title" style="margin-bottom:0.3rem">🧠 Chapter MCQs</h2>
+    <h2 class="section-title" style="margin-bottom:0.3rem">Chapter MCQs</h2>
     <p style="color:var(--muted);margin-bottom:1.5rem;font-size:0.88rem">100 MCQs per chapter · All topics · High Difficulty</p>
     <div class="pdf-list">${cards}</div>`;
 }
@@ -1209,7 +1209,7 @@ function buildMathsMCQCards(subject) {
       </div>`;
   }).join('');
   return `
-    <h2 class="section-title" style="margin-bottom:0.3rem">🧠 Chapter MCQs</h2>
+    <h2 class="section-title" style="margin-bottom:0.3rem">Chapter MCQs</h2>
     <p style="color:var(--muted);margin-bottom:1.5rem;font-size:0.88rem">NCERT 2026 · PYQs · Important · Slightly Advanced</p>
     <div class="pdf-list">${cards}</div>`;
 }
@@ -1218,10 +1218,10 @@ function buildMathsMCQCards(subject) {
    SOCIAL SCIENCE MCQ CHAPTER CARDS
 ══════════════════════════════════════ */
 const SOCIAL_SUBJECTS = [
-  { key: 'History',   icon: '📜', color: '#EF4444', ids: [1, 2, 11, 12, 13] },
-  { key: 'Geography', icon: '🌍', color: '#10B981', ids: [3, 14, 15, 7, 16, 8, 17] },
-  { key: 'Civics',    icon: '🏛️', color: '#3B82F6', ids: [4, 18, 19, 9, 20] },
-  { key: 'Economics', icon: '💰', color: '#F59E0B', ids: [5, 21, 6, 10, 22] }
+  { key: 'History',   icon: '', color: '#EF4444', ids: [1, 2, 11, 12, 13] },
+  { key: 'Geography', icon: '', color: '#10B981', ids: [3, 14, 15, 7, 16, 8, 17] },
+  { key: 'Civics',    icon: '', color: '#3B82F6', ids: [4, 18, 19, 9, 20] },
+  { key: 'Economics', icon: '', color: '#F59E0B', ids: [5, 21, 6, 10, 22] }
 ];
 
 function buildSocialMCQCards(subject) {
@@ -1238,7 +1238,6 @@ function buildSocialMCQCards(subject) {
       const chDone = getChapterDone(chDoneKey);
       return `
         <div class="pdf-card">
-          <div class="pdf-card-icon">${s.icon}</div>
           <div class="pdf-card-info">
             <div class="pdf-card-title">${escH(ch.title)}</div>
             <div class="pdf-card-desc">${count} MCQs · ${s.key}</div>
@@ -1250,14 +1249,13 @@ function buildSocialMCQCards(subject) {
     return `
       <div style="margin-bottom:1.5rem">
         <div style="display:flex;align-items:center;gap:0.5rem;margin-bottom:0.75rem">
-          <span style="font-size:1.2rem">${s.icon}</span>
           <h3 style="margin:0;font-size:0.95rem;font-weight:800;color:${s.color}">${s.key}</h3>
         </div>
         <div class="pdf-list">${cards}</div>
       </div>`;
   }).join('');
   return `
-    <h2 class="section-title" style="margin-bottom:0.3rem">🧠 Chapter MCQs</h2>
+    <h2 class="section-title" style="margin-bottom:0.3rem">Chapter MCQs</h2>
     <p style="color:var(--muted);margin-bottom:1.5rem;font-size:0.88rem">100 MCQs per chapter · History, Geography, Civics, Economics · High Difficulty</p>
     ${sections}`;
 }
@@ -1288,7 +1286,7 @@ function openChapterMCQs(chId, title, subject) {
           </div>
           <div style="display:flex;align-items:center;gap:0.6rem">
             <span class="mcq-score-pill" id="mcqScorePill">0 / 0</span>
-            <button class="mcq-modal-close" aria-label="Close" onclick="closeMCQModal()">✕</button>
+            <button class="mcq-modal-close" aria-label="Close" onclick="closeMCQModal()">×</button>
           </div>
         </div>
         <div class="mcq-modal-body" id="mcqModalBody"></div>
@@ -1331,8 +1329,8 @@ function openChapterMCQs(chId, title, subject) {
     if (fb) {
       fb.classList.add('show', chosen === correct ? 'correct' : 'wrong');
       fb.innerHTML = chosen === correct
-        ? `✅ <strong>Correct!</strong> ${escH(card.dataset.exp)}`
-        : `❌ <strong>Wrong.</strong> Correct answer: <strong>${escH(card.dataset.explbl)}</strong>. ${escH(card.dataset.exp)}`;
+        ? `Correct! ${escH(card.dataset.exp)}`
+        : `Wrong. Correct answer: <strong>${escH(card.dataset.explbl)}</strong>. ${escH(card.dataset.exp)}`;
     }
     // Record attempt in Firestore
     var user = (typeof getUser === 'function') ? getUser() : null;
@@ -1365,7 +1363,7 @@ function openChapterMCQs(chId, title, subject) {
     if (answered === mcqs.length && !body.querySelector('.mcq-session-summary')) {
       const accuracy = Math.round((correct2 / mcqs.length) * 100);
       const sm = (accuracy >= 85 && mcqs.length >= 10) ? 'mastered' : accuracy >= 70 ? 'proficient' : accuracy >= 50 ? 'developing' : 'learning';
-      const msgs = { mastered: '🏆 Chapter mastered!', proficient: '👍 Great performance!', developing: '📚 Keep practicing.', learning: '🔄 Review and retry.' };
+      const msgs = { mastered: 'Chapter mastered!', proficient: 'Great performance!', developing: 'Keep practicing.', learning: 'Review and retry.' };
       const summEl = document.createElement('div');
       summEl.className = 'mcq-session-summary';
       summEl.innerHTML =
@@ -1414,7 +1412,7 @@ function buildPYQs(subject) {
   if (!cards) {
     return `
       <div class="coming-soon">
-        <div class="cs-icon">📋</div>
+        <div class="cs-icon"></div>
         <h3>PYQs Coming Soon</h3>
         <p>CBSE Board exam question papers will be added here soon.</p>
       </div>`;
@@ -1607,7 +1605,7 @@ function buildMostImportant(subject) {
 function buildNCERT() {
   return `
     <div class="coming-soon">
-      <div class="cs-icon">📗</div>
+      <div class="cs-icon"></div>
       <h3>NCERT Solutions</h3>
       <p>Step-by-step NCERT textbook solutions for all chapters are being prepared. Your teacher's notes will also be added here.</p>
     </div>`;
@@ -1617,7 +1615,7 @@ function buildNCERT() {
    ENGLISH FIRST FLIGHT & FOOTPRINTS
 ══════════════════════════════════════ */
 function buildEnglishReader(subject, type) {
-  const title = type === 'ff' ? '✈️ First Flight' : '👣 Footprints Without Feet';
+  const title = type === 'ff' ? 'First Flight' : 'Footprints Without Feet';
   const pdfTab = type === 'ff' ? 'first-flight' : 'footprints';
   const cards = pdfCards(subject, pdfTab);
   return `<h2 class="section-title" style="margin-bottom:1.5rem">${title}</h2>
@@ -1630,11 +1628,11 @@ function buildChapterAccordionHTML(ch, subjectId, numClass) {
   const done = getChapterDone(chKey);
   const letters = ['A','B','C','D'];
   const kpHTML = ch.keyPoints?.length
-    ? `<div class="kp-section"><h4>🔑 Key Points</h4><ul class="kp-list">${ch.keyPoints.map(k => `<li>${escH(k)}</li>`).join('')}</ul></div>` : '';
+    ? `<div class="kp-section"><h4>Key Points</h4><ul class="kp-list">${ch.keyPoints.map(k => `<li>${escH(k)}</li>`).join('')}</ul></div>` : '';
   const fmHTML = ch.formulas?.length
-    ? `<div class="fm-section"><h4>📌 Key Info</h4>${ch.formulas.map(f => `<div class="fm-pill">${escH(f)}</div>`).join('')}</div>` : '';
+    ? `<div class="fm-section"><h4>Key Info</h4>${ch.formulas.map(f => `<div class="fm-pill">${escH(f)}</div>`).join('')}</div>` : '';
   const mcqHTML = ch.mcqs?.length
-    ? `<div class="mcq-section"><h4>✏️ Practice MCQs</h4>${ch.mcqs.map((q, qi) => `
+    ? `<div class="mcq-section"><h4>Practice MCQs</h4>${ch.mcqs.map((q, qi) => `
         <div class="mcq-card" style="margin-bottom:0.75rem" data-correct="${q.ans}" data-exp="${escH(q.exp||'')}" data-explbl="${escH(q.opts[q.ans])}" data-subject-id="${subjectId}" data-chapter-id="${ch.id}" data-q-idx="${qi}">
           <div class="mcq-q">${qi + 1}. ${q.q}</div>
           <div class="mcq-opts">${q.opts.map((o, i) => `<button class="mcq-opt" data-idx="${i}"><span class="opt-letter">${letters[i]}</span>${escH(o)}</button>`).join('')}</div>
@@ -1786,7 +1784,7 @@ function buildGrammar() {
       ['used to','Past habit (no longer done)','He used to wake up at 5 am.'],
     ].map(function(r){ return trow(r, false); }).join('') +
     '</table></div>' +
-    '<div class="eng-rule"><strong>Remember:</strong> Modals are always followed by V1 (base form). Never add -s, -ing, or -ed after a modal. ✗ She can goes. ✓ She can go.</div>'
+    '<div class="eng-rule"><strong>Remember:</strong> Modals are always followed by V1 (base form). Never add -s, -ing, or -ed after a modal. (Wrong) She can goes. (Correct) She can go.</div>'
   );
 
   var sva = acc('Subject-Verb Agreement',
@@ -1996,7 +1994,7 @@ function buildGrammar() {
     '<li><strong>Positive → as…as:</strong> X is as + adj + as Y | Negative → not as/so…as</li>' +
     '<li><strong>Comparative → than:</strong> X is + adj+er + than Y | No other + noun + is as…as | adj+er + than any other</li>' +
     '<li><strong>Superlative → the…of/in:</strong> X is the + adj+est + of/in… | One of the + superlative + plural noun</li>' +
-    '<li>When comparing within a group: use "any other" not "any": ✗ She is taller than <u>any</u> girl ✓ She is taller than <u>any other</u> girl</li>' +
+    '<li>When comparing within a group: use "any other" not "any": (Wrong) She is taller than <u>any</u> girl | (Correct) She is taller than <u>any other</u> girl</li>' +
     '</ul>'
   );
 
@@ -2041,7 +2039,7 @@ function buildGrammar() {
     '<ul class="eng-list">' +
     '<li><strong>Present Participle (V-ing):</strong> <em>The barking dog scared the child. Seeing the fire, she ran away.</em></li>' +
     '<li><strong>Past Participle (V3):</strong> <em>The broken window was repaired. Exhausted after the race, he sat down.</em></li>' +
-    '<li><strong>Dangling Participle (common error):</strong> ✗ <em>Walking down the street, the trees looked beautiful.</em> (trees don\'t walk)<br>✓ <em>Walking down the street, she saw beautiful trees.</em></li>' +
+    '<li><strong>Dangling Participle (common error):</strong> (Wrong) <em>Walking down the street, the trees looked beautiful.</em> (trees don\'t walk)<br>(Correct) <em>Walking down the street, she saw beautiful trees.</em></li>' +
     '</ul>' +
     '<p class="eng-h3">Verbs Followed by Infinitive vs Gerund</p>' +
     '<div style="overflow-x:auto"><table class="eng-table">' +
@@ -2554,10 +2552,10 @@ function buildWriting() {
     '<li>Closing: "Regards," "Yours faithfully," or "With warm regards," depending on familiarity.</li>' +
     '</ul>' +
     '<div class="eng-eg"><strong>Subject line examples:</strong><br>' +
-    '✓ Request for Medical Leave on 18–19 March 20XX<br>' +
-    '✓ Complaint Regarding Broken Streetlights in Block C<br>' +
-    '✓ Application for Participation in District Science Fair<br>' +
-    '✗ Leave (too vague) ✗ URGENT!!! (unprofessional)</div>'
+    'Good: Request for Medical Leave on 18–19 March 20XX<br>' +
+    'Good: Complaint Regarding Broken Streetlights in Block C<br>' +
+    'Good: Application for Participation in District Science Fair<br>' +
+    'Avoid: Leave (too vague) | Avoid: URGENT!!! (unprofessional)</div>'
   );
 
   var report = acc('Report Writing — Newspaper Report &amp; Factual Report',
@@ -2598,9 +2596,9 @@ function buildWriting() {
     '[Signature]\n[Name &amp; Designation]' +
     '</div>' +
     '<div class="eng-eg"><strong>Headline Examples (Newspaper Report):</strong><br>' +
-    '✓ STUDENTS PLANT 500 TREES IN DRIVE AGAINST DEFORESTATION<br>' +
-    '✓ INTER-SCHOOL SCIENCE FAIR DRAWS RECORD PARTICIPATION IN PUNE<br>' +
-    '✓ CITY CELEBRATES WORLD ENVIRONMENT DAY WITH CLEANLINESS DRIVE</div>'
+    'STUDENTS PLANT 500 TREES IN DRIVE AGAINST DEFORESTATION<br>' +
+    'INTER-SCHOOL SCIENCE FAIR DRAWS RECORD PARTICIPATION IN PUNE<br>' +
+    'CITY CELEBRATES WORLD ENVIRONMENT DAY WITH CLEANLINESS DRIVE</div>'
   );
 
   var writingTips = acc('Writing Skills — Common Errors &amp; Marks Scoring Tips',
@@ -2723,7 +2721,7 @@ function openScienceQBank(chId) {
             <span class="mcq-modal-title" id="qbankModalTitle"></span>
             <span class="mcq-modal-meta" id="qbankModalMeta"></span>
           </div>
-          <button class="mcq-modal-close" aria-label="Close" onclick="closeQBankModal()">✕</button>
+          <button class="mcq-modal-close" aria-label="Close" onclick="closeQBankModal()">×</button>
         </div>
         <div class="mcq-modal-body" id="qbankModalBody"></div>
       </div>`;
@@ -2809,7 +2807,7 @@ function openMathsQBank(chId) {
             <span class="mcq-modal-title" id="mathsQBankModalTitle"></span>
             <span class="mcq-modal-meta" id="mathsQBankModalMeta"></span>
           </div>
-          <button class="mcq-modal-close" aria-label="Close" onclick="closeMathsQBankModal()">✕</button>
+          <button class="mcq-modal-close" aria-label="Close" onclick="closeMathsQBankModal()">×</button>
         </div>
         <div class="mcq-modal-body" id="mathsQBankModalBody"></div>
       </div>`;
@@ -2845,10 +2843,10 @@ function closeMathsQBankModal() {
 function buildSocialNotes(subject) {
   const pdfs = PDFS.social;
   const sections = [
-    { key: 'notes_history',   icon: '📜', label: 'History',   color: '#EF4444' },
-    { key: 'notes_geography', icon: '🌍', label: 'Geography',  color: '#10B981' },
-    { key: 'notes_civics',    icon: '🏛️', label: 'Civics',    color: '#3B82F6' },
-    { key: 'notes_economics', icon: '💰', label: 'Economics',  color: '#F59E0B' }
+    { key: 'notes_history',   icon: '', label: 'History',   color: '#EF4444' },
+    { key: 'notes_geography', icon: '', label: 'Geography',  color: '#10B981' },
+    { key: 'notes_civics',    icon: '', label: 'Civics',    color: '#3B82F6' },
+    { key: 'notes_economics', icon: '', label: 'Economics',  color: '#F59E0B' }
   ];
   return `
     <div>
@@ -2859,7 +2857,6 @@ function buildSocialNotes(subject) {
         return `
         <div style="margin-bottom:2rem">
           <div style="display:flex;align-items:center;gap:0.6rem;margin-bottom:0.9rem">
-            <span style="font-size:1.3rem">${s.icon}</span>
             <h3 style="margin:0;font-size:1rem;font-weight:800;color:${s.color}">${s.label}</h3>
             <span style="font-size:0.75rem;color:var(--muted);background:var(--surface);padding:0.15rem 0.55rem;border-radius:20px;border:1px solid var(--border)">${list.length} chapters</span>
           </div>
@@ -2885,10 +2882,10 @@ function buildSocialNotes(subject) {
 function buildSocialQBank() {
   const db = (typeof SOCIAL_QBANK_CH !== 'undefined') ? SOCIAL_QBANK_CH : null;
   const sections = [
-    { key: 'history',   icon: '📜', label: 'History',   color: '#EF4444' },
-    { key: 'geography', icon: '🌍', label: 'Geography',  color: '#10B981' },
-    { key: 'civics',    icon: '🏛️', label: 'Civics',    color: '#3B82F6' },
-    { key: 'economics', icon: '💰', label: 'Economics',  color: '#F59E0B' }
+    { key: 'history',   icon: '', label: 'History',   color: '#EF4444' },
+    { key: 'geography', icon: '', label: 'Geography',  color: '#10B981' },
+    { key: 'civics',    icon: '', label: 'Civics',    color: '#3B82F6' },
+    { key: 'economics', icon: '', label: 'Economics',  color: '#F59E0B' }
   ];
   return `
     <div>
@@ -2900,7 +2897,6 @@ function buildSocialQBank() {
         return `
         <div style="margin-bottom:2rem">
           <div style="display:flex;align-items:center;gap:0.6rem;margin-bottom:0.9rem">
-            <span style="font-size:1.3rem">${s.icon}</span>
             <h3 style="margin:0;font-size:1rem;font-weight:800;color:${s.color}">${s.label}</h3>
             <span style="font-size:0.75rem;color:var(--muted);background:var(--surface);padding:0.15rem 0.55rem;border-radius:20px;border:1px solid var(--border)">${chEntries.length} chapters</span>
           </div>
@@ -2941,7 +2937,7 @@ function openSocialQBank(subj, chKey) {
             <span class="mcq-modal-title" id="socialQBankModalTitle"></span>
             <span class="mcq-modal-meta" id="socialQBankModalMeta"></span>
           </div>
-          <button class="mcq-modal-close" aria-label="Close" onclick="closeSocialQBankModal()">✕</button>
+          <button class="mcq-modal-close" aria-label="Close" onclick="closeSocialQBankModal()">×</button>
         </div>
         <div class="mcq-modal-body" id="socialQBankModalBody"></div>
       </div>`;
@@ -2983,24 +2979,24 @@ function closeSocialQBankModal() {
 ══════════════════════════════════════ */
 function buildMaps() {
   const maps = [
-    { icon: '🗺️', name: 'Historical Maps Nationalism in India', sub: 'Salt March route, Non-Cooperation centres, Partition maps' },
-    { icon: '🌾', name: 'Agricultural Map of India', sub: 'Kharif/Rabi crop distribution, Green Revolution states' },
-    { icon: '⛏️', name: 'Minerals & Resources Map', sub: 'Iron ore, coal, bauxite, mica, petroleum locations' },
-    { icon: '🏭', name: 'Industrial Map of India', sub: 'Cotton, steel, IT, cement, automobile industries' },
-    { icon: '🌊', name: 'Water Resources Map', sub: 'Major rivers, dams, multipurpose river projects (Bhakra, Hirakud)' },
-    { icon: '🚂', name: 'Lifelines of the Economy', sub: 'National highways, railway zones, major ports and airports' },
-    { icon: '🌍', name: 'Europe Rise of Nationalism', sub: 'Map-based questions on unification of Germany & Italy' }
+    { name: 'Historical Maps Nationalism in India', sub: 'Salt March route, Non-Cooperation centres, Partition maps' },
+    { name: 'Agricultural Map of India', sub: 'Kharif/Rabi crop distribution, Green Revolution states' },
+    { name: 'Minerals & Resources Map', sub: 'Iron ore, coal, bauxite, mica, petroleum locations' },
+    { name: 'Industrial Map of India', sub: 'Cotton, steel, IT, cement, automobile industries' },
+    { name: 'Water Resources Map', sub: 'Major rivers, dams, multipurpose river projects (Bhakra, Hirakud)' },
+    { name: 'Lifelines of the Economy', sub: 'National highways, railway zones, major ports and airports' },
+    { name: 'Europe Rise of Nationalism', sub: 'Map-based questions on unification of Germany & Italy' }
   ];
   return `
     <div class="maps-section">
       <div class="maps-header">
-        <h3>🗺️ Map Work Social Science</h3>
+        <h3>Map Work Social Science</h3>
         <p>Important maps for CBSE Class 10 Board Exam</p>
       </div>
       <div class="maps-list">
         ${maps.map(m => `
           <div class="map-item reveal">
-            <div class="map-icon">${m.icon}</div>
+            <div class="map-icon"></div>
             <div>
               <div class="map-name">${m.name}</div>
               <div class="map-sub">${m.sub}</div>
@@ -3023,7 +3019,7 @@ function buildSummary(subject) {
 
   if (!chapters.length) return buildComingSoon('Chapter Summaries', 'Summaries for all chapters will be added here soon.');
 
-  return `<h2 class="section-title" style="margin-bottom:1.5rem">📖 Chapter Summaries ${subject.name}</h2>
+  return `<h2 class="section-title" style="margin-bottom:1.5rem">Chapter Summaries ${subject.name}</h2>
     <div class="summary-grid">
       ${chapters.map(ch => `
         <div class="summary-card reveal">
@@ -3070,7 +3066,7 @@ function buildQuestionGenerator(subject) {
               <option value="15">15</option>
             </select>
           </label>
-          <button class="btn btn-primary btn-sm" onclick="generateQuestions()">🎲 Generate New Set</button>
+          <button class="btn btn-primary btn-sm" onclick="generateQuestions()">Generate New Set</button>
           <button class="btn btn-sm" onclick="resetQGenSeen()" style="background:var(--surface);color:var(--muted);border:1px solid var(--border)">↺ Reset Seen</button>
         </div>
       </div>
@@ -3182,7 +3178,7 @@ document.addEventListener('change', e => {
 function buildComingSoon(name, msg) {
   return `
     <div class="coming-soon">
-      <div class="cs-icon">🚀</div>
+      <div class="cs-icon"></div>
       <h3>${name} Coming Soon</h3>
       <p>${msg}</p>
     </div>`;
@@ -3378,7 +3374,7 @@ function openTestMode(chId, title, subject) {
           '<div style="display:flex;align-items:center;gap:0.6rem">' +
             '<span class="test-timer" id="testTimer">10:00</span>' +
             '<span class="mcq-score-pill" id="testScorePill">0 / 0</span>' +
-            '<button class="mcq-modal-close" aria-label="Close" onclick="closeTestModal()">✕</button>' +
+            '<button class="mcq-modal-close" aria-label="Close" onclick="closeTestModal()">×</button>' +
           '</div>' +
         '</div>' +
         '<div class="mcq-modal-body" id="testModalBody"></div>' +
@@ -3439,8 +3435,8 @@ function openTestMode(chId, title, subject) {
     if (fb) {
       fb.classList.add('show', chosen === correct ? 'correct' : 'wrong');
       fb.innerHTML = chosen === correct
-        ? '✅ <strong>Correct!</strong> ' + escH(card.dataset.exp)
-        : '❌ <strong>Wrong.</strong> Correct answer: <strong>' + escH(card.dataset.explbl) + '</strong>. ' + escH(card.dataset.exp);
+        ? 'Correct! ' + escH(card.dataset.exp)
+        : 'Wrong. Correct answer: <strong>' + escH(card.dataset.explbl) + '</strong>. ' + escH(card.dataset.exp);
     }
     // Record to Firestore
     var user = (typeof getUser === 'function') ? getUser() : null;

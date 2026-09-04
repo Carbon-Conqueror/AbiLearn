@@ -58,8 +58,8 @@
       '</div>' +
       '<div class="mistake-q">' + escH(m.question || 'Question not available') + '</div>' +
       '<div class="mistake-answers">' +
-        '<span class="mistake-wrong">✗ Your answer: ' + escH(wrongText) + '</span>' +
-        '<span class="mistake-correct">✓ Correct: ' + escH(correctText) + '</span>' +
+        '<span class="mistake-wrong">Your answer: ' + escH(wrongText) + '</span>' +
+        '<span class="mistake-correct">Correct: ' + escH(correctText) + '</span>' +
       '</div>' +
       '<button class="mistake-resolve-btn" onclick="resolveMistakeItem(\'' + escH(key) + '\',\'' + escH(m.subjectId) + '\')" data-key="' + escH(key) + '">Mark as Resolved</button>' +
     '</div>';

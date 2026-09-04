@@ -458,8 +458,8 @@ function openSettings() {
   var fbUser = window._fauth && window._fauth.currentUser;
   var verified = fbUser ? fbUser.emailVerified : true;
   var verifiedBadge = verified
-    ? '<span style="color:#10B981;font-size:0.8rem">✓ Verified</span>'
-    : '<span style="color:#F59E0B;font-size:0.8rem">⚠ Not verified &nbsp;<button class="settings-btn" onclick="sendVerificationEmail()" style="font-size:0.75rem;padding:0.2rem 0.6rem">Verify</button></span>';
+    ? '<span style="color:#10B981;font-size:0.8rem">Verified</span>'
+    : '<span style="color:#F59E0B;font-size:0.8rem">Not verified &nbsp;<button class="settings-btn" onclick="sendVerificationEmail()" style="font-size:0.75rem;padding:0.2rem 0.6rem">Verify</button></span>';
 
   panel.setAttribute('role', 'dialog');
   panel.setAttribute('aria-modal', 'true');

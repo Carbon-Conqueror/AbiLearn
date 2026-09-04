@@ -6,13 +6,13 @@
 (function () {
 
   var SUBJECT_META = {
-    maths:   { name: 'Mathematics',   icon: '📐', color: '#EF4444', href: 'maths.html',   mcqHref: null },
-    science: { name: 'Science',        icon: '🔬', color: '#0EA5E9', href: 'science.html', mcqHref: 'science.html' },
-    english: { name: 'English',        icon: '📖', color: '#F59E0B', href: 'english.html', mcqHref: null },
-    social:  { name: 'Social Science', icon: '🌍', color: '#10B981', href: 'social.html',  mcqHref: 'social.html' }
+    maths:   { name: 'Mathematics',   icon: '', color: '#EF4444', href: 'maths.html',   mcqHref: null },
+    science: { name: 'Science',        icon: '', color: '#0EA5E9', href: 'science.html', mcqHref: 'science.html' },
+    english: { name: 'English',        icon: '', color: '#F59E0B', href: 'english.html', mcqHref: null },
+    social:  { name: 'Social Science', icon: '', color: '#10B981', href: 'social.html',  mcqHref: 'social.html' }
   };
 
-  var PLAN_TYPE_LABEL = { revise: '⏰ Revise', practice: '📝 Practice', start: '🆕 Start' };
+  var PLAN_TYPE_LABEL = { revise: 'Revise', practice: 'Practice', start: 'Start' };
   var PLAN_TYPE_COLOR = { revise: '#F59E0B', practice: '#3B82F6', start: '#10B981' };
 
   function escH(s) {
@@ -54,7 +54,7 @@
   function buildSubjectBars(km) {
     if (typeof DATA === 'undefined') return '<div style="color:var(--muted)">Subject data unavailable.</div>';
     return DATA.subjects.map(function(sub) {
-      var meta = SUBJECT_META[sub.id] || { name: sub.name, icon: '📚', color: '#7C3AED', href: '#' };
+      var meta = SUBJECT_META[sub.id] || { name: sub.name, icon: '', color: '#7C3AED', href: '#' };
       var pct = DB.computeSubjectPct(sub.id, km);
       var entries = sub.chapters.map(function(ch) { return km[sub.id + '_' + ch.id] || {}; });
       var mastered  = entries.filter(function(e) { return e.mastery === 'mastered'; }).length;
@@ -135,9 +135,9 @@
       return '<div style="color:var(--muted);font-size:0.9rem;padding:1rem 0">No study items to show. Start practicing MCQs to generate your plan!</div>';
     }
     return items.map(function(item, i) {
-      var meta = SUBJECT_META[item.subjectId] || { name: item.subjectId, icon: '📚', color: '#7C3AED', href: '#' };
+      var meta = SUBJECT_META[item.subjectId] || { name: item.subjectId, icon: '', color: '#7C3AED', href: '#' };
       var chTitle = getChapterTitle(item.subjectId, item.chapterId);
-      var typeLabel = PLAN_TYPE_LABEL[item.type] || '📚 Study';
+      var typeLabel = PLAN_TYPE_LABEL[item.type] || 'Study';
       var typeColor = PLAN_TYPE_COLOR[item.type] || '#7C3AED';
       var entry = km[item.subjectId + '_' + item.chapterId] || {};
       var acc = (entry.totalAttempts && entry.correctAttempts !== undefined)
@@ -167,11 +167,11 @@
   function buildRevisionHTML(km) {
     var due = DB.getDueForRevision(km);
     if (!due.length) {
-      return '<div style="color:var(--muted);font-size:0.9rem;padding:0.75rem 0">Nothing due right now — keep it up! 🎉</div>';
+      return '<div style="color:var(--muted);font-size:0.9rem;padding:0.75rem 0">Nothing due right now — keep it up!</div>';
     }
     var now = Date.now();
     return due.map(function(e) {
-      var meta = SUBJECT_META[e.subjectId] || { name: e.subjectId, icon: '📚', color: '#7C3AED', href: '#' };
+      var meta = SUBJECT_META[e.subjectId] || { name: e.subjectId, icon: '', color: '#7C3AED', href: '#' };
       var chTitle = getChapterTitle(e.subjectId, e.chapterId);
       var dueDate = e.nextRevisionDue
         ? (e.nextRevisionDue.toDate ? e.nextRevisionDue.toDate() : new Date(e.nextRevisionDue))
@@ -198,7 +198,7 @@
   function buildStatsHTML(stats, profile) {
     var streak = (profile && profile.studyStreak) || 0;
     var streakEl = streak > 0
-      ? '<span class="dash-stat-highlight">' + streak + ' 🔥</span> day streak'
+      ? '<span class="dash-stat-highlight">' + streak + '</span> day streak'
       : 'No streak yet';
     return (
       '<div class="dash-stats-grid">' +
@@ -245,7 +245,7 @@
         /* Study plan */
         '<div class="dash-card">' +
           '<div class="dash-card-header">' +
-            '<div class="dash-card-title">📅 Today\'s Study Plan</div>' +
+            '<div class="dash-card-title">Today\'s Study Plan</div>' +
             (planItems.length ? '<span class="dash-plan-count">' + planItems.length + ' items</span>' : '') +
           '</div>' +
           '<div class="dash-card-body">' + buildPlanHTML(planItems, km) + '</div>' +
