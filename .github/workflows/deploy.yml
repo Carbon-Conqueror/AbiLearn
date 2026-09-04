@@ -1,4 +1,4 @@
-name: Deploy to Cloudflare Workers
+name: Deploy to Cloudflare Pages
 
 on:
   push:
@@ -12,8 +12,9 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Deploy via Wrangler
+      - name: Deploy to Cloudflare Pages
         uses: cloudflare/wrangler-action@v3
         with:
           apiToken: ${{ secrets.CF_API_TOKEN }}
           accountId: ${{ secrets.CF_ACCOUNT_ID }}
+          command: pages deploy . --project-name=abilearn --commit-dirty=true
