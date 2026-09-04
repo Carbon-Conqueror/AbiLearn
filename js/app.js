@@ -730,7 +730,9 @@ const PDFS = {
     ],
     notes_civics: [
       { title: 'Ch 1 Power-Sharing',                     desc: 'AbiLearn Notes · Deep Structured', url: 'pdfs/social/notes/civics/ch1-power-sharing.pdf' },
-      { title: 'Ch 2 Federalism',                        desc: 'AbiLearn Notes · Deep Structured', url: 'pdfs/social/notes/civics/ch2-federalism.pdf' }
+      { title: 'Ch 2 Federalism',                        desc: 'AbiLearn Notes · Deep Structured', url: 'pdfs/social/notes/civics/ch2-federalism.pdf' },
+      { title: 'Ch 4 Political Parties',                 desc: 'AbiLearn Notes · Functions, Party Systems, National Parties, Reforms', url: 'pdfs/social/notes/civics/ch4-political-parties.pdf' },
+      { title: 'Ch 5 Outcomes of Democracy',             desc: 'AbiLearn Notes · Accountability, Dignity, Equality, Economic Outcomes', url: 'pdfs/social/notes/civics/ch5-outcomes-of-democracy.pdf' }
     ],
     notes_economics: [
       { title: 'Ch 1 Development',                       desc: 'AbiLearn Notes · Deep Structured', url: 'pdfs/social/notes/economics/ch1-development.pdf' },
