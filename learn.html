@@ -905,30 +905,8 @@
     transform: scale(1.05);
   }
 
-  /* Tool icons via CSS content on icon-dot */
-  .app-tool-icon-dot {
-    width: 26px; height: 26px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
-
-  /* MCQ Practice */
-  .app-tools-grid .app-tool-card:nth-child(1) .app-tool-icon { background: rgba(91,71,222,.1); }
-  .app-tools-grid .app-tool-card:nth-child(1) .app-tool-icon-dot::before {
-    content: '';
-    display: block;
-    width: 20px; height: 20px;
-    border: 2px solid var(--lh-brand);
-    border-radius: 50%;
-    box-shadow: inset 0 0 0 4px var(--lh-brand-light), inset 0 0 0 6px var(--lh-brand);
-  }
-
-  /* Tips & Tricks */
-  .app-tools-grid .app-tool-card:nth-child(2) .app-tool-icon { background: rgba(245,158,11,.1); }
-  .app-tools-grid .app-tool-card:nth-child(2) .app-tool-icon-dot::before {
-    content: '';
-  }
+  /* Tool icon SVG centering */
+  .app-tool-icon svg { display: block; }
 
 
   .app-tool-body { flex: 1; min-width: 0; }
