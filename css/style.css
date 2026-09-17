@@ -1912,3 +1912,65 @@ footer {
   font-size: .8rem;
   vertical-align: middle;
 }
+
+/* ─── SPA PROGRESS BAR ───────────────────────── */
+#abl-spa-bar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 0;
+  height: 3px;
+  background: var(--accent, #5B47DE);
+  z-index: 2147483647;
+  opacity: 0;
+  transition: width .25s ease, opacity .3s ease;
+  pointer-events: none;
+  border-radius: 0 2px 2px 0;
+}
+
+/* ─── FULLSCREEN FAB ─────────────────────────── */
+#abl-fs-fab {
+  position: fixed;
+  bottom: 1.25rem;
+  right: 1.25rem;
+  z-index: 9000;
+  display: flex;
+  align-items: center;
+  gap: .45rem;
+  padding: .5rem .85rem;
+  border-radius: 2rem;
+  border: none;
+  cursor: pointer;
+  font-size: .8rem;
+  font-weight: 600;
+  font-family: inherit;
+  white-space: nowrap;
+  background: var(--surface2, rgba(91,71,222,.15));
+  color: var(--accent, #5B47DE);
+  box-shadow: 0 2px 12px rgba(0,0,0,.18);
+  transition: background .2s, transform .15s, opacity .25s;
+}
+#abl-fs-fab:hover { background: var(--accent, #5B47DE); color: #fff; }
+#abl-fs-fab:active { transform: scale(.96); }
+#abl-fs-fab .abl-fs-fab-icon {
+  font-size: 1rem;
+  line-height: 1;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) #abl-fs-fab {
+    background: rgba(132,116,238,.18);
+    color: #8474EE;
+  }
+  :root:not([data-theme="light"]) #abl-fs-fab:hover {
+    background: #8474EE;
+    color: #fff;
+  }
+}
+:root[data-theme="dark"] #abl-fs-fab {
+  background: rgba(132,116,238,.18);
+  color: #8474EE;
+}
+:root[data-theme="dark"] #abl-fs-fab:hover {
+  background: #8474EE;
+  color: #fff;
+}
