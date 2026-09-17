@@ -896,15 +896,14 @@ function openPDF(url, title) {
       <div class="pdf-modal-box">
         <button class="pdf-float-close" aria-label="Close document" onclick="closePDF()">×</button>
         <div class="pdf-float-zoom">
-          <button class="pdf-zoom-btn" onclick="zoomPDF(-0.25)">−</button>
-          <span id="pdfZoomLevel">100%</span>
-          <button class="pdf-zoom-btn" onclick="zoomPDF(0.25)">+</button>
+          <button class="pdf-zoom-btn" aria-label="Zoom out" onclick="zoomPDF(-0.25)">−</button>
+          <button class="pdf-zoom-btn" aria-label="Zoom in"  onclick="zoomPDF(0.25)">+</button>
         </div>
         <div class="pdf-modal-body" id="pdfModalBody"></div>
       </div>`;
     document.body.appendChild(modal);
   }
-  document.getElementById('pdfZoomLevel').textContent = '100%';
+  // zoom label removed — buttons only
   const body = document.getElementById('pdfModalBody');
   body.innerHTML = '<div class="pdf-loading">Loading…</div>';
   body.style.padding = _isImage ? '0.5rem' : '0';
@@ -951,8 +950,6 @@ function _applyImgZoom(img) {
 
 function zoomPDF(delta) {
   _pdfZoom = Math.round(Math.max(0.5, Math.min(5.0, _pdfZoom + delta)) * 10) / 10;
-  const el = document.getElementById('pdfZoomLevel');
-  if (el) el.textContent = Math.round(_pdfZoom * 100) + '%';
   if (_isImage) {
     const img = document.querySelector('#pdfModalBody .pdf-img-view');
     _applyImgZoom(img);
@@ -985,17 +982,17 @@ function renderPDF(url) {
   load.then(pdf => {
     body.innerHTML = '';
 
-    // clientWidth can be 0 on mobile before layout settles fall back to innerWidth
+    // clientWidth can be 0 on mobile before layout settles — fall back to innerWidth
     const rawW = body.clientWidth > 32 ? body.clientWidth : window.innerWidth;
     const containerW = rawW - 16;
-    const dpr = window.devicePixelRatio || 1;
+    // Always render at ≥2× resolution for sharp, crisp output on all screens
+    const dpr = Math.max(window.devicePixelRatio || 1, 2);
     const displayW = Math.max(Math.round(containerW * _pdfZoom), 200);
 
     function renderPage(w) {
       if (w.dataset.rendered === '1') return;
       w.dataset.rendered = '1';
       pdf.getPage(parseInt(w.dataset.page)).then(page => {
-        // Must pass rotation so PDF.js respects the page's own orientation metadata
         const rotation = page.rotate;
         const natVp = page.getViewport({ scale: 1, rotation });
         const scale  = (displayW / natVp.width) * dpr;
@@ -1008,7 +1005,10 @@ function renderPDF(url) {
         w.style.cssText = `display:block;margin:0 auto 4px;width:${displayW}px;height:${cssH}px;`;
         w.innerHTML = '';
         w.appendChild(canvas);
-        page.render({ canvasContext: canvas.getContext('2d'), viewport: vp });
+        const ctx = canvas.getContext('2d', { alpha: false });
+        ctx.imageSmoothingEnabled = true;
+        ctx.imageSmoothingQuality = 'high';
+        page.render({ canvasContext: ctx, viewport: vp });
       });
     }
 
