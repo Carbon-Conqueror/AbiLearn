@@ -50,7 +50,7 @@
       /* iOS Safari cannot enter fullscreen — show Add to Home Screen guide */
       content =
         '<div class="abl-fs-box">' +
-          '<img class="abl-fs-logo" src="assets/logo.svg" alt="AbiLearn">' +
+          '<img class="abl-fs-logo" src="assets/logo.jpeg" alt="AbiLearn">' +
           '<h2 class="abl-fs-title">Focus Mode</h2>' +
           '<p class="abl-fs-sub">For the best fullscreen experience on iPhone or iPad, add AbiLearn to your Home Screen:</p>' +
           '<ol class="abl-fs-steps">' +
@@ -63,7 +63,7 @@
     } else {
       content =
         '<div class="abl-fs-box">' +
-          '<img class="abl-fs-logo" src="assets/logo.svg" alt="AbiLearn">' +
+          '<img class="abl-fs-logo" src="assets/logo.jpeg" alt="AbiLearn">' +
           '<h2 class="abl-fs-title">Focus Mode</h2>' +
           '<p class="abl-fs-sub">Study without distractions. Enter fullscreen to continue.</p>' +
           '<button id="abl-fs-btn" class="abl-fs-btn">Enter Fullscreen</button>' +
