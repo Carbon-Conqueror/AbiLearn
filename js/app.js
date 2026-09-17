@@ -1160,7 +1160,7 @@ function buildScienceMCQCards(subject) {
   return `
     <h2 class="section-title" style="margin-bottom:0.3rem">Chapter MCQs</h2>
     <p style="color:var(--muted);margin-bottom:1.5rem;font-size:0.88rem">100 MCQs per chapter · All topics · High Difficulty</p>
-    <div class="pdf-list">${cards}</div>`;
+    <div class="pdf-cards-grid">${cards}</div>`;
 }
 
 /* ══════════════════════════════════════
@@ -1186,7 +1186,7 @@ function buildMathsMCQCards(subject) {
   return `
     <h2 class="section-title" style="margin-bottom:0.3rem">Chapter MCQs</h2>
     <p style="color:var(--muted);margin-bottom:1.5rem;font-size:0.88rem">NCERT 2026 · PYQs · Important · Slightly Advanced</p>
-    <div class="pdf-list">${cards}</div>`;
+    <div class="pdf-cards-grid">${cards}</div>`;
 }
 
 /* ══════════════════════════════════════
@@ -1226,7 +1226,7 @@ function buildSocialMCQCards(subject) {
         <div style="display:flex;align-items:center;gap:0.5rem;margin-bottom:0.75rem">
           <h3 style="margin:0;font-size:0.95rem;font-weight:800;color:${s.color}">${s.key}</h3>
         </div>
-        <div class="pdf-list">${cards}</div>
+        <div class="pdf-cards-grid">${cards}</div>
       </div>`;
   }).join('');
   return `

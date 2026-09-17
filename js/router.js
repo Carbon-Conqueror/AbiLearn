@@ -107,7 +107,7 @@
     var remaining = toLoad.length;
     toLoad.forEach(function (src) {
       var ns = document.createElement('script');
-      ns.src = src;
+      ns.setAttribute('src', src);   // setAttribute keeps the relative path as-is so _loadedSrcs dedup works
       ns.onload = ns.onerror = function () {
         remaining--;
         if (remaining === 0) runInline();
