@@ -1893,3 +1893,22 @@ footer {
 }
 .abl-fs-btn:hover  { background: #4A38CF; text-decoration: none; }
 .abl-fs-btn:active { transform: scale(.97); }
+
+/* ─── iOS FOCUS MODE (Add to Home Screen) ────── */
+.abl-fs-steps {
+  text-align: left;
+  color: rgba(255,255,255,.75);
+  font-size: .875rem;
+  line-height: 1.8;
+  margin: 0 0 1.5rem;
+  padding-left: 1.25rem;
+}
+.abl-fs-steps strong { color: #fff; }
+.abl-fs-share-icon {
+  display: inline-block;
+  background: rgba(255,255,255,.15);
+  border-radius: 5px;
+  padding: 0 5px;
+  font-size: .8rem;
+  vertical-align: middle;
+}
