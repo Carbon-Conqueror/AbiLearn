@@ -104,9 +104,16 @@
         /* ① Update <title> */
         document.title = nd.title;
 
-        /* ② Swap page-specific <style> blocks from <head> */
-        document.querySelectorAll('head style').forEach(function (s) { s.remove(); });
+        /* ② Swap page-specific <style> blocks from <head>
+         * Skip persistent styles injected at runtime (community CSS, protect
+         * inline style) — they don't appear in the fetched page HTML so
+         * removing them would strip the community widget's position:fixed. */
+        var PERSIST_STYLE_IDS = ['abl-community-css', 'abl-protect'];
+        document.querySelectorAll('head style').forEach(function (s) {
+          if (PERSIST_STYLE_IDS.indexOf(s.id) === -1) s.remove();
+        });
         nd.querySelectorAll('head style').forEach(function (s) {
+          if (PERSIST_STYLE_IDS.indexOf(s.id) !== -1) return; // already present
           var ns = document.createElement('style');
           if (s.id) ns.id = s.id;
           ns.textContent = s.textContent;
