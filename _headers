@@ -1,8 +1,41 @@
+# ── Global security headers (all paths) ───────────────────────────
+/*
+  X-Content-Type-Options: nosniff
+  X-Frame-Options: DENY
+  Referrer-Policy: strict-origin-when-cross-origin
+  Permissions-Policy: camera=(), microphone=(), geolocation=(), interest-cohort=(), payment=()
+  Strict-Transport-Security: max-age=63072000; includeSubDomains; preload
+
+# ── HTML pages — CSP + no-cache ───────────────────────────────────
+# CSP is scoped to what AbiLearn actually uses:
+#   script-src: self + inline scripts (needed for page-init calls) + jsDelivr (PDF.js)
+#   style-src:  self + inline styles (needed for abl-protect blocks) + Google Fonts CSS
+#   font-src:   self + data: (inline fonts) + Google Fonts static
+#   img-src:    self + data: (canvas watermark, formula images) + blob: (PDF.js)
+#   media-src:  self + data: (screenshot deterrent video) + blob:
+#   connect-src: self (SPA fetch nav + PDF fetch) + jsDelivr (PDF.js CMaps)
+#   worker-src: blob: + jsDelivr (PDF.js worker)
+#   frame-ancestors 'none': prevents all framing / clickjacking
 /*.html
   Cache-Control: no-cache, no-store, must-revalidate
+  Content-Security-Policy: default-src 'self'; script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' data: https://fonts.gstatic.com; img-src 'self' data: blob:; media-src 'self' data: blob:; connect-src 'self' https://cdn.jsdelivr.net; worker-src blob: https://cdn.jsdelivr.net; frame-ancestors 'none'; frame-src 'none'; object-src 'none'; base-uri 'self'; form-action 'self'
 
+# ── JavaScript — long cache ────────────────────────────────────────
 /js/*.js
   Cache-Control: public, max-age=31536000, immutable
 
+# ── CSS — long cache ───────────────────────────────────────────────
 /css/*.css
   Cache-Control: public, max-age=31536000, immutable
+
+# ── PDFs — no search-engine indexing, private no-store ────────────
+# Hotlink / referer protection is enforced by the Pages Function at
+# functions/pdfs/[[path]].js — headers here add defence-in-depth.
+/pdfs/*
+  X-Robots-Tag: noindex, nofollow
+  Cache-Control: private, no-store, no-cache, must-revalidate
+  X-Content-Type-Options: nosniff
+
+# ── Assets — allow caching, no indexing for raw asset files ───────
+/assets/*
+  Cache-Control: public, max-age=86400

@@ -10,10 +10,13 @@
   /* ── Persistent element IDs ─────────────────────────────────────── */
   /* These elements are created by other scripts and must survive swaps */
   var PERSIST_IDS = [
-    'abl-community-cta',   // community.js — floating widget
+    'abl-community-cta',   // community.js  — floating widget
     'abl-fs-overlay',      // fullscreen.js — focus mode overlay
     'abl-ss-guard',        // protect.js    — screenshot guard
     'abl-fs-exit-btn',     // fullscreen.js — exit fullscreen button
+    'abl-watermark',       // watermark.js  — repeating watermark overlay
+    'abl-copyright',       // watermark.js  — copyright footer notice
+    'abl-print-notice',    // watermark.js  — print shield
     'abl-spa-bar'          // router.js     — progress bar (self)
   ];
 
@@ -108,7 +111,7 @@
          * Skip persistent styles injected at runtime (community CSS, protect
          * inline style) — they don't appear in the fetched page HTML so
          * removing them would strip the community widget's position:fixed. */
-        var PERSIST_STYLE_IDS = ['abl-community-css', 'abl-protect'];
+        var PERSIST_STYLE_IDS = ['abl-community-css', 'abl-protect', 'abl-print-css'];
         document.querySelectorAll('head style').forEach(function (s) {
           if (PERSIST_STYLE_IDS.indexOf(s.id) === -1) s.remove();
         });
@@ -145,6 +148,11 @@
         /* ⑧ Scroll to top unless URL has a hash anchor */
         try { if (!new URL(href).hash) window.scrollTo(0, 0); }
         catch (e) { window.scrollTo(0, 0); }
+
+        /* ⑨ Notify other scripts (watermark, etc.) of route change */
+        try {
+          document.dispatchEvent(new CustomEvent('abl-navigate', { detail: { href: href } }));
+        } catch (e) {}
 
         progress(100);
         _busy = false;

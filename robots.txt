@@ -1,0 +1,8 @@
+User-agent: *
+# Block direct indexing of PDF files — they are served through the website
+Disallow: /pdfs/
+
+# Allow all public pages
+Allow: /
+
+Sitemap: https://www.abilearn.co.in/sitemap.xml
