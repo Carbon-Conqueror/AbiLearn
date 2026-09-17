@@ -3530,6 +3530,14 @@ function renderAppTools() {
   if (!grid) return;
   var tools = [
     {
+      name: 'MCQ Practice',
+      desc: 'Science multiple-choice questions, chapter by chapter. Track your mastery as you go.',
+      href: 'science.html',
+      onclick: 'return guardNav(event,\'science.html\')',
+      iconBg: 'rgba(91,71,222,.12)',
+      svg: '<svg width="24" height="24" viewBox="0 0 24 24" fill="none"><rect x="4" y="3" width="16" height="18" rx="2" stroke="#5B47DE" stroke-width="1.5"/><circle cx="8" cy="8.5" r="1.5" fill="#5B47DE"/><line x1="11.5" y1="8.5" x2="17" y2="8.5" stroke="#5B47DE" stroke-width="1.3" stroke-linecap="round"/><circle cx="8" cy="13" r="1.5" stroke="#5B47DE" stroke-width="1.3"/><line x1="11.5" y1="13" x2="17" y2="13" stroke="#5B47DE" stroke-width="1.3" stroke-linecap="round"/><circle cx="8" cy="17.5" r="1.5" stroke="#5B47DE" stroke-width="1.3"/><line x1="11.5" y1="17.5" x2="17" y2="17.5" stroke="#5B47DE" stroke-width="1.3" stroke-linecap="round"/></svg>'
+    },
+    {
       name: 'Tips & Tricks',
       desc: 'Smart study strategies to help you score 90+ in your board exams.',
       href: 'learn-tips.html',
@@ -3544,6 +3552,14 @@ function renderAppTools() {
       onclick: '',
       iconBg: 'rgba(14,165,233,.12)',
       svg: '<svg width="24" height="24" viewBox="0 0 24 24" fill="none"><rect x="3" y="4" width="18" height="17" rx="2.5" stroke="#0EA5E9" stroke-width="1.5"/><path d="M3 9h18" stroke="#0EA5E9" stroke-width="1.4"/><path d="M8 2v4M16 2v4" stroke="#0EA5E9" stroke-width="1.5" stroke-linecap="round"/><path d="M10.5 14.5c0-1.1.9-2 1.5-2s1.5.9 1.5 2c0 .8-.4 1.2-1 1.6-.4.3-.7.6-.7.9" stroke="#0EA5E9" stroke-width="1.4" stroke-linecap="round"/><circle cx="12" cy="19" r=".9" fill="#0EA5E9"/></svg>'
+    },
+    {
+      name: 'Mind Maps',
+      desc: 'Visual concept maps for every chapter — see the big picture before diving into details.',
+      href: 'mind-maps.html',
+      onclick: '',
+      iconBg: 'rgba(16,185,129,.12)',
+      svg: '<svg width="24" height="24" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="2.5" fill="#10B981"/><circle cx="5" cy="6" r="2" stroke="#10B981" stroke-width="1.4"/><circle cx="19" cy="6" r="2" stroke="#10B981" stroke-width="1.4"/><circle cx="5" cy="18" r="2" stroke="#10B981" stroke-width="1.4"/><circle cx="19" cy="18" r="2" stroke="#10B981" stroke-width="1.4"/><line x1="9.6" y1="10.6" x2="7" y2="7.8" stroke="#10B981" stroke-width="1.3"/><line x1="14.4" y1="10.6" x2="17" y2="7.8" stroke="#10B981" stroke-width="1.3"/><line x1="9.6" y1="13.4" x2="7" y2="16.2" stroke="#10B981" stroke-width="1.3"/><line x1="14.4" y1="13.4" x2="17" y2="16.2" stroke="#10B981" stroke-width="1.3"/></svg>'
     }
   ];
   grid.innerHTML = tools.map(function(t) {
