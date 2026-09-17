@@ -895,15 +895,10 @@ function openPDF(url, title) {
     modal.innerHTML = `
       <div class="pdf-modal-box">
         <button class="pdf-float-close" aria-label="Close document" onclick="closePDF()">×</button>
-        <div class="pdf-float-zoom">
-          <button class="pdf-zoom-btn" aria-label="Zoom out" onclick="zoomPDF(-0.25)">−</button>
-          <button class="pdf-zoom-btn" aria-label="Zoom in"  onclick="zoomPDF(0.25)">+</button>
-        </div>
         <div class="pdf-modal-body" id="pdfModalBody"></div>
       </div>`;
     document.body.appendChild(modal);
   }
-  // zoom label removed — buttons only
   const body = document.getElementById('pdfModalBody');
   body.innerHTML = '<div class="pdf-loading">Loading…</div>';
   body.style.padding = _isImage ? '0.5rem' : '0';
@@ -931,31 +926,10 @@ function renderImage(url) {
   body.style.padding = '0';
   const img = document.createElement('img');
   img.className = 'pdf-img-view';
-  _applyImgZoom(img);
+  img.style.cssText = 'display:block;width:100%;height:auto;max-width:100%;';
   img.onerror = () => { body.innerHTML = `<div class="pdf-error">Could not load image.</div>`; };
   body.appendChild(img);
   img.src = url;
-}
-
-function _applyImgZoom(img) {
-  const pct = Math.round(_pdfZoom * 100);
-  if (_pdfZoom <= 1) {
-    // Height-first: fill the full screen height, let width scale naturally
-    img.style.cssText = `display:block;margin:0 auto;height:${pct}%;width:auto;max-width:100%;`;
-  } else {
-    // Zoomed in: width-based so user can scroll horizontally too
-    img.style.cssText = `display:block;margin:0 auto;height:${pct}%;width:auto;max-width:none;`;
-  }
-}
-
-function zoomPDF(delta) {
-  _pdfZoom = Math.round(Math.max(0.5, Math.min(5.0, _pdfZoom + delta)) * 10) / 10;
-  if (_isImage) {
-    const img = document.querySelector('#pdfModalBody .pdf-img-view');
-    _applyImgZoom(img);
-    return;
-  }
-  renderPDF(_pdfUrl);
 }
 
 function renderPDF(url) {
