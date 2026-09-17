@@ -1929,3 +1929,32 @@ footer {
   border-radius: 0 2px 2px 0;
 }
 
+
+/* ─── EXIT FULLSCREEN BUTTON (bottom-left) ─── */
+#abl-fs-exit-btn {
+  position: fixed;
+  bottom: 1.25rem;
+  left: 1.25rem;
+  z-index: 9000;
+  padding: .55rem 1.1rem;
+  border-radius: 2rem;
+  border: none;
+  cursor: pointer;
+  font-size: .82rem;
+  font-weight: 800;
+  font-family: inherit;
+  white-space: nowrap;
+  letter-spacing: .02em;
+  background: rgba(0,0,0,.55);
+  color: #fff;
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  box-shadow: 0 2px 12px rgba(0,0,0,.35);
+  display: none;
+  transition: background .2s, transform .15s;
+}
+#abl-fs-exit-btn:hover  { background: rgba(0,0,0,.75); }
+#abl-fs-exit-btn:active { transform: scale(.96); }
+@media (max-width: 600px) {
+  #abl-fs-exit-btn { bottom: 1rem; left: 1rem; font-size: .78rem; }
+}

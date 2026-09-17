@@ -131,6 +131,38 @@
   }
   /* iOS standalone (PWA) — already fullscreen, no overlay needed */
 
+  /* ── Exit Fullscreen button (bottom-left) ───── */
+  if (canFullscreen() || isStandalone) {
+    var _exitBtn = document.createElement('button');
+    _exitBtn.id = 'abl-fs-exit-btn';
+    _exitBtn.textContent = 'Exit Fullscreen';
+    _exitBtn.setAttribute('aria-label', 'Exit fullscreen');
+    _exitBtn.addEventListener('click', function () {
+      var exitFn = document.exitFullscreen || document.webkitExitFullscreen ||
+                   document.mozCancelFullScreen || document.msExitFullscreen;
+      if (exitFn && isFS()) exitFn.call(document).catch(function () {});
+    });
+
+    function _updateExitBtn() {
+      _exitBtn.style.display = isFS() ? 'block' : 'none';
+    }
+
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', function () {
+        document.body.appendChild(_exitBtn);
+        _updateExitBtn();
+      });
+    } else {
+      document.body.appendChild(_exitBtn);
+      _updateExitBtn();
+    }
+
+    ['fullscreenchange', 'webkitfullscreenchange',
+     'mozfullscreenchange', 'MSFullscreenChange'].forEach(function (ev) {
+      document.addEventListener(ev, _updateExitBtn);
+    });
+  }
+
   /* ── Screenshot video-layer deterrent ──────── */
   window.addEventListener('DOMContentLoaded', function () {
     var vid = document.createElement('video');

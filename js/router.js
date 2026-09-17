@@ -13,6 +13,7 @@
     'abl-community-cta',   // community.js — floating widget
     'abl-fs-overlay',      // fullscreen.js — focus mode overlay
     'abl-ss-guard',        // protect.js    — screenshot guard
+    'abl-fs-exit-btn',     // fullscreen.js — exit fullscreen button
     'abl-spa-bar'          // router.js     — progress bar (self)
   ];
 
