@@ -70,16 +70,49 @@
   }
 
   /* ── Inline script re-execution ─────────────────────────────────── */
-  /* Re-run only inline scripts (e.g. initMathsPage()). External scripts
-   * (app.js, community.js, protect.js, …) are already loaded — skip them. */
-  function runInlineScripts(parsedBody) {
-    parsedBody.querySelectorAll('script').forEach(function (s) {
-      if (s.src) return;                    // external — already in memory
+  /* External scripts shared across all pages (app.js, community.js, …) are
+   * already in memory — skip them.  Page-specific data scripts (maths-mcqs.js,
+   * science-mcqs.js, social-mcqs-final.js, …) are NOT present on every page,
+   * so we load any that are missing before running the inline init call. */
+  function _loadedSrcs() {
+    var set = {};
+    document.querySelectorAll('script[src]').forEach(function (s) {
+      set[s.getAttribute('src').split('?')[0]] = true;
+    });
+    return set;
+  }
+
+  function runScripts(parsedBody, done) {
+    /* Collect external srcs that are new to this page */
+    var loaded = _loadedSrcs();
+    var toLoad = [];
+    parsedBody.querySelectorAll('script[src]').forEach(function (s) {
+      var src = s.getAttribute('src');
+      if (!loaded[src.split('?')[0]]) toLoad.push(src);
+    });
+
+    function runInline() {
+      parsedBody.querySelectorAll('script:not([src])').forEach(function (s) {
+        var ns = document.createElement('script');
+        if (s.type) ns.type = s.type;
+        ns.textContent = s.textContent;
+        document.body.appendChild(ns);
+        ns.remove();
+      });
+      done();
+    }
+
+    if (!toLoad.length) { runInline(); return; }
+
+    var remaining = toLoad.length;
+    toLoad.forEach(function (src) {
       var ns = document.createElement('script');
-      if (s.type) ns.type = s.type;
-      ns.textContent = s.textContent;
-      document.body.appendChild(ns);
-      ns.remove();
+      ns.src = src;
+      ns.onload = ns.onerror = function () {
+        remaining--;
+        if (remaining === 0) runInline();
+      };
+      document.head.appendChild(ns);
     });
   }
 
@@ -138,24 +171,24 @@
         /* ⑤ Restore persistent elements */
         reattach(saved);
 
-        /* ⑥ Re-run inline page-init scripts */
-        runInlineScripts(nb);
+        /* ⑥ Load page-specific external scripts then run inline init */
+        runScripts(nb, function () {
+          /* ⑦ Push / replace history */
+          if (push) history.pushState({ href: href }, document.title, href);
+          _currentHref = href;
 
-        /* ⑦ Push / replace history */
-        if (push) history.pushState({ href: href }, document.title, href);
-        _currentHref = href;
+          /* ⑧ Scroll to top unless URL has a hash anchor */
+          try { if (!new URL(href).hash) window.scrollTo(0, 0); }
+          catch (e) { window.scrollTo(0, 0); }
 
-        /* ⑧ Scroll to top unless URL has a hash anchor */
-        try { if (!new URL(href).hash) window.scrollTo(0, 0); }
-        catch (e) { window.scrollTo(0, 0); }
+          /* ⑨ Notify other scripts (watermark, etc.) of route change */
+          try {
+            document.dispatchEvent(new CustomEvent('abl-navigate', { detail: { href: href } }));
+          } catch (e) {}
 
-        /* ⑨ Notify other scripts (watermark, etc.) of route change */
-        try {
-          document.dispatchEvent(new CustomEvent('abl-navigate', { detail: { href: href } }));
-        } catch (e) {}
-
-        progress(100);
-        _busy = false;
+          progress(100);
+          _busy = false;
+        });
       })
       .catch(function () {
         /* Network error or unexpected response — fall back gracefully */

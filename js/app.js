@@ -3530,14 +3530,6 @@ function renderAppTools() {
   if (!grid) return;
   var tools = [
     {
-      name: 'MCQ Practice',
-      desc: 'Science multiple-choice questions, chapter by chapter. Track your mastery as you go.',
-      href: 'science.html',
-      onclick: 'return guardNav(event,\'science.html\')',
-      iconBg: 'rgba(91,71,222,.12)',
-      svg: '<svg width="24" height="24" viewBox="0 0 24 24" fill="none"><rect x="4" y="3" width="16" height="18" rx="2" stroke="#5B47DE" stroke-width="1.5"/><circle cx="8" cy="8.5" r="1.5" fill="#5B47DE"/><line x1="11.5" y1="8.5" x2="17" y2="8.5" stroke="#5B47DE" stroke-width="1.3" stroke-linecap="round"/><circle cx="8" cy="13" r="1.5" stroke="#5B47DE" stroke-width="1.3"/><line x1="11.5" y1="13" x2="17" y2="13" stroke="#5B47DE" stroke-width="1.3" stroke-linecap="round"/><circle cx="8" cy="17.5" r="1.5" stroke="#5B47DE" stroke-width="1.3"/><line x1="11.5" y1="17.5" x2="17" y2="17.5" stroke="#5B47DE" stroke-width="1.3" stroke-linecap="round"/></svg>'
-    },
-    {
       name: 'Tips & Tricks',
       desc: 'Smart study strategies to help you score 90+ in your board exams.',
       href: 'learn-tips.html',
