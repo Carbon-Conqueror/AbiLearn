@@ -1851,11 +1851,16 @@ footer {
   max-width: 360px;
   width: 90%;
 }
-.abl-fs-icon {
-  font-size: 3.5rem;
-  line-height: 1;
+.abl-fs-logo {
+  width: 72px;
+  height: 72px;
+  object-fit: contain;
   margin-bottom: 1.25rem;
-  filter: drop-shadow(0 0 20px rgba(91,71,222,.6));
+  border-radius: 16px;
+  filter: drop-shadow(0 0 20px rgba(91,71,222,.55));
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
 }
 .abl-fs-title {
   color: #fff;
@@ -1863,12 +1868,14 @@ footer {
   font-weight: 700;
   margin: 0 0 .5rem;
   letter-spacing: -.01em;
+  text-decoration: none;
 }
 .abl-fs-sub {
   color: rgba(255,255,255,.55);
   font-size: .9rem;
   line-height: 1.5;
   margin: 0 0 1.75rem;
+  text-decoration: none;
 }
 .abl-fs-btn {
   background: #5B47DE;
@@ -1881,6 +1888,8 @@ footer {
   cursor: pointer;
   transition: background 150ms, transform 120ms;
   box-shadow: 0 4px 18px rgba(91,71,222,.45);
+  text-decoration: none;
+  display: inline-block;
 }
-.abl-fs-btn:hover  { background: #4A38CF; }
+.abl-fs-btn:hover  { background: #4A38CF; text-decoration: none; }
 .abl-fs-btn:active { transform: scale(.97); }

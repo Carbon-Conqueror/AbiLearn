@@ -2,6 +2,8 @@
 (function () {
   'use strict';
 
+  var FS_KEY = 'abl_fs'; // sessionStorage key — '1' = user has consented
+
   /* ── Fullscreen helpers ─────────────────────── */
   function isFS() {
     return !!(document.fullscreenElement ||
@@ -18,7 +20,7 @@
     if (fn) fn.call(el).catch(function () {});
   }
 
-  /* ── Focus overlay ──────────────────────────── */
+  /* ── Overlay ────────────────────────────────── */
   var overlay = null;
 
   function showOverlay() {
@@ -29,16 +31,16 @@
     overlay.setAttribute('aria-modal', 'true');
     overlay.innerHTML =
       '<div class="abl-fs-box">' +
-        '<div class="abl-fs-icon">📚</div>' +
+        '<img class="abl-fs-logo" src="assets/logo.svg" alt="AbiLearn">' +
         '<h2 class="abl-fs-title">Focus Mode</h2>' +
-        '<p class="abl-fs-sub">Tap to enter fullscreen and study without distractions.</p>' +
+        '<p class="abl-fs-sub">Study without distractions. Enter fullscreen to continue.</p>' +
         '<button id="abl-fs-btn" class="abl-fs-btn">Enter Fullscreen</button>' +
       '</div>';
     document.body.appendChild(overlay);
     document.getElementById('abl-fs-btn').addEventListener('click', function () {
       enterFS();
-      // On iOS Safari fullscreen is not supported — dismiss overlay anyway
-      setTimeout(function () { if (!isFS()) hideOverlay(); }, 600);
+      // iOS Safari: fullscreen API not supported — dismiss gracefully
+      setTimeout(function () { if (!isFS()) hideOverlay(); }, 800);
     });
   }
 
@@ -52,38 +54,46 @@
   function onFSChange() {
     if (isFS()) {
       enteredOnce = true;
+      try { sessionStorage.setItem(FS_KEY, '1'); } catch (e) {}
       hideOverlay();
     } else if (enteredOnce) {
+      // User pressed Escape — show overlay so they can re-enter
       showOverlay();
     }
   }
 
-  ['fullscreenchange','webkitfullscreenchange',
-   'mozfullscreenchange','MSFullscreenChange'].forEach(function (ev) {
+  ['fullscreenchange', 'webkitfullscreenchange',
+   'mozfullscreenchange', 'MSFullscreenChange'].forEach(function (ev) {
     document.addEventListener(ev, onFSChange);
   });
 
-  /* Try immediately (works when page loaded via navigation click) */
+  /* ── Boot: enter as early as possible ──────── */
+  // The inline <head> script already attempted enterFS() if consent exists.
+  // This call covers the case where fullscreen.js loads before DOMContentLoaded
+  // and the head script was absent / consent not yet stored.
   enterFS();
 
-  /* Re-enter / show overlay on any interaction if not fullscreen */
+  // Re-enter silently on every click/touch (covers Escape-then-interact flow)
   document.addEventListener('click', function () {
-    if (!isFS()) { enterFS(); }
+    if (!isFS()) enterFS();
   }, { capture: true, passive: true });
 
   document.addEventListener('touchstart', function () {
-    if (!isFS()) { enterFS(); }
+    if (!isFS()) enterFS();
   }, { capture: true, passive: true });
 
-  /* Show focus overlay after 3 s if still not fullscreen */
+  /* ── Overlay delay logic ────────────────────── */
+  // If the user has previously consented (consent flag set), give the auto-entry
+  // plenty of time before showing the overlay — it will succeed silently.
+  // If this is the very first visit (no consent yet), show overlay sooner.
+  var hasConsent = false;
+  try { hasConsent = sessionStorage.getItem(FS_KEY) === '1'; } catch (e) {}
+
   setTimeout(function () {
     if (!isFS()) showOverlay();
-  }, 3000);
+  }, hasConsent ? 1500 : 3000);
 
   /* ── Screenshot video-layer deterrent ──────── */
-  /* A near-invisible autoplay video overlaid on the page causes many
-     system-level screenshot tools (Win DXGI, OBS game capture) to capture
-     the video layer as a black frame instead of the page content. */
   window.addEventListener('DOMContentLoaded', function () {
     var vid = document.createElement('video');
     vid.setAttribute('autoplay', '');
@@ -95,8 +105,8 @@
       'position:fixed;top:0;left:0;width:100%;height:100%;' +
       'z-index:2147483640;pointer-events:none;' +
       'opacity:0.004;object-fit:cover;';
-    // Tiny blank 1×1 transparent webm (inline data URI, ~80 bytes)
-    vid.src = 'data:video/webm;base64,GkXfo0AgQoaBAUL3gQFC8oEEQvOBCFEscoCkAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABZU29mdU1vb1ZvcmJpcwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=';
+    // Tiny blank transparent webm (inline data URI)
+    vid.src = 'data:video/webm;base64,GkXfo0AgQoaBAUL3gQFC8oEEQvOBCFEscoCkAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABZU29mdU1vb1ZvcmJpcwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=';
     document.body.appendChild(vid);
     vid.play().catch(function () {});
   });
