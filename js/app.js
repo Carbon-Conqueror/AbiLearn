@@ -507,6 +507,32 @@ function handleTabClick(btn, subjectId) {
 }
 
 /* ══════════════════════════════════════
+   MCQ DATA LAZY LOADER
+   Loads the per-subject MCQ script on demand if it wasn't included on
+   the starting page (e.g. SPA navigation from index.html → maths.html).
+══════════════════════════════════════ */
+var _MCQ_SRCS = {
+  maths:   'js/maths-mcqs.js?v=2',
+  science: 'js/science-mcqs.js?v=1',
+  social:  'js/social-mcqs-final.js?v=1'
+};
+function _loadMCQData(subjectId, callback) {
+  var src = _MCQ_SRCS[subjectId];
+  if (!src) { callback(); return; }
+  /* Already in DOM? */
+  var base = src.split('?')[0];
+  var found = false;
+  document.querySelectorAll('script[src]').forEach(function(s) {
+    if (s.getAttribute('src').split('?')[0] === base) found = true;
+  });
+  if (found) { callback(); return; }
+  var ns = document.createElement('script');
+  ns.setAttribute('src', src);
+  ns.onload = ns.onerror = callback;
+  document.head.appendChild(ns);
+}
+
+/* ══════════════════════════════════════
    TAB CONTENT ROUTER
 ══════════════════════════════════════ */
 function renderTabContent(subject, tabId) {
@@ -514,21 +540,26 @@ function renderTabContent(subject, tabId) {
   if (!el) return;
   el.innerHTML = '<div style="text-align:center;padding:2rem;color:var(--muted)">Loading...</div>';
 
-  setTimeout(() => {
-    switch (tabId) {
-      case 'formula-sheet':     el.innerHTML = buildFormulaSheet(subject); break;
-      case 'important-notes':   el.innerHTML = buildImportantNotes(subject); break;
-      case 'practice-questions':
-        if (subject && subject.id === 'science' && typeof SCIENCE_MCQS !== 'undefined') {
-          el.innerHTML = buildScienceMCQCards(subject);
-        } else if (subject && subject.id === 'maths' && typeof MATHS_MCQS !== 'undefined') {
-          el.innerHTML = buildMathsMCQCards(subject);
-        } else if (subject && subject.id === 'social') {
-          el.innerHTML = buildSocialMCQCards(subject);
-        } else {
-          el.innerHTML = buildPracticeQuestions(subject); initMCQHandlers(el, subject && subject.id);
-        }
-        break;
+  var sid = subject && subject.id;
+  var needsLazy = tabId === 'practice-questions' &&
+    (sid === 'maths' || sid === 'science' || sid === 'social');
+
+  function _render() {
+    setTimeout(() => {
+      switch (tabId) {
+        case 'formula-sheet':     el.innerHTML = buildFormulaSheet(subject); break;
+        case 'important-notes':   el.innerHTML = buildImportantNotes(subject); break;
+        case 'practice-questions':
+          if (sid === 'science' && typeof SCIENCE_MCQS !== 'undefined') {
+            el.innerHTML = buildScienceMCQCards(subject);
+          } else if (sid === 'maths' && typeof MATHS_MCQS !== 'undefined') {
+            el.innerHTML = buildMathsMCQCards(subject);
+          } else if (sid === 'social' && typeof SOCIAL_MCQS !== 'undefined') {
+            el.innerHTML = buildSocialMCQCards(subject);
+          } else {
+            el.innerHTML = buildPracticeQuestions(subject); initMCQHandlers(el, sid);
+          }
+          break;
       case 'question-gen':      el.innerHTML = buildQuestionGenerator(subject); break;
       case 'questions':         el.innerHTML = buildPracticeQuestions(subject); initMCQHandlers(el, subject && subject.id); break;
       case 'pyqs':              el.innerHTML = buildPYQs(subject); break;
@@ -545,10 +576,17 @@ function renderTabContent(subject, tabId) {
       case 'social-qbank':      el.innerHTML = buildSocialQBank(subject); break;
       case 'maps':              el.innerHTML = buildMaps(); break;
       case 'summary':           el.innerHTML = buildSummary(subject); break;
-      default:                  el.innerHTML = buildComingSoon('This section', 'Content coming soon!'); break;
-    }
-    initReveal();
-  }, 80);
+        default:                  el.innerHTML = buildComingSoon('This section', 'Content coming soon!'); break;
+      }
+      initReveal();
+    }, 80);
+  }
+
+  if (needsLazy) {
+    _loadMCQData(sid, _render);
+  } else {
+    _render();
+  }
 }
 
 /* ══════════════════════════════════════
