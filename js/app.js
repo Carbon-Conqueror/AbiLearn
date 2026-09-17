@@ -855,7 +855,6 @@ function pdfCards(subject, tab) {
         
         <div class="pdf-card-info">
           <div class="pdf-card-title">${escH(p.title)}</div>
-          <div class="pdf-card-desc">${escH(p.desc || '')}</div>
         </div>
         <button class="pdf-open-btn" onclick="openPDF('${escH(p.url)}','${escH(p.title)}')">Open</button>
       </div>`;
@@ -2844,7 +2843,6 @@ function buildSocialNotes(subject) {
                 
                 <div class="pdf-card-info">
                   <div class="pdf-card-title">${escH(p.title)}</div>
-                  <div class="pdf-card-desc">${escH(p.desc)}</div>
                 </div>
                 <button class="pdf-open-btn" onclick="openPDF('${escH(p.url)}','${escH(p.title)}')">Open</button>
               </div>`;

@@ -685,15 +685,16 @@ input:focus-visible,select:focus-visible,textarea:focus-visible { outline:none; 
   background:none; border:none; border-bottom:2px solid transparent;
   padding:.82rem 1rem; font-size:.84rem; font-weight:600;
   color:var(--muted); cursor:pointer;
-  transition:color var(--dur) var(--ease),border-color var(--dur) var(--ease);
+  transition:color var(--dur) var(--ease),background var(--dur) var(--ease),border-color var(--dur) var(--ease);
   white-space:nowrap; font-family:inherit; letter-spacing:.01em;
+  border-radius:var(--radius-sm) var(--radius-sm) 0 0;
 }
 .tab-btn:hover { color:var(--text); }
-.tab-btn.active               { color:var(--accent);  border-bottom-color:var(--accent); }
-.tab-btn.active.maths-t       { color:var(--maths);   border-bottom-color:var(--maths); }
-.tab-btn.active.science-t     { color:var(--science); border-bottom-color:var(--science); }
-.tab-btn.active.english-t     { color:var(--english); border-bottom-color:var(--english); }
-.tab-btn.active.social-t      { color:var(--social);  border-bottom-color:var(--social); }
+.tab-btn.active               { color:var(--accent);  border-bottom-color:transparent; }
+.tab-btn.active.maths-t       { color:var(--maths);   border-bottom-color:transparent; }
+.tab-btn.active.science-t     { color:var(--science); border-bottom-color:transparent; }
+.tab-btn.active.english-t     { color:var(--english); border-bottom-color:transparent; }
+.tab-btn.active.social-t      { color:var(--social);  border-bottom-color:transparent; }
 .tab-panel { display:none; }
 .tab-panel.active { display:block; }
 
@@ -1430,7 +1431,7 @@ footer {
 .dash-subj-info  { display:flex; align-items:center; gap:.42rem; margin-bottom:.28rem; }
 .dash-subj-icon  { font-size:.92rem; }
 .dash-subj-name  { font-size:.86rem; font-weight:800; text-decoration:none; }
-.dash-subj-name:hover { text-decoration:underline; }
+.dash-subj-name:hover { text-decoration:none; }
 .dash-subj-right { display:flex; align-items:center; gap:.52rem; }
 .dash-subj-bar   { flex:1; height:6px; background:var(--border); border-radius:3px; overflow:hidden; }
 .dash-subj-fill  { height:100%; border-radius:3px; transition:width .8s ease; }
