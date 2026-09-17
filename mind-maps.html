@@ -15,6 +15,11 @@
 .coming-sub { font-size:.9rem;color:var(--muted);max-width:340px;line-height:1.6; }
 .coming-back { display:inline-block;margin-top:1rem;padding:.55rem 1.3rem;border-radius:20px;background:var(--accent);color:#fff;font-weight:700;font-size:.88rem;text-decoration:none; }
 </style>
+<style id="abl-protect">
+*{-webkit-user-select:none!important;-moz-user-select:none!important;-ms-user-select:none!important;user-select:none!important;}
+input,textarea{-webkit-user-select:text!important;user-select:text!important;}
+@media print{body{display:none!important;}}
+</style>
 </head>
 <body>
 <div class="coming-wrap">
@@ -25,5 +30,6 @@
 </div>
 <script src="js/fullscreen.js?v=1"></script>
 
+<script src="js/protect.js?v=1"></script>
 </body>
 </html>

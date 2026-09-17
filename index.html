@@ -975,6 +975,11 @@
     .value-item, .site-header, .mobile-menu, .ham-bar { transition: none !important; }
   }
   </style>
+<style id="abl-protect">
+*{-webkit-user-select:none!important;-moz-user-select:none!important;-ms-user-select:none!important;user-select:none!important;}
+input,textarea{-webkit-user-select:text!important;user-select:text!important;}
+@media print{body{display:none!important;}}
+</style>
 </head>
 <body>
 <a href="#hero-main" class="skip-nav">Skip to main content</a>
@@ -1242,5 +1247,6 @@ initLandingPage();
 <script src="js/fullscreen.js?v=1"></script>
 
 
+<script src="js/protect.js?v=1"></script>
 </body>
 </html>

@@ -1481,6 +1481,11 @@
   }
 
   </style>
+<style id="abl-protect">
+*{-webkit-user-select:none!important;-moz-user-select:none!important;-ms-user-select:none!important;user-select:none!important;}
+input,textarea{-webkit-user-select:text!important;user-select:text!important;}
+@media print{body{display:none!important;}}
+</style>
 </head>
 <body class="lh-body">
 <a href="#lh-main" class="lh-skip">Skip to main content</a>
@@ -1612,5 +1617,6 @@ if (location.search.indexOf('openSearch=1') !== -1) {
 </script>
 <script src="js/fullscreen.js?v=1"></script>
 
+<script src="js/protect.js?v=1"></script>
 </body>
 </html>
