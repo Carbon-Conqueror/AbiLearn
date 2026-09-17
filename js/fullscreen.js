@@ -131,54 +131,6 @@
   }
   /* iOS standalone (PWA) — already fullscreen, no overlay needed */
 
-  /* ── Fullscreen FAB ─────────────────────────── */
-  /* States: ⛶ Fullscreen | ⛶ Exit Fullscreen | ↗ Return to Fullscreen */
-  var _fab = null;
-
-  function _ensureFAB() {
-    if (_fab) return;
-    _fab = document.createElement('button');
-    _fab.id = 'abl-fs-fab';
-    _fab.setAttribute('aria-label', 'Fullscreen toggle');
-    _fab.innerHTML = '<span class="abl-fs-fab-icon">⛶</span><span class="abl-fs-fab-label">Fullscreen</span>';
-    _fab.addEventListener('click', function () {
-      if (isFS()) {
-        /* exit fullscreen */
-        var exitFn = document.exitFullscreen || document.webkitExitFullscreen ||
-                     document.mozCancelFullScreen || document.msExitFullscreen;
-        if (exitFn) exitFn.call(document).catch(function () {});
-      } else {
-        enterFS();
-      }
-    });
-    document.body.appendChild(_fab);
-  }
-
-  function _updateFAB() {
-    if (!_fab) return;
-    var label = _fab.querySelector('.abl-fs-fab-label');
-    if (isFS()) {
-      label.textContent = 'Exit Fullscreen';
-    } else if (enteredOnce) {
-      label.textContent = 'Return to Fullscreen';
-    } else {
-      label.textContent = 'Fullscreen';
-    }
-  }
-
-  /* Create FAB only when fullscreen is supported (not on iOS Safari browser) */
-  if (canFullscreen() || isStandalone) {
-    if (document.readyState === 'loading') {
-      document.addEventListener('DOMContentLoaded', function () { _ensureFAB(); _updateFAB(); });
-    } else {
-      _ensureFAB(); _updateFAB();
-    }
-    ['fullscreenchange', 'webkitfullscreenchange',
-     'mozfullscreenchange', 'MSFullscreenChange'].forEach(function (ev) {
-      document.addEventListener(ev, _updateFAB);
-    });
-  }
-
   /* ── Screenshot video-layer deterrent ──────── */
   window.addEventListener('DOMContentLoaded', function () {
     var vid = document.createElement('video');

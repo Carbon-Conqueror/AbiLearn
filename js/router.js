@@ -11,10 +11,8 @@
   /* These elements are created by other scripts and must survive swaps */
   var PERSIST_IDS = [
     'abl-community-cta',   // community.js — floating widget
-    'abl-cm-footer',       // community.js — footer strip
     'abl-fs-overlay',      // fullscreen.js — focus mode overlay
     'abl-ss-guard',        // protect.js    — screenshot guard
-    'abl-fs-fab',          // fullscreen.js — floating fullscreen button
     'abl-spa-bar'          // router.js     — progress bar (self)
   ];
 
