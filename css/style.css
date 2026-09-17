@@ -1,4 +1,4 @@
-/* AbiLearn — Design System v52 */
+/* AbiLearn — Design System v53 */
 
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap');
 
@@ -1812,3 +1812,75 @@ footer {
   .app-subjects-grid { grid-template-columns:repeat(2,1fr); gap:.75rem; }
   .app-subject-tile { padding:1rem .75rem; }
 }
+
+/* ─── SCREENSHOT GUARD ────────────────────────── */
+#abl-ss-guard {
+  position: fixed;
+  inset: 0;
+  z-index: 2147483646;
+  pointer-events: none;
+  background: #0A0818;
+  opacity: 0;
+  transition: opacity 80ms linear;
+}
+#abl-ss-guard.abl-guard-visible {
+  opacity: 1;
+  pointer-events: all;
+}
+
+/* ─── FULLSCREEN FOCUS OVERLAY ────────────────── */
+#abl-fs-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 2147483647;
+  background: rgba(10, 8, 24, 0.97);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  animation: abl-fs-fade-in 300ms var(--ease) both;
+}
+@keyframes abl-fs-fade-in {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+.abl-fs-box {
+  text-align: center;
+  padding: 2.5rem 2rem;
+  max-width: 360px;
+  width: 90%;
+}
+.abl-fs-icon {
+  font-size: 3.5rem;
+  line-height: 1;
+  margin-bottom: 1.25rem;
+  filter: drop-shadow(0 0 20px rgba(91,71,222,.6));
+}
+.abl-fs-title {
+  color: #fff;
+  font-size: 1.6rem;
+  font-weight: 700;
+  margin: 0 0 .5rem;
+  letter-spacing: -.01em;
+}
+.abl-fs-sub {
+  color: rgba(255,255,255,.55);
+  font-size: .9rem;
+  line-height: 1.5;
+  margin: 0 0 1.75rem;
+}
+.abl-fs-btn {
+  background: #5B47DE;
+  color: #fff;
+  border: none;
+  padding: .75rem 2.25rem;
+  border-radius: 50px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 150ms, transform 120ms;
+  box-shadow: 0 4px 18px rgba(91,71,222,.45);
+}
+.abl-fs-btn:hover  { background: #4A38CF; }
+.abl-fs-btn:active { transform: scale(.97); }
