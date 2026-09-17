@@ -513,8 +513,8 @@ function handleTabClick(btn, subjectId) {
 ══════════════════════════════════════ */
 var _MCQ_SRCS = {
   maths:   'js/maths-mcqs.js?v=2',
-  science: 'js/science-mcqs.js?v=1',
-  social:  'js/social-mcqs-final.js?v=1'
+  science: 'js/science-mcqs.js?v=2',
+  social:  'js/social-mcqs-final.js?v=2'
 };
 function _loadMCQData(subjectId, callback) {
   var src = _MCQ_SRCS[subjectId];
