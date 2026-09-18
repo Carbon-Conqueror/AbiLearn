@@ -66,26 +66,23 @@
     saved.forEach(function (el) { document.body.appendChild(el); });
   }
 
-  /* ── Inline script re-execution ─────────────────────────────────── */
-  /* External scripts shared across all pages (app.js, community.js, …) are
-   * already in memory — skip them.  Page-specific data scripts (maths-mcqs.js,
-   * science-mcqs.js, social-mcqs-final.js, …) are NOT present on every page,
-   * so we load any that are missing before running the inline init call. */
-  function _loadedSrcs() {
-    var set = {};
-    document.querySelectorAll('script[src]').forEach(function (s) {
-      set[s.getAttribute('src').split('?')[0]] = true;
-    });
-    return set;
-  }
+  /* ── Executed-script registry ───────────────────────────────────── */
+  /* We track which scripts have actually been executed, NOT which tags
+   * are in the DOM.  After document.body.innerHTML = html the new page's
+   * <script src> tags land in the DOM as inert nodes before they run —
+   * querying the DOM directly would make _loadedSrcs() think everything
+   * is already loaded and skip execution entirely (the original bug). */
+  var _executed = {};
+  /* Seed registry from scripts that ran on the initial full-page load */
+  document.querySelectorAll('script[src]').forEach(function (s) {
+    _executed[s.getAttribute('src').split('?')[0]] = true;
+  });
 
   function runScripts(parsedBody, done) {
-    /* Collect external srcs that are new to this page */
-    var loaded = _loadedSrcs();
     var toLoad = [];
     parsedBody.querySelectorAll('script[src]').forEach(function (s) {
       var src = s.getAttribute('src');
-      if (!loaded[src.split('?')[0]]) toLoad.push(src);
+      if (!_executed[src.split('?')[0]]) toLoad.push(src);
     });
 
     function runInline() {
@@ -104,10 +101,13 @@
     var remaining = toLoad.length;
     toLoad.forEach(function (src) {
       var ns = document.createElement('script');
-      ns.setAttribute('src', src);   // setAttribute keeps the relative path as-is so _loadedSrcs dedup works
-      ns.onload = ns.onerror = function () {
-        remaining--;
-        if (remaining === 0) runInline();
+      ns.setAttribute('src', src);
+      ns.onload = function () {
+        _executed[src.split('?')[0]] = true;  /* mark as actually executed */
+        if (--remaining === 0) runInline();
+      };
+      ns.onerror = function () {
+        if (--remaining === 0) runInline();
       };
       document.head.appendChild(ns);
     });
