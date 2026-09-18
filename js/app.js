@@ -1,4 +1,4 @@
-/* AbiLearn Main Application Logic v73 */
+/* AbiLearn Main Application Logic v96 */
 
 /* ── SCROLL-HIDE HEADER ── */
 (function() {
@@ -525,29 +525,43 @@ function _isMCQDefined(subjectId) {
 function _loadMCQData(subjectId, callback) {
   var src = _MCQ_SRCS[subjectId];
   if (!src) { callback(); return; }
-  /* Data already in memory — fastest path */
   if (_isMCQDefined(subjectId)) { callback(); return; }
-  /* Script tag in DOM but still downloading (race condition on first load):
-     poll every 100 ms until the variable is defined (max 3 s). */
+
   var base = src.split('?')[0];
   var tagInDOM = false;
   document.querySelectorAll('script[src]').forEach(function(s) {
     if (s.getAttribute('src').split('?')[0] === base) tagInDOM = true;
   });
-  if (tagInDOM) {
+
+  function _pollUntilReady(onSuccess, onTimeout) {
     var attempts = 0;
     var poll = setInterval(function() {
-      if (_isMCQDefined(subjectId) || ++attempts > 30) {
+      if (_isMCQDefined(subjectId)) {
         clearInterval(poll);
-        callback();
+        onSuccess();
+      } else if (++attempts > 150) {
+        clearInterval(poll);
+        onTimeout();
       }
     }, 100);
+  }
+
+  function _showLoadError() {
+    var el = document.getElementById('tabContent');
+    if (el) el.innerHTML = '<div style="padding:3rem;text-align:center;color:var(--muted)">MCQ data is taking too long to load.<br>Please <a href="" onclick="location.reload();return false;" style="color:var(--accent)">refresh the page</a> and try again.</div>';
+  }
+
+  if (tagInDOM) {
+    /* Script tag already in DOM — poll until variable appears (max 15 s) */
+    _pollUntilReady(callback, _showLoadError);
     return;
   }
-  /* Script not in DOM at all — load it dynamically */
+
+  /* Script not in DOM — inject it, then poll (onload fires before const is accessible in some engines) */
   var ns = document.createElement('script');
   ns.setAttribute('src', src);
-  ns.onload = ns.onerror = callback;
+  ns.onload = function() { _pollUntilReady(callback, _showLoadError); };
+  ns.onerror = _showLoadError;
   document.head.appendChild(ns);
 }
 
