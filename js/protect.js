@@ -1,4 +1,4 @@
-/* AbiLearn Content Protection */
+/* AbiLearn Content Protection v2 */
 (function () {
   'use strict';
 
@@ -29,12 +29,9 @@
     if (ctrl && ['c','a','s','u','p'].includes(key))      { e.preventDefault(); return; }
     if (ctrl && shift && ['i','j','c','k'].includes(key)) { e.preventDefault(); return; }
     if (e.key === 'F12')                                  { e.preventDefault(); return; }
-    // PrintScreen — flash guard (screenshot may still be taken at OS level,
-    // but guard covers content for the render cycle after the key)
     if (e.key === 'PrintScreen' || e.key === 'PrtSc') {
       e.preventDefault(); _flashGuard(); return;
     }
-    // Mac: Cmd+Shift+3 / 4 / 5
     if (ctrl && shift && ['3','4','5'].includes(e.key)) {
       e.preventDefault(); _flashGuard(); return;
     }
@@ -58,10 +55,10 @@
     clearTimeout(_guardTimer);
     _guardTimer = setTimeout(function () {
       _guard.classList.remove('abl-guard-visible');
-    }, 400);
+    }, 500);
   }
 
-  // Hide content when tab is hidden (screen recording, OS switcher)
+  /* ── 7. VISIBILITY CHANGE ────────────────────── */
   document.addEventListener('visibilitychange', function () {
     _ensureGuard();
     if (document.visibilityState === 'hidden') {
@@ -74,12 +71,35 @@
     }
   });
 
-  // DevTools open heuristic
+  /* ── 8. WINDOW BLUR ──────────────────────────── */
+  /* Fires when the browser window loses focus — catches OS snipping tools
+   * (Win+Shift+S, Alt-Tab to screenshot app) that steal focus briefly      */
+  window.addEventListener('blur', function () { _flashGuard(); });
+
+  /* ── 9. DEVTOOLS HEURISTIC ───────────────────── */
   setInterval(function () {
     if ((window.outerWidth  - window.innerWidth  > 160) ||
         (window.outerHeight - window.innerHeight > 160)) {
       _flashGuard();
     }
   }, 1500);
+
+  /* ── 10. DIAGONAL WATERMARK ──────────────────── */
+  /* Renders a tiled watermark over the whole viewport at low opacity.
+   * Invisible during normal use; clearly visible in any screenshot.         */
+  (function () {
+    if (document.getElementById('abl-watermark')) return;
+    var wm  = document.createElement('div');
+    wm.id   = 'abl-watermark';
+    wm.setAttribute('aria-hidden', 'true');
+
+    var text = 'AbiLearn  ·  Confidential  ·  ';
+    var html = '';
+    for (var i = 0; i < 60; i++) {
+      html += '<span>' + text + '</span>';
+    }
+    wm.innerHTML = html;
+    document.body.appendChild(wm);
+  }());
 
 }());

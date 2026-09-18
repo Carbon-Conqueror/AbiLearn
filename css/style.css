@@ -1829,6 +1829,39 @@ footer {
   pointer-events: all;
 }
 
+/* ─── DIAGONAL WATERMARK ─────────────────────── */
+#abl-watermark {
+  position: fixed;
+  inset: -60%;
+  width: 220%;
+  height: 220%;
+  z-index: 2147483644;
+  pointer-events: none;
+  overflow: hidden;
+  display: flex;
+  flex-wrap: wrap;
+  align-content: flex-start;
+  transform: rotate(-38deg);
+  user-select: none;
+  -webkit-user-select: none;
+}
+#abl-watermark span {
+  display: block;
+  width: 100%;
+  font-size: 13px;
+  font-weight: 700;
+  font-family: sans-serif;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  color: rgba(91, 71, 222, 0.09);
+  white-space: nowrap;
+  padding: 22px 0;
+  line-height: 1;
+}
+@media print {
+  #abl-watermark { display: none !important; }
+}
+
 /* ─── FULLSCREEN FOCUS OVERLAY ────────────────── */
 #abl-fs-overlay {
   position: fixed;
