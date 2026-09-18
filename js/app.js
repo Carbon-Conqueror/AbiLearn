@@ -1,4 +1,4 @@
-/* AbiLearn Main Application Logic v96 */
+/* AbiLearn Main Application Logic v97 */
 
 /* ── SCROLL-HIDE HEADER ── */
 (function() {
@@ -449,6 +449,20 @@ function initSubjectPage(subjectId) {
   const subject = DATA.subjects.find(s => s.id === subjectId);
   if (!subject) return;
   _subjectPageSubject = subject;
+
+  /* Preload MCQ data in the background so the tab renders instantly on click */
+  if (_MCQ_SRCS[subjectId] && !_isMCQDefined(subjectId)) {
+    var _preBase = _MCQ_SRCS[subjectId].split('?')[0];
+    var _alreadyTagged = false;
+    document.querySelectorAll('script[src]').forEach(function(s) {
+      if (s.getAttribute('src').split('?')[0] === _preBase) _alreadyTagged = true;
+    });
+    if (!_alreadyTagged) {
+      var _pre = document.createElement('script');
+      _pre.setAttribute('src', _MCQ_SRCS[subjectId]);
+      document.head.appendChild(_pre);
+    }
+  }
 
   renderSubjectShell(subject);
   renderTabContent(subject, SUBJECT_TABS[subjectId][0].id);
