@@ -2721,13 +2721,13 @@ function buildScienceQBank() {
     const chDoneKey = 'science_qbank_' + ch.id;
     const chDone = getChapterDone(chDoneKey);
     return `
-    <div class="pdf-card" style="cursor:pointer" onclick="location.href='qbank.html?s=science&ch=${ch.id}&m=2m'">
+    <a class="pdf-card" href="qbank.html?s=science&ch=${ch.id}&m=2m" style="text-decoration:none;display:flex;align-items:center">
       <div class="pdf-card-info">
         <div class="pdf-card-title">${escH(ch.label)}</div>
         <div class="pdf-card-desc">2m · 3m · 5m</div>
       </div>
-      <a class="pdf-open-btn" href="qbank.html?s=science&ch=${ch.id}&m=2m">View</a>
-    </div>`;
+      <span class="pdf-open-btn">View</span>
+    </a>`;
   }).join('');
   return `
     <div>
@@ -2835,13 +2835,13 @@ function buildMathsQBank() {
     const chDoneKey = 'maths_qbank_' + ch.id;
     const chDone = getChapterDone(chDoneKey);
     return `
-    <div class="pdf-card" style="cursor:pointer" onclick="location.href='qbank.html?s=maths&ch=${ch.id}&m=2m'">
+    <a class="pdf-card" href="qbank.html?s=maths&ch=${ch.id}&m=2m" style="text-decoration:none;display:flex;align-items:center">
       <div class="pdf-card-info">
         <div class="pdf-card-title">${escH(ch.label)}</div>
         <div class="pdf-card-desc">2m · 3m · 5m</div>
       </div>
-      <a class="pdf-open-btn" href="qbank.html?s=maths&ch=${ch.id}&m=2m">View</a>
-    </div>`;
+      <span class="pdf-open-btn">View</span>
+    </a>`;
   }).join('');
   return `
     <div>
@@ -2964,13 +2964,13 @@ function buildSocialQBank() {
               const chDoneKey = 'social_qbank_' + s.key + '_' + chKey.replace(/[^a-zA-Z0-9_-]/g, '_');
               const chDone = getChapterDone(chDoneKey);
               return `
-              <div class="pdf-card" style="cursor:pointer" onclick="location.href='qbank.html?s=social&subj=${s.key}&ch=${chKey}&m=2m'">
+              <a class="pdf-card" href="qbank.html?s=social&subj=${s.key}&ch=${chKey}&m=2m" style="text-decoration:none;display:flex;align-items:center">
                 <div class="pdf-card-info">
                   <div class="pdf-card-title">${escH(d.title)}</div>
                   <div class="pdf-card-desc">2m · 3m · 5m</div>
                 </div>
-                <a class="pdf-open-btn" href="qbank.html?s=social&subj=${s.key}&ch=${chKey}&m=2m">View</a>
-              </div>`;
+                <span class="pdf-open-btn">View</span>
+              </a>`;
             }).join('')}
           </div>
         </div>`;
