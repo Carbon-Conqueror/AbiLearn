@@ -1087,9 +1087,9 @@ function buildFormulaSheet(subject) {
   if (!chapters.length && !cards) return buildComingSoon('Formula Sheet', 'Formulas will be added here soon.');
 
   return `
-    ${cards ? `<h2 class="section-title" style="margin-bottom:1rem">Formula Sheets</h2>${cards}` : ''}
+    ${cards ? `<h2 class="section-title" style="margin-bottom:1rem">Formula Sheet</h2>${cards}` : ''}
     ${chapters.length ? `
-      <h2 class="section-title" style="margin-bottom:1.5rem;margin-top:${cards ? '2rem' : '0'}">Formula Sheet ${subject.name}</h2>
+      <h2 class="section-title" style="margin-bottom:1.5rem;margin-top:${cards ? '2rem' : '0'}">Formula Sheet</h2>
       <div class="formula-sheet">
         ${chapters.map(ch => {
           const dk = subject.id + '_formula_' + ch.id;
@@ -1129,7 +1129,7 @@ function buildPracticeQuestions(subject) {
   });
   if (!allMCQs.length) return buildComingSoon('Practice Questions', 'Questions will be added here soon.');
   const letters = ['A', 'B', 'C', 'D'];
-  return `<h2 class="section-title" style="margin-bottom:0.5rem">Practice Questions</h2>
+  return `<h2 class="section-title" style="margin-bottom:0.5rem">Mcq Practice</h2>
     <p style="color:var(--muted);margin-bottom:1.5rem;font-size:0.88rem">Tap an option to check your answer</p>
     <div class="mcq-grid">
       ${allMCQs.map((q, qi) => `
