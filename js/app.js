@@ -516,16 +516,35 @@ var _MCQ_SRCS = {
   science: 'js/science-mcqs.js?v=2',
   social:  'js/social-mcqs-final.js?v=2'
 };
+function _isMCQDefined(subjectId) {
+  if (subjectId === 'science') return typeof SCIENCE_MCQS !== 'undefined';
+  if (subjectId === 'maths')   return typeof MATHS_MCQS   !== 'undefined';
+  if (subjectId === 'social')  return typeof SOCIAL_MCQS  !== 'undefined';
+  return false;
+}
 function _loadMCQData(subjectId, callback) {
   var src = _MCQ_SRCS[subjectId];
   if (!src) { callback(); return; }
-  /* Already in DOM? */
+  /* Data already in memory — fastest path */
+  if (_isMCQDefined(subjectId)) { callback(); return; }
+  /* Script tag in DOM but still downloading (race condition on first load):
+     poll every 100 ms until the variable is defined (max 3 s). */
   var base = src.split('?')[0];
-  var found = false;
+  var tagInDOM = false;
   document.querySelectorAll('script[src]').forEach(function(s) {
-    if (s.getAttribute('src').split('?')[0] === base) found = true;
+    if (s.getAttribute('src').split('?')[0] === base) tagInDOM = true;
   });
-  if (found) { callback(); return; }
+  if (tagInDOM) {
+    var attempts = 0;
+    var poll = setInterval(function() {
+      if (_isMCQDefined(subjectId) || ++attempts > 30) {
+        clearInterval(poll);
+        callback();
+      }
+    }, 100);
+    return;
+  }
+  /* Script not in DOM at all — load it dynamically */
   var ns = document.createElement('script');
   ns.setAttribute('src', src);
   ns.onload = ns.onerror = callback;
