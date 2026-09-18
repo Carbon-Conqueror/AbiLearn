@@ -1,4 +1,4 @@
-/* AbiLearn Main Application Logic v73 */
+/* AbiLearn Main Application Logic v96 */
 
 /* ── SCROLL-HIDE HEADER ── */
 (function() {
@@ -23,7 +23,6 @@
 const SUBJECT_TABS = {
   maths: [
     { id: 'formula-sheet',     label: 'Formulas' },
-    { id: 'maths-qbank',       label: 'Question Bank' },
     { id: 'practice-questions', label: 'MCQ Practice' },
     { id: 'pyqs',              label: 'PYQ Papers' },
   ],
@@ -52,7 +51,7 @@ const SUBJECT_TABS = {
   ]
 };
 
-/* ── FIRESTORE PROGRESS CACHE — populated after login by loadUserDataFromFirestore ── */
+/* ── FIRESTORE PROGRESS CACHE populated after login by loadUserDataFromFirestore ── */
 var _cachedPdfProgress     = {};
 var _cachedKnowledgeMap    = {};
 var _cachedChapterProgress = {};
@@ -75,7 +74,7 @@ function saveProgress(p) {
   try { localStorage.setItem('abilearn_progress_' + email, JSON.stringify(p)); } catch {}
 }
 
-/* Email-free instant chapter-tick cache — readable before auth resolves */
+/* Email-free instant chapter-tick cache readable before auth resolves */
 var _AL_CP_KEY = '_al_chprog';
 function _cpLoad(){ try{ return JSON.parse(localStorage.getItem(_AL_CP_KEY)||'{}'); }catch(e){ return {}; } }
 function _cpSave(key, done){
@@ -108,7 +107,7 @@ function getSubjectPct(subjectId) {
   return Math.round((done / sub.chapters.length) * 100);
 }
 
-/* Real-time chapter progress listener — keeps tick buttons live on subject pages */
+/* Real-time chapter progress listener keeps tick buttons live on subject pages */
 var _chapterProgressUnsub = null;
 function subscribeChapterProgress(uid) {
   if (_chapterProgressUnsub) { try { _chapterProgressUnsub(); } catch(e){} }
@@ -128,7 +127,7 @@ function subscribeChapterProgress(uid) {
     });
     if (syncChanged) { try { localStorage.setItem(_AL_CP_KEY, JSON.stringify(localCp)); } catch(e){} }
 
-    /* Patch visible tick buttons using getChapterDone — checks Firestore cache
+    /* Patch visible tick buttons using getChapterDone checks Firestore cache
        AND localStorage, so a just-saved tick never flashes off before Firestore confirms. */
     document.querySelectorAll('.chapter-done-btn').forEach(function(btn) {
       var key = btn.dataset.key || (btn.dataset.subject + '_chapter_' + btn.dataset.cid);
@@ -161,7 +160,7 @@ async function loadUserDataFromFirestore(uid) {
     _cachedChapterProgress = chProg  || {};
     /* Home page subject cards */
     if (document.getElementById('subjectsGrid')) renderSubjectCards();
-    /* Subject tab page — re-render so tick buttons reflect loaded state */
+    /* Subject tab page re-render so tick buttons reflect loaded state */
     if (_subjectPageSubject) {
       var activeBtn = document.querySelector('.tab-btn.active');
       var tabId = activeBtn ? activeBtn.dataset.tab : (SUBJECT_TABS[_subjectPageSubject.id] ? SUBJECT_TABS[_subjectPageSubject.id][0].id : null);
@@ -173,7 +172,7 @@ async function loadUserDataFromFirestore(uid) {
         btn.classList.toggle('done', isDone);
       });
     }
-    /* Learn page — app shell */
+    /* Learn page app shell */
     if (document.getElementById('appSubjectsGrid')) {
       renderAppSubjects();
       renderContinueLearning();
@@ -525,7 +524,7 @@ function _isMCQDefined(subjectId) {
 function _loadMCQData(subjectId, callback) {
   var src = _MCQ_SRCS[subjectId];
   if (!src) { callback(); return; }
-  /* Data already in memory — fastest path */
+  /* Data already in memory fastest path */
   if (_isMCQDefined(subjectId)) { callback(); return; }
   /* Script tag in DOM but still downloading (race condition on first load):
      poll every 100 ms until the variable is defined (max 3 s). */
@@ -544,7 +543,7 @@ function _loadMCQData(subjectId, callback) {
     }, 100);
     return;
   }
-  /* Script not in DOM at all — load it dynamically */
+  /* Script not in DOM at all load it dynamically */
   var ns = document.createElement('script');
   ns.setAttribute('src', src);
   ns.onload = ns.onerror = callback;
@@ -903,15 +902,21 @@ function toggleChapterDone(btn, key) {
 function pdfCards(subject, tab) {
   const list = (PDFS[subject.id] || {})[tab] || [];
   if (!list.length) return '';
+  const TAB_CAPTIONS = {
+    notes:   'Detailed Notes',
+    formula: 'Formula Sheet',
+    pyqs:    'Previous Year Question Papers',
+  };
+  const caption = TAB_CAPTIONS[tab] || '';
   return `<div class="pdf-cards-grid">
     ${list.map(p => {
       const done = getPDFDone(p.url);
       const isImg = _isImageUrl(p.url);
       return `
       <div class="pdf-card">
-        
         <div class="pdf-card-info">
           <div class="pdf-card-title">${escH(p.title)}</div>
+          ${caption ? `<div class="pdf-card-desc">${caption}</div>` : ''}
         </div>
         <button class="pdf-open-btn" onclick="openPDF('${escH(p.url)}','${escH(p.title)}')">Open</button>
       </div>`;
@@ -1012,7 +1017,7 @@ function renderPDF(url) {
   load.then(pdf => {
     body.innerHTML = '';
 
-    // clientWidth can be 0 on mobile before layout settles — fall back to innerWidth
+    // clientWidth can be 0 on mobile before layout settles fall back to innerWidth
     const rawW = body.clientWidth > 32 ? body.clientWidth : window.innerWidth;
     const containerW = rawW - 16;
     // Always render at ≥2× resolution for sharp, crisp output on all screens
@@ -1722,12 +1727,12 @@ function initChapterAccordion(container, subjectId) {
 
 function toggleDone(btn) {
   var user = (typeof getUser === 'function') ? getUser() : null;
-  // Firestore key — namespaced so it doesn't collide with formula/qbank/mcq ticks
+  // Firestore key namespaced so it doesn't collide with formula/qbank/mcq ticks
   var fsKey = btn.dataset.key || (btn.dataset.subject + '_chapter_' + btn.dataset.cid);
   var nowDone = !getChapterDone(fsKey);
   // Update in-memory cache
   _cachedChapterProgress[fsKey] = { done: nowDone };
-  // Instant email-free cache — readable before auth resolves on next visit
+  // Instant email-free cache readable before auth resolves on next visit
   _cpSave(fsKey, nowDone);
   // Legacy email-keyed localStorage (backwards compat)
   var legacyKey = btn.dataset.subject + '_' + btn.dataset.cid;
@@ -1778,7 +1783,7 @@ function buildGrammar() {
     return '<tr>' + cells.map(function(c){ return '<' + tag + '>' + c + '</' + tag + '>'; }).join('') + '</tr>';
   }
 
-  var tenses = acc('Tenses — All 12 Types',
+  var tenses = acc('Tenses All 12 Types',
     '<div style="overflow-x:auto"><table class="eng-table">' +
     trow(['Tense','Formula','Signal Words','Example'], true) +
     [
@@ -1796,7 +1801,7 @@ function buildGrammar() {
       ['Future Perfect Continuous','S + will + have + been + V‑ing','for + duration (future)','She will have been teaching for 20 years by 2026.'],
     ].map(function(r){ return trow(r, false); }).join('') +
     '</table></div>' +
-    '<div class="eng-note"><strong>Exam tip:</strong> In gap-filling, look for signal words first — they almost always tell you which tense to use. Present Perfect = just/already/yet/ever/never/since/for. Past Perfect = before/after/by the time (comparing two past events).</div>'
+    '<div class="eng-note"><strong>Exam tip:</strong> In gap-filling, look for signal words first they almost always tell you which tense to use. Present Perfect = just/already/yet/ever/never/since/for. Past Perfect = before/after/by the time (comparing two past events).</div>'
   );
 
   var articles = acc('Articles &amp; Determiners',
@@ -1809,15 +1814,15 @@ function buildGrammar() {
     trow(['Zero (no article)','Proper nouns; uncountable nouns in general sense; plural nouns in general sense','Water is essential. Dogs are loyal. India is a country. She plays chess.'], false) +
     '</table></div>' +
     '<p class="eng-h3">Key Determiners</p>' +
-    '<ul class="eng-list"><li><strong>some / any</strong> — some (affirmative), any (negative/questions): <em>I have some milk. Do you have any sugar?</em></li>' +
-    '<li><strong>much / many</strong> — much + uncountable, many + countable: <em>much water, many books</em></li>' +
-    '<li><strong>little / few</strong> — negative sense (not enough): <em>little hope, few friends</em></li>' +
-    '<li><strong>a little / a few</strong> — positive sense (some): <em>a little sugar, a few friends</em></li>' +
-    '<li><strong>each / every</strong> — both singular, each = individually, every = all collectively: <em>Each student has a book. Every student passed.</em></li>' +
-    '<li><strong>either / neither</strong> — either (one of two), neither (not one of two): <em>Either road leads to the station. Neither answer is correct.</em></li></ul>'
+    '<ul class="eng-list"><li><strong>some / any</strong> some (affirmative), any (negative/questions): <em>I have some milk. Do you have any sugar?</em></li>' +
+    '<li><strong>much / many</strong> much + uncountable, many + countable: <em>much water, many books</em></li>' +
+    '<li><strong>little / few</strong> negative sense (not enough): <em>little hope, few friends</em></li>' +
+    '<li><strong>a little / a few</strong> positive sense (some): <em>a little sugar, a few friends</em></li>' +
+    '<li><strong>each / every</strong> both singular, each = individually, every = all collectively: <em>Each student has a book. Every student passed.</em></li>' +
+    '<li><strong>either / neither</strong> either (one of two), neither (not one of two): <em>Either road leads to the station. Neither answer is correct.</em></li></ul>'
   );
 
-  var modals = acc('Modals — Uses &amp; Examples',
+  var modals = acc('Modals Uses &amp; Examples',
     '<div style="overflow-x:auto"><table class="eng-table">' +
     trow(['Modal','Primary Use','Example'], true) +
     [
@@ -1847,7 +1852,7 @@ function buildGrammar() {
     '<li><strong>Collective nouns:</strong> Singular when acting as one unit, plural when acting individually. <em>The team <u>has</u> won. The team <u>are</u> arguing among themselves.</em></li>' +
     '<li><strong>Indefinite pronouns (always singular):</strong> everyone, everyone, anyone, no one, someone, each, either, neither. <em>Everyone <u>is</u> ready.</em></li>' +
     '<li><strong>Words that look plural but are singular:</strong> news, mathematics, physics, economics, measles, politics. <em>The news <u>is</u> shocking.</em></li>' +
-    '<li><strong>Uncountable nouns:</strong> always singular — furniture, information, luggage, advice, knowledge. <em>The information <u>was</u> useful.</em></li>' +
+    '<li><strong>Uncountable nouns:</strong> always singular furniture, information, luggage, advice, knowledge. <em>The information <u>was</u> useful.</em></li>' +
     '<li><strong>"A number of" = plural; "The number of" = singular:</strong> <em>A number of students <u>were</u> absent. The number of students <u>is</u> increasing.</em></li>' +
     '<li><strong>With "as well as", "together with", "along with":</strong> verb agrees with the first subject only. <em>The principal, as well as teachers, <u>was</u> present.</em></li>' +
     '</ul>'
@@ -1904,7 +1909,7 @@ function buildGrammar() {
     'Exclamation: He said, "What a beautiful painting!" → He exclaimed that it was a very beautiful painting.</div>'
   );
 
-  var clauses = acc('Clauses — Noun, Adjective &amp; Adverb',
+  var clauses = acc('Clauses Noun, Adjective &amp; Adverb',
     '<p class="eng-h3">Noun Clause</p>' +
     '<p style="font-size:.85rem;line-height:1.65">Functions as Subject, Object, or Complement. Introduced by: <strong>that, if/whether, who, what, when, where, why, how</strong>.</p>' +
     '<div class="eng-eg">That he lied is surprising. (Subject) | She knows <u>that I am right</u>. (Object) | The truth is <u>that nobody came</u>. (Complement)</div>' +
@@ -1926,7 +1931,7 @@ function buildGrammar() {
     '</table></div>'
   );
 
-  var editing = acc('Editing, Omission &amp; Gap Filling — Exam Techniques',
+  var editing = acc('Editing, Omission &amp; Gap Filling Exam Techniques',
     '<p class="eng-h3">Editing (Spot the Error)</p>' +
     '<p style="font-size:.85rem;line-height:1.65">Each line has exactly one grammatical error. Common errors to watch for:</p>' +
     '<ul class="eng-list">' +
@@ -1942,13 +1947,13 @@ function buildGrammar() {
     '<div class="eng-eg">He is going __ school. → He is going <strong>to</strong> school.<br>She was standing __ the corner. → She was standing <strong>at</strong> the corner.</div>' +
     '<p class="eng-h3">Gap Filling Tips</p>' +
     '<ul class="eng-list">' +
-    '<li>Read the entire sentence before filling — context determines the answer</li>' +
+    '<li>Read the entire sentence before filling context determines the answer</li>' +
     '<li>Check for signal words (tense), collocations (verb + preposition), and grammar rules</li>' +
     '<li>Common verbs + prepositions: believe <em>in</em>, depend <em>on</em>, consist <em>of</em>, interested <em>in</em>, afraid <em>of</em>, good <em>at</em>, listen <em>to</em></li>' +
     '</ul>'
   );
 
-  var prepositions = acc('Prepositions — In / On / At &amp; Common Collocations',
+  var prepositions = acc('Prepositions In / On / At &amp; Common Collocations',
     '<p class="eng-h3">Time Prepositions</p>' +
     '<div style="overflow-x:auto"><table class="eng-table">' +
     trow(['Preposition','Used For','Examples'], true) +
@@ -1989,7 +1994,7 @@ function buildGrammar() {
     '<div class="eng-rule"><strong>Exam tip:</strong> In editing/gap filling, preposition errors are very common. Always check: (1) Is it a time or place context? (2) Is there a fixed verb-preposition or adjective-preposition collocation?</div>'
   );
 
-  var conjunctions = acc('Conjunctions — Coordinating, Subordinating &amp; Correlative',
+  var conjunctions = acc('Conjunctions Coordinating, Subordinating &amp; Correlative',
     '<p class="eng-h3">Coordinating Conjunctions (FANBOYS)</p>' +
     '<div style="overflow-x:auto"><table class="eng-table">' +
     trow(['Conjunction','Use','Example'], true) +
@@ -2024,14 +2029,14 @@ function buildGrammar() {
     '<div class="eng-note"><strong>Note:</strong> After "scarcely/hardly/no sooner," invert subject and auxiliary: <em>Scarcely had I sat down when…</em> (not "Scarcely I had sat")</div>'
   );
 
-  var degrees = acc('Degrees of Comparison — All Transformation Rules',
+  var degrees = acc('Degrees of Comparison All Transformation Rules',
     '<div class="eng-note">Three degrees: <strong>Positive</strong> (simple quality), <strong>Comparative</strong> (between two), <strong>Superlative</strong> (among three or more). In board exams, you must transform sentences from one degree to another without changing meaning.</div>' +
     '<p class="eng-h3">Formation Rules</p>' +
     '<div style="overflow-x:auto"><table class="eng-table">' +
     trow(['Type','Formation','Examples'], true) +
     trow(['Short adjectives (1–2 syllables)','Add -er / -est','fast→faster→fastest, tall→taller→tallest, big→bigger→biggest'], false) +
     trow(['Long adjectives (3+ syllables)','more / most + adjective','beautiful→more beautiful→most beautiful'], false) +
-    trow(['Irregular','No rule — memorise','good→better→best, bad→worse→worst, much/many→more→most, little→less→least'], false) +
+    trow(['Irregular','No rule memorise','good→better→best, bad→worse→worst, much/many→more→most, little→less→least'], false) +
     '</table></div>' +
     '<p class="eng-h3">Transformation: Positive ↔ Comparative ↔ Superlative</p>' +
     '<div style="overflow-x:auto"><table class="eng-table">' +
@@ -2050,17 +2055,17 @@ function buildGrammar() {
     '</ul>'
   );
 
-  var conditionals = acc('Conditionals — All 4 Types',
+  var conditionals = acc('Conditionals All 4 Types',
     '<div style="overflow-x:auto"><table class="eng-table">' +
     trow(['Type','Name','Structure','Use','Example'], true) +
     trow(['Zero','Zero Conditional','If + Simple Present, Simple Present','Universal truth / scientific fact','If you heat water to 100°C, it boils.'], false) +
     trow(['First','Real/Possible','If + Simple Present, will + V1','Likely/possible future situation','If it rains, we will cancel the match.'], false) +
     trow(['Second','Unreal/Hypothetical','If + Simple Past, would + V1','Imaginary or unlikely present situation','If I were a bird, I would fly freely.'], false) +
-    trow(['Third','Past Unreal','If + Past Perfect, would have + V3','Imaginary past — something that did NOT happen','If she had studied, she would have passed.'], false) +
+    trow(['Third','Past Unreal','If + Past Perfect, would have + V3','Imaginary past something that did NOT happen','If she had studied, she would have passed.'], false) +
     '</table></div>' +
     '<p class="eng-h3">Special Points</p>' +
     '<ul class="eng-list">' +
-    '<li>In Second Conditional: use <strong>"were"</strong> for all persons (not "was") — <em>If I were you, If he were here</em>. This is the grammatically correct form in formal writing.</li>' +
+    '<li>In Second Conditional: use <strong>"were"</strong> for all persons (not "was") <em>If I were you, If he were here</em>. This is the grammatically correct form in formal writing.</li>' +
     '<li>The "if clause" and "result clause" can be swapped: <em>We will cancel the match if it rains.</em> (no comma when if-clause is second)</li>' +
     '<li>Instead of "if not," use <strong>unless</strong>: <em>Unless you study, you will fail. = If you do not study, you will fail.</em></li>' +
     '<li>Mixed Conditional (Past condition + Present result): <em>If she had slept early, she would not be tired now.</em></li>' +
@@ -2070,7 +2075,7 @@ function buildGrammar() {
     'Advice → Conditional: "Work hard or you will fail." → "Unless you work hard, you will fail." / "If you do not work hard, you will fail."</div>'
   );
 
-  var nonfinites = acc('Non-Finites — Infinitive, Gerund &amp; Participle',
+  var nonfinites = acc('Non-Finites Infinitive, Gerund &amp; Participle',
     '<div class="eng-note">Non-finite verbs do not change with the subject or tense. They are: <strong>Infinitive</strong> (to + V1), <strong>Gerund</strong> (V-ing used as noun), and <strong>Participle</strong> (V-ing / V3 used as adjective).</div>' +
     '<p class="eng-h3">Infinitive (to + base form)</p>' +
     '<ul class="eng-list">' +
@@ -2101,7 +2106,7 @@ function buildGrammar() {
     '<div class="eng-eg"><strong>Meaning changes:</strong><br>Stop <em>to smoke</em> = stop in order to smoke | Stop <em>smoking</em> = quit the habit<br>Remember <em>to lock</em> = don\'t forget (future task) | Remember <em>locking</em> = recall doing it (past action)<br>Try <em>to sleep</em> = attempt | Try <em>sleeping</em> = experiment with it</div>'
   );
 
-  var transformation = acc('Sentence Transformation — Simple ↔ Compound ↔ Complex',
+  var transformation = acc('Sentence Transformation Simple ↔ Compound ↔ Complex',
     '<p class="eng-h3">Simple → Compound</p>' +
     '<p style="font-size:.85rem;line-height:1.65">Join two simple sentences with a coordinating conjunction (and, but, or, so, yet).</p>' +
     '<div class="eng-eg">Simple: He was tired. He kept working.<br>Compound: He was tired, <strong>but</strong> he kept working.<br><br>Simple: She studied hard. She passed the exam.<br>Compound: She studied hard, <strong>so</strong> she passed the exam.</div>' +
@@ -2123,7 +2128,7 @@ function buildGrammar() {
   );
 
   return '<h2 class="section-title" style="margin-bottom:.25rem">Grammar</h2>' +
-    '<p class="eng-sub">Click any topic to open full notes — all rules, tables and examples</p>' +
+    '<p class="eng-sub">Click any topic to open full notes all rules, tables and examples</p>' +
     '<div class="eng-stack">' + tenses + articles + modals + sva + voice + speech + clauses + editing + prepositions + conjunctions + degrees + conditionals + nonfinites + transformation + '</div>';
 }
 
@@ -2140,26 +2145,26 @@ function buildReading() {
     return '<tr>' + cells.map(function(c){ return '<' + tag + '>' + c + '</' + tag + '>'; }).join('') + '</tr>';
   }
 
-  var pattern = acc('Exam Pattern — Reading Section',
+  var pattern = acc('Exam Pattern Reading Section',
     '<div style="overflow-x:auto"><table class="eng-table">' +
     '<tr><th>Question</th><th>Type</th><th>Marks</th><th>What to do</th></tr>' +
     '<tr><td><strong>Q1</strong></td><td>Factual / Discursive Passage</td><td>10 marks</td><td>Multiple Choice + Short Answer + Vocabulary</td></tr>' +
     '<tr><td><strong>Q2</strong></td><td>Case-based / Data-based Passage</td><td>10 marks</td><td>MCQs based on graph, table, or case study</td></tr>' +
     '</table></div>' +
-    '<div class="eng-note"><strong>Time allocation:</strong> Spend ~10 min on Q1 passage, ~10 min on Q2. Always read questions first before the passage — saves time and guides focus.</div>'
+    '<div class="eng-note"><strong>Time allocation:</strong> Spend ~10 min on Q1 passage, ~10 min on Q2. Always read questions first before the passage saves time and guides focus.</div>'
   );
 
-  var strategy = acc('How to Attempt Any Passage — Step by Step',
+  var strategy = acc('How to Attempt Any Passage Step by Step',
     '<ol class="eng-list" style="padding-left:1.3rem">' +
-    '<li><strong>Read all questions first</strong> (2 min) — underline keywords in each question.</li>' +
-    '<li><strong>Skim the passage</strong> (1–2 min) — identify topic, tone, and structure.</li>' +
+    '<li><strong>Read all questions first</strong> (2 min) underline keywords in each question.</li>' +
+    '<li><strong>Skim the passage</strong> (1–2 min) identify topic, tone, and structure.</li>' +
     '<li><strong>Read carefully</strong>, marking portions that answer questions.</li>' +
-    '<li><strong>Answer factual questions directly</strong> — copy key phrases, paraphrase slightly. Never invent.</li>' +
-    '<li><strong>Inferential questions</strong> — the answer is implied. Look for cause-effect, contrast, or author\'s opinion.</li>' +
-    '<li><strong>Vocabulary questions</strong> — use context clues (surrounding words/sentences).</li>' +
-    '<li><strong>Check length</strong> — 1-mark answer = 1 sentence, 2-mark = 2–3 sentences.</li>' +
+    '<li><strong>Answer factual questions directly</strong> copy key phrases, paraphrase slightly. Never invent.</li>' +
+    '<li><strong>Inferential questions</strong> the answer is implied. Look for cause-effect, contrast, or author\'s opinion.</li>' +
+    '<li><strong>Vocabulary questions</strong> use context clues (surrounding words/sentences).</li>' +
+    '<li><strong>Check length</strong> 1-mark answer = 1 sentence, 2-mark = 2–3 sentences.</li>' +
     '</ol>' +
-    '<div class="eng-rule"><strong>Never guess from general knowledge.</strong> Every answer must be traceable to the passage — quote the relevant line in your mind before writing.</div>'
+    '<div class="eng-rule"><strong>Never guess from general knowledge.</strong> Every answer must be traceable to the passage quote the relevant line in your mind before writing.</div>'
   );
 
   var qtypes = acc('Types of Questions &amp; How to Answer Each',
@@ -2172,12 +2177,12 @@ function buildReading() {
     '<p style="font-size:.85rem;line-height:1.65">Find a word/phrase meaning the same as the given word, or find the meaning of a word used in the passage.</p>' +
     '<ul class="eng-list"><li>Look at the words immediately before and after the target word</li><li>Identify if the word is positive, negative, or neutral in context</li><li>Substitute your answer back in the sentence to verify it makes sense</li></ul>' +
     '<p class="eng-h3">4. Title / Heading Questions</p>' +
-    '<p style="font-size:.85rem;line-height:1.65">The title must cover the main idea of the <em>entire</em> passage — not just one paragraph. It should be concise, specific, and not too broad or narrow.</p>' +
+    '<p style="font-size:.85rem;line-height:1.65">The title must cover the main idea of the <em>entire</em> passage not just one paragraph. It should be concise, specific, and not too broad or narrow.</p>' +
     '<p class="eng-h3">5. MCQ Questions (Case-based Passage)</p>' +
     '<ul class="eng-list"><li>Eliminate obviously wrong options first</li><li>Verify your chosen answer against the passage</li><li>For graphs/tables: read the title, axes, legend before answering</li></ul>'
   );
 
-  var notemaking = acc('Note-Making — Format &amp; Complete Guide',
+  var notemaking = acc('Note-Making Format &amp; Complete Guide',
     '<div class="eng-note">Note-making is a structured summary. You must use a specific format with a title, abbreviations, and sub-points. Marks are awarded for format + content.</div>' +
     '<p class="eng-h3">Format</p>' +
     '<div class="eng-format-box">' +
@@ -2196,15 +2201,15 @@ function buildReading() {
     '</div>' +
     '<p class="eng-h3">Rules</p>' +
     '<ul class="eng-list">' +
-    '<li>Use short phrases — not full sentences</li>' +
+    '<li>Use short phrases not full sentences</li>' +
     '<li>Use at least <strong>4 abbreviations</strong> (list them at the bottom)</li>' +
     '<li>Have a clear heading/title for the entire notes</li>' +
     '<li>Minimum 2 main points, each with at least 2 sub-points</li>' +
-    '<li>Do not include personal opinions — only information from the passage</li>' +
+    '<li>Do not include personal opinions only information from the passage</li>' +
     '</ul>'
   );
 
-  var summary = acc('Summary Writing — How to Write',
+  var summary = acc('Summary Writing How to Write',
     '<div class="eng-note">In CBSE board, you may be asked to write a summary of the note-making passage in about 80 words. The summary must be in continuous prose (not bullet points).</div>' +
     '<p class="eng-h3">Steps</p>' +
     '<ol class="eng-list" style="padding-left:1.3rem">' +
@@ -2223,16 +2228,16 @@ function buildReading() {
     '</div>'
   );
 
-  var databased = acc('Data-Based / Case-Based Passage — Full Strategy',
-    '<div class="eng-note">Q2 in the board exam is a <strong>case-based passage</strong> — it includes a graph, table, pie chart, infographic, or a real-world case study. All questions are MCQs. You must read the visual data carefully.</div>' +
+  var databased = acc('Data-Based / Case-Based Passage Full Strategy',
+    '<div class="eng-note">Q2 in the board exam is a <strong>case-based passage</strong> it includes a graph, table, pie chart, infographic, or a real-world case study. All questions are MCQs. You must read the visual data carefully.</div>' +
     '<p class="eng-h3">Step-by-Step Approach</p>' +
     '<ol class="eng-list" style="padding-left:1.3rem">' +
     '<li><strong>Read the heading / title of the graph or table first.</strong> It tells you what is being measured and compared.</li>' +
     '<li><strong>Read axes labels</strong> (X-axis = horizontal, Y-axis = vertical) and note units (%, years, crore, etc.).</li>' +
-    '<li><strong>Read the legend</strong> (if a multi-line or multi-bar graph) — know which colour/pattern represents which category.</li>' +
+    '<li><strong>Read the legend</strong> (if a multi-line or multi-bar graph) know which colour/pattern represents which category.</li>' +
     '<li><strong>Identify the trend:</strong> Is something increasing, decreasing, fluctuating, or remaining stable?</li>' +
-    '<li><strong>Note the highest, lowest, and most dramatic change</strong> — these are almost always asked in MCQs.</li>' +
-    '<li><strong>Read the accompanying text/case study paragraph</strong> — some questions are based on this, not the visual.</li>' +
+    '<li><strong>Note the highest, lowest, and most dramatic change</strong> these are almost always asked in MCQs.</li>' +
+    '<li><strong>Read the accompanying text/case study paragraph</strong> some questions are based on this, not the visual.</li>' +
     '</ol>' +
     '<p class="eng-h3">Common Question Patterns</p>' +
     '<ul class="eng-list">' +
@@ -2242,17 +2247,17 @@ function buildReading() {
     '<li>"What can be inferred from the data?" → Look for the overall trend, not a single data point.</li>' +
     '<li>"What is the ratio/difference between X and Y?" → Calculate from given values.</li>' +
     '</ul>' +
-    '<div class="eng-rule"><strong>Common mistakes:</strong> (1) Confusing Y-axis values — always double-check units. (2) Choosing an option that sounds logically right but isn\'t supported by the data. Every MCQ answer must be traceable to the data given.</div>'
+    '<div class="eng-rule"><strong>Common mistakes:</strong> (1) Confusing Y-axis values always double-check units. (2) Choosing an option that sounds logically right but isn\'t supported by the data. Every MCQ answer must be traceable to the data given.</div>'
   );
 
-  var tone = acc('Author\'s Tone, Attitude &amp; Purpose — How to Identify',
+  var tone = acc('Author\'s Tone, Attitude &amp; Purpose How to Identify',
     '<div class="eng-note">Board exam questions often ask: "What is the author\'s tone?" or "The author\'s attitude towards X is…" This tests your ability to read between the lines.</div>' +
     '<p class="eng-h3">Common Tones &amp; Their Clues</p>' +
     '<div style="overflow-x:auto"><table class="eng-table">' +
     trow(['Tone','What it Means','Clue Words / Signals'], true) +
     trow(['Critical / Disapproving','Author finds fault, expresses dissatisfaction','unfortunately, regrettably, fails, neglects, shameful, alarming, despite, however'], false) +
     trow(['Appreciative / Admiring','Author praises or expresses admiration','commendable, remarkable, exceptional, praise, fortunately, successfully, admirably'], false) +
-    trow(['Neutral / Objective','No personal opinion — reports facts','it is observed, studies show, data indicates, according to, reportedly'], false) +
+    trow(['Neutral / Objective','No personal opinion reports facts','it is observed, studies show, data indicates, according to, reportedly'], false) +
     trow(['Persuasive / Argumentative','Author is trying to convince you','must, should, need to, it is essential, clearly, undoubtedly, there is no doubt'], false) +
     trow(['Sarcastic / Ironic','Saying the opposite of what is meant','seemingly, supposedly, "great" (used for something bad)'], false) +
     trow(['Nostalgic / Reflective','Looking back fondly or thoughtfully','once, used to, I remember, in those days, those were the times'], false) +
@@ -2262,13 +2267,13 @@ function buildReading() {
     '<p class="eng-h3">How to Answer "Tone" Questions</p>' +
     '<ul class="eng-list">' +
     '<li>Read the entire passage and note the <strong>overall mood</strong>, not just one sentence.</li>' +
-    '<li>Look at the adjectives and adverbs used — they reveal the author\'s feelings.</li>' +
+    '<li>Look at the adjectives and adverbs used they reveal the author\'s feelings.</li>' +
     '<li>Ask: Is the author FOR or AGAINST the topic? Is it emotional or factual? Personal or impersonal?</li>' +
     '<li>If two options both seem correct (e.g., "critical" and "concerned"), pick the one that matches the <strong>primary</strong> emotion of the whole passage.</li>' +
     '</ul>'
   );
 
-  var vocabulary = acc('Vocabulary Building — Prefixes, Suffixes &amp; Word Roots',
+  var vocabulary = acc('Vocabulary Building Prefixes, Suffixes &amp; Word Roots',
     '<p class="eng-h3">Common Prefixes</p>' +
     '<div style="overflow-x:auto"><table class="eng-table">' +
     trow(['Prefix','Meaning','Examples'], true) +
@@ -2310,7 +2315,7 @@ function buildReading() {
     '<div class="eng-rule"><strong>Strategy for vocabulary MCQs:</strong> If you don\'t know the word, use the prefix/suffix to guess the meaning. Then substitute your guess back in the sentence. If it makes sense, you\'re likely right.</div>'
   );
 
-  var noteEx = acc('Note-Making — Full Worked Example',
+  var noteEx = acc('Note-Making Full Worked Example',
     '<p class="eng-h3">Sample Passage</p>' +
     '<p style="font-size:.84rem;line-height:1.72;border-left:3px solid var(--accent);padding:.7rem 1rem;background:rgba(91,71,222,.05);border-radius:var(--radius-sm)">' +
     'Water is one of the most vital natural resources on Earth. Despite covering 71% of the planet\'s surface, only 2.5% of the world\'s water is fresh, and of that, less than 1% is accessible for human use. The growing human population and rapid industrialization have dramatically increased the demand for fresh water, while pollution and mismanagement have reduced its quality and availability. Agriculture consumes nearly 70% of all fresh water used globally, often through inefficient irrigation methods. Climate change is further aggravating the crisis by altering precipitation patterns, causing glaciers to melt, and making extreme droughts more frequent. Immediate steps such as rainwater harvesting, water recycling, drip irrigation, and stricter industrial regulations are urgently needed to ensure water security for future generations.' +
@@ -2337,18 +2342,18 @@ function buildReading() {
     'ind. = industrial    approx. = approximately' +
     '</div>' +
     '<p class="eng-h3">Model Summary (80 words)</p>' +
-    '<div class="eng-eg">Water is a critical but scarce resource — only 1% of the Earth\'s fresh water is accessible. Rising population, industrialisation, and poor agricultural practices have intensified the crisis. Climate change has worsened the situation through droughts and glacial melting. To address this, governments and individuals must adopt rainwater harvesting, water recycling, drip irrigation, and stricter regulations on industrial effluents. Immediate and collective action is essential to secure fresh water for generations to come.</div>'
+    '<div class="eng-eg">Water is a critical but scarce resource only 1% of the Earth\'s fresh water is accessible. Rising population, industrialisation, and poor agricultural practices have intensified the crisis. Climate change has worsened the situation through droughts and glacial melting. To address this, governments and individuals must adopt rainwater harvesting, water recycling, drip irrigation, and stricter regulations on industrial effluents. Immediate and collective action is essential to secure fresh water for generations to come.</div>'
   );
 
-  var summaryEx = acc('Summary Writing — Techniques &amp; Worked Example',
-    '<div class="eng-note">A summary condenses a passage into about <strong>80 words</strong> in continuous prose. It captures the main idea and key supporting points — no personal opinion, no new examples.</div>' +
+  var summaryEx = acc('Summary Writing Techniques &amp; Worked Example',
+    '<div class="eng-note">A summary condenses a passage into about <strong>80 words</strong> in continuous prose. It captures the main idea and key supporting points no personal opinion, no new examples.</div>' +
     '<p class="eng-h3">The 5-Step Method</p>' +
     '<ol class="eng-list" style="padding-left:1.3rem">' +
-    '<li><strong>Identify the theme</strong> — What is the passage mainly about? (1 concept)</li>' +
-    '<li><strong>List main points</strong> (from your notes) — 3 to 4 key ideas only; ignore examples and statistics that aren\'t essential.</li>' +
-    '<li><strong>Write in your own words</strong> — paraphrase; do not copy sentences from the passage.</li>' +
-    '<li><strong>Connect ideas with linking words</strong> — use transitions to make it flow as one paragraph.</li>' +
-    '<li><strong>Count words and trim</strong> — if over 90 words, remove adjectives and minor details.</li>' +
+    '<li><strong>Identify the theme</strong> What is the passage mainly about? (1 concept)</li>' +
+    '<li><strong>List main points</strong> (from your notes) 3 to 4 key ideas only; ignore examples and statistics that aren\'t essential.</li>' +
+    '<li><strong>Write in your own words</strong> paraphrase; do not copy sentences from the passage.</li>' +
+    '<li><strong>Connect ideas with linking words</strong> use transitions to make it flow as one paragraph.</li>' +
+    '<li><strong>Count words and trim</strong> if over 90 words, remove adjectives and minor details.</li>' +
     '</ol>' +
     '<p class="eng-h3">What to Include vs. Exclude</p>' +
     '<div style="overflow-x:auto"><table class="eng-table">' +
@@ -2386,7 +2391,7 @@ function buildWriting() {
     return '<tr>' + cells.map(function(c){ return '<' + tag + '>' + c + '</' + tag + '>'; }).join('') + '</tr>';
   }
 
-  var formalLetter = acc('Formal Letter — Application / Complaint / Editor',
+  var formalLetter = acc('Formal Letter Application / Complaint / Editor',
     '<p class="eng-h3">Format</p>' +
     '<div class="eng-format-box">' +
     'Sender\'s Address\n' +
@@ -2406,42 +2411,42 @@ function buildWriting() {
     '<p class="eng-h3">Key Rules</p>' +
     '<ul class="eng-list">' +
     '<li>Use <strong>Yours faithfully</strong> when you don\'t know the person\'s name; <strong>Yours sincerely</strong> when you do.</li>' +
-    '<li>Tone must be formal and polite — never rude even in a complaint.</li>' +
+    '<li>Tone must be formal and polite never rude even in a complaint.</li>' +
     '<li>Subject line must be clear and specific: "Regarding installation of street lights in Sector 5."</li>' +
     '<li>Paragraphs: Introduction (purpose) → Body (details) → Conclusion (request/action).</li>' +
     '</ul>' +
     '<div class="eng-eg"><strong>Letter to the Editor opening:</strong><br>The Editor<br>The Hindustan Times<br>New Delhi<br><br>Subject: Menace of plastic pollution in urban parks<br><br>Sir,<br>Through the columns of your esteemed newspaper, I wish to draw the attention of the concerned authorities towards the increasing menace of plastic pollution in public parks...</div>'
   );
 
-  var informalLetter = acc('Informal Letter — Friend / Relative',
+  var informalLetter = acc('Informal Letter Friend / Relative',
     '<p class="eng-h3">Format</p>' +
     '<div class="eng-format-box">' +
     'Your Address\n' +
     'Date\n\n' +
     'Dear [Name],\n\n' +
     'Opening: Greet and mention why you\'re writing.\n\n' +
-    'Body: Main message — news, experience, invitation, advice etc.\n\n' +
+    'Body: Main message news, experience, invitation, advice etc.\n\n' +
     'Closing: Regards to family, end warmly.\n\n' +
     'Yours lovingly/affectionately/sincerely,\n' +
     'Your Name' +
     '</div>' +
     '<p class="eng-h3">Key Rules</p>' +
     '<ul class="eng-list">' +
-    '<li>Conversational, warm tone — you may use contractions (I\'m, you\'re, it\'s).</li>' +
+    '<li>Conversational, warm tone you may use contractions (I\'m, you\'re, it\'s).</li>' +
     '<li>No subject line needed.</li>' +
     '<li>Address the friend by first name: Dear Priya, Dear Rahul.</li>' +
     '<li>Closing: "Yours lovingly" (close family), "Yours affectionately" (close friend).</li>' +
     '</ul>'
   );
 
-  var analytical = acc('Analytical Paragraph — Based on Outline / Chart / Data',
+  var analytical = acc('Analytical Paragraph Based on Outline / Chart / Data',
     '<div class="eng-note">An analytical paragraph is a single, well-organized paragraph (100–120 words) that analyses a given outline, graph, table, or data. It must have a clear topic sentence, supporting details with data, and a conclusion.</div>' +
     '<p class="eng-h3">Structure</p>' +
     '<div class="eng-format-box">' +
-    '[Topic Sentence — state what the data/outline is about]\n' +
+    '[Topic Sentence state what the data/outline is about]\n' +
     '[2–3 Supporting sentences with specific figures/facts from the data]\n' +
     '[Comparison or trend analysis]\n' +
-    '[Concluding sentence — inference or summary]' +
+    '[Concluding sentence inference or summary]' +
     '</div>' +
     '<p class="eng-h3">Useful Language</p>' +
     '<div class="eng-eg">' +
@@ -2473,7 +2478,7 @@ function buildWriting() {
     '<p class="eng-h3">Key Rules</p>' +
     '<ul class="eng-list">' +
     '<li>Keep within <strong>50 words</strong> (school notices).</li>' +
-    '<li>Use formal, impersonal language — passive voice where appropriate.</li>' +
+    '<li>Use formal, impersonal language passive voice where appropriate.</li>' +
     '<li>NOTICE and TITLE in CAPITALS.</li>' +
     '<li>Must answer: What is happening? When? Where? Who should attend? What should they do?</li>' +
     '</ul>' +
@@ -2485,7 +2490,7 @@ function buildWriting() {
     '<div class="eng-format-box">' +
     'Title: ________________________\n' +
     'By: [Author Name]\n\n' +
-    'Introduction (Hook + Topic introduction — 2–3 sentences)\n\n' +
+    'Introduction (Hook + Topic introduction 2–3 sentences)\n\n' +
     'Body Paragraph 1: First main point with explanation and example\n\n' +
     'Body Paragraph 2: Second main point\n\n' +
     'Body Paragraph 3: Third point / Counterpoint\n\n' +
@@ -2494,7 +2499,7 @@ function buildWriting() {
     '<p class="eng-h3">Key Rules</p>' +
     '<ul class="eng-list">' +
     '<li>Word limit: usually <strong>100–120 words</strong> (strictly follow instructions).</li>' +
-    '<li>Begin with an interesting hook — a question, quote, or surprising fact.</li>' +
+    '<li>Begin with an interesting hook a question, quote, or surprising fact.</li>' +
     '<li>Use subheadings within the body if the article is long.</li>' +
     '<li>Write in third person or first person depending on the topic.</li>' +
     '<li>Avoid very casual language; maintain a semi-formal tone.</li>' +
@@ -2508,23 +2513,23 @@ function buildWriting() {
     'Good morning/afternoon! I, [Name], [Class], stand before you to speak on "[Topic]".\n\n' +
     'Introduction: Define or introduce the topic (1–2 sentences).\n\n' +
     'Main Points (2–3 paragraphs):\n' +
-    '  — Point 1 with explanation/example\n' +
-    '  — Point 2 with example\n' +
-    '  — Counter argument / broader perspective\n\n' +
+    '  Point 1 with explanation/example\n' +
+    '  Point 2 with example\n' +
+    '  Counter argument / broader perspective\n\n' +
     'Conclusion: Summarize + call to action / inspiring close.\n\n' +
     'Thank you.' +
     '</div>' +
     '<p class="eng-h3">Techniques for an Effective Speech</p>' +
     '<ul class="eng-list">' +
-    '<li><strong>Rhetorical questions:</strong> "Have you ever wondered why…?" — engages the audience.</li>' +
+    '<li><strong>Rhetorical questions:</strong> "Have you ever wondered why…?" engages the audience.</li>' +
     '<li><strong>Tripling:</strong> "We must act now, act together, and act decisively."</li>' +
     '<li><strong>Anaphora (repetition):</strong> "We need cleaner cities. We need cleaner rivers. We need cleaner air."</li>' +
     '<li><strong>Statistics/facts:</strong> Make the speech credible and specific.</li>' +
-    '<li><strong>Inclusive language:</strong> "We", "our", "together" — makes audience feel part of the message.</li>' +
+    '<li><strong>Inclusive language:</strong> "We", "our", "together" makes audience feel part of the message.</li>' +
     '</ul>'
   );
 
-  var debate = acc('Debate Writing — For &amp; Against',
+  var debate = acc('Debate Writing For &amp; Against',
     '<div class="eng-note">A debate is a formal speech taking a clear position (for or against) on a given topic. You argue one side convincingly. Word limit: usually 150–200 words.</div>' +
     '<p class="eng-h3">Format</p>' +
     '<div class="eng-format-box">' +
@@ -2548,7 +2553,7 @@ function buildWriting() {
     '<div class="eng-rule"><strong>Marks are given for:</strong> Format (salutation, stance, vote of thanks), Content (at least 3 valid arguments), Language (varied vocabulary, sentence structures), Coherence (logical flow). Never forget to state which SIDE you are arguing.</div>'
   );
 
-  var diary = acc('Diary Entry — Format, Rules &amp; Example',
+  var diary = acc('Diary Entry Format, Rules &amp; Example',
     '<div class="eng-note">A diary entry is a personal, informal record of your thoughts, experiences, or feelings on a particular day. It is written in first person and reflects the writer\'s emotions honestly.</div>' +
     '<p class="eng-h3">Format</p>' +
     '<div class="eng-format-box">' +
@@ -2566,28 +2571,28 @@ function buildWriting() {
     '<ul class="eng-list">' +
     '<li>Always <strong>first person</strong> (I, me, my, we). Never "he/she said."</li>' +
     '<li>Use <strong>past tense</strong> to describe events; present tense for current feelings.</li>' +
-    '<li>Informal, personal, honest tone — use contractions (I\'m, couldn\'t, it\'s).</li>' +
+    '<li>Informal, personal, honest tone use contractions (I\'m, couldn\'t, it\'s).</li>' +
     '<li>Show emotions vividly: "I was overwhelmed with joy", "My heart sank", "I couldn\'t believe my eyes".</li>' +
     '<li>Word limit: 100–120 words (strictly follow exam instructions).</li>' +
     '</ul>' +
     '<div class="eng-eg"><strong>Model opening:</strong><br>' +
     'Wednesday, 15 March 20XX, 10:30 p.m.<br>' +
     'Dear Diary,<br>' +
-    'Today was perhaps the most memorable day of my school life. When my name was announced as the winner of the National Science Olympiad, I could hardly believe my ears. The hall erupted in applause and I felt a wave of emotions — relief, pride, and immense gratitude for my teachers who had guided me through months of preparation. My parents\' tearful smiles were worth every sleepless night. Today, I truly understood what hard work can achieve.<br>' +
+    'Today was perhaps the most memorable day of my school life. When my name was announced as the winner of the National Science Olympiad, I could hardly believe my ears. The hall erupted in applause and I felt a wave of emotions relief, pride, and immense gratitude for my teachers who had guided me through months of preparation. My parents\' tearful smiles were worth every sleepless night. Today, I truly understood what hard work can achieve.<br>' +
     '[Asha]</div>'
   );
 
-  var email = acc('Formal Email — Format &amp; Complete Guide',
+  var email = acc('Formal Email Format &amp; Complete Guide',
     '<div class="eng-note">Formal emails follow a structure similar to formal letters but are shorter and more direct. In the board exam, you may be asked to write an email to a principal, teacher, editor, or official.</div>' +
     '<p class="eng-h3">Format</p>' +
     '<div class="eng-format-box">' +
     'To: recipient@example.com\n' +
     'From: yourname@example.com\n' +
-    'Subject: [Clear, specific subject — e.g., Request for Leave on 20 March]\n\n' +
+    'Subject: [Clear, specific subject e.g., Request for Leave on 20 March]\n\n' +
     'Dear Sir/Madam / Dear [Name],\n\n' +
     'Opening: State who you are and the purpose of the email.\n' +
     '(e.g., "I am a student of Class X, Section A. I am writing to request...")\n\n' +
-    'Body: Explain in detail — reason, background, specific request or complaint.\n\n' +
+    'Body: Explain in detail reason, background, specific request or complaint.\n\n' +
     'Action line: What you want the reader to do.\n' +
     '(e.g., "I would be grateful if you could grant me leave...")\n\n' +
     'Closing: Express gratitude and end politely.\n\n' +
@@ -2597,10 +2602,10 @@ function buildWriting() {
     '</div>' +
     '<p class="eng-h3">Key Differences from Formal Letter</p>' +
     '<ul class="eng-list">' +
-    '<li>No sender\'s postal address at the top — only email addresses.</li>' +
+    '<li>No sender\'s postal address at the top only email addresses.</li>' +
     '<li>Subject line is <strong>mandatory</strong> and must be specific.</li>' +
-    '<li>Shorter paragraphs — 3 to 4 sentences each maximum.</li>' +
-    '<li>Same formal tone and vocabulary as a letter — no slang, abbreviations, or emojis.</li>' +
+    '<li>Shorter paragraphs 3 to 4 sentences each maximum.</li>' +
+    '<li>Same formal tone and vocabulary as a letter no slang, abbreviations, or emojis.</li>' +
     '<li>Closing: "Regards," "Yours faithfully," or "With warm regards," depending on familiarity.</li>' +
     '</ul>' +
     '<div class="eng-eg"><strong>Subject line examples:</strong><br>' +
@@ -2610,12 +2615,12 @@ function buildWriting() {
     'Avoid: Leave (too vague) | Avoid: URGENT!!! (unprofessional)</div>'
   );
 
-  var report = acc('Report Writing — Newspaper Report &amp; Factual Report',
-    '<div class="eng-note">Two types appear in board exams: (1) <strong>Newspaper Report</strong> — journalistic style for an event or incident. (2) <strong>Factual Report</strong> — formal document (submitted to an authority).</div>' +
+  var report = acc('Report Writing Newspaper Report &amp; Factual Report',
+    '<div class="eng-note">Two types appear in board exams: (1) <strong>Newspaper Report</strong> journalistic style for an event or incident. (2) <strong>Factual Report</strong> formal document (submitted to an authority).</div>' +
     '<p class="eng-h3">Newspaper Report Format</p>' +
     '<div class="eng-format-box">' +
-    'HEADLINE (in CAPITALS — bold, catchy, present tense)\n\n' +
-    'Dateline: City Name, Date — [Reporter Name]\n\n' +
+    'HEADLINE (in CAPITALS bold, catchy, present tense)\n\n' +
+    'Dateline: City Name, Date [Reporter Name]\n\n' +
     'Lead Paragraph (most important facts first):\n' +
     '  WHO did WHAT, WHEN, WHERE, WHY in 2–3 sentences.\n\n' +
     'Body Paragraphs:\n' +
@@ -2642,7 +2647,7 @@ function buildWriting() {
     '1. Purpose / Objective\n' +
     '   [What the report is about and why it was prepared]\n\n' +
     '2. Findings / Observations\n' +
-    '   [What was found, observed, measured — use bullet points]\n\n' +
+    '   [What was found, observed, measured use bullet points]\n\n' +
     '3. Conclusion / Recommendations\n' +
     '   [What should be done / what was decided]\n\n' +
     '[Signature]\n[Name &amp; Designation]' +
@@ -2653,12 +2658,12 @@ function buildWriting() {
     'CITY CELEBRATES WORLD ENVIRONMENT DAY WITH CLEANLINESS DRIVE</div>'
   );
 
-  var writingTips = acc('Writing Skills — Common Errors &amp; Marks Scoring Tips',
+  var writingTips = acc('Writing Skills Common Errors &amp; Marks Scoring Tips',
     '<p class="eng-h3">Most Common Mistakes That Cost Marks</p>' +
     '<ul class="eng-list">' +
     '<li><strong>Exceeding word limit:</strong> Examiners note it. Stay within ±10% of the given limit.</li>' +
-    '<li><strong>Missing format elements:</strong> Forgetting subject line (email), designation (notice/report), or salutation (letter) — each missing element loses marks.</li>' +
-    '<li><strong>Informal language in formal writing:</strong> Using "gonna", "wanna", short forms — heavily penalized.</li>' +
+    '<li><strong>Missing format elements:</strong> Forgetting subject line (email), designation (notice/report), or salutation (letter) each missing element loses marks.</li>' +
+    '<li><strong>Informal language in formal writing:</strong> Using "gonna", "wanna", short forms heavily penalized.</li>' +
     '<li><strong>Copying the question:</strong> Rephrase the topic given in the question; do not repeat it word-for-word as your opening line.</li>' +
     '<li><strong>No coherence:</strong> Jumping between ideas without linking words makes the writing feel disconnected.</li>' +
     '<li><strong>Poor handwriting / spelling:</strong> Affects overall impression. Practice common difficult spellings.</li>' +
@@ -2675,10 +2680,10 @@ function buildWriting() {
     trow(['show / prove','demonstrate, illustrate, substantiate, indicate, reveal'], false) +
     trow(['very','extremely, tremendously, remarkably, profoundly, exceptionally'], false) +
     '</table></div>' +
-    '<p class="eng-h3">Sentence Variety — Avoid Repetition</p>' +
+    '<p class="eng-h3">Sentence Variety Avoid Repetition</p>' +
     '<ul class="eng-list">' +
     '<li>Mix short and long sentences. A short punchy line after several long ones creates impact.</li>' +
-    '<li>Begin sentences differently — not always with "I" or "The". Try: "Having considered…", "It is evident that…", "Given the circumstances…"</li>' +
+    '<li>Begin sentences differently not always with "I" or "The". Try: "Having considered…", "It is evident that…", "Given the circumstances…"</li>' +
     '<li>Use passive voice occasionally to add variety: "It has been widely acknowledged that…"</li>' +
     '</ul>'
   );
@@ -2716,7 +2721,7 @@ function buildScienceQBank() {
     <div class="pdf-card" style="cursor:pointer" onclick="location.href='qbank.html?s=science&ch=${ch.id}&m=2m'">
       <div class="pdf-card-info">
         <div class="pdf-card-title">${escH(ch.label)}</div>
-        <div class="pdf-card-desc">${n2 + n3 + n5} questions</div>
+        <div class="pdf-card-desc">2m · 3m · 5m</div>
       </div>
       <a class="pdf-open-btn" href="qbank.html?s=science&ch=${ch.id}&m=2m">View</a>
     </div>`;
@@ -2781,7 +2786,7 @@ function openScienceQBank(chId) {
     modal.addEventListener('click', e => { if (e.target === modal) closeQBankModal(); });
   }
   document.getElementById('qbankModalTitle').textContent = d.title;
-  document.getElementById('qbankModalMeta').textContent = `${d.q2m.length + d.q3m.length + d.q5m.length} questions`;
+  document.getElementById('qbankModalMeta').textContent = `2m · 3m · 5m`;
   document.getElementById('qbankModalBody').innerHTML = _buildQBankBody(d, '2m', `openScienceQBankSection(${chId}`);
   _lastModalTrigger = _lastModalTrigger || document.activeElement;
   modal.classList.add('open');
@@ -2830,7 +2835,7 @@ function buildMathsQBank() {
     <div class="pdf-card" style="cursor:pointer" onclick="location.href='qbank.html?s=maths&ch=${ch.id}&m=2m'">
       <div class="pdf-card-info">
         <div class="pdf-card-title">${escH(ch.label)}</div>
-        <div class="pdf-card-desc">${n2 + n3 + n5} questions</div>
+        <div class="pdf-card-desc">2m · 3m · 5m</div>
       </div>
       <a class="pdf-open-btn" href="qbank.html?s=maths&ch=${ch.id}&m=2m">View</a>
     </div>`;
@@ -2867,7 +2872,7 @@ function openMathsQBank(chId) {
     modal.addEventListener('click', e => { if (e.target === modal) closeMathsQBankModal(); });
   }
   document.getElementById('mathsQBankModalTitle').textContent = d.title;
-  document.getElementById('mathsQBankModalMeta').textContent = `${d.q2m.length + d.q3m.length + d.q5m.length} questions`;
+  document.getElementById('mathsQBankModalMeta').textContent = `2m · 3m · 5m`;
   document.getElementById('mathsQBankModalBody').innerHTML = _buildQBankBody(d, '2m', `openMathsQBankSection(${chId}`);
   _lastModalTrigger = _lastModalTrigger || document.activeElement;
   modal.classList.add('open');
@@ -2959,7 +2964,7 @@ function buildSocialQBank() {
               <div class="pdf-card" style="cursor:pointer" onclick="location.href='qbank.html?s=social&subj=${s.key}&ch=${chKey}&m=2m'">
                 <div class="pdf-card-info">
                   <div class="pdf-card-title">${escH(d.title)}</div>
-                  <div class="pdf-card-desc">${d.q2m.length + d.q3m.length + d.q5m.length} questions</div>
+                  <div class="pdf-card-desc">2m · 3m · 5m</div>
                 </div>
                 <a class="pdf-open-btn" href="qbank.html?s=social&subj=${s.key}&ch=${chKey}&m=2m">View</a>
               </div>`;
@@ -2996,7 +3001,7 @@ function openSocialQBank(subj, chKey) {
     modal.addEventListener('click', e => { if (e.target === modal) closeSocialQBankModal(); });
   }
   document.getElementById('socialQBankModalTitle').textContent = d.title;
-  document.getElementById('socialQBankModalMeta').textContent = `${d.q2m.length + d.q3m.length + d.q5m.length} questions`;
+  document.getElementById('socialQBankModalMeta').textContent = `2m · 3m · 5m`;
   document.getElementById('socialQBankModalBody').innerHTML = _buildQBankBody(d, '2m', `openSocialQBankSection('${subj}','${chKey}'`);
   _lastModalTrigger = _lastModalTrigger || document.activeElement;
   modal.classList.add('open');
@@ -3239,19 +3244,19 @@ function buildComingSoon(name, msg) {
    MY PROGRESS TAB
 ══════════════════════════════════════ */
 /*
- * buildProgressTab — comprehensive progress across ALL resource types.
+ * buildProgressTab comprehensive progress across ALL resource types.
  *
  * Data sources:
- *   _cachedKnowledgeMap    — MCQ mastery per chapter (from answering MCQs)
- *   _cachedChapterProgress — tick completion per section/chapter (formula, qbank, mcq, chapter)
- *   _cachedPdfProgress     — PDF / resource completion (opened + marked done)
+ *   _cachedKnowledgeMap    MCQ mastery per chapter (from answering MCQs)
+ *   _cachedChapterProgress tick completion per section/chapter (formula, qbank, mcq, chapter)
+ *   _cachedPdfProgress     PDF / resource completion (opened + marked done)
  *
  * Tick key naming convention (written by each section builder):
- *   {subjectId}_formula_{chId}                — formula sheet chapter tick
- *   {subjectId}_qbank_{chId}                  — question bank chapter tick
- *   {subjectId}_mcq_{chId}                    — MCQ section chapter tick
- *   {subjectId}_chapter_{chId}                — "Most Important" chapter tick
- *   social_qbank_{section}_{normalizedChKey}  — social Q-Bank chapter tick
+ *   {subjectId}_formula_{chId}                formula sheet chapter tick
+ *   {subjectId}_qbank_{chId}                  question bank chapter tick
+ *   {subjectId}_mcq_{chId}                    MCQ section chapter tick
+ *   {subjectId}_chapter_{chId}                "Most Important" chapter tick
+ *   social_qbank_{section}_{normalizedChKey}  social Q-Bank chapter tick
  *
  * Overall % = (done chapter ticks + done PDFs) / (expected ticks + total subject PDFs) × 100
  */
@@ -3433,7 +3438,7 @@ function openTestMode(chId, title, subject) {
     document.body.appendChild(modal);
   }
 
-  document.getElementById('testModalTitle').textContent = 'Test: Ch ' + chId + ' — ' + title;
+  document.getElementById('testModalTitle').textContent = 'Test: Ch ' + chId + ' ' + title;
   document.getElementById('testModalMeta').textContent = testMCQs.length + ' Questions · 10 min';
   document.getElementById('testScorePill').textContent = '0 / 0';
   var timerEl = document.getElementById('testTimer');
@@ -3572,7 +3577,7 @@ function initLandingPage() {
 }
 
 /* ══════════════════════════════════════
-   LEARN PAGE — APP SHELL (learn.html)
+   LEARN PAGE APP SHELL (learn.html)
 ══════════════════════════════════════ */
 function initLearnPage() {
   renderAppSubjects();
@@ -3624,7 +3629,7 @@ function renderAppTools() {
     },
     {
       name: 'Mind Maps',
-      desc: 'Visual concept maps for every chapter — see the big picture before diving into details.',
+      desc: 'Visual concept maps for every chapter see the big picture before diving into details.',
       href: 'mind-maps.html',
       onclick: '',
       iconBg: 'rgba(16,185,129,.12)',

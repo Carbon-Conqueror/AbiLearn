@@ -1,6 +1,6 @@
 const MATHS_QBANK_CH = {
   1: {
-    title: "Ch 1 — Real Numbers",
+    title: "Ch 1: Real Numbers",
     q2m: [
       "Find the HCF and LCM of 96 and 404 by prime factorisation method.",
       "Find the HCF and LCM of 336 and 54 using prime factorisation.",
@@ -153,7 +153,7 @@ const MATHS_QBANK_CH = {
     ]
   },
   2: {
-    title: "Ch 2 — Polynomials",
+    title: "Ch 2: Polynomials",
     q2m: [
       "The graph of y = p(x) is given where the curve intersects the x-axis at 2 points. How many zeroes does p(x) have? What is the minimum degree of the polynomial?",
       "The graph of y = p(x) touches the x-axis at exactly one point. How many zeroes does p(x) have?",
@@ -314,7 +314,7 @@ const MATHS_QBANK_CH = {
     ]
   },
   3: {
-    title: "Ch 3 — Pair of Linear Equations in Two Variables",
+    title: "Ch 3: Pair of Linear Equations in Two Variables",
     q2m: [
       "Check graphically whether the pair x + 3y = 6 and 2x − 3y = 12 is consistent. If yes, find the solution.",
       "On comparing the ratios a₁/a₂, b₁/b₂, c₁/c₂, find whether the pair 5x − 4y + 8 = 0 and 7x + 6y − 9 = 0 is consistent or inconsistent.",
@@ -466,7 +466,7 @@ const MATHS_QBANK_CH = {
       "For what values of k does the pair 3x + y = 3 and (2k − 1)x + (k − 1)y = 2k + 1 have no solution?",
       "In △ABC, ∠A = x°, ∠B = (3x − 2)°, ∠C = y°. Also ∠C − ∠B = 9°. Find the three angles.",
       "Solve: x + y/2 = 4 and x/3 + 2y = 5. Hence find the point that divides the line segment joining (x, y) and (0, 0) in ratio 2:3.",
-      "A person covers 14 km in 4 hours — partly on foot at 3 km/hr and partly by bicycle at 5 km/hr. Find the distance covered on foot.",
+      "A person covers 14 km in 4 hours: partly on foot at 3 km/hr and partly by bicycle at 5 km/hr. Find the distance covered on foot.",
       "Solve: (x+y−8)/2 = (x+2y−14)/3 = (3x+y−12)/11.",
       "A two-digit number is 18 more than the number formed by reversing its digits. The sum of the digits is 12. Find the number.",
       "Solve: bx/a − ay/b = a² + b² and x + y = 2ab/(a² + b²) × (a + b).",
@@ -476,7 +476,7 @@ const MATHS_QBANK_CH = {
     ]
   },
   4: {
-    title: "Ch 4 — Quadratic Equations",
+    title: "Ch 4: Quadratic Equations",
     q2m: [
       "Check whether x² − 5x + 6 = 0 is a quadratic equation.",
       "Check whether (x − 2)² + 1 = 2x − 3 is a quadratic equation.",
@@ -640,7 +640,7 @@ const MATHS_QBANK_CH = {
     ]
   },
   5: {
-    title: "Ch 5 — Arithmetic Progressions",
+    title: "Ch 5: Arithmetic Progressions",
     q2m: [
       "Which of the following are APs? If they form an AP, find the common difference d and write three more terms: 2, 4, 8, 16, ...",
       "Which of the following are APs? 0, −4, −8, −12, ... Find d and write three more terms.",
@@ -805,7 +805,7 @@ const MATHS_QBANK_CH = {
     ]
   },
   7: {
-    title: "Ch 7 — Coordinate Geometry",
+    title: "Ch 7: Coordinate Geometry",
     q2m: [
       "Find the distance between the points A(2, 3) and B(4, 1).",
       "Find the distance between the points P(−6, 7) and Q(−1, −5).",
@@ -951,7 +951,7 @@ const MATHS_QBANK_CH = {
     ]
   },
   8: {
-    title: "Ch 8 — Introduction to Trigonometry",
+    title: "Ch 8: Introduction to Trigonometry",
     q2m: [
       "In triangle ABC right-angled at B, AB = 24 cm and BC = 7 cm. Find sin A, cos A, and tan A.",
       "In triangle ABC right-angled at B, AB = 5 cm and AC = 13 cm. Find all six trigonometric ratios of angle A.",
@@ -1098,7 +1098,7 @@ const MATHS_QBANK_CH = {
     ]
   },
   9: {
-    title: "Ch 9 — Some Applications of Trigonometry",
+    title: "Ch 9: Some Applications of Trigonometry",
     q2m: [],
     q3m: [
       "Two points A and B are on the same side of a tower and in the same straight line with its base. The angles of depression of these points from the top of the tower are 60° and 45° respectively. If the height of the tower is 15 m, find the distance between points A and B.",
@@ -1204,7 +1204,7 @@ const MATHS_QBANK_CH = {
     ]
   },
   11: {
-    title: "Ch 11 — Areas Related to Circles",
+    title: "Ch 11: Areas Related to Circles",
     q2m: [
       "Find the area and circumference of a circle of radius 14 cm.",
       "Find the radius of a circle whose circumference is 44 cm.",
@@ -1266,7 +1266,7 @@ const MATHS_QBANK_CH = {
       "A square OABC is inscribed in a quadrant OPBQ of a circle. If OA = 20 cm, find the area of the shaded region. (Use π = 3.14)",
       "OACB is a quadrant of a circle with centre O and radius 7 cm. If OD = 4 cm, find the area of the shaded region.",
       "Three circles are drawn with vertices of an equilateral triangle of side 4 cm as centres such that each circle touches the other two. Find the area inside the triangle but outside the three circles.",
-      "Three semicircles are drawn — one on AB = 36 cm as diameter and one each on halves of AB. Find the area of the shaded region.",
+      "Three semicircles are drawn: one on AB = 36 cm as diameter and one each on halves of AB. Find the area of the shaded region.",
       "A round table cover has six equal designs. If the radius of the cover is 28 cm, find the cost of making the designs at Rs. 0.35 per cm². (Use √3 = 1.7)",
       "An umbrella has 8 equally spaced ribs. If the radius is 45 cm, find the area between two consecutive ribs.",
       "A car has two wipers which do not overlap. Each wiper has a blade of length 25 cm sweeping through an angle of 115°. Find the total area cleaned at each sweep.",
@@ -1370,7 +1370,7 @@ const MATHS_QBANK_CH = {
     ]
   },
   12: {
-    title: "Ch 12 — Surface Areas and Volumes",
+    title: "Ch 12: Surface Areas and Volumes",
     q2m: [
       "Two cubes each of volume 64 cm³ are joined end to end. Find the surface area of the resulting cuboid.",
       "A cylindrical pencil sharpened at one end is a combination of which two solids? Name both.",
@@ -1477,7 +1477,7 @@ const MATHS_QBANK_CH = {
       "Water flows at 10 km/hr through a pipe of internal diameter 7 cm into a rectangular tank of dimensions 50 m × 44 m. Find the time for the level to rise by 21 cm.",
       "A well of diameter 14 m is dug 15 m deep. The earth dug out is spread to form a platform 44 m long and 27 m wide. Find the height of the platform.",
       "A bucket is in the shape of a cylinder of height 28 cm with a hemispherical depression at the bottom. The base radius is 7 cm. Find the inner surface area of the bucket and the volume of water it can hold.",
-      "Milk in a cylindrical container of radius 30 cm and height 40 cm is transferred to two containers simultaneously — one conical of radius 10 cm and height 18 cm, and one spherical of radius 6 cm. After filling both, find the height of milk remaining in the cylindrical container.",
+      "Milk in a cylindrical container of radius 30 cm and height 40 cm is transferred to two containers simultaneously: one conical of radius 10 cm and height 18 cm, and one spherical of radius 6 cm. After filling both, find the height of milk remaining in the cylindrical container.",
       "A solid iron pole consists of a cylinder of height 1.8 m and base diameter 28 cm. On the top is a hemisphere of same radius. Find the volume of iron used and the mass if density is 8 g/cm³.",
       "The interior of a building is in the form of a right circular cylinder of diameter 4.3 m and height 3.8 m surmounted by a cone whose vertical angle is 90°. Find the area of the surface, the floor is excluded, to be painted at the rate of Rs. 25 per m².",
       "A spherical ball of diameter 21 cm is melted and recasted into small cones of height 3 cm and base radius 1.5 cm. Find the number of cones obtained and the ratio of the surface area of the sphere to the total surface area of all the cones.",
@@ -1515,7 +1515,7 @@ const MATHS_QBANK_CH = {
     ]
   },
   13: {
-    title: "Ch 13 — Statistics",
+    title: "Ch 13: Statistics",
     q2m: [
       "Find the class mark of the class 25-35. Also state the formula for mean using assumed mean method.",
       "Write the formula for mean using step-deviation method. State what each symbol represents.",
@@ -1661,7 +1661,7 @@ const MATHS_QBANK_CH = {
     ]
   },
   14: {
-    title: "Ch 14 — Probability",
+    title: "Ch 14: Probability",
     q2m: [
       "A die is thrown once. Find the probability of getting a prime number.",
       "A die is thrown once. Find the probability of getting a number which is not a factor of 36.",
@@ -1687,7 +1687,7 @@ const MATHS_QBANK_CH = {
       "A bag contains 3 red, 5 white, and 7 blue balls. A ball is drawn at random. Find the probability that the ball drawn is blue.",
       "A bag contains 5 red balls and some blue balls. If the probability of drawing a blue ball is double that of a red ball, find the number of blue balls.",
       "A bag contains 6 red balls, 8 white balls, and 4 green balls. A ball is drawn at random. Find the probability that it is not green.",
-      "A jar contains 24 marbles — some are green and others blue. If a marble is drawn at random, the probability that it is green is 2/3. Find the number of blue marbles.",
+      "A jar contains 24 marbles: some are green and others blue. If a marble is drawn at random, the probability that it is green is 2/3. Find the number of blue marbles.",
       "If P(E) = 0.05, what is the probability of not E?",
       "An event E has probability 0.38. Find P(not E). Also explain what complementary events mean.",
       "A box contains 20 balls numbered 1 to 20. A ball is drawn at random. Find the probability that the number on the ball is divisible by both 2 and 3.",
@@ -1737,7 +1737,7 @@ const MATHS_QBANK_CH = {
       "Joel has 6 coins of Rs. 2, 5 coins of Rs. 10, and 3 coins of Rs. 20 in his pocket. He draws one coin randomly. Find the probability that: (i) the coin is sufficient to pay Rs. 7 (ii) the coin is of Rs. 20.",
       "The probability of selecting a green marble from a bag is 1/4 and the probability of selecting a blue marble is 1/3. Find the probability of selecting neither a green nor a blue marble if the bag contains only green, blue, and red marbles.",
       "The probability that a student passes in Mathematics is 2/3 and the probability that he passes in English is 4/9. If the probability of passing at least one subject is 4/5, find the probability that he passes in both subjects.",
-      "Savita and Hamida are friends. What is the probability that both will have: (i) different birthdays (ii) the same birthday — ignoring leap year?"
+      "Savita and Hamida are friends. What is the probability that both will have: (i) different birthdays (ii) the same birthday: ignoring leap year?"
     ,
       "A bag contains 6 red, 4 blue, and 2 green balls. A ball drawn. Find P(red), P(not blue), P(green or red).",
       "A die is thrown twice. Find P(sum = 7) and P(sum is even).",

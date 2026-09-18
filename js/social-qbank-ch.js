@@ -1,7 +1,7 @@
 const SOCIAL_QBANK_CH = {
   "history": {
     "h1": {
-      title: "Ch 1 — The Rise of Nationalism in Europe",
+      title: "Ch 1: The Rise of Nationalism in Europe",
       q2m: [
         "Who was Frédéric Sorrieu? What was his utopian vision in the 1848 prints?",
         "What is meant by the term 'nation-state'? Give one example from 19th century Europe.",
@@ -39,7 +39,7 @@ const SOCIAL_QBANK_CH = {
         "Explain the major outcomes of the Treaty of Vienna of 1815. Mention any three points.",
         "How did the new middle class contribute to the growth of nationalism in Europe? Explain three points.",
         "Why did the 1848 revolution of liberals fail in Europe? State three reasons.",
-        "How did culture — art, poetry, and music — help in constructing national identity in Europe? Give examples.",
+        "How did culture: art, poetry, and music: help in constructing national identity in Europe? Give examples.",
         "What role did women play in nationalist movements in Europe? Were they given equal political rights?",
         "Explain how a wave of economic nationalism strengthened the wider nationalist sentiment in Europe.",
         "How did local populations react to French rule in conquered territories?",
@@ -84,7 +84,7 @@ const SOCIAL_QBANK_CH = {
       ]
     },
     "h2": {
-      title: "Ch 2 — Nationalism in India",
+      title: "Ch 2: Nationalism in India",
       q2m: [
         "What is meant by 'Begar'? Why did peasants resent it?",
         "What was the Rowlatt Act of 1919? Why was it called a 'Black Act'?",
@@ -158,7 +158,7 @@ const SOCIAL_QBANK_CH = {
         "What were the causes of the Second Round Table Conference failing? How did it impact the nationalist movement?",
         "Explain the circumstances that led to the Chauri Chaura incident. Why did Gandhiji consider it a grave setback?",
         "How did the Non-Cooperation Movement affect relationships between different communities in India? Explain with examples.",
-        "Describe the role of Mahatma Gandhi's three local satyagrahas — Champaran, Kheda, and Ahmedabad — before the Non-Cooperation Movement.",
+        "Describe the role of Mahatma Gandhi's three local satyagrahas: Champaran, Kheda, and Ahmedabad: before the Non-Cooperation Movement.",
         "What was the significance of 'Purna Swaraj' declared at the Lahore Congress? How was it different from earlier demands for self-rule?",
         "Explain how the revival of Indian folklore and folk traditions helped build nationalist sentiment in India.",
         "Describe the role of the press and literature in spreading nationalist ideas during the freedom movement.",
@@ -172,13 +172,13 @@ const SOCIAL_QBANK_CH = {
         "Describe the role of poor peasantry in the Civil Disobedience Movement.",
         "List all the different social groups which joined the Non-Cooperation Movement of 1921. Choose any three and explain their hopes and struggles.",
         "Discuss the Salt March to make clear why it was an effective symbol of resistance against colonialism.",
-        "How did the Non-Cooperation Movement unfold across India — in cities, towns, and the countryside? Explain with examples.",
+        "How did the Non-Cooperation Movement unfold across India: in cities, towns, and the countryside? Explain with examples.",
         "\"Tribal peasants interpreted the message of Mahatma Gandhi and the idea of Swaraj in their own way.\" Justify this with examples from Andhra Pradesh and Gudem Hills.",
         "Explain the factors that led Gandhiji to launch the Civil Disobedience Movement in 1930. What were its main features and how did it spread across India?",
         "Why did Mahatma Gandhi decide to withdraw the Non-Cooperation Movement in 1922? What were the consequences of this withdrawal on the nationalist movement?",
         "How had the First World War created a new economic and political situation in India? Explain with five examples.",
         "How did the Civil Disobedience Movement differ from the Non-Cooperation Movement? Compare across five points including methods, participation, and outcome.",
-        "Explain how different classes — merchants, industrialists, peasants, workers, and women — participated in the Civil Disobedience Movement. What were its limitations?",
+        "Explain how different classes: merchants, industrialists, peasants, workers, and women: participated in the Civil Disobedience Movement. What were its limitations?",
         "Examine the role of women in India's nationalist movement. How did their participation change from the Non-Cooperation Movement to the Civil Disobedience Movement?",
         "How did the Rowlatt Act, the Jallianwala Bagh massacre, and the Khilafat issue together contribute to the launch and spread of the Non-Cooperation Movement?",
         "Describe the events and significance of the Dandi March. Why is it considered a turning point in India's freedom struggle?",
@@ -189,11 +189,11 @@ const SOCIAL_QBANK_CH = {
         "Describe the main events of the Civil Disobedience Movement from 1930 to 1934. Why was it ultimately called off? What did it achieve?",
         "\"The Non-Cooperation Movement was the first true mass movement in India's freedom struggle.\" Justify this statement with five supporting points covering different sections of society.",
         "How did the Indian National Congress evolve from a limited elite organisation to a mass-based national movement through the 1920s and 1930s? Trace the role of Gandhiji.",
-        "Explain the three local satyagrahas launched by Gandhiji — Champaran (1917), Kheda (1917), and Ahmedabad (1918). How did they prepare the ground for the Non-Cooperation Movement?"
+        "Explain the three local satyagrahas launched by Gandhiji: Champaran (1917), Kheda (1917), and Ahmedabad (1918). How did they prepare the ground for the Non-Cooperation Movement?"
       ]
     },
     "h5": {
-      title: "Ch 5 — Print Culture and the Modern World",
+      title: "Ch 5: Print Culture and the Modern World",
       q2m: [
         "Who published 'Samvad Kaumudi'? What was its significance?",
         "What is meant by 'calligraphy'? In which countries was it practised before the printing press?",
@@ -297,14 +297,14 @@ const SOCIAL_QBANK_CH = {
         "Describe the role of print in creating a new sense of community and national identity in Europe. How did print help standardise languages?",
         "How did the printing press become connected with the ideas of the Enlightenment? Explain with reference to Voltaire, Rousseau, and other thinkers.",
         "Trace the history of print culture in India from the arrival of the Portuguese printing press to the growth of the nationalist press in the 20th century.",
-        "How did print culture give rise to new kinds of literature — novels, pamphlets, newspapers — in Europe? Explain the social significance of each.",
+        "How did print culture give rise to new kinds of literature: novels, pamphlets, newspapers: in Europe? Explain the social significance of each.",
         "\"Censorship of print by both colonial and religious authorities showed how powerful the printed word had become.\" Justify this statement with five examples from Europe and India."
       ]
     }
   },
   "geography": {
     "g1": {
-      title: "Ch 1 — Resources and Development",
+      title: "Ch 1: Resources and Development",
       q2m: [
         "What is a 'Resource'? Give two examples.",
         "Distinguish between biotic and abiotic resources with one example each.",
@@ -401,7 +401,7 @@ const SOCIAL_QBANK_CH = {
         "How does soil formation take place? Explain the factors responsible for soil formation and give examples.",
         "\"Sustainable development requires a balance between resource use and conservation.\" Discuss with reference to Gandhiji's views and the Rio Earth Summit 1992.",
         "Explain how mining, over-irrigation, deforestation, and overgrazing have together caused severe land degradation in different states of India.",
-        "Classify all types of resources on four different bases — origin, exhaustibility, ownership, and status of development — with one example of each.",
+        "Classify all types of resources on four different bases: origin, exhaustibility, ownership, and status of development: with one example of each.",
         "Explain the importance of soil as a resource. Describe the different types of soil found in India and their uses.",
         "Describe five different methods used to control soil erosion in plains and hilly areas of India.",
         "\"Technology, institutions and human beings together transform materials into resources.\" Justify this statement with five examples.",
@@ -415,7 +415,7 @@ const SOCIAL_QBANK_CH = {
       ]
     },
     "g2": {
-      title: "Ch 2 — Forest and Wildlife Resources",
+      title: "Ch 2: Forest and Wildlife Resources",
       q2m: [
         "What is biodiversity? What percentage of world species does India have?",
         "What is flora? What is fauna? Give one example of each.",
@@ -523,7 +523,7 @@ const SOCIAL_QBANK_CH = {
       ]
     },
     "g3": {
-      title: "Ch 3 — Water Resources",
+      title: "Ch 3: Water Resources",
       q2m: [
         "Explain three reasons why water scarcity exists even in water-abundant regions of India.",
         "How has urbanisation added to water scarcity in India? Explain with three points.",
@@ -543,7 +543,7 @@ const SOCIAL_QBANK_CH = {
         "Explain three reasons why different water harvesting techniques developed in different regions of India.",
         "Describe any three traditional water harvesting methods practised in India with examples from different regions.",
         "Explain how dams affect the natural flow of rivers and harm aquatic life. Give three points.",
-        "Explain three causes of water scarcity in India — population, agriculture, and industries.",
+        "Explain three causes of water scarcity in India: population, agriculture, and industries.",
         "Describe the functioning of the rooftop rainwater harvesting system in Rajasthan. How is water stored and used?",
         "Explain the Narmada Bachao Andolan. What issues did it raise? What was its impact?",
         "How do inter-state water disputes arise from multipurpose projects? Give two examples from India.",
@@ -588,7 +588,7 @@ const SOCIAL_QBANK_CH = {
         "Explain the concept of sustainable water management. What steps can individuals, communities, and the government take to conserve water in India?",
         "Describe the working of the Narmada Bachao Andolan. Why did it begin? Who were involved? What were the short-term and long-term outcomes?",
         "How do inter-state water disputes arise in India? Explain with reference to the Krishna-Godavari dispute and the Sabarmati basin conflict.",
-        "Explain how India's ancient tradition of water harvesting — from the Chandragupta Maurya era to the 14th century — reflects sophisticated understanding of water conservation.",
+        "Explain how India's ancient tradition of water harvesting: from the Chandragupta Maurya era to the 14th century: reflects sophisticated understanding of water conservation.",
         "Describe five ecological and social problems caused by the construction of large dams in India. What alternative approaches can be considered.",
         "How is rainwater harvesting practised in different parts of India? Describe techniques used in Rajasthan, Bengal, Western Himalayas, and Meghalaya with five examples.",
         "\"The benefits of multipurpose projects are not shared equally.\" Discuss who benefits and who suffers from large dam projects in India with five points.",
@@ -616,7 +616,7 @@ const SOCIAL_QBANK_CH = {
         "Explain the concept of sustainable water management. What steps can individuals, communities, and the government take to conserve water in India?",
         "Describe the working of the Narmada Bachao Andolan. Why did it begin? Who were involved? What were the short-term and long-term outcomes?",
         "How do inter-state water disputes arise in India? Explain with reference to the Krishna-Godavari dispute and the Sabarmati basin conflict.",
-        "Explain how India's ancient tradition of water harvesting — from the Chandragupta Maurya era to the 14th century — reflects sophisticated understanding of water conservation.",
+        "Explain how India's ancient tradition of water harvesting: from the Chandragupta Maurya era to the 14th century: reflects sophisticated understanding of water conservation.",
         "Describe five ecological and social problems caused by the construction of large dams in India. What alternative approaches can be considered.",
         "How is rainwater harvesting practised in different parts of India? Describe techniques used in Rajasthan, Bengal, Western Himalayas, and Meghalaya with five examples.",
         "\"The benefits of multipurpose projects are not shared equally.\" Discuss who benefits and who suffers from large dam projects in India with five points.",
@@ -627,7 +627,7 @@ const SOCIAL_QBANK_CH = {
       ]
     },
     "g4": {
-      title: "Ch 4 — Agriculture",
+      title: "Ch 4: Agriculture",
       q2m: [
         "What is agriculture? What fraction of India's population depends on it?",
         "What is primitive subsistence farming? On what factors does it depend?",
@@ -640,7 +640,7 @@ const SOCIAL_QBANK_CH = {
         "What are Kharif crops? Name four examples and their sowing and harvesting period.",
         "What are Rabi crops? Name four examples and their sowing and harvesting period.",
         "What are Zaid crops? Give four examples.",
-        "Barley is a Rabi crop, Cotton is a Kharif crop — name one Zaid crop.",
+        "Barley is a Rabi crop, Cotton is a Kharif crop: name one Zaid crop.",
         "Which millet is rich in iron, calcium, and other micronutrients?",
         "What is Aus, Aman, and Boro? Which crop do they refer to?",
         "Which state is the leading producer of sugarcane in India?",
@@ -660,7 +660,7 @@ const SOCIAL_QBANK_CH = {
         "Name four agricultural products exported by India.",
         "What is the Kissan Credit Card scheme? What is its purpose?",
         "What is the Gene Revolution? How does it differ from the Green Revolution?",
-        "Rice is grown in three varieties — name them and state which season each belongs to."
+        "Rice is grown in three varieties: name them and state which season each belongs to."
       ],
       q3m: [
         "Distinguish between subsistence farming and commercial farming with three points each.",
@@ -671,7 +671,7 @@ const SOCIAL_QBANK_CH = {
         "Explain the geographical conditions required for growing cotton in India. Name two major producing states.",
         "Explain the geographical conditions required for growing sugarcane. Which state is the leading producer?",
         "Explain the geographical conditions required for growing jute. Why is jute losing its market?",
-        "Explain rubber cultivation in India — its importance, geographical conditions, and two major producing states.",
+        "Explain rubber cultivation in India: its importance, geographical conditions, and two major producing states.",
         "Explain the geographical conditions required for growing tea in India. Name the major producing states.",
         "Explain the geographical conditions required for growing coffee in India. Which state is the major producer?",
         "Explain how irrigation has changed the cropping pattern in many regions of India.",
@@ -715,29 +715,29 @@ const SOCIAL_QBANK_CH = {
         "Describe the geographical conditions, distribution, and importance of jute cultivation in India. Why is it losing market share?",
         "Explain the types of farming practised in India. Describe primitive subsistence, intensive subsistence, commercial, and plantation farming with examples.",
         "\"India is an agrarian country.\" Justify this statement by explaining the role of agriculture in India's economy with five points.",
-        "Explain the three cropping seasons of India — Kharif, Rabi, and Zaid — with sowing time, harvesting time, climate needed, and two crops each.",
+        "Explain the three cropping seasons of India: Kharif, Rabi, and Zaid: with sowing time, harvesting time, climate needed, and two crops each.",
         "Explain the impact of globalisation on Indian agriculture. What challenges has it created for small farmers?",
         "\"The growth rate in agriculture is decelerating.\" Explain the causes and describe the steps taken by the government to modernise agriculture.",
-        "Describe the Green Revolution — its causes, methods, areas where it succeeded, positive effects, and negative consequences.",
+        "Describe the Green Revolution: its causes, methods, areas where it succeeded, positive effects, and negative consequences.",
         "Explain any five factors responsible for low productivity of crops in India. What measures can improve agricultural productivity?",
         "Describe the features of plantation agriculture in India. Explain with reference to tea, coffee, and rubber.",
         "Explain how irrigation has transformed the agricultural landscape of India. Give five examples of how cropping patterns have changed.",
-        "Explain the various revolutions in Indian agriculture — Green, White, Blue, Yellow, and Gene Revolutions — and their significance.",
-        "Describe the major food crops of India — rice, wheat, millets, maize, and pulses — with their geographical conditions and producing states.",
-        "Describe the major cash crops of India — sugarcane, cotton, jute, and oilseeds — with their geographical conditions, producing states, and industrial significance.",
+        "Explain the various revolutions in Indian agriculture: Green, White, Blue, Yellow, and Gene Revolutions: and their significance.",
+        "Describe the major food crops of India: rice, wheat, millets, maize, and pulses: with their geographical conditions and producing states.",
+        "Describe the major cash crops of India: sugarcane, cotton, jute, and oilseeds: with their geographical conditions, producing states, and industrial significance.",
         "\"Agriculture in India faces multiple challenges even after decades of independence.\" Discuss five major challenges and suggest solutions.",
         "Explain the role of the government in developing Indian agriculture through land reforms, minimum support price, and institutional support. Give five examples.",
-        "Compare and contrast rice and wheat farming in India across five parameters — climate, rainfall, soil, season, and major producing states.",
-        "Describe the contribution of beverage crops — tea and coffee — to India's economy. Explain their geographical conditions, distribution, and export significance.",
+        "Compare and contrast rice and wheat farming in India across five parameters: climate, rainfall, soil, season, and major producing states.",
+        "Describe the contribution of beverage crops: tea and coffee: to India's economy. Explain their geographical conditions, distribution, and export significance.",
         "Explain how commercial farming has transformed certain regions of India. Discuss with reference to Punjab, Haryana, and Maharashtra.",
-        "\"Rice is grown in three types — Aus, Aman, and Boro — in different seasons.\" Explain the distribution, season, and significance of rice cultivation across different regions of India.",
+        "\"Rice is grown in three types: Aus, Aman, and Boro: in different seasons.\" Explain the distribution, season, and significance of rice cultivation across different regions of India.",
         "Explain how India has moved from food scarcity to food surplus after independence. What role did the Green Revolution, irrigation, and government policy play?",
-        "Describe the distribution and significance of oilseed crops in India — groundnut, mustard, soyabean, and sunflower. Where are they mainly grown and why?",
+        "Describe the distribution and significance of oilseed crops in India: groundnut, mustard, soyabean, and sunflower. Where are they mainly grown and why?",
         "Explain the relationship between agriculture and industry in India. How do raw materials from agriculture support major industries?"
       ]
     },
     "g5": {
-      title: "Ch 5 — Minerals and Energy Resources",
+      title: "Ch 5: Minerals and Energy Resources",
       q2m: [
         "What is a mineral? Give two examples of minerals found in India.",
         "What is an 'ore'? How does it differ from a mineral?",
@@ -832,7 +832,7 @@ const SOCIAL_QBANK_CH = {
       ]
     },
     "g6": {
-      title: "Ch 6 — Manufacturing Industries",
+      title: "Ch 6: Manufacturing Industries",
       q2m: [
         "What is manufacturing? To which sector of the economy does it belong?",
         "What are basic or key industries? Give two examples.",
@@ -847,7 +847,7 @@ const SOCIAL_QBANK_CH = {
         "What is the major difference between integrated steel plants and mini steel plants?",
         "Name the public sector body that markets steel on behalf of all public sector steel plants.",
         "Why are most iron and steel industries concentrated around the Chota Nagpur Plateau? Give two reasons.",
-        "What is the ratio of raw materials — iron ore, coal, and limestone — used in steel production?",
+        "What is the ratio of raw materials: iron ore, coal, and limestone: used in steel production?",
         "Where was the first cotton textile mill set up in India? In which year?",
         "Why did the cotton textile industry first develop in Maharashtra and Gujarat? Give two reasons.",
         "Name any two problems faced by the cotton textile industry in India.",
@@ -920,7 +920,7 @@ const SOCIAL_QBANK_CH = {
         "Explain the factors responsible for the location of jute mills in the Hooghly basin. What are the challenges faced by the jute industry and what steps has the government taken to address them?",
         "Describe the cotton textile industry in India. Explain its importance, distribution, problems faced, and the difference between the spinning and weaving sectors.",
         "Describe the sugar industry in India. Explain its distribution, why mills are located near fields, why they are shifting southwards, and the major challenges faced.",
-        "Classify industries on five different bases — raw material, ownership, main role, capital investment, and bulk of material — with two examples of each.",
+        "Classify industries on five different bases: raw material, ownership, main role, capital investment, and bulk of material: with two examples of each.",
         "Explain the factors that influence the location of industries in India. Give examples of at least five factors with specific industries.",
         "How do manufacturing industries cause environmental pollution? Describe air, water, land, and noise pollution caused by industries. Suggest five measures to control industrial pollution.",
         "Describe the growth, distribution, and importance of the IT industry in India. Why has Bengaluru emerged as the electronic capital? What has been the impact on India's economy and employment?",
@@ -928,7 +928,7 @@ const SOCIAL_QBANK_CH = {
         "Compare the iron and steel industry of India with its potential. Why is India not able to fully realise its potential despite being a major producer? Suggest five measures.",
         "\"Industrial development is a precondition for eradication of unemployment and poverty in India.\" Justify with five points.",
         "Explain how the Make in India initiative and FDI have impacted the growth of manufacturing industries in India. Give five examples from different sectors.",
-        "Describe the cement industry in India — its importance, raw materials, distribution, and how it supports infrastructure development.",
+        "Describe the cement industry in India: its importance, raw materials, distribution, and how it supports infrastructure development.",
         "Explain the role of agro-based industries in transforming India's agricultural economy. Discuss cotton, sugar, and jute industries with their importance, challenges, and government measures.",
         "How does the location of raw materials affect the efficiency of manufacturing industries? Explain with five examples from iron and steel, cotton, jute, sugar, and cement industries.",
         "Explain how manufacturing industries contribute to India's foreign exchange earnings. Which industries are the top contributors and what are the challenges they face in international markets?",
@@ -943,7 +943,7 @@ const SOCIAL_QBANK_CH = {
   },
   "civics": {
     "c1": {
-      title: "Ch 1 — Power Sharing",
+      title: "Ch 1: Power Sharing",
       q2m: [
         "What is power sharing? Why is it important in a democracy?",
         "What is majoritarianism? Give one example from Sri Lanka.",
@@ -1039,18 +1039,18 @@ const SOCIAL_QBANK_CH = {
         "Explain the relationship between federalism and power sharing. How does giving power to different levels of government help in managing diversity in a country like India?",
         "Describe the role of elections, political parties, and coalition governments in ensuring power sharing in a democracy. Give five examples from India.",
         "How has India adopted a system of power sharing that accommodates its linguistic, religious, and social diversity? Give five examples covering all four forms of power sharing.",
-        "\"Power sharing does not just mean dividing power — it means making everyone a stakeholder in the system.\" Explain this statement with five arguments and examples.",
+        "\"Power sharing does not just mean dividing power: it means making everyone a stakeholder in the system.\" Explain this statement with five arguments and examples.",
         "Compare the power sharing models of Belgium and India. How has each country tried to accommodate ethnic, linguistic, and regional diversity?",
         "Explain the evolution of the Belgian power sharing model step by step. Why was it necessary and how did it prevent the country from breaking apart?",
         "Explain how the Sri Lankan Tamil community went from demanding equal rights to demanding a separate nation. Trace the five key steps that led to the civil war.",
-        "\"Democracy is not just about majority rule — it is about power sharing with all.\" Justify this statement using examples from Belgium, Sri Lanka, and India.",
+        "\"Democracy is not just about majority rule: it is about power sharing with all.\" Justify this statement using examples from Belgium, Sri Lanka, and India.",
         "Explain the significance of checks and balances in a democracy. How does the separation of powers among the legislature, executive, and judiciary prevent the abuse of power? Give five examples.",
         "Why is power sharing considered essential for political stability and national unity? Explain with five examples from countries that have both succeeded and failed in managing diversity.",
         "Explain how pressure groups, trade unions, media, and civil society organisations contribute to power sharing in a democracy. Why is their role important?"
       ]
     },
     "c2": {
-      title: "Ch 2 — Federalism",
+      title: "Ch 2: Federalism",
       q2m: [
         "What is federalism? What are its two levels of government?",
         "What are the dual objectives of a federal system?",
@@ -1071,7 +1071,7 @@ const SOCIAL_QBANK_CH = {
         "What was the States Reorganisation Act? When was it passed?",
         "What is the language policy of India? Is there a national language in India?",
         "What is decentralisation? Why is it important in a federal system?",
-        "When was the third tier of government — the local self-government — given constitutional status in India?",
+        "When was the third tier of government: the local self-government: given constitutional status in India?",
         "What are Gram Sabhas? What is their role in rural local government?",
         "What is a Panchayati Raj system? At how many levels does it function?",
         "What is a Municipality? Who is the head of a Municipal Corporation?",
@@ -1120,7 +1120,7 @@ const SOCIAL_QBANK_CH = {
         "Describe the role of the State Election Commission in ensuring free and fair elections to local government bodies.",
         "Explain three reasons why local self-government is considered an important step towards deepening democracy in India.",
         "How have coalition governments at the Centre since the 1990s changed the nature of Centre-state relations in India? Give three points.",
-        "Explain any three functions of Urban Local Bodies — Municipalities and Municipal Corporations — in Indian cities.",
+        "Explain any three functions of Urban Local Bodies: Municipalities and Municipal Corporations: in Indian cities.",
         "Explain the significance of reserved seats for women in local government bodies under the 73rd and 74th Amendments.",
         "Describe how the process of decentralisation was carried out in India after 1992. What were its main features?",
         "Explain three ways in which the Indian federal system has evolved over time to give more power to states.",
@@ -1138,11 +1138,11 @@ const SOCIAL_QBANK_CH = {
         "Explain how the reorganisation of states on linguistic lines strengthened Indian federalism. Give five examples of states created on linguistic grounds and their significance.",
         "\"India is a federal country but with a strong Centre.\" Justify this statement with five examples showing where the Centre has more power than the states.",
         "Explain the role of the local self-government in deepening democracy in India. How have the 73rd and 74th Amendments changed the nature of grassroots governance?",
-        "Compare the federal systems of India and the USA across five parameters — distribution of power, role of judiciary, residuary powers, relationship between Centre and states, and constitutional provisions.",
+        "Compare the federal systems of India and the USA across five parameters: distribution of power, role of judiciary, residuary powers, relationship between Centre and states, and constitutional provisions.",
         "Explain how the language policy of India has helped maintain national unity while respecting linguistic diversity. Give five specific provisions and their significance.",
         "Explain the evolution of Centre-state relations in India since independence. How have coalition governments and the rise of regional parties changed the power balance?",
         "Describe the significance of Panchayati Raj institutions for women, Scheduled Castes, and Scheduled Tribes in India. How has reservation helped these groups participate in governance?",
-        "\"Federalism is not just about dividing power — it is about ensuring that different levels of government work together for the common good.\" Justify with five examples from India.",
+        "\"Federalism is not just about dividing power: it is about ensuring that different levels of government work together for the common good.\" Justify with five examples from India.",
         "Explain the dual objectives of federalism. How does India's Constitution try to achieve both objectives simultaneously? Give five specific constitutional provisions.",
         "Describe the three tiers of government in India. Explain the powers and functions of each tier with specific examples.",
         "Explain how decentralisation has helped bring government closer to the people in India. Give five specific examples of functions transferred to local bodies.",
@@ -1158,7 +1158,7 @@ const SOCIAL_QBANK_CH = {
       ]
     },
     "c3": {
-      title: "Ch 3 — Gender, Religion and Caste",
+      title: "Ch 3: Gender, Religion and Caste",
       q2m: [
         "What is sexual division of labour? Give two examples.",
         "What is a feminist? What do feminist movements aim at?",
@@ -1185,7 +1185,7 @@ const SOCIAL_QBANK_CH = {
         "What is meant by 'majority community' in the context of communalism? Give one example from India.",
         "Why do we discuss household work in a textbook on Political Science?",
         "What does the 42nd Constitutional Amendment of 1976 say about India being a secular state?",
-        "Name two caste-based political terms used to group castes in India — one for upper castes and one for lower castes.",
+        "Name two caste-based political terms used to group castes in India: one for upper castes and one for lower castes.",
         "What are the literacy rates of men and women in India? What does the difference indicate?",
         "What are 'backward' and 'forward' caste groups? How have they emerged in Indian politics?",
         "Give two examples of how caste identities are used during elections in India.",
@@ -1258,14 +1258,14 @@ const SOCIAL_QBANK_CH = {
         "\"Women's political representation in India is far below what is needed for true democracy.\" Discuss this statement with five arguments covering Lok Sabha, state assemblies, local bodies, and international comparisons.",
         "Explain the relationship between gender, caste, and class as overlapping social inequalities in India. How do they together affect the life of a poor Dalit woman? Give five specific examples.",
         "How have Dalit communities used democratic politics to challenge caste discrimination in India? Trace the journey from Ambedkar's movements to modern OBC politics with five examples.",
-        "\"Social divisions based on caste are peculiar to India.\" Discuss this statement — is it accurate? How does the Indian caste system differ from social stratification in other countries?",
+        "\"Social divisions based on caste are peculiar to India.\" Discuss this statement: is it accurate? How does the Indian caste system differ from social stratification in other countries?",
         "Explain how women's reservation in Panchayati Raj institutions has changed political participation at the grassroots level in India. What are its achievements and limitations?",
-        "Describe the three major social divisions covered in this chapter — gender, religion, and caste. Explain how each affects democratic politics in India and what measures have been taken to address each.",
-        "\"Democracy is about more than just elections — it is about ensuring equal dignity and rights for all social groups.\" Justify this statement with reference to gender equality, secularism, and caste justice in India."
+        "Describe the three major social divisions covered in this chapter: gender, religion, and caste. Explain how each affects democratic politics in India and what measures have been taken to address each.",
+        "\"Democracy is about more than just elections: it is about ensuring equal dignity and rights for all social groups.\" Justify this statement with reference to gender equality, secularism, and caste justice in India."
       ]
     },
     "c4": {
-      title: "Ch 4 — Political Parties",
+      title: "Ch 4: Political Parties",
       q2m: [
         "What is a political party? Name its three components.",
         "Who is a partisan? What is partisanship?",
@@ -1348,13 +1348,13 @@ const SOCIAL_QBANK_CH = {
         "What are the challenges faced by political parties in India? Explain five shortcomings and suggest measures to reform them.",
         "Distinguish between one-party, two-party, and multi-party systems with examples. Why is a multi-party system considered most suitable for India?",
         "Explain why political parties are considered the most visible institution of a democracy. What functions do they perform? Give five examples.",
-        "Explain the various ways in which political parties can be reformed to make them more democratic and accountable. Give five specific measures — both those already taken and those that should be taken.",
+        "Explain the various ways in which political parties can be reformed to make them more democratic and accountable. Give five specific measures: both those already taken and those that should be taken.",
         "Describe any two national political parties of India. For each, explain their origin, ideology, social base, and role in Indian politics.",
         "Explain how regional political parties have grown in India since the 1990s. What has caused their rise and what impact have they had on national politics?",
         "\"Political parties link the government and the people.\" Justify this statement with five specific examples of how parties perform this linking function.",
         "Explain the problem of dynastic politics in India. How does it affect inner-party democracy? What reforms can address this? Give five points.",
         "Explain how money and muscle power have distorted democratic elections in India. Give five examples and suggest five measures to control this problem.",
-        "Compare the multi-party system in India with the two-party system in the USA across five parameters — number of parties, coalition politics, party discipline, social representation, and government stability.",
+        "Compare the multi-party system in India with the two-party system in the USA across five parameters: number of parties, coalition politics, party discipline, social representation, and government stability.",
         "Explain how political parties are necessary for democracy to function. What would happen to democracy if political parties did not exist?",
         "Explain the role of opposition parties in a democracy. How do they hold the government accountable? Give five specific examples from India.",
         "Explain why the lack of internal democracy is the most serious challenge for political parties. How does it lead to dynastic politics, criminalisation, and lack of accountability?",
@@ -1372,7 +1372,7 @@ const SOCIAL_QBANK_CH = {
       ]
     },
     "c5": {
-      title: "Ch 5 — Outcomes of Democracy",
+      title: "Ch 5: Outcomes of Democracy",
       q2m: [
         "Read the statements and choose which correctly describe features of democracy: (I) Promotes equality among citizens (II) Government by few individuals (III) Protection of human rights (IV) Ensures checks and balance system.",
         "What is the most basic outcome of democracy?",
@@ -1470,7 +1470,7 @@ const SOCIAL_QBANK_CH = {
         "Explain the concept of transparency in democratic governance. How does it prevent corruption and abuse of power? Give five specific examples from India.",
         "\"The outcomes of democracy depend not just on the system but on how citizens use it.\" Explain this statement with five points showing how active citizen participation improves democratic outcomes.",
         "Explain five ways in which democracy has helped India achieve better outcomes than its non-democratic neighbours in terms of human rights, political stability, and social development.",
-        "\"Democracy is not just about elections — it is about everyday governance.\" Explain this with five examples of how democratic institutions deliver outcomes to citizens beyond election time.",
+        "\"Democracy is not just about elections: it is about everyday governance.\" Explain this with five examples of how democratic institutions deliver outcomes to citizens beyond election time.",
         "Explain how democracy in India has both succeeded and failed in reducing poverty and inequality. Give five examples of success and five examples of failure.",
         "How has the experience of Zimbabwe under Mugabe shown that non-democratic governance leads to economic collapse? Compare it with India's democratic development.",
         "Explain the concept of legitimate government in democracy. Why do people trust and accept a democratically elected government more than an authoritarian one? Give five reasons.",
@@ -1480,7 +1480,7 @@ const SOCIAL_QBANK_CH = {
   },
   "economics": {
     "e1": {
-      title: "Ch 1 — Development",
+      title: "Ch 1: Development",
       q2m: [
         "What is development? Give two features of development.",
         "What is per capita income? How is it calculated?",
@@ -1508,8 +1508,8 @@ const SOCIAL_QBANK_CH = {
         "Differentiate between economic growth and economic development in two points.",
         "What are conflicting development goals? Give one example.",
         "What are common development goals? Give one example.",
-        "Which one of the following is a developmental goal of the factory workers — better wages, better technology, more hours of work, or more labour work? Justify.",
-        "Which groups of people are likely to have the most conflicting developmental goals — tribals and industrialists, or small and large farmers? Give a reason.",
+        "Which one of the following is a developmental goal of the factory workers: better wages, better technology, more hours of work, or more labour work? Justify.",
+        "Which groups of people are likely to have the most conflicting developmental goals: tribals and industrialists, or small and large farmers? Give a reason.",
         "What is meant by 'quality of life'? Name two indicators used to measure it.",
         "What is GNI? How does it differ from per capita income?",
         "Name two countries with high HDI ranking. Name two with low HDI ranking.",
@@ -1574,23 +1574,23 @@ const SOCIAL_QBANK_CH = {
         "\"Development for one may be destruction for another.\" Justify this statement with five examples showing how development goals can conflict between different groups.",
         "Explain the concept of sustainable development. Why is it important for countries like India? Give five specific measures India can take to ensure sustainable development.",
         "Explain the role of public facilities in the development of a country. Give five examples of essential public facilities and explain how each contributes to development.",
-        "Compare India's development with two other countries using at least four indicators — per capita income, literacy rate, life expectancy, and HDI rank. What does this comparison reveal?",
+        "Compare India's development with two other countries using at least four indicators: per capita income, literacy rate, life expectancy, and HDI rank. What does this comparison reveal?",
         "Explain how overuse and misuse of natural resources can become a barrier to development. Give five examples of resource depletion and their impact on future generations.",
         "\"Economic development without social development is incomplete.\" Justify this with five examples showing the importance of literacy, health, gender equality, and public facilities.",
-        "Explain the various criteria used to measure development — per capita income, HDI, literacy rate, infant mortality rate, and net attendance ratio. Which is the best single measure and why?",
-        "How do the development goals of people in different occupations — farmer, industrial worker, trader, teacher, and domestic worker — reflect the complex nature of development?",
+        "Explain the various criteria used to measure development: per capita income, HDI, literacy rate, infant mortality rate, and net attendance ratio. Which is the best single measure and why?",
+        "How do the development goals of people in different occupations: farmer, industrial worker, trader, teacher, and domestic worker: reflect the complex nature of development?",
         "Why is it said that development must be sustainable? What are the consequences of unsustainable development? How can renewable energy and conservation help?",
         "Explain the differences in development levels between India and a developed country like Germany or Sri Lanka using five indicators. What are the key challenges India faces in reaching that level?",
         "\"Income is necessary but not sufficient for development.\" Explain this statement with five arguments covering health, education, gender equality, environment, and social freedom.",
-        "Describe the developmental goals of five different groups — urban rich, urban poor, rural landowner, rural landless labourer, and urban woman — and explain how these goals are similar, different, and sometimes conflicting.",
+        "Describe the developmental goals of five different groups: urban rich, urban poor, rural landowner, rural landless labourer, and urban woman: and explain how these goals are similar, different, and sometimes conflicting.",
         "How does the concept of Human Development go beyond GDP? Explain using the three pillars of HDI and compare the HDI ranks of India with two other countries.",
         "Explain why sustainability is considered the most important dimension of development in the 21st century. Give five specific environmental and resource-related challenges that threaten sustainable development.",
-        "\"Development is a complex and multi-dimensional concept.\" Justify this statement by explaining five different dimensions of development — economic, social, political, environmental, and cultural — with examples.",
+        "\"Development is a complex and multi-dimensional concept.\" Justify this statement by explaining five different dimensions of development: economic, social, political, environmental, and cultural: with examples.",
         "Explain the developmental goals of different sections of Indian society and show how government policies on health, education, PDS, and employment try to address multiple development goals simultaneously."
       ]
     },
     "e2": {
-      title: "Ch 2 — Sectors of the Indian Economy",
+      title: "Ch 2: Sectors of the Indian Economy",
       q2m: [
         "What are economic activities? Give two examples.",
         "Define the primary sector. Give two examples.",
@@ -1623,7 +1623,7 @@ const SOCIAL_QBANK_CH = {
         "Why has employment in the service sector not increased to the same extent as production? Give one reason.",
         "A large proportion of labourers in India work in the unorganised sector. Name any two problems they face.",
         "What percentage of India's workforce works in the unorganised sector?",
-        "Which of the following is an example of the organised sector — a daily wage labourer working for a contractor, or an engineer receiving all employment benefits?"
+        "Which of the following is an example of the organised sector: a daily wage labourer working for a contractor, or an engineer receiving all employment benefits?"
       ],
       q3m: [
         "Explain the difference between public sector and private sector with three examples each.",
@@ -1676,12 +1676,12 @@ const SOCIAL_QBANK_CH = {
         "What is GDP? How is it calculated? Why are only final goods counted? Explain with an example avoiding double counting.",
         "Explain the concept of disguised unemployment and underemployment with examples. How can the problem be solved?",
         "Explain the role of the public sector in India's economic development. Give five examples of public sector activities and explain why the government takes them up.",
-        "Distinguish between the organised and unorganised sectors across five parameters — registration, job security, wages, working hours, and social security benefits. Give examples.",
+        "Distinguish between the organised and unorganised sectors across five parameters: registration, job security, wages, working hours, and social security benefits. Give examples.",
         "Explain how employment can be increased in rural areas. Suggest five specific measures with examples.",
         "Explain the objectives, functioning, and achievements of MGNREGA. What are its limitations?",
         "\"The tertiary sector has emerged as the largest sector in terms of GDP contribution in India.\" Analyse why this has happened. Explain the reasons and give five examples of growing service sector activities.",
         "Explain the growth of the three sectors of the Indian economy since independence. Why has employment in agriculture not declined despite its falling share in GDP?",
-        "Classify all economic activities on three different bases — nature of activity, ownership, and employment conditions — with two examples of each category.",
+        "Classify all economic activities on three different bases: nature of activity, ownership, and employment conditions: with two examples of each category.",
         "Explain the problems faced by workers in the unorganised sector. What steps can the government take to protect them? Give five specific measures.",
         "\"In India, the primary sector still employs the most workers even though its share in GDP has fallen sharply.\" Analyse this statement and explain its causes and consequences.",
         "How can disguised unemployment in agriculture be transferred to productive employment in the secondary and tertiary sectors? Explain five measures.",
@@ -1699,7 +1699,7 @@ const SOCIAL_QBANK_CH = {
       ]
     },
     "e3": {
-      title: "Ch 3 — Money and Credit",
+      title: "Ch 3: Money and Credit",
       q2m: [
         "What is barter system? What is its basic feature?",
         "What is double coincidence of wants? In which system is it essential?",
@@ -1743,7 +1743,7 @@ const SOCIAL_QBANK_CH = {
         "What are the advantages of Self Help Groups for the poor? Explain three points.",
         "Explain the working of a Self Help Group. How does it help its members get credit?",
         "Differentiate between formal and informal sources of credit. Give two examples of each.",
-        "Explain two different credit situations — one where credit plays a positive role and one where it leads to a debt trap.",
+        "Explain two different credit situations: one where credit plays a positive role and one where it leads to a debt trap.",
         "Explain any three reasons why the credit activities of the informal sector should be discouraged.",
         "How do banks mediate between those who have surplus money and those who need money? Explain three steps.",
         "Explain why cheap and affordable credit is important for the economic development of a country. Give three points.",
@@ -1779,7 +1779,7 @@ const SOCIAL_QBANK_CH = {
       q5m: [
         "Compare formal and informal sources of credit in rural India.",
         "Justify the role of Self Help Groups in the rural economy.",
-        "Explain the importance of credit in development with examples of two different credit situations — one positive and one that leads to a debt trap.",
+        "Explain the importance of credit in development with examples of two different credit situations: one positive and one that leads to a debt trap.",
         "Explain the working and significance of Self Help Groups for women in rural India. How do SHGs help overcome the problem of lack of collateral?",
         "Explain the role of the Reserve Bank of India in regulating and supervising the credit system in India. Give five specific functions.",
         "Explain how money has evolved as a medium of exchange. Describe the limitations of the barter system and how money overcame each limitation.",
@@ -1787,7 +1787,7 @@ const SOCIAL_QBANK_CH = {
         "\"Credit can be both a boon and a bane.\" Justify this statement with five examples showing credit as positive in some situations and harmful in others.",
         "Explain the functions of commercial banks in India. How do they mediate between depositors and borrowers? Give five specific points.",
         "\"Poor households are caught in a vicious cycle of debt when they borrow from informal sources.\" Explain this statement with five points and suggest measures to break this cycle.",
-        "Compare formal and informal sources of credit across five parameters — interest rate, collateral, supervision, documentation, and accessibility. Which is more beneficial for the poor and why?",
+        "Compare formal and informal sources of credit across five parameters: interest rate, collateral, supervision, documentation, and accessibility. Which is more beneficial for the poor and why?",
         "Explain how the expansion of formal credit to rural areas can help in the economic development of India. Give five specific benefits.",
         "Describe the role of cooperative societies, SHGs, and microfinance institutions as alternatives to moneylenders for the rural poor. Compare them across five points.",
         "Explain the concept of demand deposits and how the banking system creates money through lending. Describe the role of RBI in controlling this process.",
@@ -1798,7 +1798,7 @@ const SOCIAL_QBANK_CH = {
         "\"Affordable credit is a key driver of development.\" Explain this statement with five examples covering agriculture, small business, education, housing, and emergency needs.",
         "Explain how digital banking, mobile payments, and fintech have transformed access to credit in India. What challenges still remain for rural and poor households?",
         "Describe the evolution of money from barter to currency to demand deposits. Explain the advantages of each stage and why demand deposits are considered the most advanced form of money.",
-        "Explain the working of SHGs in detail — how they are formed, how they collect savings, how they give loans, and what social impact they have on women and rural communities.",
+        "Explain the working of SHGs in detail: how they are formed, how they collect savings, how they give loans, and what social impact they have on women and rural communities.",
         "Compare the credit situations of a rich urban businessman and a poor rural farmer in India. How does access to formal credit differ between them and what are the consequences for each?",
         "\"Absence of collateral is one of the biggest barriers to formal credit for the rural poor.\" Explain this with five points and suggest how microfinance and SHGs help overcome this barrier.",
         "Explain the importance of financial inclusion in India. What steps has the government taken to bring the unbanked population into the formal credit system? Give five examples.",
@@ -1806,7 +1806,7 @@ const SOCIAL_QBANK_CH = {
       ]
     },
     "e4": {
-      title: "Ch 4 — Globalisation and the Indian Economy",
+      title: "Ch 4: Globalisation and the Indian Economy",
       q2m: [
         "What is globalisation? Give one example.",
         "What is an MNC? Give two examples of MNCs operating in India.",
@@ -1876,11 +1876,11 @@ const SOCIAL_QBANK_CH = {
         "Explain three ways in which the Indian government can protect its domestic industries from unfair foreign competition.",
         "Explain the significance of the year 1991 in India's economic history. What changes were introduced and why?",
         "How has globalisation enabled some countries to grow faster while leaving others behind? Explain with three examples.",
-        "Explain how MNCs have changed the nature of employment in India — both positively by creating jobs and negatively by displacing workers.",
-        "Explain three ways in which globalisation has affected the manufacturing sector in India — particularly textiles, automobiles, and electronics.",
+        "Explain how MNCs have changed the nature of employment in India: both positively by creating jobs and negatively by displacing workers.",
+        "Explain three ways in which globalisation has affected the manufacturing sector in India: particularly textiles, automobiles, and electronics.",
         "Describe how Indian companies like Infosys and Wipro have become global players. What role did globalisation play in their growth?",
         "Explain how globalisation has affected India's agriculture sector. What challenges have farmers faced due to competition from imported agricultural products?",
-        "Describe any three impacts of globalisation on the Indian textile industry — both positive for exporters and negative for handloom weavers.",
+        "Describe any three impacts of globalisation on the Indian textile industry: both positive for exporters and negative for handloom weavers.",
         "Explain the role of cheap labour as a factor that attracts MNCs to India. Why is this considered both an opportunity and a problem?",
         "Explain any three reasons why some people oppose globalisation. What alternatives do they suggest?"
       ],
@@ -1890,7 +1890,7 @@ const SOCIAL_QBANK_CH = {
         "How has information technology promoted globalisation? Explain with five examples.",
         "Justify the role of Self Help Groups in the rural economy.",
         "Explain the role of MNCs in the process of globalisation. How do they benefit from spreading production across countries? Give five points.",
-        "Explain the impact of globalisation on Indian economy — both positive and negative — with five examples each.",
+        "Explain the impact of globalisation on Indian economy: both positive and negative: with five examples each.",
         "\"Globalisation has benefited some sections of the Indian population while harming others.\" Justify with five points covering producers, workers, consumers, and farmers.",
         "What is liberalisation? Explain how the removal of trade barriers and opening of the economy since 1991 has transformed India's economy. Give five specific changes.",
         "Explain the role of the WTO in globalisation. Why do developing countries feel that WTO rules are unfair? Give five points.",
@@ -1903,8 +1903,8 @@ const SOCIAL_QBANK_CH = {
         "Explain the concept of globalisation. Trace how the process of globalisation has developed over the past century, with special reference to India since 1991.",
         "How has the information technology revolution transformed the Indian economy? Explain with reference to IT exports, BPO services, e-commerce, and digital payments.",
         "Describe the impact of globalisation on Indian agriculture. How have farmers been affected by changes in input prices, output prices, and competition from imports?",
-        "Explain the positive impact of globalisation on India — consumer choice, employment in services, growth of Indian MNCs, technology transfer, and GDP growth.",
-        "Explain the negative impact of globalisation on India — job losses in small industries, exploitation of cheap labour, displacement of handloom weavers, unfair competition, and rising inequality.",
+        "Explain the positive impact of globalisation on India: consumer choice, employment in services, growth of Indian MNCs, technology transfer, and GDP growth.",
+        "Explain the negative impact of globalisation on India: job losses in small industries, exploitation of cheap labour, displacement of handloom weavers, unfair competition, and rising inequality.",
         "Describe the changes that took place in India's economy after the LPG reforms of 1991. How did these reforms accelerate globalisation? Give five specific examples.",
         "\"India has both gained and lost from globalisation.\" Present a balanced analysis with five points each for gains and losses across different sectors.",
         "Explain how the growth of transport and communication technology has made it possible for MNCs to organise production across multiple countries. Give five specific examples.",
