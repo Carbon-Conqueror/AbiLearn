@@ -172,12 +172,13 @@
         /* ⑤ Restore persistent elements */
         reattach(saved);
 
-        /* ⑥ Load page-specific external scripts then run inline init */
-        runScripts(nb, preLoaded, function () {
-          /* ⑦ Push / replace history */
-          if (push) history.pushState({ href: href }, document.title, href);
-          _currentHref = href;
+        /* ⑥ Push / replace history BEFORE running inline scripts so that
+         * any init script that reads location.search/hash sees the new URL */
+        if (push) history.pushState({ href: href }, document.title, href);
+        _currentHref = href;
 
+        /* ⑦ Load page-specific external scripts then run inline init */
+        runScripts(nb, preLoaded, function () {
           /* ⑧ Scroll to top unless URL has a hash anchor */
           try { if (!new URL(href).hash) window.scrollTo(0, 0); }
           catch (e) { window.scrollTo(0, 0); }
