@@ -905,6 +905,7 @@ function pdfCards(subject, tab) {
   if (!list.length) return '';
   const TAB_CAPTIONS = {
     notes:   'Detailed Notes',
+    qbank:   '2m · 3m · 5m',
     formula: 'Formula Sheet',
     pyqs:    'Previous Year Question Papers',
   };
