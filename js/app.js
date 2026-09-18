@@ -1,4 +1,4 @@
-/* AbiLearn Main Application Logic v97 */
+/* AbiLearn Main Application Logic v98 */
 
 /* ── SCROLL-HIDE HEADER ── */
 (function() {
@@ -450,19 +450,23 @@ function initSubjectPage(subjectId) {
   if (!subject) return;
   _subjectPageSubject = subject;
 
-  /* Preload MCQ data in the background so the tab renders instantly on click */
-  if (_MCQ_SRCS[subjectId] && !_isMCQDefined(subjectId)) {
-    var _preBase = _MCQ_SRCS[subjectId].split('?')[0];
-    var _alreadyTagged = false;
+  /* Preload ALL MCQ data files in the background immediately.
+     This ensures every subject's MCQ tab renders on first click
+     regardless of navigation order (direct load or SPA). */
+  (function() {
+    var _tagged = {};
     document.querySelectorAll('script[src]').forEach(function(s) {
-      if (s.getAttribute('src').split('?')[0] === _preBase) _alreadyTagged = true;
+      _tagged[s.getAttribute('src').split('?')[0]] = true;
     });
-    if (!_alreadyTagged) {
-      var _pre = document.createElement('script');
-      _pre.setAttribute('src', _MCQ_SRCS[subjectId]);
-      document.head.appendChild(_pre);
-    }
-  }
+    Object.keys(_MCQ_SRCS).forEach(function(sub) {
+      var src = _MCQ_SRCS[sub];
+      if (!_tagged[src.split('?')[0]] && !_isMCQDefined(sub)) {
+        var ns = document.createElement('script');
+        ns.setAttribute('src', src);
+        document.head.appendChild(ns);
+      }
+    });
+  })();
 
   renderSubjectShell(subject);
   renderTabContent(subject, SUBJECT_TABS[subjectId][0].id);
