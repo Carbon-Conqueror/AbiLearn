@@ -1096,7 +1096,7 @@ function buildImportantNotes(subject) {
   const cards = pdfCards(subject, 'notes');
   if (!cards) return buildComingSoon('Study Notes', 'Chapter PDFs will be added here soon.');
   return `
-    <h2 class="section-title" style="margin-bottom:1rem">Study PDFs</h2>
+    <h2 class="section-title" style="margin-bottom:1rem">AbiLearn Notes</h2>
     ${cards}`;
 }
 
@@ -1196,7 +1196,7 @@ function buildScienceMCQCards(subject) {
       </div>`;
   }).join('');
   return `
-    <h2 class="section-title" style="margin-bottom:0.3rem">Chapter MCQs</h2>
+    <h2 class="section-title" style="margin-bottom:0.3rem">Mcq Practice</h2>
     <p style="color:var(--muted);margin-bottom:1.5rem;font-size:0.88rem">100 MCQs per chapter · All topics · High Difficulty</p>
     <div class="pdf-cards-grid">${cards}</div>`;
 }
@@ -1222,7 +1222,7 @@ function buildMathsMCQCards(subject) {
       </div>`;
   }).join('');
   return `
-    <h2 class="section-title" style="margin-bottom:0.3rem">Chapter MCQs</h2>
+    <h2 class="section-title" style="margin-bottom:0.3rem">Mcq Practice</h2>
     <p style="color:var(--muted);margin-bottom:1.5rem;font-size:0.88rem">NCERT 2026 · PYQs · Important · Slightly Advanced</p>
     <div class="pdf-cards-grid">${cards}</div>`;
 }
@@ -1268,7 +1268,7 @@ function buildSocialMCQCards(subject) {
       </div>`;
   }).join('');
   return `
-    <h2 class="section-title" style="margin-bottom:0.3rem">Chapter MCQs</h2>
+    <h2 class="section-title" style="margin-bottom:0.3rem">Mcq Practice</h2>
     <p style="color:var(--muted);margin-bottom:1.5rem;font-size:0.88rem">100 MCQs per chapter · History, Geography, Civics, Economics · High Difficulty</p>
     ${sections}`;
 }
@@ -1630,9 +1630,29 @@ function buildNCERT() {
 function buildEnglishReader(subject, type) {
   const title = type === 'ff' ? 'First Flight' : 'Footprints Without Feet';
   const pdfTab = type === 'ff' ? 'first-flight' : 'footprints';
-  const cards = pdfCards(subject, pdfTab);
-  return `<h2 class="section-title" style="margin-bottom:1.5rem">${title}</h2>
-    ${cards || buildComingSoon(title, 'PDFs for this section will be added here soon.')}`;
+  const list = (PDFS[subject.id] || {})[pdfTab] || [];
+  if (!list.length) return buildComingSoon(title, 'PDFs for this section will be added here soon.');
+  const proseItems = list.filter(p => p.desc !== 'Poetry');
+  const poemItems  = list.filter(p => p.desc === 'Poetry');
+  function renderCards(items) {
+    return `<div class="pdf-cards-grid">
+      ${items.map(p => `
+      <div class="pdf-card">
+        <div class="pdf-card-info">
+          <div class="pdf-card-title">${escH(p.title)}</div>
+        </div>
+        <button class="pdf-open-btn" onclick="openPDF('${escH(p.url)}','${escH(p.title)}')">Open</button>
+      </div>`).join('')}
+    </div>`;
+  }
+  let html = '';
+  if (proseItems.length) {
+    html += `<h2 class="section-title" style="margin-bottom:1rem">Prose</h2>${renderCards(proseItems)}`;
+  }
+  if (poemItems.length) {
+    html += `<h2 class="section-title" style="margin-top:2rem;margin-bottom:1rem">Poem</h2>${renderCards(poemItems)}`;
+  }
+  return html;
 }
 
 function buildChapterAccordionHTML(ch, subjectId, numClass) {
@@ -2684,7 +2704,7 @@ function buildScienceQBank() {
   }).join('');
   return `
     <div>
-      <h2 class="section-title" style="margin-bottom:1.5rem">Question Bank</h2>
+      <h2 class="section-title" style="margin-bottom:1.5rem">AbiLearn Question Bank</h2>
       <div class="pdf-cards-grid">${cards}</div>
     </div>`;
 }
@@ -2798,7 +2818,7 @@ function buildMathsQBank() {
   }).join('');
   return `
     <div>
-      <h2 class="section-title" style="margin-bottom:1.5rem">Question Bank</h2>
+      <h2 class="section-title" style="margin-bottom:1.5rem">AbiLearn Question Bank</h2>
       <div class="pdf-cards-grid">${cards}</div>
     </div>`;
 }
@@ -2863,7 +2883,7 @@ function buildSocialNotes(subject) {
   ];
   return `
     <div>
-      <h2 class="section-title" style="margin-bottom:1.5rem">Chapter Notes</h2>
+      <h2 class="section-title" style="margin-bottom:1.5rem">AbiLearn Notes</h2>
       ${sections.map(s => {
         const list = pdfs[s.key] || [];
         if (!list.length) return '';
@@ -2901,7 +2921,7 @@ function buildSocialQBank() {
   ];
   return `
     <div>
-      <h2 class="section-title" style="margin-bottom:1.5rem">Question Bank</h2>
+      <h2 class="section-title" style="margin-bottom:1.5rem">AbiLearn Question Bank</h2>
       ${sections.map(s => {
         const subj = db ? db[s.key] : null;
         if (!subj) return '';
