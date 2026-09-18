@@ -14,9 +14,6 @@
     'abl-fs-overlay',      // fullscreen.js — focus mode overlay
     'abl-ss-guard',        // protect.js    — screenshot guard
     'abl-fs-exit-btn',     // fullscreen.js — exit fullscreen button
-    'abl-watermark',       // watermark.js  — repeating watermark overlay
-    'abl-copyright',       // watermark.js  — copyright footer notice
-    'abl-print-notice',    // watermark.js  — print shield
     'abl-spa-bar'          // router.js     — progress bar (self)
   ];
 
