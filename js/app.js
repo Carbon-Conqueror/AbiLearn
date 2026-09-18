@@ -23,6 +23,7 @@
 const SUBJECT_TABS = {
   maths: [
     { id: 'formula-sheet',     label: 'Formulas' },
+    { id: 'maths-qbank',       label: 'Question Bank' },
     { id: 'practice-questions', label: 'MCQ Practice' },
     { id: 'pyqs',              label: 'PYQ Papers' },
   ],
