@@ -1659,12 +1659,13 @@ function buildEnglishReader(subject, type) {
   if (!list.length) return buildComingSoon(title, 'PDFs for this section will be added here soon.');
   const proseItems = list.filter(p => p.desc !== 'Poetry');
   const poemItems  = list.filter(p => p.desc === 'Poetry');
-  function renderCards(items) {
+  function renderCards(items, subtitle) {
     return `<div class="pdf-cards-grid">
       ${items.map(p => `
       <div class="pdf-card">
         <div class="pdf-card-info">
           <div class="pdf-card-title">${escH(p.title)}</div>
+          ${subtitle ? `<div class="pdf-card-desc">${subtitle}</div>` : ''}
         </div>
         <button class="pdf-open-btn" onclick="openPDF('${escH(p.url)}','${escH(p.title)}')">Open</button>
       </div>`).join('')}
@@ -1672,10 +1673,10 @@ function buildEnglishReader(subject, type) {
   }
   let html = '';
   if (proseItems.length) {
-    html += `<h2 class="section-title" style="margin-bottom:1rem">Prose</h2>${renderCards(proseItems)}`;
+    html += `<h2 class="section-title" style="margin-bottom:1rem">Prose</h2>${renderCards(proseItems, 'Prose')}`;
   }
   if (poemItems.length) {
-    html += `<h2 class="section-title" style="margin-top:2rem;margin-bottom:1rem">Poem</h2>${renderCards(poemItems)}`;
+    html += `<h2 class="section-title" style="margin-top:2rem;margin-bottom:1rem">Poem</h2>${renderCards(poemItems, 'Poem')}`;
   }
   return html;
 }

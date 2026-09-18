@@ -79,9 +79,11 @@
     return set;
   }
 
-  function runScripts(parsedBody, done) {
-    /* Collect external srcs that are new to this page */
-    var loaded = _loadedSrcs();
+  function runScripts(parsedBody, preLoaded, done) {
+    /* Collect external srcs that are new to this page.
+     * preLoaded is captured BEFORE the body swap so inert <script> nodes
+     * injected by innerHTML= don't falsely appear as already-executed. */
+    var loaded = preLoaded;
     var toLoad = [];
     parsedBody.querySelectorAll('script[src]').forEach(function (s) {
       var src = s.getAttribute('src');
@@ -158,7 +160,9 @@
         /* ③ Save persistent elements before touching <body> */
         var saved = detach();
 
-        /* ④ Swap <body> content */
+        /* ④ Swap <body> content — capture loaded scripts BEFORE the swap
+         * so inert copies injected by innerHTML= don't fool runScripts */
+        var preLoaded = _loadedSrcs();
         var nb = nd.body;
         document.body.innerHTML = nb.innerHTML;
         document.body.className = nb.className;
@@ -169,7 +173,7 @@
         reattach(saved);
 
         /* ⑥ Load page-specific external scripts then run inline init */
-        runScripts(nb, function () {
+        runScripts(nb, preLoaded, function () {
           /* ⑦ Push / replace history */
           if (push) history.pushState({ href: href }, document.title, href);
           _currentHref = href;
