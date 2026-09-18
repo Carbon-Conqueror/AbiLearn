@@ -1,4 +1,4 @@
-/* AbiLearn Main Application Logic v98 */
+/* AbiLearn Main Application Logic v73 */
 
 /* ── SCROLL-HIDE HEADER ── */
 (function() {
@@ -450,24 +450,6 @@ function initSubjectPage(subjectId) {
   if (!subject) return;
   _subjectPageSubject = subject;
 
-  /* Preload ALL MCQ data files in the background immediately.
-     This ensures every subject's MCQ tab renders on first click
-     regardless of navigation order (direct load or SPA). */
-  (function() {
-    var _tagged = {};
-    document.querySelectorAll('script[src]').forEach(function(s) {
-      _tagged[s.getAttribute('src').split('?')[0]] = true;
-    });
-    Object.keys(_MCQ_SRCS).forEach(function(sub) {
-      var src = _MCQ_SRCS[sub];
-      if (!_tagged[src.split('?')[0]] && !_isMCQDefined(sub)) {
-        var ns = document.createElement('script');
-        ns.setAttribute('src', src);
-        document.head.appendChild(ns);
-      }
-    });
-  })();
-
   renderSubjectShell(subject);
   renderTabContent(subject, SUBJECT_TABS[subjectId][0].id);
 
@@ -543,43 +525,29 @@ function _isMCQDefined(subjectId) {
 function _loadMCQData(subjectId, callback) {
   var src = _MCQ_SRCS[subjectId];
   if (!src) { callback(); return; }
+  /* Data already in memory — fastest path */
   if (_isMCQDefined(subjectId)) { callback(); return; }
-
+  /* Script tag in DOM but still downloading (race condition on first load):
+     poll every 100 ms until the variable is defined (max 3 s). */
   var base = src.split('?')[0];
   var tagInDOM = false;
   document.querySelectorAll('script[src]').forEach(function(s) {
     if (s.getAttribute('src').split('?')[0] === base) tagInDOM = true;
   });
-
-  function _pollUntilReady(onSuccess, onTimeout) {
+  if (tagInDOM) {
     var attempts = 0;
     var poll = setInterval(function() {
-      if (_isMCQDefined(subjectId)) {
+      if (_isMCQDefined(subjectId) || ++attempts > 30) {
         clearInterval(poll);
-        onSuccess();
-      } else if (++attempts > 150) {
-        clearInterval(poll);
-        onTimeout();
+        callback();
       }
     }, 100);
-  }
-
-  function _showLoadError() {
-    var el = document.getElementById('tabContent');
-    if (el) el.innerHTML = '<div style="padding:3rem;text-align:center;color:var(--muted)">MCQ data is taking too long to load.<br>Please <a href="" onclick="location.reload();return false;" style="color:var(--accent)">refresh the page</a> and try again.</div>';
-  }
-
-  if (tagInDOM) {
-    /* Script tag already in DOM — poll until variable appears (max 15 s) */
-    _pollUntilReady(callback, _showLoadError);
     return;
   }
-
-  /* Script not in DOM — inject it, then poll (onload fires before const is accessible in some engines) */
+  /* Script not in DOM at all — load it dynamically */
   var ns = document.createElement('script');
   ns.setAttribute('src', src);
-  ns.onload = function() { _pollUntilReady(callback, _showLoadError); };
-  ns.onerror = _showLoadError;
+  ns.onload = ns.onerror = callback;
   document.head.appendChild(ns);
 }
 
