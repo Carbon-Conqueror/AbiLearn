@@ -2823,10 +2823,7 @@ function buildMathsQBank() {
     { id: 5,  label: 'Ch 5 Arithmetic Progressions' },
     { id: 7,  label: 'Ch 7 Coordinate Geometry' },
     { id: 8,  label: 'Ch 8 Introduction to Trigonometry' },
-    { id: 9,  label: 'Ch 9 Some Applications of Trigonometry' },
-    { id: 11, label: 'Ch 11 Areas Related to Circles' },
     { id: 12, label: 'Ch 12 Surface Areas and Volumes' },
-    { id: 13, label: 'Ch 13 Statistics' },
     { id: 14, label: 'Ch 14 Probability' },
   ];
   const cards = chapters.map(ch => {
