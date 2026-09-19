@@ -1,4 +1,4 @@
-/* AbiLearn Main Application Logic v96 */
+/* AbiLearn Main Application Logic v97 */
 
 /* ── SCROLL-HIDE HEADER ── */
 (function() {
@@ -963,6 +963,7 @@ function openPDF(url, title) {
     document.body.appendChild(modal);
   }
   const body = document.getElementById('pdfModalBody');
+  if (window.ablPinchZoom) window.ablPinchZoom.attachPdf(body);
   body.innerHTML = '<div class="pdf-loading">Loading…</div>';
   body.style.padding = _isImage ? '0.5rem' : '0';
   _lastModalTrigger = _lastModalTrigger || document.activeElement;
@@ -995,7 +996,7 @@ function renderImage(url) {
   img.src = url;
 }
 
-function renderPDF(url) {
+function renderPDF(url, scrollRatio) {
   const body = document.getElementById('pdfModalBody');
   if (!body) return;
   if (_pdfObserver) { _pdfObserver.disconnect(); _pdfObserver = null; }
@@ -1068,6 +1069,12 @@ function renderPDF(url) {
     }, { root: body, rootMargin: '400px 0px', threshold: 0 });
     wrappers.slice(2).forEach(w => _pdfObserver.observe(w));
 
+    if (scrollRatio !== undefined) {
+      requestAnimationFrame(function() {
+        body.scrollTop = body.scrollHeight * scrollRatio;
+      });
+    }
+
   }).catch(() => {
     body.innerHTML = `<div class="pdf-error">Could not load PDF.<br><a href="${escH(absUrl)}" target="_blank">Tap to download</a></div>`;
   });
@@ -1081,6 +1088,13 @@ function closePDF() {
   if (_lastModalTrigger) { try { _lastModalTrigger.focus(); } catch(e) {} _lastModalTrigger = null; }
 }
 document.addEventListener('keydown', e => { if (e.key === 'Escape') closePDF(); });
+
+document.addEventListener('abl-pdf-zoom', function(e) {
+  var b = document.getElementById('pdfModalBody');
+  if (b) { b.style.transform = ''; b.style.transformOrigin = ''; }
+  _pdfZoom = Math.max(0.4, Math.min(4.0, e.detail.zoom));
+  renderPDF(_pdfUrl, e.detail.scrollRatio);
+});
 
 /* ══════════════════════════════════════
    FORMULA SHEET
