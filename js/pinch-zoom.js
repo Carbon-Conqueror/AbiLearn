@@ -1,33 +1,31 @@
-/* AbiLearn PinchZoom v2 — global gesture system
- * Provides native pinch-to-zoom + pan for all images and the PDF modal.
- * No visible controls; gesture-only, GPU-accelerated via transform3d.
+/* AbiLearn PinchZoom v3 — global gesture system
  *
  * IMAGES
- *   • Two-finger pinch → zoom in/out, anchored to the pinch midpoint
- *   • One-finger drag when scale > 1 → pan the zoomed image
- *   • Double-tap → toggle between 2.5× zoom and fit view
- *   • Scale < 1.2 on release → snaps back to 1× (prevents tiny mis-zooms)
- *   • touch-action: none while zoomed; restored on reset
+ *   • Two-finger pinch → incremental zoom anchored to the CURRENT midpoint
+ *     spread apart  → scale increases  (zoom in)
+ *     pinch together → scale decreases (zoom out)
+ *   • One-finger drag when scale > 1 → pan
+ *   • Double-tap → toggle 2.5× / fit
+ *   • Scale < 1.2 on release → snaps back to 1×
  *
  * PDF MODAL
- *   • Two-finger pinch on the PDF modal body → live CSS transform preview
- *   • On release → dispatches `abl-pdf-zoom` event so app.js re-renders
- *     the canvases at the new _pdfZoom value (scroll position preserved)
+ *   • Two-finger pinch → live CSS scale preview (same incremental logic)
+ *   • On release → dispatches `abl-pdf-zoom` so app.js re-renders
  */
 (function () {
   'use strict';
 
-  /* ── CONFIG ────────────────────────────────────── */
+  /* ── CONFIG ───────────────────────────────────── */
   var IMG_MIN    = 1.0;
   var IMG_MAX    = 5.0;
   var PDF_MIN    = 0.4;
   var PDF_MAX    = 4.0;
-  var DBL_MS     = 270;    // double-tap detection window (ms)
-  var DBL_ZOOM   = 2.5;    // zoom level applied by a double-tap
-  var SNAP_MIN   = 1.2;    // scale below this snaps back to 1 on release
-  var EDGE_GUARD = 60;     // minimum pixels of image that must stay on screen
+  var DBL_MS     = 270;
+  var DBL_ZOOM   = 2.5;
+  var SNAP_MIN   = 1.2;
+  var EDGE_GUARD = 60;
 
-  /* ── MATH HELPERS ──────────────────────────────── */
+  /* ── MATH ─────────────────────────────────────── */
   function clamp(v, lo, hi) { return v < lo ? lo : v > hi ? hi : v; }
 
   function pDist(a, b) {
@@ -39,7 +37,7 @@
     return { x: (a.clientX + b.clientX) / 2, y: (a.clientY + b.clientY) / 2 };
   }
 
-  function mapVals(obj) {
+  function pList(obj) {
     return Object.keys(obj).map(function (k) { return obj[k]; });
   }
 
@@ -47,7 +45,6 @@
      IMAGE ZOOM ENGINE
   ══════════════════════════════════════════════════ */
 
-  /* Per-element zoom state, keyed by the <img> element itself. */
   var imgData = (typeof WeakMap !== 'undefined') ? new WeakMap() : null;
 
   function getState(el) {
@@ -55,10 +52,16 @@
     if (!imgData.has(el)) {
       imgData.set(el, {
         scale: 1, tx: 0, ty: 0,
-        ptrs:  {},        /* active pointer map: id → {clientX, clientY} */
-        gs:    null,      /* gesture-start snapshot (set when pinch begins) */
+        ptrs: {},
+        /* incremental pinch state */
+        pinching: false,
+        prevDist: 0,
+        prevMid:  null,
+        nl: 0, nt: 0,       /* natural origin (viewport coords without our tx) */
+        /* pan state */
         panning: false,
         panSX: 0, panSY: 0, panSTx: 0, panSTy: 0,
+        /* double-tap */
         lastTap: 0, ltX: 0, ltY: 0,
         raf: false,
       });
@@ -66,12 +69,18 @@
     return imgData.get(el);
   }
 
-  /* Apply the current state to the DOM element (called via rAF). */
+  /* Compute natural origin (element top-left ignoring our own transform). */
+  function naturalOrigin(s, el) {
+    var r = el.getBoundingClientRect();
+    return { nl: r.left - s.tx, nt: r.top - s.ty };
+  }
+
+  /* Apply transform to DOM. */
   function applyTransform(s, el) {
     s.raf = false;
     if (s.scale <= 1.005) {
       s.scale = 1; s.tx = 0; s.ty = 0;
-      el.style.transform      = '';
+      el.style.transform       = '';
       el.style.transformOrigin = '';
       el.style.zIndex          = '';
       el.style.position        = '';
@@ -93,19 +102,17 @@
     requestAnimationFrame(function () { applyTransform(s, el); });
   }
 
-  /* Constrain tx/ty so the image stays partly within the viewport. */
-  function constrain(s, el) {
+  /* Clamp translation so EDGE_GUARD px of the image remains on screen. */
+  function constrain(s) {
     var cw = window.innerWidth, ch = window.innerHeight;
-    /* Natural position of the element origin (without our translation) */
-    var nl = s.gs ? s.gs.nl : (el.getBoundingClientRect().left - s.tx);
-    var nt = s.gs ? s.gs.nt : (el.getBoundingClientRect().top  - s.ty);
-    var ew = el.offsetWidth  * s.scale;
-    var eh = el.offsetHeight * s.scale;
-    s.tx = clamp(s.tx, -(nl + ew - EDGE_GUARD), cw - nl - EDGE_GUARD);
-    s.ty = clamp(s.ty, -(nt + eh - EDGE_GUARD), ch - nt - EDGE_GUARD);
+    /* offsetWidth/Height are the NATURAL sizes; scaled size = natural * scale */
+    var ew = s._elW * s.scale;
+    var eh = s._elH * s.scale;
+    s.tx = clamp(s.tx, -(s.nl + ew - EDGE_GUARD), cw - s.nl - EDGE_GUARD);
+    s.ty = clamp(s.ty, -(s.nt + eh - EDGE_GUARD), ch - s.nt - EDGE_GUARD);
   }
 
-  /* ── Image event handlers ───────────────────────── */
+  /* ── Image event handlers ─────────────────────── */
 
   function onImgDown(e) {
     var el = e.currentTarget;
@@ -114,34 +121,30 @@
 
     el.setPointerCapture(e.pointerId);
     s.ptrs[e.pointerId] = { clientX: e.clientX, clientY: e.clientY };
-    var pts   = mapVals(s.ptrs);
-    var count = pts.length;
+    var p = pList(s.ptrs);
 
-    if (count === 1) {
+    /* ── Single finger ── */
+    if (p.length === 1) {
       /* Double-tap detection */
       var now = Date.now();
       var ddx = e.clientX - s.ltX, ddy = e.clientY - s.ltY;
-      var tapDist = Math.sqrt(ddx * ddx + ddy * ddy);
-      if (now - s.lastTap < DBL_MS && tapDist < 30) {
+      if (now - s.lastTap < DBL_MS && Math.sqrt(ddx * ddx + ddy * ddy) < 30) {
         e.preventDefault();
         try { el.releasePointerCapture(e.pointerId); } catch (_) {}
         delete s.ptrs[e.pointerId];
         s.lastTap = 0;
         if (s.scale > 1.1) {
-          /* Reset to fit */
           s.scale = 1;
         } else {
-          /* Zoom into tap point */
-          var rect  = el.getBoundingClientRect();
-          var nl    = rect.left - s.tx;
-          var nt    = rect.top  - s.ty;
-          var lx    = (e.clientX - nl - s.tx) / s.scale;
-          var ly    = (e.clientY - nt - s.ty) / s.scale;
-          s.scale   = DBL_ZOOM;
-          s.tx      = e.clientX - nl - lx * s.scale;
-          s.ty      = e.clientY - nt - ly * s.scale;
-          s.gs      = { nl: nl, nt: nt };
-          constrain(s, el);
+          var o   = naturalOrigin(s, el);
+          var lx  = (e.clientX - o.nl - s.tx) / s.scale;
+          var ly  = (e.clientY - o.nt - s.ty) / s.scale;
+          s.scale = DBL_ZOOM;
+          s.nl    = o.nl; s.nt = o.nt;
+          s._elW  = el.offsetWidth; s._elH = el.offsetHeight;
+          s.tx    = e.clientX - o.nl - lx * s.scale;
+          s.ty    = e.clientY - o.nt - ly * s.scale;
+          constrain(s);
         }
         scheduleApply(s, el);
         return;
@@ -150,8 +153,11 @@
       s.ltX     = e.clientX;
       s.ltY     = e.clientY;
 
-      /* Start single-finger pan if already zoomed in */
+      /* Start pan if already zoomed */
       if (s.scale > 1.05) {
+        var o2  = naturalOrigin(s, el);
+        s.nl    = o2.nl; s.nt = o2.nt;
+        s._elW  = el.offsetWidth; s._elH = el.offsetHeight;
         s.panning = true;
         s.panSX   = e.clientX; s.panSY  = e.clientY;
         s.panSTx  = s.tx;      s.panSTy = s.ty;
@@ -159,18 +165,17 @@
       }
     }
 
-    if (count === 2) {
-      s.panning = false;
-      var rect2 = el.getBoundingClientRect();
-      s.gs = {
-        d:     pDist(pts[0], pts[1]),
-        scale: s.scale,
-        mid:   pMid(pts[0], pts[1]),
-        tx0:   s.tx,  ty0: s.ty,
-        nl:    rect2.left - s.tx,
-        nt:    rect2.top  - s.ty,
-      };
-      /* Prevent browser scroll / native zoom for this gesture */
+    /* ── Second finger → start pinch ── */
+    if (p.length === 2) {
+      s.panning  = false;
+      s.pinching = true;
+      /* Capture natural origin and element size at gesture start */
+      var o3  = naturalOrigin(s, el);
+      s.nl    = o3.nl; s.nt = o3.nt;
+      s._elW  = el.offsetWidth; s._elH = el.offsetHeight;
+      /* Init incremental distance */
+      s.prevDist = pDist(p[0], p[1]);
+      s.prevMid  = pMid(p[0], p[1]);
       el.style.touchAction = 'none';
       e.preventDefault();
     }
@@ -180,38 +185,54 @@
     var el = e.currentTarget;
     var s  = getState(el);
     if (!s || !s.ptrs[e.pointerId]) return;
+
     s.ptrs[e.pointerId] = { clientX: e.clientX, clientY: e.clientY };
-    var pts = mapVals(s.ptrs);
+    var p = pList(s.ptrs);
 
-    if (pts.length >= 2 && s.gs && s.gs.d) {
-      /* ── Pinch ── */
+    /* ── Pinch ── */
+    if (p.length >= 2 && s.pinching) {
       e.preventDefault();
-      var currD = pDist(pts[0], pts[1]);
-      var currM = pMid(pts[0], pts[1]);
-      var ns    = clamp(s.gs.scale * (currD / s.gs.d), IMG_MIN, IMG_MAX);
+      var currDist = pDist(p[0], p[1]);
+      var currMid  = pMid(p[0], p[1]);
 
-      /*
-       * Anchor math (transform-origin: 0 0):
-       *   screen(lx,ly) = naturalOrigin + (tx,ty) + (lx,ly)*scale
-       * Content point under gesture-start midpoint:
-       *   lx0 = (smx - nl - tx0) / scale0
-       * New translation so that point appears under current midpoint:
-       *   tx1 = currM.x - nl - lx0 * newScale
-       */
-      var lx0 = (s.gs.mid.x - s.gs.nl - s.gs.tx0) / s.gs.scale;
-      var ly0 = (s.gs.mid.y - s.gs.nt - s.gs.ty0) / s.gs.scale;
-      s.scale  = ns;
-      s.tx     = currM.x - s.gs.nl - lx0 * ns;
-      s.ty     = currM.y - s.gs.nt - ly0 * ns;
-      constrain(s, el);
-      scheduleApply(s, el);
+      if (s.prevDist > 0) {
+        /*
+         * INCREMENTAL scale: ratio = currentDistance / previousDistance
+         *   spread fingers  → currDist > prevDist → ratio > 1 → scale UP (zoom in)
+         *   pinch fingers   → currDist < prevDist → ratio < 1 → scale DOWN (zoom out)
+         */
+        var ratio    = currDist / s.prevDist;
+        var newScale = clamp(s.scale * ratio, IMG_MIN, IMG_MAX);
 
-    } else if (pts.length === 1 && s.panning) {
-      /* ── One-finger pan (while zoomed) ── */
+        /*
+         * Anchor: the content point that was under prevMid must appear under currMid.
+         * With transform-origin: 0 0 and translate3d(tx,ty,0) scale(s):
+         *   screen = nl + tx + contentPoint * scale
+         *   contentPoint = (screen - nl - tx) / scale
+         * Solve for newTx so contentPoint appears at currMid:
+         *   newTx = currMid.x - nl - contentPoint * newScale
+         */
+        var cpX = (s.prevMid.x - s.nl - s.tx) / s.scale;
+        var cpY = (s.prevMid.y - s.nt - s.ty) / s.scale;
+        s.scale = newScale;
+        s.tx    = currMid.x - s.nl - cpX * s.scale;
+        s.ty    = currMid.y - s.nt - cpY * s.scale;
+        constrain(s);
+        scheduleApply(s, el);
+      }
+
+      /* Advance for next frame */
+      s.prevDist = currDist;
+      s.prevMid  = currMid;
+      return;
+    }
+
+    /* ── Pan (one finger while zoomed) ── */
+    if (p.length === 1 && s.panning) {
       e.preventDefault();
       s.tx = s.panSTx + (e.clientX - s.panSX);
       s.ty = s.panSTy + (e.clientY - s.panSY);
-      constrain(s, el);
+      constrain(s);
       scheduleApply(s, el);
     }
   }
@@ -220,20 +241,38 @@
     var el = e.currentTarget;
     var s  = getState(el);
     if (!s) return;
+
     delete s.ptrs[e.pointerId];
-    var pts = mapVals(s.ptrs);
-    if (pts.length < 2) s.gs = null;
-    if (pts.length === 0) {
+    var p = pList(s.ptrs);
+
+    /* End pinch when fewer than 2 pointers remain */
+    if (p.length < 2 && s.pinching) {
+      s.pinching = false;
+      s.prevDist = 0;
+      s.prevMid  = null;
+
+      /* Smooth transition: remaining finger keeps panning */
+      if (p.length === 1 && s.scale > 1.05) {
+        var o  = naturalOrigin(s, el);
+        s.nl   = o.nl; s.nt = o.nt;
+        s._elW = el.offsetWidth; s._elH = el.offsetHeight;
+        s.panning  = true;
+        s.panSX    = p[0].clientX; s.panSY  = p[0].clientY;
+        s.panSTx   = s.tx;         s.panSTy = s.ty;
+      }
+    }
+
+    if (p.length === 0) {
       s.panning = false;
-      /* Snap back to 1 if barely zoomed */
-      if (s.scale < SNAP_MIN) {
+      /* Snap back if barely zoomed */
+      if (s.scale > 1.005 && s.scale < SNAP_MIN) {
         s.scale = 1;
         scheduleApply(s, el);
       }
     }
   }
 
-  /* ── Exclude UI chrome from zoom ─────────────────── */
+  /* ── Exclusion list ───────────────────────────── */
   var SKIP_SEL = [
     'button', 'nav', 'header',
     '.nav-logo', '[class*="logo"]', '[class*="icon"]',
@@ -243,14 +282,13 @@
 
   function attachImg(el) {
     if (!el || el._ablZ) return;
-    /* Skip navigation chrome, icons, logos */
     try { if (el.closest(SKIP_SEL)) return; } catch (_) {}
     var cls = (el.className && typeof el.className === 'string') ? el.className : '';
     if (/(icon|logo|avatar|badge|guard|watermark)/i.test(cls)) return;
     if (/(icon|logo|avatar)/i.test(el.src || '')) return;
 
-    el._ablZ      = true;
-    el.draggable  = false;
+    el._ablZ             = true;
+    el.draggable         = false;
     el.style.touchAction = 'pan-x pan-y';
     el.addEventListener('pointerdown',   onImgDown, { passive: false });
     el.addEventListener('pointermove',   onImgMove, { passive: false });
@@ -262,17 +300,13 @@
     document.querySelectorAll('img').forEach(attachImg);
   }
 
-  /* Watch for images added dynamically (SPA navigations, lazy-loaded content). */
   if (typeof MutationObserver !== 'undefined') {
     new MutationObserver(function (muts) {
       muts.forEach(function (m) {
         m.addedNodes.forEach(function (n) {
           if (n.nodeType !== 1) return;
-          if (n.tagName === 'IMG') {
-            attachImg(n);
-          } else if (n.querySelectorAll) {
-            n.querySelectorAll('img').forEach(attachImg);
-          }
+          if (n.tagName === 'IMG') attachImg(n);
+          else if (n.querySelectorAll) n.querySelectorAll('img').forEach(attachImg);
         });
       });
     }).observe(document.body, { childList: true, subtree: true });
@@ -283,88 +317,86 @@
   ══════════════════════════════════════════════════ */
 
   var pdfState = {
-    ptrs:     {},
-    gs:       null,   /* gesture-start snapshot */
-    active:   false,
-    cssRatio: 1,      /* current CSS scale ratio (relative to _pdfZoom) */
+    ptrs:         {},
+    active:       false,
+    prevDist:     0,
+    prevMid:      null,
+    cssScale:     1,    /* accumulated CSS scale during this gesture */
+    startPdfZoom: 1,    /* _pdfZoom captured at gesture start */
   };
 
   function onPdfDown(e) {
     var body = e.currentTarget;
     body.setPointerCapture(e.pointerId);
     pdfState.ptrs[e.pointerId] = { clientX: e.clientX, clientY: e.clientY };
-    var pts = mapVals(pdfState.ptrs);
+    var p = pList(pdfState.ptrs);
 
-    if (pts.length === 2 && !pdfState.active) {
-      pdfState.active = true;
+    if (p.length === 2 && !pdfState.active) {
+      pdfState.active       = true;
+      pdfState.cssScale     = 1;
+      pdfState.startPdfZoom = (typeof _pdfZoom !== 'undefined') ? _pdfZoom : 1;
+      pdfState.prevDist     = pDist(p[0], p[1]);
+      pdfState.prevMid      = pMid(p[0], p[1]);
+      /* Set initial transform-origin at pinch midpoint */
       var bRect = body.getBoundingClientRect();
-      pdfState.gs = {
-        d:         pDist(pts[0], pts[1]),
-        mid:       pMid(pts[0], pts[1]),
-        bLeft:     bRect.left,
-        bTop:      bRect.top,
-        scrollTop: body.scrollTop,
-        scrollH:   body.scrollHeight,
-        /* Capture current PDF zoom level from app.js global */
-        zoomVal:   (typeof _pdfZoom !== 'undefined') ? _pdfZoom : 1,
-      };
-      pdfState.cssRatio = 1;
-      body.style.touchAction = 'none';
+      var ox    = pdfState.prevMid.x - bRect.left;
+      var oy    = pdfState.prevMid.y - bRect.top + body.scrollTop;
+      body.style.transformOrigin = ox + 'px ' + oy + 'px';
+      body.style.transform       = 'scale(1)';
+      body.style.touchAction     = 'none';
       e.preventDefault();
     }
   }
 
   function onPdfMove(e) {
-    if (!pdfState.active || !pdfState.gs) return;
+    if (!pdfState.active) return;
     var body = e.currentTarget;
     if (!pdfState.ptrs[e.pointerId]) return;
     pdfState.ptrs[e.pointerId] = { clientX: e.clientX, clientY: e.clientY };
-    var pts = mapVals(pdfState.ptrs);
-    if (pts.length < 2) return;
+    var p = pList(pdfState.ptrs);
+    if (p.length < 2) return;
     e.preventDefault();
 
-    var currD = pDist(pts[0], pts[1]);
-    var currM = pMid(pts[0], pts[1]);
-    var ratio  = clamp(currD / pdfState.gs.d, 0.2, 5.0);
-    pdfState.cssRatio = ratio;
+    var currDist = pDist(p[0], p[1]);
+    var currMid  = pMid(p[0], p[1]);
 
-    /*
-     * Set transform-origin to the CURRENT pinch midpoint (not just the
-     * gesture-start midpoint) so the view re-anchors as fingers move.
-     * The origin is relative to the body element, accounting for scroll.
-     */
-    var ox = currM.x - pdfState.gs.bLeft;
-    var oy = currM.y - pdfState.gs.bTop + body.scrollTop;
-    body.style.transformOrigin = ox + 'px ' + oy + 'px';
-    body.style.transform       = 'scale(' + ratio + ')';
+    if (pdfState.prevDist > 0) {
+      /*
+       * INCREMENTAL scale for PDF — same formula as images:
+       *   spread → scale increases (zoom in)
+       *   pinch  → scale decreases (zoom out)
+       */
+      var ratio         = currDist / pdfState.prevDist;
+      pdfState.cssScale = clamp(pdfState.cssScale * ratio, 0.15, 6.0);
+
+      /* Move transform-origin to current midpoint so zoom follows fingers */
+      var bRect = body.getBoundingClientRect();
+      var ox    = currMid.x - bRect.left;
+      var oy    = currMid.y - bRect.top + body.scrollTop;
+      body.style.transformOrigin = ox + 'px ' + oy + 'px';
+      body.style.transform       = 'scale(' + pdfState.cssScale + ')';
+    }
+
+    pdfState.prevDist = currDist;
+    pdfState.prevMid  = currMid;
   }
 
   function onPdfUp(e) {
     delete pdfState.ptrs[e.pointerId];
-    var remaining = mapVals(pdfState.ptrs).length;
+    var remaining = pList(pdfState.ptrs).length;
 
-    /* End gesture when fewer than 2 fingers remain */
     if (pdfState.active && remaining < 2) {
       pdfState.active = false;
-      var body = e.currentTarget;
-      var gs   = pdfState.gs;
-      pdfState.gs = null;
+      var body        = e.currentTarget;
 
-      var ratio       = pdfState.cssRatio;
-      pdfState.cssRatio = 1;
-      body.style.touchAction = 'pan-y';
+      /* Absolute zoom = zoom-at-gesture-start × CSS scale accumulated */
+      var newZoom     = clamp(pdfState.startPdfZoom * pdfState.cssScale, PDF_MIN, PDF_MAX);
+      var scrollRatio = body.scrollHeight > 0 ? body.scrollTop / body.scrollHeight : 0;
 
-      if (!gs) {
-        body.style.transform      = '';
-        body.style.transformOrigin = '';
-        return;
-      }
-
-      /* Compute target zoom and fractional scroll position to preserve */
-      var newZoom     = clamp(gs.zoomVal * ratio, PDF_MIN, PDF_MAX);
-      var scrollRatio = gs.scrollH > 0 ? gs.scrollTop / gs.scrollH : 0;
-
-      /* Remove CSS transform then ask app.js to re-render */
+      pdfState.cssScale = 1;
+      pdfState.prevDist = 0;
+      pdfState.prevMid  = null;
+      body.style.touchAction     = 'pan-y';
       body.style.transform       = '';
       body.style.transformOrigin = '';
 
@@ -376,7 +408,7 @@
 
   function attachPdf(body) {
     if (!body || body._ablPdfZ) return;
-    body._ablPdfZ = true;
+    body._ablPdfZ        = true;
     body.style.touchAction = 'pan-y';
     body.addEventListener('pointerdown',   onPdfDown, { passive: false });
     body.addEventListener('pointermove',   onPdfMove, { passive: false });
@@ -389,11 +421,8 @@
   ══════════════════════════════════════════════════ */
 
   attachAllImgs();
-
-  /* Re-scan images after SPA page transitions */
   document.addEventListener('abl-navigate', attachAllImgs);
 
-  /* Public API consumed by app.js */
   window.ablPinchZoom = {
     attachImg:     attachImg,
     attachAllImgs: attachAllImgs,
