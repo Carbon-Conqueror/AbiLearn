@@ -1,4 +1,4 @@
-/* AbiLearn PinchZoom v1 — global gesture system
+/* AbiLearn PinchZoom v2 — global gesture system
  * Provides native pinch-to-zoom + pan for all images and the PDF modal.
  * No visible controls; gesture-only, GPU-accelerated via transform3d.
  *
@@ -76,7 +76,7 @@
       el.style.zIndex          = '';
       el.style.position        = '';
       el.style.willChange      = '';
-      el.style.touchAction     = '';
+      el.style.touchAction     = 'pan-x pan-y';
     } else {
       el.style.transform       = 'translate3d(' + s.tx + 'px,' + s.ty + 'px,0) scale(' + s.scale + ')';
       el.style.transformOrigin = '0 0';
@@ -251,6 +251,7 @@
 
     el._ablZ      = true;
     el.draggable  = false;
+    el.style.touchAction = 'pan-x pan-y';
     el.addEventListener('pointerdown',   onImgDown, { passive: false });
     el.addEventListener('pointermove',   onImgMove, { passive: false });
     el.addEventListener('pointerup',     onImgUp);
@@ -351,7 +352,7 @@
 
       var ratio       = pdfState.cssRatio;
       pdfState.cssRatio = 1;
-      body.style.touchAction = '';
+      body.style.touchAction = 'pan-y';
 
       if (!gs) {
         body.style.transform      = '';
@@ -376,6 +377,7 @@
   function attachPdf(body) {
     if (!body || body._ablPdfZ) return;
     body._ablPdfZ = true;
+    body.style.touchAction = 'pan-y';
     body.addEventListener('pointerdown',   onPdfDown, { passive: false });
     body.addEventListener('pointermove',   onPdfMove, { passive: false });
     body.addEventListener('pointerup',     onPdfUp);
