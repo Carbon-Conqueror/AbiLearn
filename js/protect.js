@@ -1,6 +1,43 @@
-/* AbiLearn Content Protection v2 */
+/* AbiLearn Content Protection v3 */
 (function () {
   'use strict';
+
+  /* ── 0. ANTI-IFRAME ──────────────────────────────
+   * Bust any attempt to embed this site in another page's iframe.           */
+  if (window.top !== window.self) {
+    try {
+      /* Try to escape the frame by navigating the top context away */
+      window.top.location.replace(window.location.href);
+    } catch (_) {
+      /* Cross-origin parent: just blank out our own document */
+      document.documentElement.style.cssText = 'display:none!important';
+    }
+  }
+
+  /* ── 0b. ANTI-CLONE ──────────────────────────────
+   * Redirect to the official domain if the page is being served from an
+   * unauthorised hostname (mirrors, clones, offline saves served via a
+   * web server).  Localhost / LAN IPs are allowed for development.          */
+  (function () {
+    var host    = (window.location.hostname || '').toLowerCase();
+    var allowed = [
+      'abilearn.co.in',
+      'www.abilearn.co.in',
+      'abilearn-89c92.web.app',
+      'abilearn-89c92.firebaseapp.com',
+    ];
+    var isLocal = host === 'localhost' || host === '127.0.0.1' ||
+                  /^192\.168\.|^10\.|^172\.(1[6-9]|2\d|3[01])\./.test(host);
+    var isOk    = isLocal || allowed.some(function (a) {
+      return host === a || host.endsWith('.' + a);
+    });
+    if (!isOk) {
+      document.documentElement.style.cssText = 'display:none!important';
+      window.location.replace(
+        'https://www.abilearn.co.in' + window.location.pathname + window.location.search
+      );
+    }
+  }());
 
   /* ── 1. CONTEXT MENU ─────────────────────────── */
   document.addEventListener('contextmenu', function (e) { e.preventDefault(); });
@@ -52,10 +89,13 @@
   function _flashGuard() {
     _ensureGuard();
     _guard.classList.add('abl-guard-visible');
+    /* Blur all content under the guard */
+    document.body.classList.add('abl-ss-active');
     clearTimeout(_guardTimer);
     _guardTimer = setTimeout(function () {
       _guard.classList.remove('abl-guard-visible');
-    }, 500);
+      document.body.classList.remove('abl-ss-active');
+    }, 1500);
   }
 
   /* ── 7. VISIBILITY CHANGE ────────────────────── */
@@ -63,17 +103,19 @@
     _ensureGuard();
     if (document.visibilityState === 'hidden') {
       _guard.classList.add('abl-guard-visible');
+      document.body.classList.add('abl-ss-active');
     } else {
       clearTimeout(_guardTimer);
+      /* Keep guard up briefly after returning — covers any screenshot-viewer
+       * swipe-back animation that might expose the page content             */
       _guardTimer = setTimeout(function () {
         _guard.classList.remove('abl-guard-visible');
-      }, 200);
+        document.body.classList.remove('abl-ss-active');
+      }, 600);
     }
   });
 
   /* ── 8. WINDOW BLUR ──────────────────────────── */
-  /* Fires when the browser window loses focus — catches OS snipping tools
-   * (Win+Shift+S, Alt-Tab to screenshot app) that steal focus briefly      */
   window.addEventListener('blur', function () { _flashGuard(); });
 
   /* ── 9. DEVTOOLS HEURISTIC ───────────────────── */
@@ -84,22 +126,34 @@
     }
   }, 1500);
 
-  /* ── 10. DIAGONAL WATERMARK ──────────────────── */
-  /* Renders a tiled watermark over the whole viewport at low opacity.
-   * Invisible during normal use; clearly visible in any screenshot.         */
+  /* ── 10. WATERMARK ───────────────────────────────
+   * Diagonal tiled overlay — visible in every screenshot.
+   * Personalised with the user's email once auth resolves so that any
+   * shared screenshot is traceable to the specific account.                  */
+  var _wm = null;
+
+  function _wmBuild(text) {
+    if (!_wm) return;
+    var safe = text.replace(/</g, '&lt;').replace(/>/g, '&gt;');
+    var html = '';
+    for (var i = 0; i < 60; i++) html += '<span>' + safe + '</span>';
+    _wm.innerHTML = html;
+  }
+
   (function () {
     if (document.getElementById('abl-watermark')) return;
-    var wm  = document.createElement('div');
-    wm.id   = 'abl-watermark';
-    wm.setAttribute('aria-hidden', 'true');
-
-    var text = 'AbiLearn  ·  Confidential  ·  ';
-    var html = '';
-    for (var i = 0; i < 60; i++) {
-      html += '<span>' + text + '</span>';
-    }
-    wm.innerHTML = html;
-    document.body.appendChild(wm);
+    _wm = document.createElement('div');
+    _wm.id = 'abl-watermark';
+    _wm.setAttribute('aria-hidden', 'true');
+    _wmBuild('AbiLearn  ·  Confidential  ·  ');
+    document.body.appendChild(_wm);
   }());
+
+  /* Called by app.js once Firebase auth resolves with the signed-in user */
+  window._ablSetWatermarkUser = function (email, name) {
+    var id = (name || email || '').trim();
+    if (!id) return;
+    _wmBuild('AbiLearn  ·  ' + id + '  ·  ');
+  };
 
 }());

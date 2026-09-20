@@ -148,6 +148,13 @@ function subscribeChapterProgress(uid) {
 
 /* Called by auth.js onAuthStateChanged after Firebase auth resolves */
 async function loadUserDataFromFirestore(uid) {
+  /* Personalise the watermark so any screenshot is traceable to this account */
+  try {
+    var u = (typeof getUser === 'function') ? getUser() : null;
+    if (u && window._ablSetWatermarkUser) {
+      window._ablSetWatermarkUser(u.email || '', u.displayName || '');
+    }
+  } catch (_) {}
   if (typeof DB === 'undefined' || !uid) return;
   subscribeChapterProgress(uid);
   try {

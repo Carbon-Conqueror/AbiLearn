@@ -1849,18 +1849,31 @@ footer {
 #abl-watermark span {
   display: block;
   width: 100%;
-  font-size: 13px;
+  font-size: 14px;
   font-weight: 700;
   font-family: sans-serif;
   letter-spacing: .12em;
   text-transform: uppercase;
-  color: rgba(91, 71, 222, 0.09);
+  color: rgba(91, 71, 222, 0.22);
   white-space: nowrap;
   padding: 22px 0;
   line-height: 1;
 }
 @media print {
   #abl-watermark { display: none !important; }
+}
+
+/* ─── GUARD CONTENT BLUR ─────────────────────── */
+/* Applied while the screenshot guard is active.
+ * Blurs page content under the guard so that any
+ * screenshot taken during the guard fade-out also
+ * captures illegible, blurred content.            */
+body.abl-ss-active > *:not(#abl-ss-guard):not(#abl-watermark) {
+  filter: blur(18px) brightness(0.25) !important;
+  transition: filter 0s !important;
+  user-select: none !important;
+  -webkit-user-select: none !important;
+  pointer-events: none !important;
 }
 
 /* ─── FULLSCREEN FOCUS OVERLAY ────────────────── */
