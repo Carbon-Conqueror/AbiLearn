@@ -1823,11 +1823,13 @@ footer {
   pointer-events: none;
   background: #0A0818;
   opacity: 0;
-  transition: opacity 80ms linear;
+  /* fade-out only — appearance is instant so there's no window for screenshots */
+  transition: opacity 400ms linear;
 }
 #abl-ss-guard.abl-guard-visible {
   opacity: 1;
   pointer-events: all;
+  transition: opacity 0ms; /* instant on */
 }
 
 /* ─── DIAGONAL WATERMARK ─────────────────────── */

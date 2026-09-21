@@ -1,4 +1,4 @@
-/* AbiLearn Content Protection v4 */
+/* AbiLearn Content Protection v5 */
 (function () {
   'use strict';
 
@@ -58,6 +58,10 @@
   window.print = function () {};
 
   /* ── 5. KEYBOARD SHORTCUTS ───────────────────── */
+  function _isPrintScreen(e) {
+    return e.key === 'PrintScreen' || e.key === 'PrtSc' ||
+           e.key === 'Print' || e.keyCode === 44;
+  }
   document.addEventListener('keydown', function (e) {
     var ctrl  = e.ctrlKey || e.metaKey;
     var key   = (e.key || '').toLowerCase();
@@ -66,12 +70,18 @@
     if (ctrl && ['c','a','s','u','p'].includes(key))      { e.preventDefault(); return; }
     if (ctrl && shift && ['i','j','c','k'].includes(key)) { e.preventDefault(); return; }
     if (e.key === 'F12')                                  { e.preventDefault(); return; }
-    if (e.key === 'PrintScreen' || e.key === 'PrtSc') {
+    if (_isPrintScreen(e)) {
       e.preventDefault(); _flashGuard(); return;
     }
     if (ctrl && shift && ['3','4','5'].includes(e.key)) {
       e.preventDefault(); _flashGuard(); return;
     }
+    /* Windows Snipping Tool: Win+Shift+S doesn't fire keydown with Win key
+       but the app loses focus → window.blur fires (handled in section 8) */
+  });
+  /* Also catch PrintScreen on keyup — some tools only fire keyup */
+  document.addEventListener('keyup', function (e) {
+    if (_isPrintScreen(e)) { _flashGuard(); }
   });
 
   /* ── 6. SCREENSHOT GUARD ─────────────────────── */
