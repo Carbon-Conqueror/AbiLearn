@@ -14,6 +14,7 @@
     'abl-fs-overlay',      // fullscreen.js — focus mode overlay
     'abl-ss-guard',        // protect.js    — screenshot guard
     'abl-fs-exit-btn',     // fullscreen.js — exit fullscreen button
+    'abl-fs-back-btn',     // fullscreen.js — back navigation button
     'abl-spa-bar'          // router.js     — progress bar (self)
   ];
 

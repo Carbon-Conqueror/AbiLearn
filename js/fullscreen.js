@@ -88,6 +88,7 @@
 
   /* ── Fullscreen lifecycle ───────────────────── */
   var enteredOnce = false;
+  var _deliberateExit = false;
 
   function _syncFsClass() {
     if (isFS()) {
@@ -101,11 +102,14 @@
     _syncFsClass();
     if (isFS()) {
       enteredOnce = true;
+      _deliberateExit = false;
       try { sessionStorage.setItem(FS_KEY, '1'); } catch (e) {}
       hideOverlay();
-    } else if (enteredOnce) {
+    } else if (enteredOnce && !_deliberateExit) {
+      /* Accidental exit (Escape key, browser gesture) — prompt to re-enter */
       showOverlay(false);
     }
+    /* Deliberate exit: do nothing, let user browse normally */
   }
 
   ['fullscreenchange', 'webkitfullscreenchange',
@@ -118,12 +122,13 @@
     /* All non-iOS-Safari browsers: attempt fullscreen immediately */
     enterFS();
 
+    /* Re-enter fullscreen on interaction only when not deliberately exited */
     document.addEventListener('click', function () {
-      if (!isFS()) enterFS();
+      if (!isFS() && !_deliberateExit) enterFS();
     }, { capture: true, passive: true });
 
     document.addEventListener('touchstart', function () {
-      if (!isFS()) enterFS();
+      if (!isFS() && !_deliberateExit) enterFS();
     }, { capture: true, passive: true });
 
     var hasConsent = false;
@@ -147,6 +152,7 @@
     _exitBtn.textContent = 'Exit Fullscreen';
     _exitBtn.setAttribute('aria-label', 'Exit fullscreen');
     _exitBtn.addEventListener('click', function () {
+      _deliberateExit = true;
       var exitFn = document.exitFullscreen || document.webkitExitFullscreen ||
                    document.mozCancelFullScreen || document.msExitFullscreen;
       if (exitFn && isFS()) exitFn.call(document).catch(function () {});

@@ -10,7 +10,7 @@
     const navH = nav ? nav.offsetHeight : 72;
     if (y > lastY && y > navH) {
       if (nav) nav.style.transform = 'translateY(-100%)';
-      if (tabs) tabs.style.top = '0';
+      if (tabs) tabs.style.top = 'env(safe-area-inset-top,0px)';
     } else {
       if (nav) nav.style.transform = '';
       if (tabs) tabs.style.top = '';
@@ -308,6 +308,15 @@ function initMobileNav() {
       <a href="science.html" class="mobile-nav-link mobile-sub-link">Science</a>
       <a href="english.html" class="mobile-nav-link mobile-sub-link">English</a>
       <a href="social.html" class="mobile-nav-link mobile-sub-link">Social Science</a>
+      <div class="mobile-nav-section">Tools</div>
+      <a href="daily-quiz.html" class="mobile-nav-link mobile-sub-link">Daily Quiz</a>
+      <a href="qbank.html" class="mobile-nav-link mobile-sub-link">Question Bank</a>
+      <a href="mind-maps.html" class="mobile-nav-link mobile-sub-link">Mind Maps</a>
+      <a href="learn-tips.html" class="mobile-nav-link mobile-sub-link">Learn Tips</a>
+      <a href="learn.html" class="mobile-nav-link mobile-sub-link">Study Planner</a>
+      <div class="mobile-nav-section">Account</div>
+      <a href="profile.html" class="mobile-nav-link mobile-sub-link">My Profile</a>
+      <a href="about.html" class="mobile-nav-link mobile-sub-link">About AbiLearn</a>
       <div class="mobile-menu-actions">
         <button class="btn-login">Log In</button>
         <button class="btn-signup">Sign Up Free</button>
