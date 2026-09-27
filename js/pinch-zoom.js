@@ -1,20 +1,23 @@
-/* AbiLearn PinchZoom v4 — images, PDFs, and all visual content
+/* AbiLearn PinchZoom v5 — images, PDFs, and all visual content
  *
  * IMAGES / DIAGRAMS
  *   • Two-finger pinch → incremental zoom anchored to live midpoint
  *     spread apart  → scale UP  (zoom in)
  *     pinch together → scale DOWN (zoom out)
- *   • One-finger drag while zoomed → pan in all directions
+ *   • One-finger drag while zoomed → pan with inertia/momentum
  *   • Ctrl/Cmd + mouse-wheel or natural trackpad pinch → zoom at cursor
  *   • Double-tap → 2.5× / fit toggle
  *   • Smooth snap-back when released below SNAP_MIN
- *   • Boundary resistance at min/max scale
- *   • GPU-accelerated via translate3d + scale
+ *   • Elastic resistance at min/max scale limits
+ *   • GPU-accelerated via translate3d + scale (transformOrigin: 0 0 always)
+ *   • touch-action:none during 1-finger pan — no accidental page scroll
  *
  * PDF MODAL
- *   • Two-finger pinch → live CSS scale preview
- *   • Ctrl/Cmd + wheel → zoom at cursor
- *   • On release → dispatches `abl-pdf-zoom` so app.js re-renders
+ *   • Two-finger pinch → live CSS preview (translate3d + scale, stable anchor)
+ *   • Mid-point drift handled — pinch + pan simultaneously
+ *   • Ctrl/Cmd + wheel → re-render at new zoom
+ *   • On release → dispatches `abl-pdf-zoom` for app.js re-render
+ *   • touch-action: pan-x pan-y → horizontal + vertical scroll when zoomed
  */
 (function () {
   'use strict';
@@ -24,15 +27,14 @@
   var IMG_MAX    = 5.0;
   var PDF_MIN    = 0.4;
   var PDF_MAX    = 4.0;
-  var DBL_MS     = 270;
+  var DBL_MS     = 270;   /* ms window for double-tap */
   var DBL_ZOOM   = 2.5;
-  var SNAP_MIN   = 1.15;
-  var EDGE_GUARD = 50;
+  var SNAP_MIN   = 1.15;  /* snap back to 1× if released below this */
+  var EDGE_GUARD = 40;    /* px of element always kept on screen */
 
   /* ── MATH ─────────────────────────────────────── */
   function clamp(v, lo, hi) { return v < lo ? lo : v > hi ? hi : v; }
 
-  /* Elastic resistance: value tries to go past limit, returns softened result */
   function resist(v, lo, hi) {
     if (v < lo) return lo + (v - lo) * 0.25;
     if (v > hi) return hi + (v - hi) * 0.25;
@@ -42,10 +44,6 @@
   function pDist(a, b) {
     var dx = b.clientX - a.clientX, dy = b.clientY - a.clientY;
     return Math.sqrt(dx * dx + dy * dy);
-  }
-
-  function pMid(a, b) {
-    return { x: (a.clientX + b.clientX) / 2, y: (a.clientY + b.clientY) / 2 };
   }
 
   function pList(obj) {
@@ -63,25 +61,41 @@
     if (!imgData.has(el)) {
       imgData.set(el, {
         scale: 1, tx: 0, ty: 0,
+        nl: 0, nt: 0,
+        _elW: 0, _elH: 0,
         ptrs: {},
         pinching: false,
         prevDist: 0,
         prevMid: null,
-        nl: 0, nt: 0,
-        _elW: 0, _elH: 0,
         panning: false,
         panSX: 0, panSY: 0, panSTx: 0, panSTy: 0,
+        /* Inertia */
+        vx: 0, vy: 0,
+        prevPanTx: 0, prevPanTy: 0,
+        prevPanTime: 0,
+        inertiaRaf: 0,
+        /* Double-tap */
         lastTap: 0, ltX: 0, ltY: 0,
         raf: false,
-        snapping: false,
       });
     }
     return imgData.get(el);
   }
 
-  function naturalOrigin(s, el) {
-    var r = el.getBoundingClientRect();
-    return { nl: r.left - s.tx, nt: r.top - s.ty };
+  function captureNatural(s, el) {
+    var r  = el.getBoundingClientRect();
+    s.nl   = r.left - s.tx;   /* viewport left WITHOUT transform */
+    s.nt   = r.top  - s.ty;   /* viewport top  WITHOUT transform */
+    s._elW = el.offsetWidth;
+    s._elH = el.offsetHeight;
+  }
+
+  /* Constrain tx/ty so EDGE_GUARD px of the element always stays visible */
+  function constrain(s) {
+    var cw = window.innerWidth, ch = window.innerHeight;
+    var ew = s._elW * s.scale, eh = s._elH * s.scale;
+    s.tx = clamp(s.tx, -(s.nl + ew - EDGE_GUARD), cw - s.nl - EDGE_GUARD);
+    s.ty = clamp(s.ty, -(s.nt + eh - EDGE_GUARD), ch - s.nt - EDGE_GUARD);
   }
 
   function applyTransform(s, el, snap) {
@@ -89,21 +103,20 @@
     if (s.scale <= 1.005) {
       s.scale = 1; s.tx = 0; s.ty = 0;
       if (snap) {
-        /* Animate snap-back with a short CSS transition */
-        el.style.transition     = 'transform 200ms cubic-bezier(.22,.68,0,1.1)';
-        el.style.transform      = 'translate3d(0,0,0) scale(1)';
+        el.style.transition      = 'transform 200ms cubic-bezier(.22,.68,0,1.1)';
+        el.style.transform       = 'translate3d(0,0,0) scale(1)';
         el.style.transformOrigin = '0 0';
-        /* Clean up transition after it fires */
         setTimeout(function () {
-          el.style.transition     = '';
-          el.style.transform      = '';
+          el.style.transition      = '';
+          el.style.transform       = '';
           el.style.transformOrigin = '';
-          el.style.zIndex         = '';
-          el.style.position       = '';
-          el.style.willChange     = '';
-          el.style.touchAction    = 'pan-x pan-y';
+          el.style.zIndex          = '';
+          el.style.position        = '';
+          el.style.willChange      = '';
+          el.style.touchAction     = 'pan-x pan-y';
         }, 220);
       } else {
+        el.style.transition      = '';
         el.style.transform       = '';
         el.style.transformOrigin = '';
         el.style.zIndex          = '';
@@ -118,7 +131,7 @@
       el.style.zIndex          = '500';
       el.style.position        = 'relative';
       el.style.willChange      = 'transform';
-      el.style.touchAction     = 'none';
+      el.style.touchAction     = 'none';  /* prevent scroll during pan */
     }
   }
 
@@ -128,12 +141,34 @@
     requestAnimationFrame(function () { applyTransform(s, el, false); });
   }
 
-  /* Clamp tx/ty so EDGE_GUARD px of the image always stays on screen. */
-  function constrain(s) {
-    var cw = window.innerWidth, ch = window.innerHeight;
-    var ew = s._elW * s.scale, eh = s._elH * s.scale;
-    s.tx = clamp(s.tx, -(s.nl + ew - EDGE_GUARD), cw - s.nl - EDGE_GUARD);
-    s.ty = clamp(s.ty, -(s.nt + eh - EDGE_GUARD), ch - s.nt - EDGE_GUARD);
+  /* ── Inertia ──────────────────────────────────── */
+  function stopInertia(s) {
+    if (s.inertiaRaf) { cancelAnimationFrame(s.inertiaRaf); s.inertiaRaf = 0; }
+  }
+
+  function startInertia(s, el) {
+    stopInertia(s);
+    var DECAY = 0.92;
+    var STOP  = 0.5;  /* px/frame cutoff */
+    if (Math.abs(s.vx) < STOP && Math.abs(s.vy) < STOP) return;
+
+    function tick() {
+      if (s.pinching || s.panning) { s.inertiaRaf = 0; return; }
+      s.vx *= DECAY; s.vy *= DECAY;
+      if (Math.abs(s.vx) < STOP && Math.abs(s.vy) < STOP) {
+        s.vx = 0; s.vy = 0; s.inertiaRaf = 0; return;
+      }
+      s.tx += s.vx; s.ty += s.vy;
+      constrain(s);
+      if (s.scale < SNAP_MIN) {
+        s.scale = 1; s.vx = 0; s.vy = 0;
+        applyTransform(s, el, true);
+        s.inertiaRaf = 0; return;
+      }
+      scheduleApply(s, el);
+      s.inertiaRaf = requestAnimationFrame(tick);
+    }
+    s.inertiaRaf = requestAnimationFrame(tick);
   }
 
   /* ── Image pointer handlers ───────────────────── */
@@ -142,33 +177,33 @@
     var el = e.currentTarget;
     var s  = getState(el);
     if (!s) return;
-    /* Cancel any in-flight snap */
+    stopInertia(s);
     el.style.transition = '';
-
     el.setPointerCapture(e.pointerId);
     s.ptrs[e.pointerId] = { clientX: e.clientX, clientY: e.clientY };
     var p = pList(s.ptrs);
 
+    /* ── 1-finger ── */
     if (p.length === 1) {
       var now = Date.now();
       var ddx = e.clientX - s.ltX, ddy = e.clientY - s.ltY;
+
+      /* Double-tap */
       if (now - s.lastTap < DBL_MS && Math.sqrt(ddx * ddx + ddy * ddy) < 30) {
         e.preventDefault();
         try { el.releasePointerCapture(e.pointerId); } catch (_) {}
         delete s.ptrs[e.pointerId];
         s.lastTap = 0;
+        captureNatural(s, el);
         if (s.scale > 1.1) {
-          s.scale = 1;
+          s.scale = 1; s.tx = 0; s.ty = 0;
           applyTransform(s, el, true);
         } else {
-          var o   = naturalOrigin(s, el);
-          var lx  = (e.clientX - o.nl - s.tx) / s.scale;
-          var ly  = (e.clientY - o.nt - s.ty) / s.scale;
+          var cpX = (e.clientX - s.nl - s.tx) / s.scale;
+          var cpY = (e.clientY - s.nt - s.ty) / s.scale;
           s.scale = DBL_ZOOM;
-          s.nl    = o.nl; s.nt = o.nt;
-          s._elW  = el.offsetWidth; s._elH = el.offsetHeight;
-          s.tx    = e.clientX - o.nl - lx * s.scale;
-          s.ty    = e.clientY - o.nt - ly * s.scale;
+          s.tx    = e.clientX - s.nl - cpX * s.scale;
+          s.ty    = e.clientY - s.nt - cpY * s.scale;
           constrain(s);
           scheduleApply(s, el);
         }
@@ -176,28 +211,33 @@
       }
       s.lastTap = now; s.ltX = e.clientX; s.ltY = e.clientY;
 
+      /* Pan when zoomed */
       if (s.scale > 1.05) {
-        var o2 = naturalOrigin(s, el);
-        s.nl   = o2.nl; s.nt = o2.nt;
-        s._elW = el.offsetWidth; s._elH = el.offsetHeight;
-        s.panning = true;
-        s.panSX   = e.clientX; s.panSY  = e.clientY;
-        s.panSTx  = s.tx;      s.panSTy = s.ty;
+        captureNatural(s, el);
+        s.panning      = true;
+        s.panSX        = e.clientX; s.panSY    = e.clientY;
+        s.panSTx       = s.tx;      s.panSTy   = s.ty;
+        s.prevPanTx    = s.tx;      s.prevPanTy = s.ty;
+        s.prevPanTime  = now;
+        s.vx = 0; s.vy = 0;
+        el.style.touchAction = 'none'; /* block page scroll during pan */
         e.preventDefault();
       }
     }
 
+    /* ── 2-finger: start pinch ── */
     if (p.length === 2) {
       s.panning  = false;
       s.pinching = true;
-      var o3 = naturalOrigin(s, el);
-      s.nl   = o3.nl; s.nt = o3.nt;
-      s._elW = el.offsetWidth; s._elH = el.offsetHeight;
+      captureNatural(s, el);
       s.prevDist = pDist(p[0], p[1]);
-      s.prevMid  = pMid(p[0], p[1]);
+      s.prevMid  = { x: (p[0].clientX + p[1].clientX) * 0.5,
+                     y: (p[0].clientY + p[1].clientY) * 0.5 };
       el.style.touchAction = 'none';
       e.preventDefault();
     }
+
+    /* Ignore 3rd+ fingers silently */
   }
 
   function onImgMove(e) {
@@ -207,24 +247,28 @@
     s.ptrs[e.pointerId] = { clientX: e.clientX, clientY: e.clientY };
     var p = pList(s.ptrs);
 
+    /* ── Pinch ── */
     if (p.length >= 2 && s.pinching) {
       e.preventDefault();
       var currDist = pDist(p[0], p[1]);
-      var currMid  = pMid(p[0], p[1]);
+      var currMid  = { x: (p[0].clientX + p[1].clientX) * 0.5,
+                       y: (p[0].clientY + p[1].clientY) * 0.5 };
+
       if (s.prevDist > 0) {
         var ratio    = currDist / s.prevDist;
-        /* Apply elastic resistance when pushing past limits */
-        var raw      = s.scale * ratio;
-        var newScale = raw < IMG_MIN ? resist(raw, IMG_MIN, IMG_MAX)
-                     : raw > IMG_MAX ? resist(raw, IMG_MIN, IMG_MAX)
-                     : raw;
-        newScale = clamp(newScale, IMG_MIN * 0.85, IMG_MAX * 1.15);
+        var rawScale = s.scale * ratio;
+        /* Elastic resistance past limits */
+        var newScale = (rawScale < IMG_MIN || rawScale > IMG_MAX)
+                     ? resist(rawScale, IMG_MIN, IMG_MAX)
+                     : rawScale;
+        newScale = clamp(newScale, IMG_MIN * 0.82, IMG_MAX * 1.18);
 
-        var cpX = (s.prevMid.x - s.nl - s.tx) / s.scale;
-        var cpY = (s.prevMid.y - s.nt - s.ty) / s.scale;
+        /* Anchor formula: content under prevMid appears at currMid
+         * tx_new = currMid.x - (newScale/prevScale) * (prevMid.x - tx) */
+        var r = newScale / s.scale;
+        s.tx    = currMid.x - r * (s.prevMid.x - s.tx);
+        s.ty    = currMid.y - r * (s.prevMid.y - s.ty);
         s.scale = newScale;
-        s.tx    = currMid.x - s.nl - cpX * s.scale;
-        s.ty    = currMid.y - s.nt - cpY * s.scale;
         constrain(s);
         scheduleApply(s, el);
       }
@@ -233,10 +277,20 @@
       return;
     }
 
+    /* ── Pan ── */
     if (p.length === 1 && s.panning) {
       e.preventDefault();
-      s.tx = s.panSTx + (e.clientX - s.panSX);
-      s.ty = s.panSTy + (e.clientY - s.panSY);
+      var now  = Date.now();
+      var dt   = now - s.prevPanTime;
+      s.tx     = s.panSTx + (e.clientX - s.panSX);
+      s.ty     = s.panSTy + (e.clientY - s.panSY);
+      /* Track velocity for inertia (px/frame at 60fps) */
+      if (dt > 0 && dt < 100) {
+        s.vx = (s.tx - s.prevPanTx) / dt * 16;
+        s.vy = (s.ty - s.prevPanTy) / dt * 16;
+      }
+      s.prevPanTx   = s.tx; s.prevPanTy   = s.ty;
+      s.prevPanTime = now;
       constrain(s);
       scheduleApply(s, el);
     }
@@ -249,63 +303,70 @@
     delete s.ptrs[e.pointerId];
     var p = pList(s.ptrs);
 
+    /* ── Pinch ended ── */
     if (p.length < 2 && s.pinching) {
       s.pinching = false;
       s.prevDist = 0;
       s.prevMid  = null;
-      /* Snap scale back to hard limits if rubber-banded past them */
+      /* Snap hard limits (elastic may have gone past them) */
       if (s.scale < IMG_MIN) { s.scale = IMG_MIN; }
       if (s.scale > IMG_MAX) { s.scale = IMG_MAX; constrain(s); }
 
+      /* Transition seamlessly to pan if one finger remains */
       if (p.length === 1 && s.scale > 1.05) {
-        var o  = naturalOrigin(s, el);
-        s.nl   = o.nl; s.nt = o.nt;
-        s._elW = el.offsetWidth; s._elH = el.offsetHeight;
-        s.panning  = true;
-        s.panSX    = p[0].clientX; s.panSY  = p[0].clientY;
-        s.panSTx   = s.tx;         s.panSTy = s.ty;
+        captureNatural(s, el);
+        s.panning     = true;
+        s.panSX       = p[0].clientX; s.panSY    = p[0].clientY;
+        s.panSTx      = s.tx;         s.panSTy   = s.ty;
+        s.prevPanTx   = s.tx;         s.prevPanTy = s.ty;
+        s.prevPanTime = Date.now();
+        s.vx = 0; s.vy = 0;
+        el.style.touchAction = 'none';
       }
     }
 
+    /* ── Last finger lifted ── */
     if (p.length === 0) {
-      s.panning = false;
-      if (s.scale > 1.005 && s.scale < SNAP_MIN) {
-        s.scale = 1;
-        applyTransform(s, el, true); /* animated snap */
+      if (s.panning) {
+        s.panning = false;
+        s.vx = clamp(s.vx, -28, 28);
+        s.vy = clamp(s.vy, -28, 28);
+        startInertia(s, el);
+      }
+      /* Snap back if barely zoomed */
+      if (s.scale > 1.005 && s.scale < SNAP_MIN && !s.inertiaRaf) {
+        s.scale = 1; s.tx = 0; s.ty = 0;
+        applyTransform(s, el, true);
       }
     }
   }
 
-  /* ── Ctrl/Cmd + wheel (desktop mouse + trackpad pinch) ── */
+  /* ── Ctrl/Cmd + wheel (desktop mouse + trackpad) ── */
   function onImgWheel(e) {
     if (!e.ctrlKey && !e.metaKey) return;
     e.preventDefault();
     var el = e.currentTarget;
     var s  = getState(el);
     if (!s) return;
+    stopInertia(s);
+    captureNatural(s, el);
 
-    /* Normalise delta across deltaMode values */
     var dy = e.deltaMode === 1 ? e.deltaY * 20
            : e.deltaMode === 2 ? e.deltaY * 400
            : e.deltaY;
-    /* Trackpad: dy > 0 = pinch (zoom out), dy < 0 = spread (zoom in) */
-    var factor = Math.pow(1.0015, -dy);
-    var o = naturalOrigin(s, el);
-    s.nl   = o.nl; s.nt = o.nt;
-    s._elW = el.offsetWidth; s._elH = el.offsetHeight;
+    var factor   = Math.pow(1.0015, -dy);
+    var rawScale = s.scale * factor;
+    var newScale = clamp(rawScale, IMG_MIN, IMG_MAX);
 
-    var raw      = s.scale * factor;
-    var newScale = clamp(raw, IMG_MIN, IMG_MAX);
     var cpX = (e.clientX - s.nl - s.tx) / s.scale;
     var cpY = (e.clientY - s.nt - s.ty) / s.scale;
+    var r   = newScale / s.scale;
+    s.tx    = e.clientX - s.nl - cpX * newScale;
+    s.ty    = e.clientY - s.nt - cpY * newScale;
     s.scale = newScale;
-    s.tx    = e.clientX - s.nl - cpX * s.scale;
-    s.ty    = e.clientY - s.nt - cpY * s.scale;
     constrain(s);
 
-    /* Snap back if barely zoomed and not actively gesture-zooming */
     if (s.scale <= 1.005) { s.scale = 1; s.tx = 0; s.ty = 0; }
-
     scheduleApply(s, el);
   }
 
@@ -354,28 +415,40 @@
      PDF MODAL PINCH ZOOM
   ══════════════════════════════════════════════════ */
 
+  /* One shared state object for the PDF modal body */
   var pdfState = {
     ptrs: {}, active: false,
     prevDist: 0, prevMid: null,
-    cssScale: 1, startPdfZoom: 1,
+    /* Live CSS preview state */
+    cssScale: 1, tx: 0, ty: 0,
+    startPdfZoom: 1,
   };
+
+  /* PDF uses translate3d(tx, ty, 0) scale(cssScale) with transformOrigin:0 0
+   * so the anchor formula is identical to the image engine:
+   *   tx_new = currMid.x - ratio * (prevMid.x - tx)
+   *
+   * "body" here is the pdf-modal-body scrollable container (position:fixed;inset:0)
+   * Its natural top-left is at viewport (0, 0), so nl=nt=0 and the formula
+   * simplifies — but we write it generically for robustness. */
 
   function onPdfDown(e) {
     var body = e.currentTarget;
     body.setPointerCapture(e.pointerId);
     pdfState.ptrs[e.pointerId] = { clientX: e.clientX, clientY: e.clientY };
     var p = pList(pdfState.ptrs);
+
     if (p.length === 2 && !pdfState.active) {
       pdfState.active       = true;
       pdfState.cssScale     = 1;
+      pdfState.tx           = 0;
+      pdfState.ty           = 0;
       pdfState.startPdfZoom = (typeof _pdfZoom !== 'undefined') ? _pdfZoom : 1;
       pdfState.prevDist     = pDist(p[0], p[1]);
-      pdfState.prevMid      = pMid(p[0], p[1]);
-      var bRect = body.getBoundingClientRect();
-      var ox    = pdfState.prevMid.x - bRect.left;
-      var oy    = pdfState.prevMid.y - bRect.top + body.scrollTop;
-      body.style.transformOrigin = ox + 'px ' + oy + 'px';
-      body.style.transform       = 'scale(1)';
+      pdfState.prevMid      = { x: (p[0].clientX + p[1].clientX) * 0.5,
+                                y: (p[0].clientY + p[1].clientY) * 0.5 };
+      body.style.transformOrigin = '0 0';
+      body.style.transform       = 'translate3d(0,0,0) scale(1)';
       body.style.touchAction     = 'none';
       e.preventDefault();
     }
@@ -391,15 +464,16 @@
     e.preventDefault();
 
     var currDist = pDist(p[0], p[1]);
-    var currMid  = pMid(p[0], p[1]);
+    var currMid  = { x: (p[0].clientX + p[1].clientX) * 0.5,
+                     y: (p[0].clientY + p[1].clientY) * 0.5 };
+
     if (pdfState.prevDist > 0) {
-      var ratio         = currDist / pdfState.prevDist;
-      pdfState.cssScale = clamp(pdfState.cssScale * ratio, 0.15, 6.0);
-      var bRect = body.getBoundingClientRect();
-      var ox    = currMid.x - bRect.left;
-      var oy    = currMid.y - bRect.top + body.scrollTop;
-      body.style.transformOrigin = ox + 'px ' + oy + 'px';
-      body.style.transform       = 'scale(' + pdfState.cssScale + ')';
+      var ratio = currDist / pdfState.prevDist;
+      /* Same anchor formula as images */
+      pdfState.tx       = currMid.x - ratio * (pdfState.prevMid.x - pdfState.tx);
+      pdfState.ty       = currMid.y - ratio * (pdfState.prevMid.y - pdfState.ty);
+      pdfState.cssScale = clamp(pdfState.cssScale * ratio, 0.1, 8.0);
+      body.style.transform = 'translate3d(' + pdfState.tx + 'px,' + pdfState.ty + 'px,0) scale(' + pdfState.cssScale + ')';
     }
     pdfState.prevDist = currDist;
     pdfState.prevMid  = currMid;
@@ -407,19 +481,30 @@
 
   function onPdfUp(e) {
     delete pdfState.ptrs[e.pointerId];
-    if (pdfState.active && pList(pdfState.ptrs).length < 2) {
-      pdfState.active = false;
-      var body        = e.currentTarget;
-      var newZoom     = clamp(pdfState.startPdfZoom * pdfState.cssScale, PDF_MIN, PDF_MAX);
-      var scrollRatio = body.scrollHeight > 0 ? body.scrollTop / body.scrollHeight : 0;
-      pdfState.cssScale = 1; pdfState.prevDist = 0; pdfState.prevMid = null;
-      body.style.touchAction     = 'pan-y';
-      body.style.transform       = '';
-      body.style.transformOrigin = '';
-      document.dispatchEvent(new CustomEvent('abl-pdf-zoom', {
-        detail: { zoom: newZoom, scrollRatio: scrollRatio }
-      }));
-    }
+    if (!pdfState.active || pList(pdfState.ptrs).length >= 2) return;
+
+    pdfState.active = false;
+    var body        = e.currentTarget;
+
+    /* Commit new zoom — clamp to supported range */
+    var newZoom = clamp(pdfState.startPdfZoom * pdfState.cssScale, PDF_MIN, PDF_MAX);
+
+    /* Preserve center-of-viewport position through the re-render.
+     * scrollRatio is (visible center) / (total content height). */
+    var scrollRatio = body.scrollHeight > 0
+      ? (body.scrollTop + body.clientHeight * 0.5) / body.scrollHeight
+      : 0;
+
+    /* Clear preview transform */
+    pdfState.cssScale = 1; pdfState.tx = 0; pdfState.ty = 0;
+    pdfState.prevDist = 0; pdfState.prevMid = null;
+    body.style.transform       = '';
+    body.style.transformOrigin = '';
+    body.style.touchAction     = 'pan-x pan-y';
+
+    document.dispatchEvent(new CustomEvent('abl-pdf-zoom', {
+      detail: { zoom: newZoom, scrollRatio: scrollRatio }
+    }));
   }
 
   /* Ctrl+wheel zoom on PDF body */
@@ -431,8 +516,10 @@
     var dy   = e.deltaMode === 1 ? e.deltaY * 20
              : e.deltaMode === 2 ? e.deltaY * 400
              : e.deltaY;
-    var newZoom = clamp(cur * Math.pow(1.0015, -dy), PDF_MIN, PDF_MAX);
-    var scrollRatio = body.scrollHeight > 0 ? body.scrollTop / body.scrollHeight : 0;
+    var newZoom     = clamp(cur * Math.pow(1.0015, -dy), PDF_MIN, PDF_MAX);
+    var scrollRatio = body.scrollHeight > 0
+      ? (body.scrollTop + body.clientHeight * 0.5) / body.scrollHeight
+      : 0;
     document.dispatchEvent(new CustomEvent('abl-pdf-zoom', {
       detail: { zoom: newZoom, scrollRatio: scrollRatio }
     }));
@@ -441,7 +528,8 @@
   function attachPdf(body) {
     if (!body || body._ablPdfZ) return;
     body._ablPdfZ          = true;
-    body.style.touchAction = 'pan-y';
+    /* pan-x pan-y: allow natural scroll in both directions when PDF is wide */
+    body.style.touchAction = 'pan-x pan-y';
     body.addEventListener('pointerdown',   onPdfDown,  { passive: false });
     body.addEventListener('pointermove',   onPdfMove,  { passive: false });
     body.addEventListener('pointerup',     onPdfUp);

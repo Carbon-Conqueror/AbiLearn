@@ -1079,8 +1079,12 @@ function renderPDF(url, scrollRatio) {
     wrappers.slice(2).forEach(w => _pdfObserver.observe(w));
 
     if (scrollRatio !== undefined) {
+      /* Restore so the same content remains centered in the viewport.
+       * scrollRatio = (scrollTop + clientHeight/2) / scrollHeight at the
+       * moment the gesture ended, so invert: scrollTop = ratio*h - h/2 */
       requestAnimationFrame(function() {
-        body.scrollTop = body.scrollHeight * scrollRatio;
+        var targetTop = body.scrollHeight * scrollRatio - body.clientHeight * 0.5;
+        body.scrollTop = Math.max(0, targetTop);
       });
     }
 
