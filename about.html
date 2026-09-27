@@ -312,26 +312,12 @@
   #abl-ss-guard.abl-guard-visible {
     opacity: 1; pointer-events: all; transition: opacity 0ms;
   }
-  body.abl-ss-active > *:not(#abl-ss-guard):not(#abl-watermark) {
+  body.abl-ss-active > *:not(#abl-ss-guard) {
     filter: blur(18px) brightness(0.25) !important;
     transition: filter 0s !important;
     user-select: none !important; -webkit-user-select: none !important;
     pointer-events: none !important;
   }
-
-  /* ── WATERMARK ── */
-  #abl-watermark {
-    position: fixed; inset: -60%; width: 220%; height: 220%;
-    z-index: 2147483644; pointer-events: none; overflow: hidden;
-    display: flex; flex-wrap: wrap; align-content: flex-start;
-    transform: rotate(-38deg); user-select: none; -webkit-user-select: none;
-  }
-  #abl-watermark span {
-    display: block; width: 100%; font-size: 14px; font-weight: 700;
-    font-family: sans-serif; letter-spacing: .12em; text-transform: uppercase;
-    color: rgba(91,71,222,.35); white-space: nowrap; padding: 22px 0; line-height: 1;
-  }
-  @media print { #abl-watermark { display: none !important; } }
 
   /* ── VIDEO GUARD ── */
   #abl-vid-guard {
@@ -650,9 +636,9 @@ input,textarea{-webkit-user-select:text!important;user-select:text!important;}
 }());
 </script>
 
-<script src="js/protect.js?v=5"></script>
+<script src="js/protect.js?v=6"></script>
 <script src="js/community.js?v=1"></script>
   <script src="js/router.js?v=5"></script>
-  <script src="js/pinch-zoom.js?v=3"></script>
+  <script src="js/pinch-zoom.js?v=4"></script>
 </body>
 </html>

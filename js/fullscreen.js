@@ -89,7 +89,16 @@
   /* ── Fullscreen lifecycle ───────────────────── */
   var enteredOnce = false;
 
+  function _syncFsClass() {
+    if (isFS()) {
+      document.body.classList.add('abl-is-fs');
+    } else {
+      document.body.classList.remove('abl-is-fs');
+    }
+  }
+
   function onFSChange() {
+    _syncFsClass();
     if (isFS()) {
       enteredOnce = true;
       try { sessionStorage.setItem(FS_KEY, '1'); } catch (e) {}
@@ -131,7 +140,7 @@
   }
   /* iOS standalone (PWA) — already fullscreen, no overlay needed */
 
-  /* ── Exit Fullscreen button (bottom-left) ───── */
+  /* ── Exit Fullscreen + Back Navigation buttons ── */
   if (canFullscreen() || isStandalone) {
     var _exitBtn = document.createElement('button');
     _exitBtn.id = 'abl-fs-exit-btn';
@@ -143,23 +152,36 @@
       if (exitFn && isFS()) exitFn.call(document).catch(function () {});
     });
 
-    function _updateExitBtn() {
-      _exitBtn.style.display = isFS() ? 'block' : 'none';
+    var _backBtn = document.createElement('button');
+    _backBtn.id = 'abl-fs-back-btn';
+    _backBtn.textContent = '← Back';
+    _backBtn.setAttribute('aria-label', 'Go back');
+    _backBtn.addEventListener('click', function (e) {
+      e.stopPropagation();
+      window.history.back();
+    });
+
+    function _updateFsBtns() {
+      var show = isFS() ? 'block' : 'none';
+      _exitBtn.style.display = show;
+      _backBtn.style.display = show;
+    }
+
+    function _attachFsBtns() {
+      document.body.appendChild(_exitBtn);
+      document.body.appendChild(_backBtn);
+      _updateFsBtns();
     }
 
     if (document.readyState === 'loading') {
-      document.addEventListener('DOMContentLoaded', function () {
-        document.body.appendChild(_exitBtn);
-        _updateExitBtn();
-      });
+      document.addEventListener('DOMContentLoaded', _attachFsBtns);
     } else {
-      document.body.appendChild(_exitBtn);
-      _updateExitBtn();
+      _attachFsBtns();
     }
 
     ['fullscreenchange', 'webkitfullscreenchange',
      'mozfullscreenchange', 'MSFullscreenChange'].forEach(function (ev) {
-      document.addEventListener(ev, _updateExitBtn);
+      document.addEventListener(ev, _updateFsBtns);
     });
   }
 

@@ -1,4 +1,4 @@
-/* AbiLearn Content Protection v5 */
+/* AbiLearn Content Protection v6 */
 (function () {
   'use strict';
 
@@ -136,46 +136,12 @@
     }
   }, 1500);
 
-  /* ── 10. WATERMARK ───────────────────────────────
-   * Diagonal tiled overlay — visible in every screenshot.
-   * Personalised with the user's email once auth resolves so that any
-   * shared screenshot is traceable to the specific account.                  */
-  var _wm = null;
-
-  function _wmBuild(text) {
-    if (!_wm) return;
-    var safe = text.replace(/</g, '&lt;').replace(/>/g, '&gt;');
-    var html = '';
-    for (var i = 0; i < 60; i++) html += '<span>' + safe + '</span>';
-    _wm.innerHTML = html;
-  }
-
-  (function () {
-    if (document.getElementById('abl-watermark')) return;
-    _wm = document.createElement('div');
-    _wm.id = 'abl-watermark';
-    _wm.setAttribute('aria-hidden', 'true');
-    _wmBuild('AbiLearn  ·  Confidential  ·  ');
-    document.body.appendChild(_wm);
-  }());
-
-  /* Called by app.js once Firebase auth resolves with the signed-in user */
-  window._ablSetWatermarkUser = function (email, name) {
-    var id = (name || email || '').trim();
-    if (!id) return;
-    _wmBuild('AbiLearn  ·  ' + id + '  ·  ');
-  };
-
-  /* ── 11. VIDEO HARDWARE-LAYER OVERLAY ────────────
+  /* ── 10. VIDEO HARDWARE-LAYER OVERLAY ───────────
    * On Android Chrome, <video> elements often render via a hardware overlay
    * (SurfaceView) that the Android OS captures as solid black in screenshots,
    * regardless of what the video contains.  We inject a 1×1-pixel black
    * canvas stream at near-zero opacity so it is invisible to the eye but
    * occupies the full viewport as a compositing layer.
-   *
-   * Effect: on devices where Chrome uses SurfaceView for video, every
-   * screenshot shows a black screen.  On devices that use TextureView the
-   * video is not captured differently — the watermark is the fallback there.
    *
    * NOTE: This is a best-effort technique.  Native app (TWA) + FLAG_SECURE
    * is the only 100 % reliable solution.                                     */
@@ -205,7 +171,7 @@
         'inset:0',
         'width:100%',
         'height:100%',
-        'z-index:2147483640',   /* below guard (2147483646) and watermark (2147483644) */
+        'z-index:2147483640',   /* below guard (2147483646) */
         'opacity:0.002',        /* invisible to human eye, present as hardware layer */
         'pointer-events:none',
         'object-fit:cover',

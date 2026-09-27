@@ -1832,45 +1832,12 @@ footer {
   transition: opacity 0ms; /* instant on */
 }
 
-/* ─── DIAGONAL WATERMARK ─────────────────────── */
-#abl-watermark {
-  position: fixed;
-  inset: -60%;
-  width: 220%;
-  height: 220%;
-  z-index: 2147483644;
-  pointer-events: none;
-  overflow: hidden;
-  display: flex;
-  flex-wrap: wrap;
-  align-content: flex-start;
-  transform: rotate(-38deg);
-  user-select: none;
-  -webkit-user-select: none;
-}
-#abl-watermark span {
-  display: block;
-  width: 100%;
-  font-size: 14px;
-  font-weight: 700;
-  font-family: sans-serif;
-  letter-spacing: .12em;
-  text-transform: uppercase;
-  color: rgba(91, 71, 222, 0.35);
-  white-space: nowrap;
-  padding: 22px 0;
-  line-height: 1;
-}
-@media print {
-  #abl-watermark { display: none !important; }
-}
-
 /* ─── GUARD CONTENT BLUR ─────────────────────── */
 /* Applied while the screenshot guard is active.
  * Blurs page content under the guard so that any
  * screenshot taken during the guard fade-out also
  * captures illegible, blurred content.            */
-body.abl-ss-active > *:not(#abl-ss-guard):not(#abl-watermark) {
+body.abl-ss-active > *:not(#abl-ss-guard) {
   filter: blur(18px) brightness(0.25) !important;
   transition: filter 0s !important;
   user-select: none !important;
@@ -2006,4 +1973,39 @@ body.abl-ss-active > *:not(#abl-ss-guard):not(#abl-watermark) {
 #abl-fs-exit-btn:active { transform: scale(.96); }
 @media (max-width: 600px) {
   #abl-fs-exit-btn { bottom: 1rem; left: 1rem; font-size: .78rem; }
+}
+
+/* ─── BACK NAVIGATION BUTTON (fullscreen) ──── */
+#abl-fs-back-btn {
+  position: fixed;
+  bottom: 1.25rem;
+  right: 1.25rem;
+  z-index: 9000;
+  padding: .55rem 1.1rem;
+  border-radius: 2rem;
+  border: none;
+  cursor: pointer;
+  font-size: .82rem;
+  font-weight: 800;
+  font-family: inherit;
+  white-space: nowrap;
+  letter-spacing: .02em;
+  background: rgba(91,71,222,.75);
+  color: #fff;
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  box-shadow: 0 2px 12px rgba(91,71,222,.4);
+  display: none;
+  transition: background .2s, transform .15s;
+}
+#abl-fs-back-btn:hover  { background: rgba(91,71,222,.92); }
+#abl-fs-back-btn:active { transform: scale(.96); }
+@media (max-width: 600px) {
+  #abl-fs-back-btn { bottom: 1rem; right: 1rem; font-size: .78rem; }
+}
+
+/* ─── NAVBAR ALWAYS VISIBLE IN FULLSCREEN ─── */
+body.abl-is-fs .navbar {
+  transform: none !important;
+  transition: none !important;
 }
