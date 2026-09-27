@@ -460,7 +460,17 @@ function initSubjectPage(subjectId) {
   _subjectPageSubject = subject;
 
   renderSubjectShell(subject);
-  renderTabContent(subject, SUBJECT_TABS[subjectId][0].id);
+  /* Restore last visited tab for this subject, or default to first */
+  let _initialTab = SUBJECT_TABS[subjectId][0].id;
+  try {
+    const saved = sessionStorage.getItem('abl_tab_' + subjectId);
+    if (saved && SUBJECT_TABS[subjectId].some(t => t.id === saved)) _initialTab = saved;
+  } catch(e) {}
+  renderTabContent(subject, _initialTab);
+  /* Visually mark the restored tab as active */
+  document.querySelectorAll('.tab-btn').forEach(b => {
+    b.classList.toggle('active', b.dataset.tab === _initialTab);
+  });
 
   // Auto-open from search
   const oc = sessionStorage.getItem('openChapter');
@@ -487,7 +497,9 @@ function renderSubjectShell(subject) {
         </div>
         <div>
           <div class="subject-breadcrumb">
-            <a href="index.html">Home</a> / ${subject.name}
+            <a href="learn.html" onclick="return guardNav(event,'learn.html')">Home</a>
+            <span aria-hidden="true">/</span>
+            <span>${subject.name}</span>
           </div>
           <h1>${subject.name}</h1>
           <p>${subject.description} &nbsp;&nbsp; ${subject.chapters.length} chapters</p>
@@ -513,6 +525,8 @@ function handleTabClick(btn, subjectId) {
   btn.classList.add('active');
   const subject = DATA.subjects.find(s => s.id === subjectId);
   renderTabContent(subject, btn.dataset.tab);
+  /* Remember last active tab for this subject */
+  try { sessionStorage.setItem('abl_tab_' + subjectId, btn.dataset.tab); } catch(e) {}
 }
 
 /* ══════════════════════════════════════
@@ -3258,12 +3272,14 @@ document.addEventListener('change', e => {
 /* ══════════════════════════════════════
    COMING SOON
 ══════════════════════════════════════ */
-function buildComingSoon(name, msg) {
+function buildComingSoon(name, msg, cta) {
+  const ctaHtml = cta ? `<a href="${cta.href}" class="btn btn-md btn-outline-purple" style="margin-top:.5rem">${cta.label}</a>` : '';
   return `
-    <div class="coming-soon">
-      <div class="cs-icon"></div>
-      <h3>${name} Coming Soon</h3>
-      <p>${msg}</p>
+    <div class="coming-soon empty-state">
+      <div class="empty-state-icon cs-icon"></div>
+      <h3 class="empty-state-title">${name}</h3>
+      <p class="empty-state-sub">${msg}</p>
+      ${ctaHtml}
     </div>`;
 }
 
@@ -3785,4 +3801,25 @@ function closeAppSearch() {
   overlay.classList.remove('open');
   document.body.style.overflow = '';
 }
+
+/* ── Active nav highlight ───────────────────── */
+function updateNavActive() {
+  var p = location.pathname;
+  document.querySelectorAll('.nav-links a, .app-nav-link').forEach(function(a) {
+    var href = a.getAttribute('href') || '';
+    var match = false;
+    if (/maths\.html/.test(href))   match = /maths\.html/.test(p);
+    else if (/science\.html/.test(href)) match = /science\.html/.test(p);
+    else if (/english\.html/.test(href)) match = /english\.html/.test(p);
+    else if (/social\.html/.test(href))  match = /social\.html/.test(p);
+    else if (/learn\.html/.test(href))   match = /learn\.html/.test(p) || p === '/';
+    else if (/profile\.html/.test(href)) match = /profile\.html/.test(p);
+    a.classList.toggle('active', match);
+  });
+}
+
+/* Run on load and SPA navigation */
+if (document.readyState !== 'loading') updateNavActive();
+else document.addEventListener('DOMContentLoaded', updateNavActive);
+document.addEventListener('abl-navigate', updateNavActive);
 

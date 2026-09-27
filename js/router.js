@@ -15,6 +15,7 @@
     'abl-ss-guard',        // protect.js    — screenshot guard
     'abl-fs-exit-btn',     // fullscreen.js — exit fullscreen button
     'abl-fs-back-btn',     // fullscreen.js — back navigation button
+    'abl-bottom-nav',      // bottom-nav.js — mobile bottom navigation
     'abl-spa-bar'          // router.js     — progress bar (self)
   ];
 

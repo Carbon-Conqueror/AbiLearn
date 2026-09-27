@@ -2026,3 +2026,81 @@ body.abl-is-fs .navbar {
   transform: none !important;
   transition: none !important;
 }
+
+/* ─── SKELETON LOADERS ────────────────────────── */
+@keyframes abl-shimmer {
+  0%   { background-position: -400px 0; }
+  100% { background-position:  400px 0; }
+}
+.skel {
+  background: linear-gradient(90deg, var(--surface-2) 25%, var(--border) 50%, var(--surface-2) 75%);
+  background-size: 800px 100%;
+  animation: abl-shimmer 1.6s infinite linear;
+  border-radius: var(--radius-sm);
+}
+.skel-card {
+  background: var(--surface); border: 1px solid var(--border);
+  border-radius: var(--radius-lg); padding: 1.25rem;
+  display: flex; flex-direction: column; gap: .65rem;
+}
+.skel-line  { height: 13px; }
+.skel-line-sm { height: 11px; width: 60%; }
+.skel-line-lg { height: 16px; }
+.skel-block { height: 80px; }
+@media (prefers-reduced-motion: reduce) {
+  .skel { animation: none; background: var(--surface-2); }
+}
+
+/* ─── IMPROVED EMPTY STATES ───────────────────── */
+.empty-state {
+  display: flex; flex-direction: column; align-items: center;
+  justify-content: center; text-align: center;
+  padding: 3rem 1.5rem; gap: 1rem;
+}
+.empty-state-icon {
+  width: 56px; height: 56px; border-radius: 50%;
+  background: var(--surface-2); border: 1px solid var(--border);
+  display: flex; align-items: center; justify-content: center;
+}
+.empty-state-icon::before { content: ''; width: 20px; height: 20px; border-radius: 50%; background: var(--border-2); }
+.empty-state-title { font-size: 1rem; font-weight: 700; color: var(--text); }
+.empty-state-sub   { font-size: .87rem; color: var(--muted); max-width: 320px; line-height: 1.6; }
+.empty-state-cta   { margin-top: .25rem; }
+
+/* ─── BOTTOM MOBILE NAVIGATION ───────────────── */
+#abl-bottom-nav {
+  display: none;
+  position: fixed;
+  bottom: 0; left: 0; right: 0;
+  z-index: 900;
+  background: var(--surface);
+  border-top: 1px solid var(--border);
+  padding-bottom: env(safe-area-inset-bottom, 0px);
+  box-shadow: 0 -1px 8px rgba(26,16,53,.06);
+}
+@media (max-width: 768px) {
+  #abl-bottom-nav { display: flex; }
+}
+.bn-tab {
+  flex: 1; display: flex; flex-direction: column;
+  align-items: center; justify-content: center; gap: 3px;
+  color: var(--muted); text-decoration: none;
+  padding: 9px 4px; min-height: 56px;
+  transition: color 180ms ease, background 180ms ease;
+  -webkit-tap-highlight-color: transparent;
+  border-radius: 0;
+}
+.bn-tab:hover { color: var(--text-2); }
+.bn-tab.bn-active { color: var(--accent); }
+.bn-icon { line-height: 0; display: block; }
+.bn-label { font-size: 10px; font-weight: 600; font-family: 'Poppins', inherit; letter-spacing: .01em; }
+
+/* Content area gets bottom padding on mobile to clear bottom nav */
+@media (max-width: 768px) {
+  body.has-bottom-nav .app-main { padding-bottom: calc(72px + env(safe-area-inset-bottom,0px)) !important; }
+  body.has-bottom-nav .tab-panel { padding-bottom: calc(72px + env(safe-area-inset-bottom,0px)); }
+  body.has-bottom-nav footer,
+  body.has-bottom-nav .app-footer { padding-bottom: calc(72px + env(safe-area-inset-bottom,0px)) !important; }
+  /* Hide bottom nav in fullscreen focus mode */
+  body.abl-is-fs #abl-bottom-nav { display: none !important; }
+}
