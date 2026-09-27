@@ -1,4 +1,4 @@
-/* AbiLearn — Design System v53 */
+/* AbiLearn — Design System v54 */
 
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap');
 
@@ -1090,18 +1090,56 @@ input:focus-visible,select:focus-visible,textarea:focus-visible { outline:none; 
 /* ─── PDF MODALS ──────────────────────────────── */
 #pdfModal { display:none; position:fixed; inset:0; z-index:9999; }
 #pdfModal.open { display:block; }
-.pdf-modal-box { position:fixed; inset:0; width:100vw; height:100dvh; background:#525659; overflow:hidden; }
-.pdf-modal-body { width:100%; height:100%; overflow:auto; padding:.5rem; box-sizing:border-box; touch-action:pan-x pan-y; }
+.pdf-modal-box { position:fixed; inset:0; width:100vw; height:100dvh; background:#2B2B2B; overflow:hidden; display:flex; flex-direction:column; }
+
+/* PDF Toolbar */
+.pdf-toolbar {
+  display:flex; align-items:center; gap:.5rem;
+  background:#1A1A1A; padding:.45rem .75rem;
+  flex-shrink:0; min-height:52px; z-index:2;
+}
+.pdf-tb-close {
+  width:38px; height:38px; border-radius:50%; background:rgba(255,255,255,.12);
+  color:#fff; font-size:1rem; border:none; cursor:pointer; display:flex;
+  align-items:center; justify-content:center; flex-shrink:0; transition:background .15s;
+}
+.pdf-tb-close:hover { background:rgba(255,255,255,.25); }
+.pdf-tb-title {
+  flex:1; color:rgba(255,255,255,.85); font-size:.82rem; font-weight:600;
+  white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
+}
+.pdf-tb-zoom {
+  display:flex; align-items:center; gap:.3rem; flex-shrink:0;
+  background:rgba(255,255,255,.08); border-radius:8px; padding:.2rem .35rem;
+}
+.pdf-tb-zoom-btn {
+  width:36px; height:36px; border-radius:6px; background:transparent;
+  color:#fff; font-size:1.15rem; font-weight:700; border:none; cursor:pointer;
+  display:flex; align-items:center; justify-content:center;
+  transition:background .15s; -webkit-tap-highlight-color:transparent;
+}
+.pdf-tb-zoom-btn:hover { background:rgba(255,255,255,.15); }
+.pdf-tb-zoom-btn:active { background:rgba(255,255,255,.25); transform:scale(.92); }
+.pdf-tb-pct {
+  font-size:.75rem; font-weight:700; color:rgba(255,255,255,.7);
+  min-width:38px; text-align:center; font-variant-numeric:tabular-nums;
+}
+.pdf-tb-fit {
+  width:36px; height:36px; border-radius:6px; background:transparent;
+  color:rgba(255,255,255,.7); font-size:1rem; border:none; cursor:pointer;
+  display:flex; align-items:center; justify-content:center; transition:background .15s;
+}
+.pdf-tb-fit:hover { background:rgba(255,255,255,.15); color:#fff; }
+
+.pdf-modal-body { flex:1; overflow:auto; padding:.5rem; box-sizing:border-box; touch-action:pan-x pan-y; min-height:0; }
 .pdf-modal-body canvas {
   border-radius:3px;
-  image-rendering: -webkit-optimize-contrast;
-  image-rendering: crisp-edges;
-  image-rendering: high-quality;
+  image-rendering: auto;
 }
 .pdf-img-view {
-  border-radius:0; display:block; margin:0 auto; transition:height .15s ease;
-  image-rendering: -webkit-optimize-contrast;
-  image-rendering: high-quality;
+  border-radius:0; display:block; margin:0 auto;
+  image-rendering: auto;
+  max-width:none;
 }
 .pdf-float-close {
   position:fixed; top:.75rem; right:.75rem; z-index:10;
@@ -1963,62 +2001,53 @@ body.abl-ss-active > *:not(#abl-ss-guard) {
 }
 
 
-/* ─── EXIT FULLSCREEN BUTTON (bottom-left) ─── */
-#abl-fs-exit-btn {
+/* ─── FULLSCREEN FLOATING BAR (top strip, visible when abl-is-fs) ─── */
+#abl-fs-exit-btn, #abl-fs-back-btn {
   position: fixed;
-  bottom: calc(1.25rem + env(safe-area-inset-bottom, 0px));
-  left: calc(1.25rem + env(safe-area-inset-left, 0px));
-  z-index: 9000;
-  padding: .55rem 1.1rem;
+  top: calc(.65rem + env(safe-area-inset-top, 0px));
+  z-index: 9100;
+  padding: .48rem 1rem;
   border-radius: 2rem;
   border: none;
   cursor: pointer;
   font-size: .82rem;
-  font-weight: 800;
+  font-weight: 700;
   font-family: inherit;
   white-space: nowrap;
-  letter-spacing: .02em;
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  box-shadow: 0 2px 14px rgba(0,0,0,.35);
+  display: none;
+  transition: background .18s, transform .12s;
+  -webkit-tap-highlight-color: transparent;
+}
+body.abl-is-fs #abl-fs-exit-btn,
+body.abl-is-fs #abl-fs-back-btn { display: block; }
+
+/* Exit Fullscreen — right side */
+#abl-fs-exit-btn {
+  right: calc(.75rem + env(safe-area-inset-right, 0px));
   background: rgba(0,0,0,.55);
   color: #fff;
-  backdrop-filter: blur(8px);
-  -webkit-backdrop-filter: blur(8px);
-  box-shadow: 0 2px 12px rgba(0,0,0,.35);
-  display: none;
-  transition: background .2s, transform .15s;
 }
-#abl-fs-exit-btn:hover  { background: rgba(0,0,0,.75); }
-#abl-fs-exit-btn:active { transform: scale(.96); }
-@media (max-width: 600px) {
-  #abl-fs-exit-btn { bottom: calc(1rem + env(safe-area-inset-bottom,0px)); left: calc(1rem + env(safe-area-inset-left,0px)); font-size: .78rem; }
-}
+#abl-fs-exit-btn:hover  { background: rgba(0,0,0,.78); }
+#abl-fs-exit-btn:active { transform: scale(.94); }
 
-/* ─── BACK NAVIGATION BUTTON (fullscreen) ──── */
+/* Back Button — left side */
 #abl-fs-back-btn {
-  position: fixed;
-  bottom: calc(1.25rem + env(safe-area-inset-bottom, 0px));
-  right: calc(1.25rem + env(safe-area-inset-right, 0px));
-  z-index: 9000;
-  padding: .55rem 1.1rem;
-  border-radius: 2rem;
-  border: none;
-  cursor: pointer;
-  font-size: .82rem;
-  font-weight: 800;
-  font-family: inherit;
-  white-space: nowrap;
-  letter-spacing: .02em;
-  background: rgba(91,71,222,.75);
+  left: calc(.75rem + env(safe-area-inset-left, 0px));
+  background: rgba(91,71,222,.82);
   color: #fff;
-  backdrop-filter: blur(8px);
-  -webkit-backdrop-filter: blur(8px);
-  box-shadow: 0 2px 12px rgba(91,71,222,.4);
+  min-width: 44px; min-height: 44px;
   display: none;
-  transition: background .2s, transform .15s;
+  align-items: center; justify-content: center;
 }
-#abl-fs-back-btn:hover  { background: rgba(91,71,222,.92); }
-#abl-fs-back-btn:active { transform: scale(.96); }
+body.abl-is-fs #abl-fs-back-btn { display: flex; }
+#abl-fs-back-btn:hover  { background: rgba(91,71,222,.97); }
+#abl-fs-back-btn:active { transform: scale(.94); }
+
 @media (max-width: 600px) {
-  #abl-fs-back-btn { bottom: calc(1rem + env(safe-area-inset-bottom,0px)); right: calc(1rem + env(safe-area-inset-right,0px)); font-size: .78rem; }
+  #abl-fs-exit-btn, #abl-fs-back-btn { font-size: .78rem; padding: .42rem .88rem; top: calc(.5rem + env(safe-area-inset-top,0px)); }
 }
 
 /* ─── NAVBAR ALWAYS VISIBLE IN FULLSCREEN ─── */

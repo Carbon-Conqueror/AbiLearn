@@ -1,4 +1,4 @@
-/* AbiLearn — Focus Mode + Screenshot Layer */
+/* AbiLearn — Focus Mode + Screenshot Layer v3 */
 (function () {
   'use strict';
 
@@ -149,13 +149,16 @@
   if (canFullscreen() || isStandalone) {
     var _exitBtn = document.createElement('button');
     _exitBtn.id = 'abl-fs-exit-btn';
-    _exitBtn.textContent = 'Exit Fullscreen';
+    _exitBtn.textContent = '✕ Exit';
     _exitBtn.setAttribute('aria-label', 'Exit fullscreen');
     _exitBtn.addEventListener('click', function () {
       _deliberateExit = true;
+      try { sessionStorage.removeItem(FS_KEY); } catch(e) {}
       var exitFn = document.exitFullscreen || document.webkitExitFullscreen ||
                    document.mozCancelFullScreen || document.msExitFullscreen;
       if (exitFn && isFS()) exitFn.call(document).catch(function () {});
+      /* After exiting, sync the body class so CSS hides these buttons */
+      setTimeout(_syncFsClass, 300);
     });
 
     var _backBtn = document.createElement('button');
@@ -164,19 +167,20 @@
     _backBtn.setAttribute('aria-label', 'Go back');
     _backBtn.addEventListener('click', function (e) {
       e.stopPropagation();
-      window.history.back();
+      /* If no history to go back to, navigate to home */
+      if (window.history.length <= 1) {
+        if (window.ablRouter) { window.ablRouter.navigate('learn.html', true); }
+        else { location.href = 'learn.html'; }
+      } else {
+        window.history.back();
+      }
     });
 
-    function _updateFsBtns() {
-      var show = isFS() ? 'block' : 'none';
-      _exitBtn.style.display = show;
-      _backBtn.style.display = show;
-    }
-
     function _attachFsBtns() {
-      document.body.appendChild(_exitBtn);
-      document.body.appendChild(_backBtn);
-      _updateFsBtns();
+      if (!document.getElementById('abl-fs-exit-btn')) document.body.appendChild(_exitBtn);
+      if (!document.getElementById('abl-fs-back-btn')) document.body.appendChild(_backBtn);
+      /* Initial state driven by CSS body.abl-is-fs; _syncFsClass handles display */
+      _syncFsClass();
     }
 
     if (document.readyState === 'loading') {
@@ -187,7 +191,7 @@
 
     ['fullscreenchange', 'webkitfullscreenchange',
      'mozfullscreenchange', 'MSFullscreenChange'].forEach(function (ev) {
-      document.addEventListener(ev, _updateFsBtns);
+      document.addEventListener(ev, _syncFsClass);
     });
   }
 
