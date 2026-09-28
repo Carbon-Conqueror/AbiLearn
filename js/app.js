@@ -311,8 +311,6 @@ function initMobileNav() {
       <a href="mind-maps.html" class="mobile-nav-link mobile-sub-link">Mind Maps</a>
       <a href="learn-tips.html" class="mobile-nav-link mobile-sub-link">Learn Tips</a>
       <a href="learn.html" class="mobile-nav-link mobile-sub-link">Study Planner</a>
-      <div class="mobile-nav-section">Account</div>
-      <a href="profile.html" class="mobile-nav-link mobile-sub-link">My Profile</a>
       <a href="about.html" class="mobile-nav-link mobile-sub-link">About AbiLearn</a>
       <div class="mobile-menu-actions">
         <button class="btn-login">Log In</button>
@@ -3866,7 +3864,6 @@ function updateNavActive() {
     else if (/english\.html/.test(href)) match = /english\.html/.test(p);
     else if (/social\.html/.test(href))  match = /social\.html/.test(p);
     else if (/learn\.html/.test(href))   match = /learn\.html/.test(p) || p === '/';
-    else if (/profile\.html/.test(href)) match = /profile\.html/.test(p);
     a.classList.toggle('active', match);
   });
 }

@@ -490,6 +490,7 @@ input:focus-visible,select:focus-visible,textarea:focus-visible { outline:none; 
 .btn-xl  { padding:.72rem 1.7rem;  font-size:.95rem; }
 .btn-primary { background:var(--accent); color:white; box-shadow:none; }
 .btn-primary:hover { background:var(--accent-h); transform:none; box-shadow:none; }
+.btn-primary:active,.btn-glass:active,.btn-outline-purple:active,.btn-white:active { transform:scale(.94) !important; opacity:.82 !important; transition-duration:80ms !important; }
 .btn-glass { background:rgba(255,255,255,.12); border:1px solid rgba(255,255,255,.2); color:white; }
 .btn-glass:hover { background:rgba(255,255,255,.18); }
 .btn-outline-purple { background:transparent; border:1.5px solid var(--accent); color:var(--accent); }
@@ -520,6 +521,7 @@ input:focus-visible,select:focus-visible,textarea:focus-visible { outline:none; 
 .subject-card.english::before { background:var(--english); }
 .subject-card.social::before  { background:var(--social); }
 .subject-card:hover { transform:translateY(-3px); box-shadow:var(--shadow); border-color:var(--border-2); }
+.subject-card:active { transform:scale(.95) !important; opacity:.82 !important; transition-duration:80ms !important; }
 
 .card-top { padding:1.5rem 1.5rem .85rem; }
 .card-icon-wrap {
@@ -1777,6 +1779,7 @@ footer {
   cursor:pointer;
 }
 .app-subject-tile:hover { border-color:var(--accent); transform:translateY(-2px); box-shadow:var(--shadow-sm); }
+.app-subject-tile:active { transform:scale(.94) !important; opacity:.82 !important; transition-duration:80ms !important; }
 .app-tile-icon {
   width:44px; height:44px; border-radius:var(--radius);
   display:flex; align-items:center; justify-content:center; flex-shrink:0;
@@ -1811,6 +1814,7 @@ footer {
   transition:border-color var(--dur) var(--ease),box-shadow var(--dur) var(--ease);
 }
 .app-tool-card:hover { border-color:var(--accent); box-shadow:var(--shadow-sm); }
+.app-tool-card:active { transform:scale(.96) !important; opacity:.82 !important; transition-duration:80ms !important; }
 .app-tool-icon {
   width:38px; height:38px; border-radius:var(--radius);
   background:var(--accent-bg);

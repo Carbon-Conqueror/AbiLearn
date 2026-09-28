@@ -16,7 +16,7 @@
   <meta name="apple-mobile-web-app-title" content="AbiLearn">
   <link rel="manifest" href="manifest.json">
   <link rel="apple-touch-icon" href="assets/logo.jpeg">
-  <link rel="stylesheet" href="css/style.css?v=68">
+  <link rel="stylesheet" href="css/style.css?v=69">
   <link rel="icon" href="assets/logo.jpeg" type="image/jpeg">
   <link rel="preconnect" href="https://www.gstatic.com">
   <link rel="dns-prefetch" href="https://www.gstatic.com">
@@ -494,7 +494,7 @@
     transform: translateY(-2px);
     box-shadow: 0 8px 38px rgba(88,56,236,.48), 0 2px 8px rgba(0,0,0,.18);
   }
-  .btn-primary:active { transform: scale(.985); }
+  .btn-primary:active { transform: scale(.94) !important; opacity: .82 !important; transition-duration: 80ms !important; }
   .btn-primary:focus-visible { outline: 2.5px solid rgba(192,176,255,.8); outline-offset: 3px; }
 
   .btn-arrow {
@@ -530,6 +530,7 @@
     border-color: rgba(192,172,255,.26);
     transform: translateY(-1px);
   }
+  .btn-ghost:active { transform: scale(.94) !important; opacity: .72 !important; transition-duration: 80ms !important; }
   .btn-ghost:focus-visible { outline: 2.5px solid rgba(192,176,255,.8); outline-offset: 3px; }
 
   /* ━━ VALUE STRIP ━━ */
@@ -1215,7 +1216,7 @@ input,textarea{-webkit-user-select:text!important;user-select:text!important;}
 
 <script src="js/db-stub.js"></script>
 <script src="js/data.js?v=1"></script>
-<script src="js/app.js?v=107"></script>
+<script src="js/app.js?v=108"></script>
 <script src="js/auth-stub.js"></script>
 <script>
 /* rAF parallax on hero background */
@@ -1248,7 +1249,7 @@ initLandingPage();
 </script>
 
 
-<script src="js/protect.js?v=7"></script>
+<script src="js/protect.js?v=8"></script>
 <script src="js/community.js?v=1"></script>
   <script src="js/router.js?v=7"></script>
   <script src="js/pinch-zoom.js?v=6"></script>
