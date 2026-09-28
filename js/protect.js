@@ -1,4 +1,4 @@
-/* AbiLearn Content Protection v6 */
+/* AbiLearn Content Protection v7 */
 (function () {
   'use strict';
 
@@ -105,36 +105,40 @@
     _guardTimer = setTimeout(function () {
       _guard.classList.remove('abl-guard-visible');
       document.body.classList.remove('abl-ss-active');
-    }, 1500);
+    }, 300);
   }
 
   /* ── 7. VISIBILITY CHANGE ────────────────────── */
+  /* Only guard when page is fully hidden (user switched app / locked screen).
+   * Do NOT use window.blur — every mobile tap fires blur, causing false flashes. */
+  var _lastVisible = true;
   document.addEventListener('visibilitychange', function () {
     _ensureGuard();
     if (document.visibilityState === 'hidden') {
+      _lastVisible = false;
       _guard.classList.add('abl-guard-visible');
       document.body.classList.add('abl-ss-active');
     } else {
+      _lastVisible = true;
       clearTimeout(_guardTimer);
-      /* Keep guard up briefly after returning — covers any screenshot-viewer
-       * swipe-back animation that might expose the page content             */
       _guardTimer = setTimeout(function () {
         _guard.classList.remove('abl-guard-visible');
         document.body.classList.remove('abl-ss-active');
-      }, 600);
+      }, 400);
     }
   });
 
-  /* ── 8. WINDOW BLUR ──────────────────────────── */
-  window.addEventListener('blur', function () { _flashGuard(); });
-
-  /* ── 9. DEVTOOLS HEURISTIC ───────────────────── */
-  setInterval(function () {
-    if ((window.outerWidth  - window.innerWidth  > 160) ||
-        (window.outerHeight - window.innerHeight > 160)) {
-      _flashGuard();
-    }
-  }, 1500);
+  /* ── 8. DEVTOOLS HEURISTIC (desktop only) ────── */
+  /* Skip on touch devices — keyboard open triggers false positives */
+  var _isTouchDevice = ('ontouchstart' in window) || navigator.maxTouchPoints > 0;
+  if (!_isTouchDevice) {
+    setInterval(function () {
+      if ((window.outerWidth  - window.innerWidth  > 160) ||
+          (window.outerHeight - window.innerHeight > 160)) {
+        _flashGuard();
+      }
+    }, 2000);
+  }
 
   /* ── 10. VIDEO HARDWARE-LAYER OVERLAY ───────────
    * On Android Chrome, <video> elements often render via a hardware overlay
