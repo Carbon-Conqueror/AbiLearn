@@ -179,7 +179,9 @@
     if (!s) return;
     stopInertia(s);
     el.style.transition = '';
-    el.setPointerCapture(e.pointerId);
+    /* Do NOT unconditionally capture — capturing on a plain tap prevents
+     * click events from reaching parent <a> or <button> elements.
+     * We only capture when we know we need it (pan, pinch, double-tap). */
     s.ptrs[e.pointerId] = { clientX: e.clientX, clientY: e.clientY };
     var p = pList(s.ptrs);
 
@@ -188,10 +190,10 @@
       var now = Date.now();
       var ddx = e.clientX - s.ltX, ddy = e.clientY - s.ltY;
 
-      /* Double-tap */
+      /* Double-tap: capture and handle */
       if (now - s.lastTap < DBL_MS && Math.sqrt(ddx * ddx + ddy * ddy) < 30) {
         e.preventDefault();
-        try { el.releasePointerCapture(e.pointerId); } catch (_) {}
+        try { el.setPointerCapture(e.pointerId); } catch (_) {}
         delete s.ptrs[e.pointerId];
         s.lastTap = 0;
         captureNatural(s, el);
@@ -211,8 +213,9 @@
       }
       s.lastTap = now; s.ltX = e.clientX; s.ltY = e.clientY;
 
-      /* Pan when zoomed */
+      /* Pan when zoomed: capture so pointer tracked outside element */
       if (s.scale > 1.05) {
+        try { el.setPointerCapture(e.pointerId); } catch (_) {}
         captureNatural(s, el);
         s.panning      = true;
         s.panSX        = e.clientX; s.panSY    = e.clientY;
@@ -223,10 +226,12 @@
         el.style.touchAction = 'none'; /* block page scroll during pan */
         e.preventDefault();
       }
+      /* Scale = 1 single tap: do nothing — let click bubble to parent */
     }
 
-    /* ── 2-finger: start pinch ── */
+    /* ── 2-finger: start pinch, capture both pointers ── */
     if (p.length === 2) {
+      try { el.setPointerCapture(e.pointerId); } catch (_) {}
       s.panning  = false;
       s.pinching = true;
       captureNatural(s, el);
@@ -372,7 +377,7 @@
 
   /* ── Exclusion list ───────────────────────────── */
   var SKIP_SEL = [
-    'button', 'nav', 'header',
+    'button', 'a', 'nav', 'header',
     '.nav-logo', '[class*="logo"]', '[class*="icon"]',
     '[class*="avatar"]', '[class*="badge"]',
     '.abl-ss-guard', '#abl-community-cta',

@@ -685,7 +685,7 @@ input:focus-visible,select:focus-visible,textarea:focus-visible { outline:none; 
 /* ─── TABS ────────────────────────────────────── */
 .tabs-bar {
   background:var(--surface); border-bottom:1px solid var(--border);
-  position:sticky; top:env(safe-area-inset-top,0px); z-index:99;
+  position:sticky; top:calc(64px + env(safe-area-inset-top,0px)); z-index:99;
   box-shadow:none;
 }
 .tabs-scroll {
@@ -1586,7 +1586,7 @@ footer {
   .nav-right  { display:none !important; }
   .hamburger  { display:flex !important; }
   .search-bar { display:none; }
-  .tabs-bar { top:env(safe-area-inset-top,0px); border-bottom:1px solid var(--border); box-shadow:none; }
+  .tabs-bar { top:calc(56px + env(safe-area-inset-top,0px)); border-bottom:1px solid var(--border); box-shadow:none; }
   .tabs-scroll { flex-wrap:wrap; padding:.48rem .75rem; gap:.28rem; overflow:visible; }
   .tab-btn {
     flex:1 1 calc(50% - .28rem); min-width:0; max-width:calc(50% - .28rem);
