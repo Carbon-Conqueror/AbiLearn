@@ -1,4 +1,4 @@
-/* AbiLearn — Design System v54 */
+/* AbiLearn — Design System v55 */
 
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap');
 
@@ -147,6 +147,8 @@ html {
   /* iOS Safari viewport fill */
   -webkit-text-size-adjust:100%;
   font-size:106.25%;
+  /* Remove 300ms tap delay globally */
+  touch-action:manipulation;
 }
 body {
   font-family:'Poppins',system-ui,-apple-system,sans-serif;
@@ -158,7 +160,13 @@ body {
 }
 a { text-decoration:none; color:inherit; }
 img { display:block; max-width:100%; }
-button { font-family:inherit; cursor:pointer; }
+/* Instant touch response — no 300ms delay, no tap flash */
+button, a, [role="button"], .tab-btn, .chapter-header, .pdf-card, .card, .mcq-option, .mcq-opt, label {
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+  cursor: pointer;
+}
+button { font-family:inherit; }
 :focus-visible { outline:2px solid var(--accent); outline-offset:3px; border-radius:4px; }
 input:focus-visible,select:focus-visible,textarea:focus-visible { outline:none; }
 
@@ -677,7 +685,7 @@ input:focus-visible,select:focus-visible,textarea:focus-visible { outline:none; 
 /* ─── TABS ────────────────────────────────────── */
 .tabs-bar {
   background:var(--surface); border-bottom:1px solid var(--border);
-  position:sticky; top:calc(64px + env(safe-area-inset-top,0px)); z-index:99;
+  position:sticky; top:env(safe-area-inset-top,0px); z-index:99;
   box-shadow:none;
 }
 .tabs-scroll {
@@ -1578,7 +1586,7 @@ footer {
   .nav-right  { display:none !important; }
   .hamburger  { display:flex !important; }
   .search-bar { display:none; }
-  .tabs-bar { top:calc(54px + env(safe-area-inset-top,0px)); border-bottom:1px solid var(--border); box-shadow:none; }
+  .tabs-bar { top:env(safe-area-inset-top,0px); border-bottom:1px solid var(--border); box-shadow:none; }
   .tabs-scroll { flex-wrap:wrap; padding:.48rem .75rem; gap:.28rem; overflow:visible; }
   .tab-btn {
     flex:1 1 calc(50% - .28rem); min-width:0; max-width:calc(50% - .28rem);
@@ -1900,90 +1908,6 @@ body.abl-ss-active > *:not(#abl-ss-guard) {
   pointer-events: none !important;
 }
 
-/* ─── FULLSCREEN FOCUS OVERLAY ────────────────── */
-#abl-fs-overlay {
-  position: fixed;
-  inset: 0;
-  z-index: 2147483647;
-  background: rgba(10, 8, 24, 0.97);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  animation: abl-fs-fade-in 300ms var(--ease) both;
-}
-@keyframes abl-fs-fade-in {
-  from { opacity: 0; }
-  to   { opacity: 1; }
-}
-.abl-fs-box {
-  text-align: center;
-  padding: 2.5rem 2rem;
-  max-width: 360px;
-  width: 90%;
-}
-.abl-fs-logo {
-  width: 72px;
-  height: 72px;
-  object-fit: contain;
-  margin-bottom: 1.25rem;
-  border-radius: 16px;
-  filter: drop-shadow(0 0 20px rgba(91,71,222,.55));
-  display: block;
-  margin-left: auto;
-  margin-right: auto;
-}
-.abl-fs-title {
-  color: #fff;
-  font-size: 1.6rem;
-  font-weight: 700;
-  margin: 0 0 .5rem;
-  letter-spacing: -.01em;
-  text-decoration: none;
-}
-.abl-fs-sub {
-  color: rgba(255,255,255,.55);
-  font-size: .9rem;
-  line-height: 1.5;
-  margin: 0 0 1.75rem;
-  text-decoration: none;
-}
-.abl-fs-btn {
-  background: #5B47DE;
-  color: #fff;
-  border: none;
-  padding: .75rem 2.25rem;
-  border-radius: 50px;
-  font-size: 1rem;
-  font-weight: 600;
-  cursor: pointer;
-  transition: background 150ms, transform 120ms;
-  box-shadow: 0 4px 18px rgba(91,71,222,.45);
-  text-decoration: none;
-  display: inline-block;
-}
-.abl-fs-btn:hover  { background: #4A38CF; text-decoration: none; }
-.abl-fs-btn:active { transform: scale(.97); }
-
-/* ─── iOS FOCUS MODE (Add to Home Screen) ────── */
-.abl-fs-steps {
-  text-align: left;
-  color: rgba(255,255,255,.75);
-  font-size: .875rem;
-  line-height: 1.8;
-  margin: 0 0 1.5rem;
-  padding-left: 1.25rem;
-}
-.abl-fs-steps strong { color: #fff; }
-.abl-fs-share-icon {
-  display: inline-block;
-  background: rgba(255,255,255,.15);
-  border-radius: 5px;
-  padding: 0 5px;
-  font-size: .8rem;
-  vertical-align: middle;
-}
 
 /* ─── SPA PROGRESS BAR ───────────────────────── */
 #abl-spa-bar {
@@ -2001,60 +1925,6 @@ body.abl-ss-active > *:not(#abl-ss-guard) {
 }
 
 
-/* ─── FULLSCREEN FLOATING BAR (top strip, visible when abl-is-fs) ─── */
-#abl-fs-exit-btn, #abl-fs-back-btn {
-  position: fixed;
-  top: calc(.65rem + env(safe-area-inset-top, 0px));
-  z-index: 9100;
-  padding: .48rem 1rem;
-  border-radius: 2rem;
-  border: none;
-  cursor: pointer;
-  font-size: .82rem;
-  font-weight: 700;
-  font-family: inherit;
-  white-space: nowrap;
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
-  box-shadow: 0 2px 14px rgba(0,0,0,.35);
-  display: none;
-  transition: background .18s, transform .12s;
-  -webkit-tap-highlight-color: transparent;
-}
-body.abl-is-fs #abl-fs-exit-btn,
-body.abl-is-fs #abl-fs-back-btn { display: block; }
-
-/* Exit Fullscreen — right side */
-#abl-fs-exit-btn {
-  right: calc(.75rem + env(safe-area-inset-right, 0px));
-  background: rgba(0,0,0,.55);
-  color: #fff;
-}
-#abl-fs-exit-btn:hover  { background: rgba(0,0,0,.78); }
-#abl-fs-exit-btn:active { transform: scale(.94); }
-
-/* Back Button — left side */
-#abl-fs-back-btn {
-  left: calc(.75rem + env(safe-area-inset-left, 0px));
-  background: rgba(91,71,222,.82);
-  color: #fff;
-  min-width: 44px; min-height: 44px;
-  display: none;
-  align-items: center; justify-content: center;
-}
-body.abl-is-fs #abl-fs-back-btn { display: flex; }
-#abl-fs-back-btn:hover  { background: rgba(91,71,222,.97); }
-#abl-fs-back-btn:active { transform: scale(.94); }
-
-@media (max-width: 600px) {
-  #abl-fs-exit-btn, #abl-fs-back-btn { font-size: .78rem; padding: .42rem .88rem; top: calc(.5rem + env(safe-area-inset-top,0px)); }
-}
-
-/* ─── NAVBAR ALWAYS VISIBLE IN FULLSCREEN ─── */
-body.abl-is-fs .navbar {
-  transform: none !important;
-  transition: none !important;
-}
 
 /* ─── SKELETON LOADERS ────────────────────────── */
 @keyframes abl-shimmer {
@@ -2130,6 +2000,4 @@ body.abl-is-fs .navbar {
   body.has-bottom-nav .tab-panel { padding-bottom: calc(72px + env(safe-area-inset-bottom,0px)); }
   body.has-bottom-nav footer,
   body.has-bottom-nav .app-footer { padding-bottom: calc(72px + env(safe-area-inset-bottom,0px)) !important; }
-  /* Hide bottom nav in fullscreen focus mode */
-  body.abl-is-fs #abl-bottom-nav { display: none !important; }
 }

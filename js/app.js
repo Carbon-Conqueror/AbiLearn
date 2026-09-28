@@ -5,15 +5,12 @@
   let lastY = 0;
   window.addEventListener('scroll', () => {
     const nav = document.querySelector('.navbar');
-    const tabs = document.querySelector('.tabs-bar');
     const y = window.scrollY;
-    const navH = nav ? nav.offsetHeight : 72;
-    if (y > lastY && y > navH) {
+    const navH = nav ? nav.offsetHeight : 0;
+    if (y > lastY && y > navH + 20) {
       if (nav) nav.style.transform = 'translateY(-100%)';
-      if (tabs) tabs.style.top = 'env(safe-area-inset-top,0px)';
     } else {
       if (nav) nav.style.transform = '';
-      if (tabs) tabs.style.top = '';
     }
     lastY = y;
   }, { passive: true });
