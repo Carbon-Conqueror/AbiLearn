@@ -1036,7 +1036,7 @@ function openPDF(url, title) {
             '<button class="pdf-tb-fit" onclick="pdfZoomFit()" aria-label="Fit to screen" title="Reset zoom">⤢</button>' +
           '</div>' +
         '</div>' +
-        '<div class="pdf-modal-body" id="pdfModalBody"></div>' +
+        '<div class="pdf-modal-body" id="pdfModalBody" tabindex="-1"></div>' +
       '</div>';
     document.body.appendChild(modal);
   }
@@ -1046,6 +1046,7 @@ function openPDF(url, title) {
 
   const body = document.getElementById('pdfModalBody');
   if (window.ablPinchZoom) window.ablPinchZoom.attachPdf(body);
+  body.focus({ preventScroll: true });
   body.innerHTML = '<div class="pdf-loading">Loading…</div>';
   body.style.padding = _isImage ? '0.5rem' : '0';
   _lastModalTrigger = _lastModalTrigger || document.activeElement;

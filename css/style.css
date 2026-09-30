@@ -1164,7 +1164,7 @@ input:focus-visible,select:focus-visible,textarea:focus-visible { outline:none; 
 .pdf-tb-fit:hover { background:rgba(255,255,255,.15); color:#fff; }
 .pdf-tb-fit:active { transform:scale(.88) !important; opacity:.8 !important; transition-duration:60ms !important; }
 
-.pdf-modal-body { flex:1; overflow:auto; padding:.5rem; box-sizing:border-box; touch-action:pan-x pan-y; min-height:0; }
+.pdf-modal-body { flex:1; overflow:auto; padding:.5rem; box-sizing:border-box; touch-action:pan-x pan-y; min-height:0; overscroll-behavior:contain; }
 .pdf-modal-body canvas {
   border-radius:3px;
   image-rendering: auto;

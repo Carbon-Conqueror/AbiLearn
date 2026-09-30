@@ -439,11 +439,13 @@
 
   function onPdfDown(e) {
     var body = e.currentTarget;
-    body.setPointerCapture(e.pointerId);
     pdfState.ptrs[e.pointerId] = { clientX: e.clientX, clientY: e.clientY };
     var p = pList(pdfState.ptrs);
 
     if (p.length === 2 && !pdfState.active) {
+      /* Capture only when a 2-finger pinch begins — capturing on every
+         pointerdown blocks the browser's native scroll on PC/trackpad. */
+      body.setPointerCapture(e.pointerId);
       pdfState.active       = true;
       pdfState.cssScale     = 1;
       pdfState.tx           = 0;
