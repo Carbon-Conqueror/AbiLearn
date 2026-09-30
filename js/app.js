@@ -954,7 +954,7 @@ function pdfCards(subject, tab) {
 const PDFJS_SRC    = 'https://cdn.jsdelivr.net/npm/pdfjs-dist@3.11.174/build/pdf.min.js';
 const PDFJS_WORKER = 'https://cdn.jsdelivr.net/npm/pdfjs-dist@3.11.174/build/pdf.worker.min.js';
 const PDFJS_CMAPS  = 'https://cdn.jsdelivr.net/npm/pdfjs-dist@3.11.174/cmaps/';
-const PDFJS_FONTS  = 'fonts/standard/';
+const PDFJS_FONTS  = window.location.origin + '/fonts/standard/';
 let _pdfUrl = '';
 let _pdfZoom = 1.0;
 let _pdfDoc = null;
@@ -1019,14 +1019,36 @@ function _pdfFallbackLink(href, label) {
    Used to pass the Firebase ID token to the Cloudflare Pages Function that
    guards /pdfs/* and /assets/formula/* from unauthenticated access. */
 function _getAuthHeader() {
-  try {
-    if (window._fauth && window._fauth.currentUser) {
-      return window._fauth.currentUser.getIdToken()
-        .then(function(tok) { return { 'Authorization': 'Bearer ' + tok }; })
-        .catch(function() { return {}; });
-    }
-  } catch (_) {}
-  return Promise.resolve({});
+  if (!window._fauth) return Promise.resolve({});
+
+  var user = window._fauth.currentUser;
+  if (user) {
+    return user.getIdToken()
+      .then(function(tok) { return { 'Authorization': 'Bearer ' + tok }; })
+      .catch(function() { return {}; });
+  }
+
+  /* Firebase auth state not yet resolved — wait up to 5 s for onAuthStateChanged
+     so we never hit the CF Function with an empty token just because auth was slow */
+  return new Promise(function(resolve) {
+    var settled = false;
+    var timer = setTimeout(function() {
+      if (!settled) { settled = true; resolve({}); }
+    }, 5000);
+    var unsub = window._fauth.onAuthStateChanged(function(u) {
+      if (settled) return;
+      settled = true;
+      clearTimeout(timer);
+      unsub();
+      if (u) {
+        u.getIdToken()
+          .then(function(tok) { resolve({ 'Authorization': 'Bearer ' + tok }); })
+          .catch(function() { resolve({}); });
+      } else {
+        resolve({});
+      }
+    });
+  });
 }
 
 function openPDF(url, title) {
