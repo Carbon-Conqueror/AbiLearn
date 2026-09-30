@@ -2033,3 +2033,27 @@ body.abl-ss-active > *:not(#abl-ss-guard) {
   body.has-bottom-nav footer,
   body.has-bottom-nav .app-footer { padding-bottom: calc(72px + env(safe-area-inset-bottom,0px)) !important; }
 }
+
+/* ─── LANDSCAPE MOBILE FIXES ──────────────────── */
+@media (orientation: landscape) and (max-height: 500px) {
+  /* Compact the shared navbar in landscape */
+  .navbar { height:48px !important; }
+  .tabs-bar { top:calc(48px + env(safe-area-inset-top,0px)) !important; }
+
+  /* Add side safe-area padding so notch doesn't block taps */
+  .app-main, .qbp-wrap, .app-body > * {
+    padding-left:  max(1rem, env(safe-area-inset-left,  0px));
+    padding-right: max(1rem, env(safe-area-inset-right, 0px));
+  }
+  .tabs-scroll {
+    padding-left:  max(.75rem, env(safe-area-inset-left,  0px));
+    padding-right: max(.75rem, env(safe-area-inset-right, 0px));
+  }
+  .navbar {
+    padding-left:  max(1rem, calc(env(safe-area-inset-left,0px)  + .75rem));
+    padding-right: max(1rem, calc(env(safe-area-inset-right,0px) + .75rem));
+  }
+
+  /* Reduce pdf modal toolbar tap targets to fit landscape height */
+  .pdf-toolbar { min-height:44px; }
+}

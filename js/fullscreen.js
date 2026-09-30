@@ -1,215 +1,144 @@
-/* AbiLearn — Focus Mode + Screenshot Layer v3 */
+/* AbiLearn — Focus Mode prompt v4 */
 (function () {
   'use strict';
 
-  var FS_KEY = 'abl_fs';
+  var FS_KEY = 'abl_focus_asked';
 
-  /* ── Browser / device detection ────────────── */
+  /* ── Device detection ───────────────────────── */
   var isIOS = /iPad|iPhone|iPod/i.test(navigator.userAgent) ||
               (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
-  var isSafariBrowser = /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
-  var isIOSSafari = isIOS && isSafariBrowser;
-  /* iOS 16.4+ supports fullscreen in standalone/PWA mode but not in browser */
-  var isStandalone = !!(navigator.standalone || window.matchMedia('(display-mode: standalone)').matches);
+  var isIOSSafari = isIOS &&
+    /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
+  var isStandalone = !!(navigator.standalone ||
+    window.matchMedia('(display-mode: standalone)').matches ||
+    window.matchMedia('(display-mode: fullscreen)').matches);
+  var isMobile = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
 
-  /* ── Fullscreen API helpers ─────────────────── */
-  function canFullscreen() {
+  /* Skip on desktop, standalone / already fullscreen */
+  if (!isMobile) return;
+  if (isStandalone) return;
+  try { if (sessionStorage.getItem(FS_KEY)) return; } catch (e) {}
+
+  /* ── Fullscreen API ─────────────────────────── */
+  function canFS() {
     var el = document.documentElement;
     return !!(el.requestFullscreen || el.webkitRequestFullscreen ||
               el.mozRequestFullScreen || el.msRequestFullscreen);
   }
 
-  function isFS() {
-    return !!(document.fullscreenElement ||
-              document.webkitFullscreenElement ||
-              document.mozFullScreenElement ||
-              document.msFullscreenElement ||
-              isStandalone);
-  }
-
   function enterFS() {
-    if (isFS()) return;
     var el = document.documentElement;
     var fn = el.requestFullscreen || el.webkitRequestFullscreen ||
              el.mozRequestFullScreen || el.msRequestFullscreen;
     if (fn) fn.call(el).catch(function () {});
   }
 
-  /* ── Overlay ────────────────────────────────── */
-  var overlay = null;
+  /* ── Dismiss overlay ────────────────────────── */
+  function dismiss(remember) {
+    try { if (remember) sessionStorage.setItem(FS_KEY, '1'); } catch (e) {}
+    var el = document.getElementById('abl-focus-prompt');
+    if (!el) return;
+    el.style.opacity = '0';
+    setTimeout(function () { el.remove(); }, 240);
+  }
 
-  function showOverlay(iosFallback) {
-    if (overlay) return;
-    overlay = document.createElement('div');
-    overlay.id = 'abl-fs-overlay';
-    overlay.setAttribute('role', 'dialog');
-    overlay.setAttribute('aria-modal', 'true');
+  /* ── Build the prompt ───────────────────────── */
+  function showPrompt() {
+    if (document.getElementById('abl-focus-prompt')) return;
 
-    var content;
-    if (iosFallback) {
-      /* iOS Safari cannot enter fullscreen — show Add to Home Screen guide */
-      content =
-        '<div class="abl-fs-box">' +
-          '<img class="abl-fs-logo" src="assets/logo.jpeg" alt="AbiLearn">' +
-          '<h2 class="abl-fs-title">Focus Mode</h2>' +
-          '<p class="abl-fs-sub">For the best fullscreen experience on iPhone or iPad, add AbiLearn to your Home Screen:</p>' +
-          '<ol class="abl-fs-steps">' +
-            '<li>Tap <strong>Share</strong> <span class="abl-fs-share-icon">⬆</span></li>' +
-            '<li>Tap <strong>Add to Home Screen</strong></li>' +
-            '<li>Open the AbiLearn icon from your Home Screen</li>' +
-          '</ol>' +
-          '<button id="abl-fs-btn" class="abl-fs-btn">Continue Anyway</button>' +
-        '</div>';
-    } else {
-      content =
-        '<div class="abl-fs-box">' +
-          '<img class="abl-fs-logo" src="assets/logo.jpeg" alt="AbiLearn">' +
-          '<h2 class="abl-fs-title">Focus Mode</h2>' +
-          '<p class="abl-fs-sub">Study without distractions. Enter fullscreen to continue.</p>' +
-          '<button id="abl-fs-btn" class="abl-fs-btn">Enter Fullscreen</button>' +
-        '</div>';
-    }
-    overlay.innerHTML = content;
+    var overlay = document.createElement('div');
+    overlay.id = 'abl-focus-prompt';
+    overlay.style.cssText =
+      'position:fixed;inset:0;z-index:99999;' +
+      'background:rgba(0,0,0,.62);' +
+      'display:flex;align-items:center;justify-content:center;' +
+      'padding:1.5rem;box-sizing:border-box;' +
+      '-webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px);' +
+      'opacity:0;transition:opacity .22s ease;';
+
+    /* iOS Safari can't enter fullscreen in browser — show Add to Home Screen tip */
+    var body = isIOSSafari
+      ? '<p style="font-size:.83rem;color:var(--muted,#888);margin:0 0 1.5rem;line-height:1.6;">' +
+          'Tap <strong>Share ⬆</strong> then <strong>Add to Home Screen</strong> ' +
+          'for a distraction-free experience on iPhone.' +
+        '</p>'
+      : '<p style="font-size:.83rem;color:var(--muted,#888);margin:0 0 1.5rem;line-height:1.6;">' +
+          'Block out distractions and study in full-screen focus mode.' +
+        '</p>';
+
+    var yesLabel = isIOSSafari ? 'Got it' : 'Enable Fullscreen';
+
+    overlay.innerHTML =
+      '<div style="background:var(--surface,#fff);border-radius:22px;' +
+        'padding:2rem 1.75rem 1.75rem;max-width:310px;width:100%;' +
+        'text-align:center;box-shadow:0 24px 60px rgba(0,0,0,.38);' +
+        'border:1px solid var(--border,#E5E7EB);">' +
+
+        /* Logo */
+        '<img src="assets/logo.jpeg" alt="AbiLearn"' +
+          ' style="width:56px;height:56px;border-radius:14px;object-fit:cover;' +
+          'display:block;margin:0 auto .75rem;box-shadow:0 4px 14px rgba(91,71,222,.25);"' +
+          ' onerror="this.style.display=\'none\'">' +
+
+        /* Focus Mode badge */
+        '<div style="display:inline-flex;align-items:center;gap:.35rem;' +
+          'background:rgba(91,71,222,.12);border:1px solid rgba(91,71,222,.3);' +
+          'border-radius:20px;padding:.28rem .82rem;margin-bottom:1rem;">' +
+          '<span style="width:6px;height:6px;border-radius:50%;background:#5B47DE;flex-shrink:0;"></span>' +
+          '<span style="font-size:.68rem;font-weight:800;letter-spacing:.08em;' +
+            'color:#5B47DE;text-transform:uppercase;">Focus Mode</span>' +
+        '</div>' +
+
+        /* Heading */
+        '<h2 style="font-size:1.1rem;font-weight:800;color:var(--text,#111);' +
+          'margin:0 0 .55rem;line-height:1.3;">Study without<br>distractions?</h2>' +
+
+        body +
+
+        /* YES */
+        '<button id="abl-fp-yes" style="display:block;width:100%;padding:.8rem;' +
+          'border-radius:12px;background:#5B47DE;color:#fff;border:none;' +
+          'font-size:.92rem;font-weight:700;cursor:pointer;margin-bottom:.55rem;' +
+          'font-family:inherit;min-height:48px;touch-action:manipulation;' +
+          '-webkit-tap-highlight-color:transparent;">' +
+          yesLabel +
+        '</button>' +
+
+        /* NO */
+        '<button id="abl-fp-no" style="display:block;width:100%;padding:.72rem;' +
+          'border-radius:12px;background:transparent;color:var(--muted,#6B7280);' +
+          'border:1px solid var(--border,#E5E7EB);font-size:.86rem;font-weight:600;' +
+          'cursor:pointer;font-family:inherit;min-height:48px;touch-action:manipulation;' +
+          '-webkit-tap-highlight-color:transparent;">Not Now</button>' +
+
+      '</div>';
+
     document.body.appendChild(overlay);
 
-    document.getElementById('abl-fs-btn').addEventListener('click', function () {
-      if (iosFallback) {
-        hideOverlay();
-      } else {
-        enterFS();
-        setTimeout(function () { if (!isFS()) hideOverlay(); }, 800);
-      }
+    /* Fade in */
+    requestAnimationFrame(function () {
+      requestAnimationFrame(function () { overlay.style.opacity = '1'; });
+    });
+
+    document.getElementById('abl-fp-yes').addEventListener('click', function () {
+      if (!isIOSSafari && canFS()) enterFS();
+      dismiss(true);
+    });
+    document.getElementById('abl-fp-no').addEventListener('click', function () {
+      dismiss(true);
+    });
+    /* Tap backdrop to dismiss without saving preference */
+    overlay.addEventListener('click', function (e) {
+      if (e.target === overlay) dismiss(false);
     });
   }
 
-  function hideOverlay() {
-    if (overlay) { overlay.remove(); overlay = null; }
+  /* ── Show after short delay ─────────────────── */
+  function init() { setTimeout(showPrompt, 1400); }
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', init);
+  } else {
+    init();
   }
-
-  /* ── Fullscreen lifecycle ───────────────────── */
-  var enteredOnce = false;
-  var _deliberateExit = false;
-
-  function _syncFsClass() {
-    if (isFS()) {
-      document.body.classList.add('abl-is-fs');
-    } else {
-      document.body.classList.remove('abl-is-fs');
-    }
-  }
-
-  function onFSChange() {
-    _syncFsClass();
-    if (isFS()) {
-      enteredOnce = true;
-      _deliberateExit = false;
-      try { sessionStorage.setItem(FS_KEY, '1'); } catch (e) {}
-      hideOverlay();
-    } else if (enteredOnce && !_deliberateExit) {
-      /* Accidental exit (Escape key, browser gesture) — prompt to re-enter */
-      showOverlay(false);
-    }
-    /* Deliberate exit: do nothing, let user browse normally */
-  }
-
-  ['fullscreenchange', 'webkitfullscreenchange',
-   'mozfullscreenchange', 'MSFullscreenChange'].forEach(function (ev) {
-    document.addEventListener(ev, onFSChange);
-  });
-
-  /* ── Boot ───────────────────────────────────── */
-  if (!isIOSSafari) {
-    /* All non-iOS-Safari browsers: attempt fullscreen immediately */
-    enterFS();
-
-    /* Re-enter fullscreen on interaction only when not deliberately exited */
-    document.addEventListener('click', function () {
-      if (!isFS() && !_deliberateExit) enterFS();
-    }, { capture: true, passive: true });
-
-    document.addEventListener('touchstart', function () {
-      if (!isFS() && !_deliberateExit) enterFS();
-    }, { capture: true, passive: true });
-
-    var hasConsent = false;
-    try { hasConsent = sessionStorage.getItem(FS_KEY) === '1'; } catch (e) {}
-    setTimeout(function () {
-      if (!isFS()) showOverlay(false);
-    }, hasConsent ? 1500 : 3000);
-
-  } else if (!isStandalone) {
-    /* iOS Safari in browser — can't do fullscreen, show Add to Home Screen guide */
-    setTimeout(function () {
-      showOverlay(true);
-    }, 4000);
-  }
-  /* iOS standalone (PWA) — already fullscreen, no overlay needed */
-
-  /* ── Exit Fullscreen + Back Navigation buttons ── */
-  if (canFullscreen() || isStandalone) {
-    var _exitBtn = document.createElement('button');
-    _exitBtn.id = 'abl-fs-exit-btn';
-    _exitBtn.textContent = '✕ Exit';
-    _exitBtn.setAttribute('aria-label', 'Exit fullscreen');
-    _exitBtn.addEventListener('click', function () {
-      _deliberateExit = true;
-      try { sessionStorage.removeItem(FS_KEY); } catch(e) {}
-      var exitFn = document.exitFullscreen || document.webkitExitFullscreen ||
-                   document.mozCancelFullScreen || document.msExitFullscreen;
-      if (exitFn && isFS()) exitFn.call(document).catch(function () {});
-      /* After exiting, sync the body class so CSS hides these buttons */
-      setTimeout(_syncFsClass, 300);
-    });
-
-    var _backBtn = document.createElement('button');
-    _backBtn.id = 'abl-fs-back-btn';
-    _backBtn.textContent = '← Back';
-    _backBtn.setAttribute('aria-label', 'Go back');
-    _backBtn.addEventListener('click', function (e) {
-      e.stopPropagation();
-      /* If no history to go back to, navigate to home */
-      if (window.history.length <= 1) {
-        if (window.ablRouter) { window.ablRouter.navigate('learn.html', true); }
-        else { location.href = 'learn.html'; }
-      } else {
-        window.history.back();
-      }
-    });
-
-    function _attachFsBtns() {
-      if (!document.getElementById('abl-fs-exit-btn')) document.body.appendChild(_exitBtn);
-      if (!document.getElementById('abl-fs-back-btn')) document.body.appendChild(_backBtn);
-      /* Initial state driven by CSS body.abl-is-fs; _syncFsClass handles display */
-      _syncFsClass();
-    }
-
-    if (document.readyState === 'loading') {
-      document.addEventListener('DOMContentLoaded', _attachFsBtns);
-    } else {
-      _attachFsBtns();
-    }
-
-    ['fullscreenchange', 'webkitfullscreenchange',
-     'mozfullscreenchange', 'MSFullscreenChange'].forEach(function (ev) {
-      document.addEventListener(ev, _syncFsClass);
-    });
-  }
-
-  /* ── Screenshot video-layer deterrent ──────── */
-  window.addEventListener('DOMContentLoaded', function () {
-    var vid = document.createElement('video');
-    vid.setAttribute('autoplay', '');
-    vid.setAttribute('loop', '');
-    vid.setAttribute('muted', '');
-    vid.setAttribute('playsinline', '');
-    vid.setAttribute('aria-hidden', 'true');
-    vid.style.cssText =
-      'position:fixed;top:0;left:0;width:100%;height:100%;' +
-      'z-index:2147483640;pointer-events:none;' +
-      'opacity:0.004;object-fit:cover;';
-    vid.src = 'data:video/webm;base64,GkXfo0AgQoaBAUL3gQFC8oEEQvOBCFEscoCkAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABZU29mdU1vb1ZvcmJpcwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=';
-    document.body.appendChild(vid);
-    vid.play().catch(function () {});
-  });
 
 })();

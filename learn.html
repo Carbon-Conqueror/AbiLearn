@@ -12,7 +12,7 @@
   <meta name="apple-mobile-web-app-title" content="AbiLearn">
   <link rel="manifest" href="manifest.json">
   <link rel="apple-touch-icon" href="assets/logo.jpeg">
-  <link rel="stylesheet" href="css/style.css?v=71">
+  <link rel="stylesheet" href="css/style.css?v=72">
   <link rel="icon" href="assets/logo.jpeg" type="image/jpeg">
   <link rel="preconnect" href="https://www.gstatic.com">
   <link rel="dns-prefetch" href="https://www.gstatic.com">
@@ -385,6 +385,20 @@
     .lh-hamburger { display: flex; }
   }
 
+  /* ── Landscape: compact header + safe-area side padding ── */
+  @media (orientation: landscape) and (max-height: 500px) {
+    :root { --lh-nav-h: 48px; }
+    .lh-header-inner {
+      padding-inline: max(1.25rem, calc(env(safe-area-inset-left, 0px) + .75rem));
+    }
+    .lh-page-inner,
+    .lh-section-inner {
+      padding-left:  max(1.25rem, env(safe-area-inset-left,  0px));
+      padding-right: max(1.25rem, env(safe-area-inset-right, 0px));
+    }
+    .lh-mmenu { top: 48px; }
+  }
+
   /* ══════════════════════════════════════
      MOBILE MENU DROPDOWN
   ══════════════════════════════════════ */
@@ -401,6 +415,10 @@
     transition: max-height .3s var(--lh-ease-out);
   }
   .lh-mmenu.is-open { max-height: 360px; }
+  /* In landscape the menu must not swallow the whole viewport */
+  @media (orientation: landscape) and (max-height: 500px) {
+    .lh-mmenu.is-open { max-height: 75vh; overflow-y: auto; }
+  }
 
   .lh-mmenu-inner {
     padding: .75rem clamp(1.25rem,4vw,2.5rem) 1rem;
@@ -1629,5 +1647,6 @@ if (location.search.indexOf('openSearch=1') !== -1) {
 <script src="js/community.js?v=1"></script>
   <script src="js/router.js?v=7"></script>
   <script src="js/pinch-zoom.js?v=6"></script>
+  <script src="js/fullscreen.js?v=4"></script>
 </body>
 </html>
