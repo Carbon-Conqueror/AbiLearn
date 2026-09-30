@@ -1005,6 +1005,19 @@ function _applyImgZoom() {
   }
 }
 
+function _pdfErrMsg(text) {
+  var p = document.createElement('p'); p.textContent = text; return p;
+}
+function _pdfRetryBtn(fn) {
+  var b = document.createElement('button'); b.className = 'pdf-retry-btn';
+  b.textContent = 'Retry'; b.onclick = fn; return b;
+}
+function _pdfFallbackLink(href, label) {
+  var a = document.createElement('a');
+  a.href = href; a.target = '_blank'; a.rel = 'noopener noreferrer';
+  a.className = 'pdf-fallback-link'; a.textContent = label; return a;
+}
+
 function openPDF(url, title) {
   _pdfUrl = url;
   _pdfZoom = 1.0;
@@ -1044,6 +1057,15 @@ function openPDF(url, title) {
   const s = document.createElement('script');
   s.src = PDFJS_SRC;
   s.onload = () => renderPDF(url);
+  s.onerror = function() {
+    var b = document.getElementById('pdfModalBody');
+    if (!b) return;
+    b.innerHTML = '';
+    var e = document.createElement('div'); e.className = 'pdf-error';
+    e.appendChild(_pdfErrMsg('Could not load PDF viewer.'));
+    e.appendChild(_pdfFallbackLink(url, 'Open PDF in new tab ↗'));
+    b.appendChild(e);
+  };
   document.head.appendChild(s);
 }
 
@@ -1075,7 +1097,11 @@ function renderImage(url) {
     if (badge) badge.classList.remove('visible');
   };
   tmp.onerror = function () {
-    body.innerHTML = '<div class="pdf-error">Could not load image.</div>';
+    body.innerHTML = '';
+    var e = document.createElement('div'); e.className = 'pdf-error';
+    e.appendChild(_pdfErrMsg('Could not load image.'));
+    e.appendChild(_pdfFallbackLink(url, 'View image in new tab ↗'));
+    body.appendChild(e);
   };
 
   body.appendChild(canvas);
@@ -1260,7 +1286,12 @@ function renderPDF(url, scrollRatio) {
     freshRender();
 
   }).catch(function() {
-    body.innerHTML = '<div class="pdf-error">Could not load PDF.<br>Please try again later.</div>';
+    body.innerHTML = '';
+    var e = document.createElement('div'); e.className = 'pdf-error';
+    e.appendChild(_pdfErrMsg('Could not load PDF.'));
+    e.appendChild(_pdfRetryBtn(function() { renderPDF(url, scrollRatio); }));
+    e.appendChild(_pdfFallbackLink(absUrl, 'Open PDF in new tab ↗'));
+    body.appendChild(e);
   });
 }
 

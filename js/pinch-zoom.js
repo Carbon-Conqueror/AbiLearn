@@ -67,6 +67,8 @@
         pinching: false,
         prevDist: 0,
         prevMid: null,
+        startDist: 0,
+        startScale: 1,
         panning: false,
         panSX: 0, panSY: 0, panSTx: 0, panSTy: 0,
         /* Inertia */
@@ -235,7 +237,9 @@
       s.panning  = false;
       s.pinching = true;
       captureNatural(s, el);
-      s.prevDist = pDist(p[0], p[1]);
+      s.prevDist   = pDist(p[0], p[1]);
+      s.startDist  = s.prevDist;
+      s.startScale = s.scale;
       s.prevMid  = { x: (p[0].clientX + p[1].clientX) * 0.5,
                      y: (p[0].clientY + p[1].clientY) * 0.5 };
       el.style.touchAction = 'none';
@@ -260,8 +264,9 @@
                        y: (p[0].clientY + p[1].clientY) * 0.5 };
 
       if (s.prevDist > 0) {
-        var ratio    = currDist / s.prevDist;
-        var rawScale = s.scale * ratio;
+        var rawScale = (s.startDist > 0)
+          ? s.startScale * (currDist / s.startDist)
+          : s.scale * (currDist / s.prevDist);
         /* Elastic resistance past limits */
         var newScale = (rawScale < IMG_MIN || rawScale > IMG_MAX)
                      ? resist(rawScale, IMG_MIN, IMG_MAX)
