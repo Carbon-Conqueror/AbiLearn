@@ -1014,6 +1014,21 @@ function _pdfFallbackLink(href, label) {
   a.className = 'pdf-fallback-link'; a.textContent = label; return a;
 }
 
+/* Returns a Promise<object> with an Authorization header when the user is
+   signed in via Firebase, or an empty object when auth is not available.
+   Used to pass the Firebase ID token to the Cloudflare Pages Function that
+   guards /pdfs/* and /assets/formula/* from unauthenticated access. */
+function _getAuthHeader() {
+  try {
+    if (window._fauth && window._fauth.currentUser) {
+      return window._fauth.currentUser.getIdToken()
+        .then(function(tok) { return { 'Authorization': 'Bearer ' + tok }; })
+        .catch(function() { return {}; });
+    }
+  } catch (_) {}
+  return Promise.resolve({});
+}
+
 function openPDF(url, title) {
   _pdfUrl = url;
   _pdfZoom = 1.0;
@@ -1088,18 +1103,33 @@ function renderImage(url) {
     canvas.style.width  = Math.round(tmp.naturalWidth  * scale) + 'px';
     canvas.style.height = Math.round(tmp.naturalHeight * scale) + 'px';
     canvas.getContext('2d').drawImage(tmp, 0, 0);
+    if (tmp._blobUrl) { URL.revokeObjectURL(tmp._blobUrl); tmp._blobUrl = null; }
     clearTimeout(_zoomBadgeTimer);
     var badge = document.getElementById('pdfZoomBadge');
     if (badge) badge.classList.remove('visible');
   };
   tmp.onerror = function () {
+    if (tmp._blobUrl) { URL.revokeObjectURL(tmp._blobUrl); tmp._blobUrl = null; }
     body.innerHTML = '<div class="pdf-error">Could not load image.</div>';
   };
 
   body.appendChild(canvas);
-  tmp.src = url;
   _imgEl = canvas;
   if (window.ablPinchZoom) window.ablPinchZoom.attachImg(canvas);
+
+  /* Fetch with Firebase auth token so the CF Pages Function can gate access */
+  _getAuthHeader().then(function(hdrs) {
+    return fetch(url, { headers: hdrs });
+  }).then(function(r) {
+    if (!r.ok) throw new Error('HTTP ' + r.status);
+    return r.blob();
+  }).then(function(blob) {
+    var blobUrl = URL.createObjectURL(blob);
+    tmp._blobUrl = blobUrl;
+    tmp.src = blobUrl;
+  }).catch(function() {
+    body.innerHTML = '<div class="pdf-error">Could not load image.</div>';
+  });
 }
 
 function renderPDF(url, scrollRatio) {
@@ -1129,10 +1159,12 @@ function renderPDF(url, scrollRatio) {
   const absUrl = url.startsWith('http') ? url : new URL(url, base).href;
 
   /* Fetch PDF bytes in the main thread (avoids worker-side HTTP restrictions),
-     then pass as data: buffer to getDocument so the worker only parses/renders. */
+     then pass as data: buffer to getDocument so the worker only parses/renders.
+     The Firebase ID token is sent so the Cloudflare Function can gate access. */
   const load = isZoom
     ? Promise.resolve(_pdfDoc)
-    : fetch(absUrl)
+    : _getAuthHeader()
+        .then(function(hdrs) { return fetch(absUrl, { headers: hdrs }); })
         .then(function(r) {
           if (!r.ok) throw new Error('HTTP ' + r.status);
           return r.arrayBuffer();

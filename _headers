@@ -19,6 +19,7 @@
 /*.html
   Cache-Control: no-cache, no-store, must-revalidate
   Content-Security-Policy: default-src 'self'; script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' data: https://fonts.gstatic.com; img-src 'self' data: blob:; media-src 'self' data: blob:; connect-src 'self' https://cdn.jsdelivr.net; worker-src 'self' blob: https://cdn.jsdelivr.net; frame-ancestors 'none'; frame-src 'none'; object-src 'none'; base-uri 'self'; form-action 'self'
+  Cross-Origin-Opener-Policy: same-origin
 
 # ── JavaScript — long cache ────────────────────────────────────────
 /js/*.js
@@ -35,6 +36,14 @@
   X-Robots-Tag: noindex, nofollow
   Cache-Control: private, no-store, no-cache, must-revalidate
   X-Content-Type-Options: nosniff
+  Cross-Origin-Resource-Policy: same-origin
+
+# ── Formula images — authenticated access only ────────────────
+/assets/formula/*
+  X-Robots-Tag: noindex, nofollow
+  Cache-Control: private, no-store, no-cache, must-revalidate
+  X-Content-Type-Options: nosniff
+  Cross-Origin-Resource-Policy: same-origin
 
 # ── Assets — allow caching, no indexing for raw asset files ───────
 /assets/*

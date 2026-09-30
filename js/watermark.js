@@ -1,11 +1,15 @@
-/* AbiLearn — Watermark, Copyright Notice & Print Shield
+/* AbiLearn — Forensic Watermark, Copyright Notice & Print Shield v2
  *
  * Three persistent layers injected on educational pages:
  *   #abl-watermark     — repeating diagonal canvas pattern, position:fixed
  *   #abl-copyright     — slim fixed footer attribution line
  *   #abl-print-notice  — full-page overlay shown only when printing
  *
- * All are pointer-events:none so they never block interaction.
+ * The watermark tile includes the authenticated user's masked UID,
+ * display name, and the current date — making every screenshot traceable
+ * back to the account that took it.
+ *
+ * All layers are pointer-events:none so they never block interaction.
  * The SPA router persists them across page navigations.
  * An abl-navigate event (fired by router.js) shows/hides based on route.
  */
@@ -22,40 +26,98 @@
     } catch (e) { return true; }
   }
 
+  /* ── User identity helpers ───────────────────── */
+  function _getUser() {
+    /* getUser() is the global function exported by auth.js (same page) */
+    if (typeof getUser === 'function') {
+      try { var u = getUser(); if (u && u.uid) return u; } catch(_) {}
+    }
+    /* Fallback: firebase currentUser object */
+    try {
+      if (window._fauth && window._fauth.currentUser) {
+        var fb = window._fauth.currentUser;
+        return { uid: fb.uid, name: fb.displayName || 'Student' };
+      }
+    } catch(_) {}
+    return null;
+  }
+
+  function _maskedUid(uid) {
+    if (!uid || uid.length < 8) return uid || '';
+    return uid.slice(0, 4) + '…' + uid.slice(-4);
+  }
+
+  function _dateStr() {
+    var d = new Date();
+    var pad = function(n) { return n < 10 ? '0' + n : '' + n; };
+    return d.getFullYear() + '-' + pad(d.getMonth() + 1) + '-' + pad(d.getDate());
+  }
+
   /* ── Canvas watermark tile ───────────────────── */
   function _buildTile(dark) {
     var canvas = document.createElement('canvas');
-    var W = 320, H = 130;
-    canvas.width = W;
+    var W = 340, H = 160;
+    canvas.width  = W;
     canvas.height = H;
     var ctx = canvas.getContext('2d');
-    var alpha = dark ? 0.038 : 0.048;
+    var alpha = dark ? 0.038 : 0.052;
     var color = dark
       ? 'rgba(200,190,255,' + alpha + ')'
-      : 'rgba(45,28,115,' + alpha + ')';
+      : 'rgba(45,28,115,'   + alpha + ')';
+
+    var user     = _getUser();
+    var uid      = user ? _maskedUid(user.uid) : '';
+    var nameLine = user
+      ? ((user.name || 'Student').substring(0, 16) + ' • ' + _dateStr())
+      : ('AbiLearn • ' + _dateStr());
 
     ctx.save();
     ctx.translate(W / 2, H / 2);
     ctx.rotate(-22 * Math.PI / 180);
-    ctx.textAlign = 'center';
+    ctx.textAlign    = 'center';
     ctx.textBaseline = 'middle';
-    ctx.fillStyle = color;
-    ctx.font = 'bold 13px system-ui,sans-serif';
-    ctx.fillText('AbiLearn', 0, -9);
-    ctx.font = '11px system-ui,sans-serif';
-    ctx.fillText('Educational Content', 0, 9);
-    ctx.restore();
+    ctx.fillStyle    = color;
 
+    ctx.font = 'bold 13px system-ui,sans-serif';
+    ctx.fillText('AbiLearn', 0, uid ? -22 : -10);
+
+    if (uid) {
+      ctx.font = '11px system-ui,sans-serif';
+      ctx.fillText(uid, 0, 0);
+      ctx.font = '10px system-ui,sans-serif';
+      ctx.fillText(nameLine, 0, 18);
+    } else {
+      ctx.font = '10px system-ui,sans-serif';
+      ctx.fillText(nameLine, 0, 10);
+    }
+
+    ctx.restore();
     return canvas.toDataURL('image/png');
   }
 
   /* ── Watermark overlay ───────────────────────── */
   var _wm = null;
   var _isDark = !!(window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches);
+  var _shiftTimer = null;
 
   function _setWmBg(dark) {
     if (!_wm) return;
     _wm.style.backgroundImage = 'url(' + _buildTile(dark) + ')';
+  }
+
+  /* Periodically shift the watermark by a small random offset so a single
+     crop cannot reliably remove it from all parts of a screenshot */
+  function _startShifting() {
+    if (_shiftTimer) return;
+    function _shift() {
+      if (_wm && _wm.style.display !== 'none') {
+        var dx = Math.round((Math.random() - 0.5) * 40);
+        var dy = Math.round((Math.random() - 0.5) * 40);
+        _wm.style.backgroundPosition = dx + 'px ' + dy + 'px';
+      }
+      _shiftTimer = setTimeout(_shift, 7000 + Math.round(Math.random() * 5000));
+    }
+    _shift();
   }
 
   function _initWatermark() {
@@ -65,11 +127,12 @@
     _wm.setAttribute('aria-hidden', 'true');
     _wm.style.cssText =
       'position:fixed;top:0;left:0;width:100%;height:100%;' +
-      'background-repeat:repeat;background-size:320px 130px;' +
+      'background-repeat:repeat;background-size:340px 160px;' +
       'pointer-events:none;z-index:2000;' +
       'user-select:none;-webkit-user-select:none;';
     _setWmBg(_isDark);
     document.body.appendChild(_wm);
+    _startShifting();
 
     if (window.matchMedia) {
       window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', function (e) {
@@ -77,6 +140,13 @@
         _setWmBg(_isDark);
       });
     }
+
+    /* Update tile when Firebase auth state changes (user logs in/out) */
+    document.addEventListener('DOMContentLoaded', function () {
+      if (window._fauth) {
+        window._fauth.onAuthStateChanged(function () { _setWmBg(_isDark); });
+      }
+    });
   }
 
   /* ── Copyright notice ────────────────────────── */
@@ -100,9 +170,6 @@
   }
 
   /* ── Print shield ────────────────────────────── */
-  /* Overrides the existing @media print { body { display:none } } from
-   * the per-page abl-protect style so we can show a notice instead of
-   * a completely blank page when the user tries to print. */
   function _initPrintShield() {
     if (document.getElementById('abl-print-css')) return;
 
@@ -142,8 +209,10 @@
   /* ── Show / hide based on current route ─────── */
   function _update(href) {
     var show = _needsWatermark(href || location.href);
-    if (_wm)  _wm.style.display  = show ? '' : 'none';
-    if (_cr)  _cr.style.display  = show ? '' : 'none';
+    if (_wm) _wm.style.display  = show ? '' : 'none';
+    if (_cr) _cr.style.display  = show ? '' : 'none';
+    /* Rebuild the tile on each navigation so the date stays current */
+    if (show && _wm) _setWmBg(_isDark);
   }
 
   /* Listen for SPA route changes dispatched by router.js */

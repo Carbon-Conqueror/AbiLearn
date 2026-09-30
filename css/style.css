@@ -1898,7 +1898,7 @@ footer {
   inset: 0;
   z-index: 2147483646;
   pointer-events: none;
-  background: #0A0818;
+  background: #000000;
   opacity: 0;
   /* fade-out only — appearance is instant so there's no window for screenshots */
   transition: opacity 400ms linear;

@@ -128,6 +128,17 @@
     }
   });
 
+  /* pagehide fires before unload AND when a page enters the back/forward cache.
+   * Showing the guard ensures no content is visible in the bfcache snapshot. */
+  window.addEventListener('pagehide', function () {
+    _ensureGuard();
+    _guard.classList.add('abl-guard-visible');
+    document.body.classList.add('abl-ss-active');
+  });
+
+  /* freeze fires when the browser puts the page in bfcache (Chrome/Edge). */
+  window.addEventListener('freeze', function () { _flashGuard(); });
+
   /* ── 8. DEVTOOLS HEURISTIC (desktop only) ────── */
   /* Skip on touch devices — keyboard open triggers false positives */
   var _isTouchDevice = ('ontouchstart' in window) || navigator.maxTouchPoints > 0;
