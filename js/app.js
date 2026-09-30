@@ -1008,10 +1008,6 @@ function _applyImgZoom() {
 function _pdfErrMsg(text) {
   var p = document.createElement('p'); p.textContent = text; return p;
 }
-function _pdfRetryBtn(fn) {
-  var b = document.createElement('button'); b.className = 'pdf-retry-btn';
-  b.textContent = 'Retry'; b.onclick = fn; return b;
-}
 function _pdfFallbackLink(href, label) {
   var a = document.createElement('a');
   a.href = href; a.target = '_blank'; a.rel = 'noopener noreferrer';
@@ -1097,11 +1093,7 @@ function renderImage(url) {
     if (badge) badge.classList.remove('visible');
   };
   tmp.onerror = function () {
-    body.innerHTML = '';
-    var e = document.createElement('div'); e.className = 'pdf-error';
-    e.appendChild(_pdfErrMsg('Could not load image.'));
-    e.appendChild(_pdfFallbackLink(url, 'View image in new tab ↗'));
-    body.appendChild(e);
+    body.innerHTML = '<div class="pdf-error">Could not load image.</div>';
   };
 
   body.appendChild(canvas);
@@ -1122,22 +1114,38 @@ function renderPDF(url, scrollRatio) {
   }
   /* Zoom re-render: keep current body content visible — pre-render replaces it atomically */
 
-  pdfjsLib.GlobalWorkerOptions.workerSrc = PDFJS_WORKER;
+  /* Blob worker: importScripts inside a blob: URL is allowed by worker-src blob:
+     and bypasses any cross-origin worker restrictions on the CDN URL. */
+  if (!pdfjsLib.GlobalWorkerOptions.workerSrc) {
+    try {
+      pdfjsLib.GlobalWorkerOptions.workerSrc = URL.createObjectURL(
+        new Blob(['importScripts("' + PDFJS_WORKER + '")'], {type: 'text/javascript'})
+      );
+    } catch(_) {
+      pdfjsLib.GlobalWorkerOptions.workerSrc = PDFJS_WORKER;
+    }
+  }
   const base = window.location.href.replace(/\/[^\/]*$/, '/');
   const absUrl = url.startsWith('http') ? url : new URL(url, base).href;
 
+  /* Fetch PDF bytes in the main thread (avoids worker-side HTTP restrictions),
+     then pass as data: buffer to getDocument so the worker only parses/renders. */
   const load = isZoom
     ? Promise.resolve(_pdfDoc)
-    : pdfjsLib.getDocument({
-        url: absUrl,
-        rangeChunkSize: 131072,
-        disableRange: false,
-        disableStream: false,
-        disableAutoFetch: false,
-        cMapUrl: PDFJS_CMAPS,
-        cMapPacked: true,
-        standardFontDataUrl: PDFJS_FONTS
-      }).promise.then(doc => { _pdfDoc = doc; return doc; });
+    : fetch(absUrl)
+        .then(function(r) {
+          if (!r.ok) throw new Error('HTTP ' + r.status);
+          return r.arrayBuffer();
+        })
+        .then(function(buf) {
+          return pdfjsLib.getDocument({
+            data: new Uint8Array(buf),
+            cMapUrl: PDFJS_CMAPS,
+            cMapPacked: true,
+            standardFontDataUrl: PDFJS_FONTS
+          }).promise;
+        })
+        .then(function(doc) { _pdfDoc = doc; return doc; });
 
   load.then(function(pdf) {
     const rawW     = body.clientWidth > 32 ? body.clientWidth : window.innerWidth;
@@ -1286,12 +1294,7 @@ function renderPDF(url, scrollRatio) {
     freshRender();
 
   }).catch(function() {
-    body.innerHTML = '';
-    var e = document.createElement('div'); e.className = 'pdf-error';
-    e.appendChild(_pdfErrMsg('Could not load PDF.'));
-    e.appendChild(_pdfRetryBtn(function() { renderPDF(url, scrollRatio); }));
-    e.appendChild(_pdfFallbackLink(absUrl, 'Open PDF in new tab ↗'));
-    body.appendChild(e);
+    body.innerHTML = '<div class="pdf-error">Could not load PDF.<br>Please try again.</div>';
   });
 }
 
