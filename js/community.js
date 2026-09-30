@@ -56,6 +56,7 @@
   align-items: flex-end;
   gap: 10px;
   font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
+  pointer-events: none; /* hidden panel takes layout space; pass through taps to page */
 }
 @media (max-width: 600px) {
   #abl-community-cta { bottom: 16px; right: 16px; }
@@ -66,6 +67,7 @@
   display: flex;
   align-items: center;
   gap: 8px;
+  pointer-events: auto;
   background: var(--cm-pill-bg);
   color: var(--cm-pill-fg);
   border: none;
@@ -114,6 +116,7 @@
   display: flex;
   align-items: center;
   gap: 14px;
+  pointer-events: auto;
   background: var(--cm-card-bg);
   border: 1px solid var(--cm-card-border);
   border-radius: var(--cm-radius);
