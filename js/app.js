@@ -477,6 +477,21 @@ function initSubjectPage(subjectId) {
     }, 400);
   }
   setTimeout(initReveal, 200);
+  /* Preload PDF.js in background so first Open tap is instant */
+  if (!window.pdfjsLib) {
+    var _preload = function() {
+      if (window.pdfjsLib) return;
+      var s = document.createElement('script');
+      s.src = PDFJS_SRC;
+      s.async = true;
+      document.head.appendChild(s);
+    };
+    if (typeof requestIdleCallback !== 'undefined') {
+      requestIdleCallback(_preload, { timeout: 3000 });
+    } else {
+      setTimeout(_preload, 1200);
+    }
+  }
 }
 
 function renderSubjectShell(subject) {
@@ -1082,9 +1097,10 @@ function renderPDF(url, scrollRatio) {
     ? Promise.resolve(_pdfDoc)
     : pdfjsLib.getDocument({
         url: absUrl,
-        rangeChunkSize: 65536,
+        rangeChunkSize: 131072,
         disableRange: false,
         disableStream: false,
+        disableAutoFetch: false,
         cMapUrl: PDFJS_CMAPS,
         cMapPacked: true,
         standardFontDataUrl: PDFJS_FONTS
@@ -1134,13 +1150,13 @@ function renderPDF(url, scrollRatio) {
       wrappers.push(w);
     }
 
-    renderPage(wrappers[0]);
-    if (wrappers[1]) renderPage(wrappers[1]);
+    /* Pre-render first 4 pages immediately for instant scroll experience */
+    for (var _pi = 0; _pi < Math.min(4, wrappers.length); _pi++) renderPage(wrappers[_pi]);
 
     _pdfObserver = new IntersectionObserver(entries => {
       entries.forEach(e => { if (e.isIntersecting) renderPage(e.target); });
-    }, { root: body, rootMargin: '400px 0px', threshold: 0 });
-    wrappers.slice(2).forEach(w => _pdfObserver.observe(w));
+    }, { root: body, rootMargin: '800px 0px', threshold: 0 });
+    wrappers.slice(4).forEach(w => _pdfObserver.observe(w));
 
     if (scrollRatio !== undefined) {
       /* Restore so the same content remains centered in the viewport.
@@ -3693,7 +3709,7 @@ function renderAppSubjects() {
   grid.innerHTML = DATA.subjects.map(function(sub) {
     var pct = getSubjectPct(sub.id);
     return '<a href="' + urlMap[sub.id] + '" onclick="return guardNav(event,\'' + urlMap[sub.id] + '\')" class="app-subject-tile ' + sub.id + '">' +
-      '<div class="app-tile-icon ' + sub.id + '"><img src="assets/subjects/' + sub.id + '.jpg" alt="" class="app-tile-subject-img" loading="lazy"></div>' +
+      '<div class="app-tile-icon ' + sub.id + '"><img src="assets/subjects/' + sub.id + '.jpg" alt="" class="app-tile-subject-img" loading="eager" fetchpriority="high" decoding="async"></div>' +
       '<div class="app-tile-name">' + sub.name + '</div>' +
       '<div class="app-tile-meta">' + sub.chapters.length + ' chapters</div>' +
     '</a>';

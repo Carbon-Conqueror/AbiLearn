@@ -160,6 +160,9 @@ body {
 }
 a { text-decoration:none; color:inherit; }
 img { display:block; max-width:100%; }
+/* GPU hint for zoomable/interactive images */
+img, canvas { will-change: auto; }
+.app-tile-subject-img, .pdf-img-view, .pdf-canvas, [data-zoomable] { will-change: transform; }
 /* Instant touch response — no 300ms delay, no tap flash */
 button, a, [role="button"], .tab-btn, .chapter-header, .pdf-card, .card, .mcq-option, .mcq-opt, label {
   touch-action: manipulation;
@@ -704,6 +707,7 @@ input:focus-visible,select:focus-visible,textarea:focus-visible { outline:none; 
   border-radius:var(--radius-sm) var(--radius-sm) 0 0;
 }
 .tab-btn:hover { color:var(--text); }
+.tab-btn:active { transform:scale(.93) !important; opacity:.78 !important; transition-duration:70ms !important; }
 .tab-btn.active               { color:var(--accent);  border-bottom-color:transparent; }
 .tab-btn.active.maths-t       { color:var(--maths);   border-bottom-color:transparent; }
 .tab-btn.active.science-t     { color:var(--science); border-bottom-color:transparent; }
@@ -769,6 +773,7 @@ input:focus-visible,select:focus-visible,textarea:focus-visible { outline:none; 
   font-family:inherit; text-align:left; width:100%;
 }
 .mcq-opt:hover:not(.disabled) { border-color:var(--accent); background:var(--accent-bg); }
+.mcq-opt:active:not(.disabled) { transform:scale(.97) !important; background:var(--accent-bg) !important; border-color:var(--accent) !important; transition-duration:60ms !important; }
 .mcq-opt.correct { border-color:var(--correct); background:var(--correct-l); color:#065F46; }
 .mcq-opt.wrong   { border-color:var(--wrong);   background:var(--wrong-l);   color:#991B1B; }
 @media (prefers-color-scheme: dark) {
@@ -813,6 +818,7 @@ input:focus-visible,select:focus-visible,textarea:focus-visible { outline:none; 
   transition:background var(--dur) var(--ease); user-select:none;
 }
 .chapter-header:hover { background:var(--surface-2); }
+.chapter-header:active { background:var(--surface-2) !important; opacity:.82 !important; transition-duration:60ms !important; }
 .chapter-num {
   width:28px; height:28px; border-radius:5px;
   display:flex; align-items:center; justify-content:center;
@@ -941,6 +947,7 @@ input:focus-visible,select:focus-visible,textarea:focus-visible { outline:none; 
   border-left:3px solid transparent;
 }
 .pdf-card:hover { border-left-color:var(--accent); border-color:var(--border-2); box-shadow:none; }
+.pdf-card:active { transform:scale(.97) !important; opacity:.85 !important; transition-duration:60ms !important; }
 .pdf-card-icon { display:none; }
 .pdf-card-info { flex:1; min-width:0; }
 .pdf-card-title { font-weight:600; font-size:.9rem; color:var(--text); margin-bottom:.1rem; }
@@ -1114,6 +1121,7 @@ input:focus-visible,select:focus-visible,textarea:focus-visible { outline:none; 
   align-items:center; justify-content:center; flex-shrink:0; transition:background .15s;
 }
 .pdf-tb-close:hover { background:rgba(255,255,255,.25); }
+.pdf-tb-close:active { transform:scale(.88) !important; opacity:.8 !important; transition-duration:60ms !important; }
 .pdf-tb-title {
   flex:1; color:rgba(255,255,255,.85); font-size:.82rem; font-weight:600;
   white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
@@ -1140,6 +1148,7 @@ input:focus-visible,select:focus-visible,textarea:focus-visible { outline:none; 
   display:flex; align-items:center; justify-content:center; transition:background .15s;
 }
 .pdf-tb-fit:hover { background:rgba(255,255,255,.15); color:#fff; }
+.pdf-tb-fit:active { transform:scale(.88) !important; opacity:.8 !important; transition-duration:60ms !important; }
 
 .pdf-modal-body { flex:1; overflow:auto; padding:.5rem; box-sizing:border-box; touch-action:pan-x pan-y; min-height:0; }
 .pdf-modal-body canvas {
@@ -1178,6 +1187,7 @@ input:focus-visible,select:focus-visible,textarea:focus-visible { outline:none; 
 .pdf-nav-bar { background:var(--surface-2); border-top:1px solid var(--border); padding:.52rem 1.25rem; display:flex; align-items:center; gap:.75rem; }
 .pdf-nav-btn { background:var(--accent); color:white; border:none; padding:.55rem .82rem; border-radius:var(--radius-sm); font-size:.78rem; font-weight:600; cursor:pointer; min-height:44px; transition:background var(--dur) var(--ease); font-family:inherit; }
 .pdf-nav-btn:hover { background:var(--accent-h); transform:none; }
+.pdf-nav-btn:active { transform:scale(.93) !important; opacity:.82 !important; transition-duration:70ms !important; }
 .pdf-page-info { font-size:.82rem; font-weight:600; color:var(--text); flex:1; }
 .pdf-protected-note { font-size:.7rem; color:var(--muted); display:flex; align-items:center; gap:.25rem; margin-left:auto; }
 .pdf-upload-placeholder { background:var(--surface-2); border:1.5px dashed var(--border); border-radius:var(--radius-lg); padding:2rem; text-align:center; margin-bottom:1.5rem; }
@@ -1195,6 +1205,7 @@ input:focus-visible,select:focus-visible,textarea:focus-visible { outline:none; 
 .maps-list { padding:1.1rem; display:flex; flex-direction:column; gap:.6rem; }
 .map-item { padding:.85rem 1.1rem; border:1px solid var(--border); border-radius:var(--radius); display:flex; align-items:center; gap:.75rem; transition:border-color var(--dur) var(--ease); }
 .map-item:hover { background:var(--surface-2); border-color:var(--social); }
+.map-item:active { transform:scale(.97) !important; opacity:.82 !important; transition-duration:60ms !important; }
 .map-icon { font-size:1.4rem; }
 .map-name { font-size:.88rem; font-weight:600; color:var(--text); }
 .map-sub  { font-size:.73rem; color:var(--muted); margin-top:.08rem; }
@@ -1425,6 +1436,7 @@ footer {
   border-radius:var(--radius); padding:.88rem 1.05rem; transition:var(--transition);
 }
 .progress-chapter-card:hover { border-color:var(--accent); }
+.progress-chapter-card:active { transform:scale(.97) !important; opacity:.82 !important; transition-duration:60ms !important; }
 .progress-chapter-card.due-for-revision { border-color:#F59E0B; }
 .progress-ch-header { display:flex; align-items:center; justify-content:space-between; gap:.5rem; margin-bottom:.42rem; }
 .progress-ch-name { font-size:.84rem; font-weight:700; color:var(--text); flex:1; min-width:0; }
