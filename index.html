@@ -16,7 +16,7 @@
   <meta name="apple-mobile-web-app-title" content="AbiLearn">
   <link rel="manifest" href="manifest.json">
   <link rel="apple-touch-icon" href="assets/logo.jpeg">
-  <link rel="stylesheet" href="css/style.css?v=70">
+  <link rel="stylesheet" href="css/style.css?v=71">
   <link rel="icon" href="assets/logo.jpeg" type="image/jpeg">
   <link rel="preconnect" href="https://www.gstatic.com">
   <link rel="dns-prefetch" href="https://www.gstatic.com">
@@ -181,7 +181,7 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    width: 36px; height: 36px;
+    width: 44px; height: 44px;
     border-radius: 8px;
     background: transparent;
     border: 1px solid var(--border);
@@ -191,6 +191,7 @@
     -webkit-tap-highlight-color: transparent;
   }
   .search-btn:hover { color: var(--text); border-color: var(--border-2); background: var(--surface-1); }
+  .search-btn:active { transform: scale(.88) !important; opacity: .75 !important; transition-duration: 70ms !important; }
   .search-btn:focus-visible { outline: 2px solid rgba(176,156,255,.7); outline-offset: 2px; }
 
   .btn-login {
@@ -206,8 +207,10 @@
     transition: color .18s, border-color .18s, background .18s;
     white-space: nowrap;
     -webkit-tap-highlight-color: transparent;
+    min-height: 44px;
   }
   .btn-login:hover { color: var(--text); border-color: rgba(176,156,255,.35); background: var(--surface-1); }
+  .btn-login:active { transform: scale(.94) !important; opacity: .78 !important; transition-duration: 70ms !important; }
   .btn-login:focus-visible { outline: 2px solid rgba(176,156,255,.7); outline-offset: 2px; }
 
   .btn-signup {
@@ -223,9 +226,10 @@
     transition: opacity .18s, transform .18s;
     white-space: nowrap;
     -webkit-tap-highlight-color: transparent;
+    min-height: 44px;
   }
   .btn-signup:hover { opacity: .88; }
-  .btn-signup:active { transform: scale(.97); }
+  .btn-signup:active { transform: scale(.94) !important; opacity: .78 !important; transition-duration: 70ms !important; }
   .btn-signup:focus-visible { outline: 2px solid rgba(176,156,255,.7); outline-offset: 2px; }
 
   /* Hamburger */
@@ -234,16 +238,17 @@
     flex-direction: column;
     justify-content: center;
     gap: 5px;
-    width: 36px; height: 36px;
+    width: 44px; height: 44px;
     background: transparent;
     border: 1px solid var(--border);
     border-radius: 8px;
     cursor: pointer;
-    padding: 0 8px;
+    padding: 0 10px;
     -webkit-tap-highlight-color: transparent;
     transition: border-color .18s;
   }
   .hamburger:hover { border-color: var(--border-2); }
+  .hamburger:active { transform: scale(.88) !important; opacity: .75 !important; transition-duration: 70ms !important; }
   .hamburger:focus-visible { outline: 2px solid rgba(176,156,255,.7); outline-offset: 2px; }
 
   .ham-bar {
@@ -835,7 +840,7 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    width: 34px; height: 34px;
+    width: 44px; height: 44px;
     border-radius: 8px;
     border: 1px solid var(--border);
     color: var(--text-3);

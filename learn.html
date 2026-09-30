@@ -12,7 +12,7 @@
   <meta name="apple-mobile-web-app-title" content="AbiLearn">
   <link rel="manifest" href="manifest.json">
   <link rel="apple-touch-icon" href="assets/logo.jpeg">
-  <link rel="stylesheet" href="css/style.css?v=70">
+  <link rel="stylesheet" href="css/style.css?v=71">
   <link rel="icon" href="assets/logo.jpeg" type="image/jpeg">
   <link rel="preconnect" href="https://www.gstatic.com">
   <link rel="dns-prefetch" href="https://www.gstatic.com">
@@ -287,7 +287,7 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    width: 36px; height: 36px;
+    width: 44px; height: 44px;
     border-radius: var(--lh-r-sm);
     background: transparent;
     border: 1px solid var(--lh-border);
@@ -302,6 +302,7 @@
     border-color: var(--lh-border-2);
     background: var(--lh-brand-subtle);
   }
+  .lh-icon-btn:active { transform: scale(.88) !important; opacity: .75 !important; transition-duration: 70ms !important; }
   .lh-icon-btn:focus-visible { outline: 2px solid var(--lh-brand); outline-offset: 2px; }
 
   .btn-login {
@@ -317,12 +318,14 @@
     transition: color .15s, border-color .15s, background .15s;
     white-space: nowrap;
     -webkit-tap-highlight-color: transparent;
+    min-height: 44px;
   }
   .btn-login:hover {
     color: var(--lh-text-2);
     border-color: var(--lh-border-2);
     background: var(--lh-brand-subtle);
   }
+  .btn-login:active { transform: scale(.94) !important; opacity: .78 !important; transition-duration: 70ms !important; }
   .btn-login:focus-visible { outline: 2px solid var(--lh-brand); outline-offset: 2px; }
 
   .btn-signup {
@@ -338,9 +341,10 @@
     transition: opacity .15s, transform .15s;
     white-space: nowrap;
     -webkit-tap-highlight-color: transparent;
+    min-height: 44px;
   }
   .btn-signup:hover { opacity: .88; }
-  .btn-signup:active { transform: scale(.97); }
+  .btn-signup:active { transform: scale(.94) !important; opacity: .78 !important; transition-duration: 70ms !important; }
   .btn-signup:focus-visible { outline: 2px solid var(--lh-brand); outline-offset: 2px; }
 
   /* Hamburger */
@@ -349,16 +353,17 @@
     flex-direction: column;
     justify-content: center;
     gap: 5px;
-    width: 36px; height: 36px;
+    width: 44px; height: 44px;
     background: transparent;
     border: 1px solid var(--lh-border);
     border-radius: var(--lh-r-sm);
     cursor: pointer;
-    padding: 0 8px;
+    padding: 0 10px;
     -webkit-tap-highlight-color: transparent;
     transition: border-color .15s;
   }
   .lh-hamburger:hover { border-color: var(--lh-border-2); }
+  .lh-hamburger:active { transform: scale(.88) !important; opacity: .75 !important; transition-duration: 70ms !important; }
   .lh-hamburger:focus-visible { outline: 2px solid var(--lh-brand); outline-offset: 2px; }
 
   .lh-ham-bar {
@@ -1042,7 +1047,7 @@
     background: var(--lh-surface-2);
     border: 1px solid var(--lh-border);
     border-radius: var(--lh-r-sm);
-    width: 28px; height: 28px;
+    width: 44px; height: 44px;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -1054,6 +1059,7 @@
     font-family: var(--lh-font);
   }
   .app-search-close:hover { background: var(--lh-border); color: var(--lh-text-2); }
+  .app-search-close:active { transform: scale(.88) !important; opacity: .75 !important; transition-duration: 70ms !important; }
   .app-search-close:focus-visible { outline: 2px solid var(--lh-brand); outline-offset: 2px; }
 
   .app-search-results {
@@ -1298,7 +1304,7 @@
     background: var(--lh-surface-2);
     border: 1px solid var(--lh-border);
     border-radius: var(--lh-r-sm);
-    width: 32px; height: 32px;
+    width: 44px; height: 44px;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -1307,6 +1313,7 @@
     transition: background .15s;
   }
   .panel-close:hover { background: var(--lh-border); }
+  .panel-close:active { transform: scale(.88) !important; opacity: .75 !important; transition-duration: 70ms !important; }
   .panel-close:focus-visible { outline: 2px solid var(--lh-brand); outline-offset: 2px; }
 
   .panel-body {
