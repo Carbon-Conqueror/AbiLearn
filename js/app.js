@@ -969,28 +969,33 @@ let _pdfZoom = 1.0;
 let _pdfDoc = null;
 let _isImage = false;
 let _pdfObserver = null;
+let _zoomBadgeTimer = null;
 
 function _isImageUrl(url) {
   return /\.(jpe?g|png|webp|gif|svg)(\?.*)?$/i.test(url);
 }
 
-function _updateZoomPct() {
-  var el = document.getElementById('pdfZoomPct');
-  if (el) el.textContent = Math.round(_pdfZoom * 100) + '%';
+function _showZoomBadge(zoom) {
+  var badge = document.getElementById('pdfZoomBadge');
+  if (!badge) return;
+  badge.textContent = Math.round((zoom || _pdfZoom) * 100) + '%';
+  badge.classList.add('visible');
+  clearTimeout(_zoomBadgeTimer);
+  _zoomBadgeTimer = setTimeout(function () { badge.classList.remove('visible'); }, 1800);
 }
 function pdfZoomIn() {
   _pdfZoom = Math.min(parseFloat((_pdfZoom * 1.3).toFixed(2)), 4.0);
-  _updateZoomPct();
+  _showZoomBadge();
   if (_isImage) _applyImgZoom(); else renderPDF(_pdfUrl);
 }
 function pdfZoomOut() {
   _pdfZoom = Math.max(parseFloat((_pdfZoom / 1.3).toFixed(2)), 0.4);
-  _updateZoomPct();
+  _showZoomBadge();
   if (_isImage) _applyImgZoom(); else renderPDF(_pdfUrl);
 }
 function pdfZoomFit() {
   _pdfZoom = 1.0;
-  _updateZoomPct();
+  _showZoomBadge();
   if (_isImage) _applyImgZoom(); else renderPDF(_pdfUrl);
 }
 var _imgEl = null;
@@ -1026,36 +1031,21 @@ function openPDF(url, title) {
     modal.setAttribute('aria-label', 'Document viewer');
     modal.innerHTML =
       '<div class="pdf-modal-box">' +
-        '<div class="pdf-toolbar">' +
-          '<button class="pdf-tb-close" aria-label="Close" onclick="closePDF()">✕</button>' +
-          '<span class="pdf-tb-title" id="pdfToolbarTitle"></span>' +
-          '<div class="pdf-tb-zoom">' +
-            '<button class="pdf-tb-zoom-btn" onclick="pdfZoomOut()" aria-label="Zoom out" title="Zoom out">−</button>' +
-            '<span class="pdf-tb-pct" id="pdfZoomPct">100%</span>' +
-            '<button class="pdf-tb-zoom-btn" onclick="pdfZoomIn()" aria-label="Zoom in" title="Zoom in">+</button>' +
-            '<button class="pdf-tb-fit" onclick="pdfZoomFit()" aria-label="Fit to screen" title="Reset zoom">⤢</button>' +
-          '</div>' +
-        '</div>' +
+        '<button class="pdf-float-close" aria-label="Close document" onclick="closePDF()">✕</button>' +
+        '<div class="pdf-zoom-badge" id="pdfZoomBadge" aria-live="polite" aria-atomic="true">100%</div>' +
         '<div class="pdf-modal-body" id="pdfModalBody" tabindex="-1"></div>' +
       '</div>';
     document.body.appendChild(modal);
   }
-  var titleEl = document.getElementById('pdfToolbarTitle');
-  if (titleEl) titleEl.textContent = title || '';
-  _updateZoomPct();
 
   const body = document.getElementById('pdfModalBody');
   if (window.ablPinchZoom) window.ablPinchZoom.attachPdf(body);
-  body.focus({ preventScroll: true });
   body.innerHTML = '<div class="pdf-loading">Loading…</div>';
   body.style.padding = _isImage ? '0.5rem' : '0';
   _lastModalTrigger = _lastModalTrigger || document.activeElement;
   modal.classList.add('open');
   _installFocusTrap(modal);
-  requestAnimationFrame(function() {
-    var closeBtn = modal.querySelector('.pdf-tb-close');
-    if (closeBtn) closeBtn.focus();
-  });
+  requestAnimationFrame(function() { body.focus({ preventScroll: true }); });
   document.body.style.overflow = 'hidden';
 
   if (_isImage) { renderImage(url); return; }
@@ -1078,7 +1068,7 @@ function renderImage(url) {
   img.className = 'pdf-img-view';
   img.style.cssText = 'display:block;width:100%;height:auto;border-radius:4px;';
   img.onerror = () => { body.innerHTML = '<div class="pdf-error">Could not load image.</div>'; };
-  img.onload = () => { _updateZoomPct(); };
+  img.onload = () => { _showZoomBadge(1.0); clearTimeout(_zoomBadgeTimer); document.getElementById('pdfZoomBadge') && document.getElementById('pdfZoomBadge').classList.remove('visible'); };
   body.appendChild(img);
   img.src = url;
   _imgEl = img;
@@ -1185,10 +1175,26 @@ document.addEventListener('keydown', e => { if (e.key === 'Escape') closePDF(); 
 
 document.addEventListener('abl-pdf-zoom', function(e) {
   var b = document.getElementById('pdfModalBody');
-  if (b) { b.style.transform = ''; b.style.transformOrigin = ''; }
   _pdfZoom = Math.max(0.4, Math.min(4.0, e.detail.zoom));
-  _updateZoomPct();
-  renderPDF(_pdfUrl, e.detail.scrollRatio);
+  _showZoomBadge(_pdfZoom);
+  if (b) {
+    /* Soft-clear the pinch CSS preview — brief dim hides the layout jump
+       between the old-zoom pages and the new-zoom render. */
+    b.style.transition = 'opacity 80ms ease';
+    b.style.opacity = '0.25';
+    b.style.transform = '';
+    b.style.transformOrigin = '';
+    setTimeout(function () {
+      renderPDF(_pdfUrl, e.detail.scrollRatio);
+      requestAnimationFrame(function () {
+        requestAnimationFrame(function () {
+          if (b) { b.style.opacity = '1'; b.style.transition = ''; }
+        });
+      });
+    }, 85);
+  } else {
+    renderPDF(_pdfUrl, e.detail.scrollRatio);
+  }
 });
 
 /* ══════════════════════════════════════
