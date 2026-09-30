@@ -116,7 +116,6 @@
   display: flex;
   align-items: center;
   gap: 14px;
-  pointer-events: auto;
   background: var(--cm-card-bg);
   border: 1px solid var(--cm-card-border);
   border-radius: var(--cm-radius);
