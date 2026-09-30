@@ -667,7 +667,6 @@ const PDFS = {
       { title: 'Ch 8 Introduction to Trigonometry',        desc: 'Ratios, identities, standard values',           url: 'assets/formula/ch08-trigonometry.png' },
       { title: 'Ch 9 Applications of Trigonometry',        desc: 'Heights & distances, angle of elevation',       url: 'assets/formula/ch09-applications-trigonometry.png' },
       { title: 'Ch 10 Circles',                            desc: 'Tangent, secant, arc, sector formulas',         url: 'assets/formula/ch10-circles.png' },
-      { title: 'Ch 11 Areas Related to Circles',           desc: 'Area of sector, segment, ring formulas',        url: 'assets/formula/ch11-areas-related-to-circles.png' },
       { title: 'Ch 13 Surface Areas and Volumes',          desc: 'Cuboid, cylinder, cone, sphere formulas',       url: 'assets/formula/ch13-surface-areas-volumes.png' },
       { title: 'Ch 14 Statistics',                         desc: 'Mean, median, mode for grouped data',           url: 'assets/formula/ch14-statistics.png' },
       { title: 'Ch 14 Probability Formula Sheet',          desc: 'Probability · CBSE Class 10 Maths · PDF',      url: 'pdfs/maths/complete-formula-sheet.pdf' }
@@ -1227,8 +1226,9 @@ function renderPDF(url, scrollRatio) {
                 w.innerHTML = '';
                 w.appendChild(r.canvas);
               } else {
-                w.style.width    = displayW + 'px';
+                w.style.cssText = `display:block;margin:0 auto 4px;width:${displayW}px;height:${estH}px;background:#e8e8e8;border-radius:2px;`;
                 w.dataset.rendered = '0';
+                w.innerHTML = '';
               }
             });
             _pdfObserver = new IntersectionObserver(function(entries) {
@@ -1239,7 +1239,21 @@ function renderPDF(url, scrollRatio) {
               body.scrollTop = Math.max(0, body.scrollHeight * scrollRatio - body.clientHeight * 0.5);
             }
           });
-        }).catch(freshRender); /* pre-render failed → fall back gracefully */
+        }).catch(function() {
+          /* Pre-render failed — reset wrappers in-place, no body.innerHTML clear (no grey flash) */
+          body.style.transform       = '';
+          body.style.transformOrigin = '';
+          existing.forEach(function(w) {
+            w.style.cssText = `display:block;margin:0 auto 4px;width:${displayW}px;height:${estH}px;background:#e8e8e8;border-radius:2px;`;
+            w.dataset.rendered = '0';
+            w.innerHTML = '';
+          });
+          if (_pdfObserver) { _pdfObserver.disconnect(); _pdfObserver = null; }
+          _pdfObserver = new IntersectionObserver(function(entries) {
+            entries.forEach(function(e) { if (e.isIntersecting) renderPage(e.target); });
+          }, { root: body, rootMargin: '800px 0px', threshold: 0 });
+          existing.forEach(function(w) { _pdfObserver.observe(w); });
+        });
       }
     }
 
