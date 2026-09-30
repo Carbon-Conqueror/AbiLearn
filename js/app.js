@@ -1064,15 +1064,29 @@ function renderImage(url) {
   body.style.display = 'flex';
   body.style.alignItems = 'flex-start';
   body.style.justifyContent = 'center';
-  const img = document.createElement('img');
-  img.className = 'pdf-img-view';
-  img.style.cssText = 'display:block;width:100%;height:auto;border-radius:4px;';
-  img.onerror = () => { body.innerHTML = '<div class="pdf-error">Could not load image.</div>'; };
-  img.onload = () => { _showZoomBadge(1.0); clearTimeout(_zoomBadgeTimer); document.getElementById('pdfZoomBadge') && document.getElementById('pdfZoomBadge').classList.remove('visible'); };
-  body.appendChild(img);
-  img.src = url;
-  _imgEl = img;
-  if (window.ablPinchZoom) window.ablPinchZoom.attachImg(img);
+
+  /* Render on canvas — prevents browser "Save image" on mobile long-press */
+  const canvas = document.createElement('canvas');
+  canvas.className = 'pdf-img-view';
+  canvas.style.cssText = 'display:block;width:100%;height:auto;border-radius:4px;';
+
+  const tmp = new Image();
+  tmp.onload = function () {
+    canvas.width  = tmp.naturalWidth;
+    canvas.height = tmp.naturalHeight;
+    canvas.getContext('2d').drawImage(tmp, 0, 0);
+    clearTimeout(_zoomBadgeTimer);
+    var badge = document.getElementById('pdfZoomBadge');
+    if (badge) badge.classList.remove('visible');
+  };
+  tmp.onerror = function () {
+    body.innerHTML = '<div class="pdf-error">Could not load image.</div>';
+  };
+
+  body.appendChild(canvas);
+  tmp.src = url;
+  _imgEl = canvas;
+  if (window.ablPinchZoom) window.ablPinchZoom.attachImg(canvas);
 }
 
 function renderPDF(url, scrollRatio) {
@@ -1163,7 +1177,7 @@ function renderPDF(url, scrollRatio) {
     }
 
   }).catch(() => {
-    body.innerHTML = `<div class="pdf-error">Could not load PDF.<br><a href="${escH(absUrl)}" target="_blank">Tap to download</a></div>`;
+    body.innerHTML = '<div class="pdf-error">Could not load PDF.<br>Please try again later.</div>';
   });
 }
 
