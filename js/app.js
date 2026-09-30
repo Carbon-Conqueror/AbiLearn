@@ -1093,12 +1093,19 @@ function renderPDF(url, scrollRatio) {
   const body = document.getElementById('pdfModalBody');
   if (!body) return;
   if (_pdfObserver) { _pdfObserver.disconnect(); _pdfObserver = null; }
-  body.innerHTML = '<div class="pdf-loading">Loading PDF…</div>';
+
+  const isZoom = (_pdfDoc && _pdfUrl === url);
+  if (!isZoom) {
+    /* First open: show spinner while network fetch runs */
+    body.innerHTML = '<div class="pdf-loading">Loading PDF…</div>';
+  }
+  /* Zoom re-render: keep current body content visible — pre-render replaces it atomically */
+
   pdfjsLib.GlobalWorkerOptions.workerSrc = PDFJS_WORKER;
   const base = window.location.href.replace(/\/[^\/]*$/, '/');
   const absUrl = url.startsWith('http') ? url : new URL(url, base).href;
 
-  const load = (_pdfDoc && _pdfUrl === url)
+  const load = isZoom
     ? Promise.resolve(_pdfDoc)
     : pdfjsLib.getDocument({
         url: absUrl,
@@ -1112,18 +1119,35 @@ function renderPDF(url, scrollRatio) {
       }).promise.then(doc => { _pdfDoc = doc; return doc; });
 
   load.then(pdf => {
-    body.innerHTML = '';
-    /* Clear any CSS preview transform now — body is empty so no visual snap */
-    body.style.transform       = '';
-    body.style.transformOrigin = '';
-
-    // clientWidth can be 0 on mobile before layout settles fall back to innerWidth
+    // clientWidth can be 0 on mobile before layout settles — fall back to innerWidth
     const rawW = body.clientWidth > 32 ? body.clientWidth : window.innerWidth;
     const containerW = rawW - 16;
     // Always render at ≥2× resolution for sharp, crisp output on all screens
     const dpr = Math.max(window.devicePixelRatio || 1, 2);
     const displayW = Math.max(Math.round(containerW * _pdfZoom), 200);
+    const estH = Math.round(displayW * 1.414);
 
+    /* Render one page to an off-screen canvas; resolves when pixels are ready */
+    function preRenderPage(n) {
+      return pdf.getPage(n).then(page => {
+        const rotation = page.rotate;
+        const natVp = page.getViewport({ scale: 1, rotation });
+        const scale  = (displayW / natVp.width) * dpr;
+        const vp     = page.getViewport({ scale, rotation });
+        const canvas = document.createElement('canvas');
+        canvas.width  = Math.round(vp.width);
+        canvas.height = Math.round(vp.height);
+        const cssH = Math.round(vp.height / dpr);
+        canvas.style.cssText = `display:block;width:${displayW}px;height:${cssH}px;`;
+        const ctx = canvas.getContext('2d', { alpha: false });
+        ctx.imageSmoothingEnabled = true;
+        ctx.imageSmoothingQuality = 'high';
+        return page.render({ canvasContext: ctx, viewport: vp }).promise
+          .then(() => ({ n, canvas, cssH }));
+      });
+    }
+
+    /* Lazy-render helper for IntersectionObserver (fire-and-forget, updates wrapper in-place) */
     function renderPage(w) {
       if (w.dataset.rendered === '1') return;
       w.dataset.rendered = '1';
@@ -1147,34 +1171,53 @@ function renderPDF(url, scrollRatio) {
       });
     }
 
-    const wrappers = [];
-    const estH = Math.round(displayW * 1.414);
-    for (let n = 1; n <= pdf.numPages; n++) {
-      const w = document.createElement('div');
-      w.dataset.page = n;
-      w.dataset.rendered = '0';
-      w.style.cssText = `display:block;margin:0 auto 4px;width:${displayW}px;height:${estH}px;background:#e8e8e8;border-radius:2px;`;
-      body.appendChild(w);
-      wrappers.push(w);
+    /* Determine which pages are visible at current scroll position */
+    const visibleCenter = scrollRatio != null
+      ? Math.max(1, Math.min(pdf.numPages, Math.round(scrollRatio * pdf.numPages) + 1))
+      : 1;
+    const toPreRender = [];
+    for (let n = Math.max(1, visibleCenter - 1); n <= Math.min(pdf.numPages, visibleCenter + 2); n++) {
+      toPreRender.push(n);
     }
 
-    /* Pre-render first 4 pages immediately for instant scroll experience */
-    for (var _pi = 0; _pi < Math.min(4, wrappers.length); _pi++) renderPage(wrappers[_pi]);
+    /* Pre-render visible pages off-screen, then do ONE atomic RAF swap */
+    Promise.all(toPreRender.map(preRenderPage)).then(rendered => {
+      const pageMap = {};
+      rendered.forEach(r => { pageMap[r.n] = r; });
 
-    _pdfObserver = new IntersectionObserver(entries => {
-      entries.forEach(e => { if (e.isIntersecting) renderPage(e.target); });
-    }, { root: body, rootMargin: '800px 0px', threshold: 0 });
-    wrappers.slice(4).forEach(w => _pdfObserver.observe(w));
+      requestAnimationFrame(() => {
+        /* All DOM mutations in one RAF callback → browser paints once, zero blank frames */
+        body.style.transform       = '';
+        body.style.transformOrigin = '';
+        body.innerHTML             = '';
 
-    if (scrollRatio !== undefined) {
-      /* Restore so the same content remains centered in the viewport.
-       * scrollRatio = (scrollTop + clientHeight/2) / scrollHeight at the
-       * moment the gesture ended, so invert: scrollTop = ratio*h - h/2 */
-      requestAnimationFrame(function() {
-        var targetTop = body.scrollHeight * scrollRatio - body.clientHeight * 0.5;
-        body.scrollTop = Math.max(0, targetTop);
+        const wrappers = [];
+        for (let n = 1; n <= pdf.numPages; n++) {
+          const w = document.createElement('div');
+          w.dataset.page = n;
+          if (pageMap[n]) {
+            const r = pageMap[n];
+            w.style.cssText = `display:block;margin:0 auto 4px;width:${displayW}px;height:${r.cssH}px;`;
+            w.dataset.rendered = '1';
+            w.appendChild(r.canvas);
+          } else {
+            w.style.cssText = `display:block;margin:0 auto 4px;width:${displayW}px;height:${estH}px;background:#e8e8e8;border-radius:2px;`;
+            w.dataset.rendered = '0';
+          }
+          body.appendChild(w);
+          wrappers.push(w);
+        }
+
+        _pdfObserver = new IntersectionObserver(entries => {
+          entries.forEach(e => { if (e.isIntersecting) renderPage(e.target); });
+        }, { root: body, rootMargin: '800px 0px', threshold: 0 });
+        wrappers.filter(w => w.dataset.rendered === '0').forEach(w => _pdfObserver.observe(w));
+
+        if (scrollRatio != null) {
+          body.scrollTop = Math.max(0, body.scrollHeight * scrollRatio - body.clientHeight * 0.5);
+        }
       });
-    }
+    });
 
   }).catch(() => {
     body.innerHTML = '<div class="pdf-error">Could not load PDF.<br>Please try again later.</div>';
