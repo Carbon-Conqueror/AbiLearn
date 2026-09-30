@@ -1119,7 +1119,7 @@ input:focus-visible,select:focus-visible,textarea:focus-visible { outline:none; 
 }
 
 /* ─── PDF MODALS ──────────────────────────────── */
-#pdfModal { display:none; position:fixed; inset:0; z-index:9999; }
+#pdfModal { display:none; position:fixed; inset:0; z-index:9999; overflow:hidden; }
 #pdfModal.open { display:block; }
 .pdf-modal-box { position:fixed; inset:0; background:#1A1A1A; overflow:hidden; }
 

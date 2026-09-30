@@ -139,6 +139,11 @@
   /* freeze fires when the browser puts the page in bfcache (Chrome/Edge). */
   window.addEventListener('freeze', function () { _flashGuard(); });
 
+  /* Pre-create the guard element now so it is already in the DOM when the first
+     screenshot event fires. A class-add repaint is faster than DOM insertion +
+     repaint, reducing the window between keydown and the black frame appearing. */
+  _ensureGuard();
+
   /* ── 8. DEVTOOLS HEURISTIC (desktop only) ────── */
   /* Skip on touch devices — keyboard open triggers false positives */
   var _isTouchDevice = ('ontouchstart' in window) || navigator.maxTouchPoints > 0;
