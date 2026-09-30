@@ -1114,21 +1114,40 @@ function renderPDF(url, scrollRatio) {
         standardFontDataUrl: PDFJS_FONTS
       }).promise.then(doc => { _pdfDoc = doc; return doc; });
 
-  load.then(pdf => {
-    body.style.transform       = '';
-    body.style.transformOrigin = '';
-    body.innerHTML             = '';
-
+  load.then(function(pdf) {
     const rawW     = body.clientWidth > 32 ? body.clientWidth : window.innerWidth;
     const containerW = rawW - 16;
     const dpr      = Math.max(window.devicePixelRatio || 1, 2);
     const displayW = Math.max(Math.round(containerW * _pdfZoom), 200);
     const estH     = Math.round(displayW * 1.414);
 
+    /* Render page off-screen and wait for pixels — used by smooth zoom path */
+    function preRender(n) {
+      return pdf.getPage(n).then(function(page) {
+        const rotation = page.rotate;
+        const natVp = page.getViewport({ scale: 1, rotation });
+        const scale  = (displayW / natVp.width) * dpr;
+        const vp     = page.getViewport({ scale, rotation });
+        const canvas = document.createElement('canvas');
+        canvas.width  = Math.round(vp.width);
+        canvas.height = Math.round(vp.height);
+        const cssH    = Math.round(vp.height / dpr);
+        canvas.style.cssText = `display:block;width:${displayW}px;height:${cssH}px;`;
+        const ctx = canvas.getContext('2d', { alpha: false });
+        ctx.imageSmoothingEnabled = true;
+        ctx.imageSmoothingQuality = 'high';
+        const task = page.render({ canvasContext: ctx, viewport: vp });
+        return (task.promise || Promise.resolve()).then(function() {
+          return { n: n, canvas: canvas, cssH: cssH };
+        });
+      });
+    }
+
+    /* Fire-and-forget render — used for first open and lazy IntersectionObserver */
     function renderPage(w) {
       if (w.dataset.rendered === '1') return;
       w.dataset.rendered = '1';
-      pdf.getPage(parseInt(w.dataset.page)).then(page => {
+      pdf.getPage(parseInt(w.dataset.page)).then(function(page) {
         const rotation = page.rotate;
         const natVp = page.getViewport({ scale: 1, rotation });
         const scale  = (displayW / natVp.width) * dpr;
@@ -1148,35 +1167,85 @@ function renderPDF(url, scrollRatio) {
       });
     }
 
-    const wrappers = [];
-    for (let n = 1; n <= pdf.numPages; n++) {
-      const w = document.createElement('div');
-      w.dataset.page = n;
-      w.dataset.rendered = '0';
-      w.style.cssText = `display:block;margin:0 auto 4px;width:${displayW}px;height:${estH}px;background:#e8e8e8;border-radius:2px;`;
-      body.appendChild(w);
-      wrappers.push(w);
+    /* Build wrappers from scratch and render sequentially (first open + fallback) */
+    function freshRender() {
+      body.style.transform       = '';
+      body.style.transformOrigin = '';
+      body.innerHTML             = '';
+      const wraps = [];
+      for (let n = 1; n <= pdf.numPages; n++) {
+        const w = document.createElement('div');
+        w.dataset.page = n;
+        w.dataset.rendered = '0';
+        w.style.cssText = `display:block;margin:0 auto 4px;width:${displayW}px;height:${estH}px;background:#e8e8e8;border-radius:2px;`;
+        body.appendChild(w);
+        wraps.push(w);
+      }
+      const center = scrollRatio != null
+        ? Math.max(1, Math.min(pdf.numPages, Math.round(scrollRatio * pdf.numPages) + 1))
+        : 1;
+      for (let i = Math.max(0, center - 2); i < Math.min(wraps.length, center + 2); i++) renderPage(wraps[i]);
+      _pdfObserver = new IntersectionObserver(function(entries) {
+        entries.forEach(function(e) { if (e.isIntersecting) renderPage(e.target); });
+      }, { root: body, rootMargin: '800px 0px', threshold: 0 });
+      wraps.forEach(function(w) { if (w.dataset.rendered === '0') _pdfObserver.observe(w); });
+      if (scrollRatio != null) {
+        requestAnimationFrame(function() {
+          body.scrollTop = Math.max(0, body.scrollHeight * scrollRatio - body.clientHeight * 0.5);
+        });
+      }
     }
 
-    const firstBatch = scrollRatio != null
-      ? Math.max(1, Math.min(pdf.numPages, Math.round(scrollRatio * pdf.numPages) + 1))
-      : 1;
-    for (let i = Math.max(0, firstBatch - 2); i < Math.min(wrappers.length, firstBatch + 2); i++) {
-      renderPage(wrappers[i]);
+    /* Smooth zoom: pre-render visible pages off-screen, swap atomically */
+    if (isZoom) {
+      const existing = Array.from(body.querySelectorAll('[data-page]'));
+      if (existing.length && existing.length === pdf.numPages) {
+        const bScroll = body.scrollTop;
+        const bH      = body.clientHeight;
+        const visNums = [];
+        existing.forEach(function(w) {
+          if (w.offsetTop + w.offsetHeight > bScroll && w.offsetTop < bScroll + bH) {
+            visNums.push(parseInt(w.dataset.page));
+          }
+        });
+        const toRender = visNums.length ? visNums : [1];
+
+        /* Return the promise so outer .catch still catches document-load failures */
+        return Promise.all(toRender.map(preRender)).then(function(rendered) {
+          const map = {};
+          rendered.forEach(function(r) { map[r.n] = r; });
+          requestAnimationFrame(function() {
+            /* Atomic: clear CSS scale + swap pre-rendered canvases in one frame */
+            body.style.transform       = '';
+            body.style.transformOrigin = '';
+            existing.forEach(function(w) {
+              const n = parseInt(w.dataset.page);
+              if (map[n]) {
+                const r = map[n];
+                w.style.cssText = `display:block;margin:0 auto 4px;width:${displayW}px;height:${r.cssH}px;`;
+                w.dataset.rendered = '1';
+                w.innerHTML = '';
+                w.appendChild(r.canvas);
+              } else {
+                w.style.width    = displayW + 'px';
+                w.dataset.rendered = '0';
+              }
+            });
+            _pdfObserver = new IntersectionObserver(function(entries) {
+              entries.forEach(function(e) { if (e.isIntersecting) renderPage(e.target); });
+            }, { root: body, rootMargin: '800px 0px', threshold: 0 });
+            existing.forEach(function(w) { if (w.dataset.rendered === '0') _pdfObserver.observe(w); });
+            if (scrollRatio != null) {
+              body.scrollTop = Math.max(0, body.scrollHeight * scrollRatio - body.clientHeight * 0.5);
+            }
+          });
+        }).catch(freshRender); /* pre-render failed → fall back gracefully */
+      }
     }
 
-    _pdfObserver = new IntersectionObserver(entries => {
-      entries.forEach(e => { if (e.isIntersecting) renderPage(e.target); });
-    }, { root: body, rootMargin: '800px 0px', threshold: 0 });
-    wrappers.forEach(w => { if (w.dataset.rendered === '0') _pdfObserver.observe(w); });
+    freshRender();
 
-    if (scrollRatio != null) {
-      requestAnimationFrame(function () {
-        body.scrollTop = Math.max(0, body.scrollHeight * scrollRatio - body.clientHeight * 0.5);
-      });
-    }
-
-  }).catch(() => {
+  }).catch(function() {
     body.innerHTML = '<div class="pdf-error">Could not load PDF.<br>Please try again later.</div>';
   });
 }
