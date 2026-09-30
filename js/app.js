@@ -1060,12 +1060,16 @@ function renderImage(url) {
   /* Render on canvas — prevents browser "Save image" on mobile long-press */
   const canvas = document.createElement('canvas');
   canvas.className = 'pdf-img-view';
-  canvas.style.cssText = 'display:block;width:100%;height:auto;border-radius:4px;';
+  canvas.style.cssText = 'display:block;max-width:100%;border-radius:4px;';
 
   const tmp = new Image();
   tmp.onload = function () {
     canvas.width  = tmp.naturalWidth;
     canvas.height = tmp.naturalHeight;
+    const availW  = (body.clientWidth || window.innerWidth) - 16;
+    const scale   = Math.min(1, availW / tmp.naturalWidth);
+    canvas.style.width  = Math.round(tmp.naturalWidth  * scale) + 'px';
+    canvas.style.height = Math.round(tmp.naturalHeight * scale) + 'px';
     canvas.getContext('2d').drawImage(tmp, 0, 0);
     clearTimeout(_zoomBadgeTimer);
     var badge = document.getElementById('pdfZoomBadge');
@@ -1111,35 +1115,16 @@ function renderPDF(url, scrollRatio) {
       }).promise.then(doc => { _pdfDoc = doc; return doc; });
 
   load.then(pdf => {
-    // clientWidth can be 0 on mobile before layout settles — fall back to innerWidth
-    const rawW = body.clientWidth > 32 ? body.clientWidth : window.innerWidth;
+    body.style.transform       = '';
+    body.style.transformOrigin = '';
+    body.innerHTML             = '';
+
+    const rawW     = body.clientWidth > 32 ? body.clientWidth : window.innerWidth;
     const containerW = rawW - 16;
-    // Always render at ≥2× resolution for sharp, crisp output on all screens
-    const dpr = Math.max(window.devicePixelRatio || 1, 2);
+    const dpr      = Math.max(window.devicePixelRatio || 1, 2);
     const displayW = Math.max(Math.round(containerW * _pdfZoom), 200);
-    const estH = Math.round(displayW * 1.414);
+    const estH     = Math.round(displayW * 1.414);
 
-    /* Render one page to an off-screen canvas; resolves when pixels are ready */
-    function preRenderPage(n) {
-      return pdf.getPage(n).then(page => {
-        const rotation = page.rotate;
-        const natVp = page.getViewport({ scale: 1, rotation });
-        const scale  = (displayW / natVp.width) * dpr;
-        const vp     = page.getViewport({ scale, rotation });
-        const canvas = document.createElement('canvas');
-        canvas.width  = Math.round(vp.width);
-        canvas.height = Math.round(vp.height);
-        const cssH = Math.round(vp.height / dpr);
-        canvas.style.cssText = `display:block;width:${displayW}px;height:${cssH}px;`;
-        const ctx = canvas.getContext('2d', { alpha: false });
-        ctx.imageSmoothingEnabled = true;
-        ctx.imageSmoothingQuality = 'high';
-        return page.render({ canvasContext: ctx, viewport: vp }).promise
-          .then(() => ({ n, canvas, cssH }));
-      });
-    }
-
-    /* Lazy-render helper for IntersectionObserver (fire-and-forget, updates wrapper in-place) */
     function renderPage(w) {
       if (w.dataset.rendered === '1') return;
       w.dataset.rendered = '1';
@@ -1151,7 +1136,7 @@ function renderPDF(url, scrollRatio) {
         const canvas = document.createElement('canvas');
         canvas.width  = Math.round(vp.width);
         canvas.height = Math.round(vp.height);
-        const cssH = Math.round(vp.height / dpr);
+        const cssH    = Math.round(vp.height / dpr);
         canvas.style.cssText = `display:block;width:${displayW}px;height:${cssH}px;`;
         w.style.cssText = `display:block;margin:0 auto 4px;width:${displayW}px;height:${cssH}px;`;
         w.innerHTML = '';
@@ -1163,53 +1148,33 @@ function renderPDF(url, scrollRatio) {
       });
     }
 
-    /* Determine which pages are visible at current scroll position */
-    const visibleCenter = scrollRatio != null
-      ? Math.max(1, Math.min(pdf.numPages, Math.round(scrollRatio * pdf.numPages) + 1))
-      : 1;
-    const toPreRender = [];
-    for (let n = Math.max(1, visibleCenter - 1); n <= Math.min(pdf.numPages, visibleCenter + 2); n++) {
-      toPreRender.push(n);
+    const wrappers = [];
+    for (let n = 1; n <= pdf.numPages; n++) {
+      const w = document.createElement('div');
+      w.dataset.page = n;
+      w.dataset.rendered = '0';
+      w.style.cssText = `display:block;margin:0 auto 4px;width:${displayW}px;height:${estH}px;background:#e8e8e8;border-radius:2px;`;
+      body.appendChild(w);
+      wrappers.push(w);
     }
 
-    /* Pre-render visible pages off-screen, then do ONE atomic RAF swap */
-    Promise.all(toPreRender.map(preRenderPage)).then(rendered => {
-      const pageMap = {};
-      rendered.forEach(r => { pageMap[r.n] = r; });
+    const firstBatch = scrollRatio != null
+      ? Math.max(1, Math.min(pdf.numPages, Math.round(scrollRatio * pdf.numPages) + 1))
+      : 1;
+    for (let i = Math.max(0, firstBatch - 2); i < Math.min(wrappers.length, firstBatch + 2); i++) {
+      renderPage(wrappers[i]);
+    }
 
-      requestAnimationFrame(() => {
-        /* All DOM mutations in one RAF callback → browser paints once, zero blank frames */
-        body.style.transform       = '';
-        body.style.transformOrigin = '';
-        body.innerHTML             = '';
+    _pdfObserver = new IntersectionObserver(entries => {
+      entries.forEach(e => { if (e.isIntersecting) renderPage(e.target); });
+    }, { root: body, rootMargin: '800px 0px', threshold: 0 });
+    wrappers.forEach(w => { if (w.dataset.rendered === '0') _pdfObserver.observe(w); });
 
-        const wrappers = [];
-        for (let n = 1; n <= pdf.numPages; n++) {
-          const w = document.createElement('div');
-          w.dataset.page = n;
-          if (pageMap[n]) {
-            const r = pageMap[n];
-            w.style.cssText = `display:block;margin:0 auto 4px;width:${displayW}px;height:${r.cssH}px;`;
-            w.dataset.rendered = '1';
-            w.appendChild(r.canvas);
-          } else {
-            w.style.cssText = `display:block;margin:0 auto 4px;width:${displayW}px;height:${estH}px;background:#e8e8e8;border-radius:2px;`;
-            w.dataset.rendered = '0';
-          }
-          body.appendChild(w);
-          wrappers.push(w);
-        }
-
-        _pdfObserver = new IntersectionObserver(entries => {
-          entries.forEach(e => { if (e.isIntersecting) renderPage(e.target); });
-        }, { root: body, rootMargin: '800px 0px', threshold: 0 });
-        wrappers.filter(w => w.dataset.rendered === '0').forEach(w => _pdfObserver.observe(w));
-
-        if (scrollRatio != null) {
-          body.scrollTop = Math.max(0, body.scrollHeight * scrollRatio - body.clientHeight * 0.5);
-        }
+    if (scrollRatio != null) {
+      requestAnimationFrame(function () {
+        body.scrollTop = Math.max(0, body.scrollHeight * scrollRatio - body.clientHeight * 0.5);
       });
-    });
+    }
 
   }).catch(() => {
     body.innerHTML = '<div class="pdf-error">Could not load PDF.<br>Please try again later.</div>';
