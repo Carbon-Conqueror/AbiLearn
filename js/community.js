@@ -73,7 +73,7 @@
   border: none;
   border-radius: 50px;
   padding: 11px 20px 11px 14px;
-  font-size: .875rem;
+  font-size: .72rem;
   font-weight: 700;
   letter-spacing: .01em;
   cursor: pointer;

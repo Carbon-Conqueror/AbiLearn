@@ -1,8 +1,6 @@
-/* AbiLearn — Focus Mode prompt v4 */
+/* AbiLearn — Focus Mode prompt v5 */
 (function () {
   'use strict';
-
-  var FS_KEY = 'abl_focus_asked';
 
   /* ── Device detection ───────────────────────── */
   var isIOS = /iPad|iPhone|iPod/i.test(navigator.userAgent) ||
@@ -14,10 +12,9 @@
     window.matchMedia('(display-mode: fullscreen)').matches);
   var isMobile = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
 
-  /* Skip on desktop, standalone / already fullscreen */
+  /* Skip on desktop and standalone */
   if (!isMobile) return;
   if (isStandalone) return;
-  try { if (sessionStorage.getItem(FS_KEY)) return; } catch (e) {}
 
   /* ── Fullscreen API ─────────────────────────── */
   function canFS() {
@@ -34,8 +31,7 @@
   }
 
   /* ── Dismiss overlay ────────────────────────── */
-  function dismiss(remember) {
-    try { if (remember) sessionStorage.setItem(FS_KEY, '1'); } catch (e) {}
+  function dismiss() {
     var el = document.getElementById('abl-focus-prompt');
     if (!el) return;
     el.style.opacity = '0';
@@ -80,15 +76,6 @@
           'display:block;margin:0 auto .75rem;box-shadow:0 4px 14px rgba(91,71,222,.25);"' +
           ' onerror="this.style.display=\'none\'">' +
 
-        /* Focus Mode badge */
-        '<div style="display:inline-flex;align-items:center;gap:.35rem;' +
-          'background:rgba(91,71,222,.12);border:1px solid rgba(91,71,222,.3);' +
-          'border-radius:20px;padding:.28rem .82rem;margin-bottom:1rem;">' +
-          '<span style="width:6px;height:6px;border-radius:50%;background:#5B47DE;flex-shrink:0;"></span>' +
-          '<span style="font-size:.68rem;font-weight:800;letter-spacing:.08em;' +
-            'color:#5B47DE;text-transform:uppercase;">Focus Mode</span>' +
-        '</div>' +
-
         /* Heading */
         '<h2 style="font-size:1.1rem;font-weight:800;color:var(--text,#111);' +
           'margin:0 0 .55rem;line-height:1.3;">Study without<br>distractions?</h2>' +
@@ -122,14 +109,14 @@
 
     document.getElementById('abl-fp-yes').addEventListener('click', function () {
       if (!isIOSSafari && canFS()) enterFS();
-      dismiss(true);
+      dismiss();
     });
     document.getElementById('abl-fp-no').addEventListener('click', function () {
-      dismiss(true);
+      dismiss();
     });
-    /* Tap backdrop to dismiss without saving preference */
+    /* Tap backdrop to dismiss */
     overlay.addEventListener('click', function (e) {
-      if (e.target === overlay) dismiss(false);
+      if (e.target === overlay) dismiss();
     });
   }
 
@@ -140,5 +127,14 @@
   } else {
     init();
   }
+
+  /* ── Re-prompt when user exits fullscreen ───── */
+  function onFsChange() {
+    if (!document.fullscreenElement && !document.webkitFullscreenElement) {
+      setTimeout(showPrompt, 800);
+    }
+  }
+  document.addEventListener('fullscreenchange', onFsChange);
+  document.addEventListener('webkitfullscreenchange', onFsChange);
 
 })();
