@@ -1099,6 +1099,9 @@ function renderPDF(url, scrollRatio) {
 
   load.then(pdf => {
     body.innerHTML = '';
+    /* Clear any CSS preview transform now — body is empty so no visual snap */
+    body.style.transform       = '';
+    body.style.transformOrigin = '';
 
     // clientWidth can be 0 on mobile before layout settles fall back to innerWidth
     const rawW = body.clientWidth > 32 ? body.clientWidth : window.innerWidth;
@@ -1174,27 +1177,9 @@ function closePDF() {
 document.addEventListener('keydown', e => { if (e.key === 'Escape') closePDF(); });
 
 document.addEventListener('abl-pdf-zoom', function(e) {
-  var b = document.getElementById('pdfModalBody');
   _pdfZoom = Math.max(0.4, Math.min(4.0, e.detail.zoom));
   _showZoomBadge(_pdfZoom);
-  if (b) {
-    /* Soft-clear the pinch CSS preview — brief dim hides the layout jump
-       between the old-zoom pages and the new-zoom render. */
-    b.style.transition = 'opacity 80ms ease';
-    b.style.opacity = '0.25';
-    b.style.transform = '';
-    b.style.transformOrigin = '';
-    setTimeout(function () {
-      renderPDF(_pdfUrl, e.detail.scrollRatio);
-      requestAnimationFrame(function () {
-        requestAnimationFrame(function () {
-          if (b) { b.style.opacity = '1'; b.style.transition = ''; }
-        });
-      });
-    }, 85);
-  } else {
-    renderPDF(_pdfUrl, e.detail.scrollRatio);
-  }
+  renderPDF(_pdfUrl, e.detail.scrollRatio);
 });
 
 /* ══════════════════════════════════════

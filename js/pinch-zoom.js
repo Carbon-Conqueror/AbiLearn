@@ -502,19 +502,22 @@
       ? (body.scrollTop + body.clientHeight * 0.5) / body.scrollHeight
       : 0;
 
-    /* Clear preview transform */
+    /* Reset pinch state — keep CSS preview alive until renderPDF clears it */
     pdfState.cssScale = 1; pdfState.tx = 0; pdfState.ty = 0;
     pdfState.prevDist = 0; pdfState.prevMid = null;
-    body.style.transform       = '';
-    body.style.transformOrigin = '';
-    body.style.touchAction     = 'pan-x pan-y';
+    body.style.touchAction = 'pan-x pan-y';
 
     document.dispatchEvent(new CustomEvent('abl-pdf-zoom', {
       detail: { zoom: newZoom, scrollRatio: scrollRatio }
     }));
   }
 
-  /* Ctrl+wheel zoom on PDF body */
+  /* Ctrl+wheel zoom on PDF body — CSS preview during scroll, single re-render on idle */
+  var _wt = null;       // debounce timer
+  var _wzBase = null;   // rendered zoom at start of wheel session
+  var _wzTarget = 1;    // accumulating target zoom
+  var _wbody = null;    // body element reference
+
   function onPdfWheel(e) {
     if (!e.ctrlKey && !e.metaKey) return;
     e.preventDefault();
@@ -523,13 +526,32 @@
     var dy   = e.deltaMode === 1 ? e.deltaY * 20
              : e.deltaMode === 2 ? e.deltaY * 400
              : e.deltaY;
-    var newZoom     = clamp(cur * Math.pow(1.0015, -dy), PDF_MIN, PDF_MAX);
-    var scrollRatio = body.scrollHeight > 0
-      ? (body.scrollTop + body.clientHeight * 0.5) / body.scrollHeight
-      : 0;
-    document.dispatchEvent(new CustomEvent('abl-pdf-zoom', {
-      detail: { zoom: newZoom, scrollRatio: scrollRatio }
-    }));
+
+    if (!_wt) {
+      /* First tick of a new wheel session — anchor to currently-rendered zoom */
+      _wzBase   = cur;
+      _wzTarget = cur;
+      _wbody    = body;
+    }
+
+    _wzTarget = clamp(_wzTarget * Math.pow(1.0015, -dy), PDF_MIN, PDF_MAX);
+
+    /* Immediate CSS preview — scale relative to what's already on-screen */
+    var cssScale = _wzTarget / _wzBase;
+    body.style.transformOrigin = '50% 50%';
+    body.style.transform       = 'scale(' + cssScale + ')';
+
+    clearTimeout(_wt);
+    _wt = setTimeout(function () {
+      var b    = _wbody;
+      var zoom = _wzTarget;
+      var ratio = b && b.scrollHeight > 0
+        ? (b.scrollTop + b.clientHeight * 0.5) / b.scrollHeight : 0;
+      _wt = null; _wzBase = null; _wzTarget = 1; _wbody = null;
+      document.dispatchEvent(new CustomEvent('abl-pdf-zoom', {
+        detail: { zoom: zoom, scrollRatio: ratio }
+      }));
+    }, 220);
   }
 
   function attachPdf(body) {
