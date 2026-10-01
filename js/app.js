@@ -1315,8 +1315,13 @@ function renderPDF(url, scrollRatio) {
 
     freshRender();
 
-  }).catch(function() {
-    body.innerHTML = '<div class="pdf-error">Could not load PDF.<br>Please try again.</div>';
+  }).catch(function(err) {
+    console.error('[AbiLearn] PDF load error:', err && (err.message || err.name || err));
+    var e = document.createElement('div'); e.className = 'pdf-error';
+    e.appendChild(_pdfErrMsg('Could not load PDF.'));
+    e.appendChild(_pdfFallbackLink(absUrl, 'Open PDF in new tab ↗'));
+    body.innerHTML = '';
+    body.appendChild(e);
   });
 }
 
