@@ -1137,7 +1137,6 @@ function renderImage(url) {
   _imgEl = canvas;
   if (window.ablPinchZoom) window.ablPinchZoom.attachImg(canvas);
 
-  tmp.crossOrigin = 'anonymous';
   tmp.src = url;
 }
 
