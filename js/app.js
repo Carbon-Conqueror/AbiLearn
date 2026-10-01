@@ -1317,11 +1317,13 @@ function renderPDF(url, scrollRatio) {
 
   }).catch(function(err) {
     console.error('[AbiLearn] PDF load error:', err && (err.message || err.name || err));
-    var e = document.createElement('div'); e.className = 'pdf-error';
-    e.appendChild(_pdfErrMsg('Could not load PDF.'));
-    e.appendChild(_pdfFallbackLink(absUrl, 'Open PDF in new tab ↗'));
     body.innerHTML = '';
-    body.appendChild(e);
+    body.style.padding = '0';
+    var iframe = document.createElement('iframe');
+    iframe.src = absUrl;
+    iframe.style.cssText = 'width:100%;height:100%;min-height:70vh;border:0;display:block;';
+    iframe.title = 'PDF viewer';
+    body.appendChild(iframe);
   });
 }
 
