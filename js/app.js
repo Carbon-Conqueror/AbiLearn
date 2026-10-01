@@ -1139,19 +1139,17 @@ function renderImage(url) {
   _imgEl = canvas;
   if (window.ablPinchZoom) window.ablPinchZoom.attachImg(canvas);
 
-  /* Fetch with Firebase auth token so the CF Pages Function can gate access */
-  _getAuthHeader().then(function(hdrs) {
-    return fetch(url, { headers: hdrs });
-  }).then(function(r) {
-    if (!r.ok) throw new Error('HTTP ' + r.status);
-    return r.blob();
-  }).then(function(blob) {
-    var blobUrl = URL.createObjectURL(blob);
-    tmp._blobUrl = blobUrl;
-    tmp.src = blobUrl;
-  }).catch(function() {
-    body.innerHTML = '<div class="pdf-error">Could not load image.</div>';
-  });
+  fetch(url)
+    .then(function(r) {
+      if (!r.ok) throw new Error('HTTP ' + r.status);
+      return r.blob();
+    }).then(function(blob) {
+      var blobUrl = URL.createObjectURL(blob);
+      tmp._blobUrl = blobUrl;
+      tmp.src = blobUrl;
+    }).catch(function() {
+      body.innerHTML = '<div class="pdf-error">Could not load image.</div>';
+    });
 }
 
 function renderPDF(url, scrollRatio) {
@@ -1181,12 +1179,10 @@ function renderPDF(url, scrollRatio) {
   const absUrl = url.startsWith('http') ? url : new URL(url, base).href;
 
   /* Fetch PDF bytes in the main thread (avoids worker-side HTTP restrictions),
-     then pass as data: buffer to getDocument so the worker only parses/renders.
-     The Firebase ID token is sent so the Cloudflare Function can gate access. */
+     then pass as data: buffer to getDocument so the worker only parses/renders. */
   const load = isZoom
     ? Promise.resolve(_pdfDoc)
-    : _getAuthHeader()
-        .then(function(hdrs) { return fetch(absUrl, { headers: hdrs }); })
+    : fetch(absUrl)
         .then(function(r) {
           if (!r.ok) throw new Error('HTTP ' + r.status);
           return r.arrayBuffer();
