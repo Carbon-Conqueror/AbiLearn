@@ -1125,13 +1125,11 @@ function renderImage(url) {
     canvas.style.width  = Math.round(tmp.naturalWidth  * scale) + 'px';
     canvas.style.height = Math.round(tmp.naturalHeight * scale) + 'px';
     canvas.getContext('2d').drawImage(tmp, 0, 0);
-    if (tmp._blobUrl) { URL.revokeObjectURL(tmp._blobUrl); tmp._blobUrl = null; }
     clearTimeout(_zoomBadgeTimer);
     var badge = document.getElementById('pdfZoomBadge');
     if (badge) badge.classList.remove('visible');
   };
   tmp.onerror = function () {
-    if (tmp._blobUrl) { URL.revokeObjectURL(tmp._blobUrl); tmp._blobUrl = null; }
     body.innerHTML = '<div class="pdf-error">Could not load image.</div>';
   };
 
@@ -1139,17 +1137,8 @@ function renderImage(url) {
   _imgEl = canvas;
   if (window.ablPinchZoom) window.ablPinchZoom.attachImg(canvas);
 
-  fetch(url)
-    .then(function(r) {
-      if (!r.ok) throw new Error('HTTP ' + r.status);
-      return r.blob();
-    }).then(function(blob) {
-      var blobUrl = URL.createObjectURL(blob);
-      tmp._blobUrl = blobUrl;
-      tmp.src = blobUrl;
-    }).catch(function() {
-      body.innerHTML = '<div class="pdf-error">Could not load image.</div>';
-    });
+  tmp.crossOrigin = 'anonymous';
+  tmp.src = url;
 }
 
 function renderPDF(url, scrollRatio) {
@@ -1164,37 +1153,21 @@ function renderPDF(url, scrollRatio) {
   }
   /* Zoom re-render: keep current body content visible — pre-render replaces it atomically */
 
-  /* Blob worker: importScripts inside a blob: URL is allowed by worker-src blob:
-     and bypasses any cross-origin worker restrictions on the CDN URL. */
   if (!pdfjsLib.GlobalWorkerOptions.workerSrc) {
-    try {
-      pdfjsLib.GlobalWorkerOptions.workerSrc = URL.createObjectURL(
-        new Blob(['importScripts("' + PDFJS_WORKER + '")'], {type: 'text/javascript'})
-      );
-    } catch(_) {
-      pdfjsLib.GlobalWorkerOptions.workerSrc = PDFJS_WORKER;
-    }
+    pdfjsLib.GlobalWorkerOptions.workerSrc = PDFJS_WORKER;
   }
   const base = window.location.href.replace(/\/[^\/]*$/, '/');
   const absUrl = url.startsWith('http') ? url : new URL(url, base).href;
 
-  /* Fetch PDF bytes in the main thread (avoids worker-side HTTP restrictions),
-     then pass as data: buffer to getDocument so the worker only parses/renders. */
   const load = isZoom
     ? Promise.resolve(_pdfDoc)
-    : fetch(absUrl)
-        .then(function(r) {
-          if (!r.ok) throw new Error('HTTP ' + r.status);
-          return r.arrayBuffer();
-        })
-        .then(function(buf) {
-          return pdfjsLib.getDocument({
-            data: new Uint8Array(buf),
-            cMapUrl: PDFJS_CMAPS,
-            cMapPacked: true,
-            standardFontDataUrl: PDFJS_FONTS
-          }).promise;
-        })
+    : pdfjsLib.getDocument({
+        url: absUrl,
+        cMapUrl: PDFJS_CMAPS,
+        cMapPacked: true,
+        standardFontDataUrl: PDFJS_FONTS,
+        withCredentials: false
+      }).promise
         .then(function(doc) { _pdfDoc = doc; return doc; });
 
   load.then(function(pdf) {
