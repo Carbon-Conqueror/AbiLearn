@@ -1154,32 +1154,46 @@ input:focus-visible,select:focus-visible,textarea:focus-visible { outline:none; 
 .pdf-float-close:hover { background:rgba(0,0,0,.82); }
 .pdf-float-close:active { transform:scale(.86) !important; opacity:.75 !important; transition-duration:60ms !important; }
 
-.pdf-zoom-controls {
+.pdf-zoom-bar {
   position:fixed;
   bottom:calc(1.2rem + env(safe-area-inset-bottom, 0px));
-  right:calc(1.2rem + env(safe-area-inset-right, 0px));
+  left:50%; transform:translateX(-50%);
   z-index:10001;
-  display:flex;
-  gap:.45rem;
-  align-items:center;
+  display:flex; align-items:center;
+  background:rgba(32,32,36,.85);
+  -webkit-backdrop-filter:blur(16px) saturate(1.5);
+  backdrop-filter:blur(16px) saturate(1.5);
+  border:1px solid rgba(255,255,255,.13);
+  border-radius:999px;
+  padding:0 .3rem;
+  box-shadow:0 2px 16px rgba(0,0,0,.45);
 }
-.pdf-zoom-btn {
-  width:44px; height:44px;
-  border-radius:50%; border:1px solid rgba(255,255,255,.18);
-  background:rgba(0,0,0,.6);
-  color:#fff; font-size:1.45rem; line-height:1;
+.pdf-zoom-bar-btn {
+  width:40px; height:40px;
+  background:none; border:none;
+  color:#fff; font-size:1.35rem;
   display:flex; align-items:center; justify-content:center;
-  cursor:pointer;
-  -webkit-backdrop-filter:blur(14px) saturate(1.4);
-  backdrop-filter:blur(14px) saturate(1.4);
-  transition:background .15s, transform .1s, opacity .1s;
+  cursor:pointer; border-radius:50%;
+  transition:background .15s, transform .1s;
   touch-action:manipulation;
   -webkit-tap-highlight-color:transparent;
   user-select:none;
 }
-.pdf-zoom-fit-btn { font-size:1.1rem; }
-.pdf-zoom-btn:hover { background:rgba(0,0,0,.82); }
-.pdf-zoom-btn:active { transform:scale(.86); opacity:.75; }
+.pdf-zoom-bar-btn:hover { background:rgba(255,255,255,.12); }
+.pdf-zoom-bar-btn:active { transform:scale(.82); }
+.pdf-zoom-bar-pct {
+  min-width:3.4rem; height:40px;
+  background:none; border:none;
+  color:rgba(255,255,255,.9); font-size:.88rem;
+  font-variant-numeric:tabular-nums; letter-spacing:.02em;
+  display:flex; align-items:center; justify-content:center;
+  cursor:pointer; border-radius:.4rem; padding:0 .25rem;
+  transition:background .15s;
+  touch-action:manipulation;
+  -webkit-tap-highlight-color:transparent;
+  user-select:none;
+}
+.pdf-zoom-bar-pct:hover { background:rgba(255,255,255,.1); }
 
 /* Transient zoom level indicator — appears on pinch/scroll zoom, auto-hides */
 .pdf-zoom-badge {
