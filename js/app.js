@@ -975,12 +975,12 @@ function _showZoomBadge(zoom) {
   _zoomBadgeTimer = setTimeout(function () { badge.classList.remove('visible'); }, 1800);
 }
 function pdfZoomIn() {
-  _pdfZoom = Math.min(parseFloat((_pdfZoom * 1.3).toFixed(2)), 4.0);
+  _pdfZoom = Math.min(parseFloat((_pdfZoom * 1.2).toFixed(2)), 4.0);
   _showZoomBadge();
   if (_isImage) _applyImgZoom(); else renderPDF(_pdfUrl);
 }
 function pdfZoomOut() {
-  _pdfZoom = Math.max(parseFloat((_pdfZoom / 1.3).toFixed(2)), 0.4);
+  _pdfZoom = Math.max(parseFloat((_pdfZoom / 1.2).toFixed(2)), 0.4);
   _showZoomBadge();
   if (_isImage) _applyImgZoom(); else renderPDF(_pdfUrl);
 }
@@ -1068,6 +1068,11 @@ function openPDF(url, title) {
         '<button class="pdf-float-close" aria-label="Close document" onclick="closePDF()">✕</button>' +
         '<div class="pdf-zoom-badge" id="pdfZoomBadge" aria-live="polite" aria-atomic="true">100%</div>' +
         '<div class="pdf-modal-body" id="pdfModalBody" tabindex="-1"></div>' +
+        '<div class="pdf-zoom-controls" id="pdfZoomControls">' +
+          '<button class="pdf-zoom-btn" onclick="pdfZoomOut()" aria-label="Zoom out">&#8722;</button>' +
+          '<button class="pdf-zoom-btn pdf-zoom-fit-btn" onclick="pdfZoomFit()" aria-label="Reset zoom">&#8883;</button>' +
+          '<button class="pdf-zoom-btn" onclick="pdfZoomIn()" aria-label="Zoom in">&#43;</button>' +
+        '</div>' +
       '</div>';
     document.body.appendChild(modal);
   }
