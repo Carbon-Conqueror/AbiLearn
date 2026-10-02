@@ -990,19 +990,15 @@ function pdfZoomFit() {
   if (_isImage) _applyImgZoom(); else renderPDF(_pdfUrl);
 }
 var _imgEl = null;
+var _imgFitScale = 1;
 function _applyImgZoom() {
   if (!_imgEl) return;
-  var body = document.getElementById('pdfModalBody');
-  if (_pdfZoom <= 1.0) {
-    _imgEl.style.width = '100%';
-    _imgEl.style.maxWidth = '100%';
-    _imgEl.style.transform = '';
-  } else {
-    var w = Math.round(_pdfZoom * 100);
-    _imgEl.style.width = w + '%';
-    _imgEl.style.maxWidth = 'none';
-    _imgEl.style.transform = '';
-  }
+  var w = Math.round(_imgEl.width  * _imgFitScale * _pdfZoom);
+  var h = Math.round(_imgEl.height * _imgFitScale * _pdfZoom);
+  _imgEl.style.width  = w + 'px';
+  _imgEl.style.height = h + 'px';
+  _imgEl.style.maxWidth = 'none';
+  _imgEl.style.transform = '';
 }
 
 function _pdfErrMsg(text) {
@@ -1056,6 +1052,7 @@ function openPDF(url, title) {
   _pdfZoom = 1.0;
   _pdfDoc = null;
   _imgEl = null;
+  _imgFitScale = 1;
   _isImage = _isImageUrl(url);
   if (_pdfObserver) { _pdfObserver.disconnect(); _pdfObserver = null; }
 
@@ -1121,9 +1118,9 @@ function renderImage(url) {
     canvas.width  = tmp.naturalWidth;
     canvas.height = tmp.naturalHeight;
     const availW  = (body.clientWidth || window.innerWidth) - 16;
-    const scale   = Math.min(1, availW / tmp.naturalWidth);
-    canvas.style.width  = Math.round(tmp.naturalWidth  * scale) + 'px';
-    canvas.style.height = Math.round(tmp.naturalHeight * scale) + 'px';
+    _imgFitScale = Math.min(1, availW / tmp.naturalWidth);
+    canvas.style.width  = Math.round(tmp.naturalWidth  * _imgFitScale) + 'px';
+    canvas.style.height = Math.round(tmp.naturalHeight * _imgFitScale) + 'px';
     canvas.getContext('2d').drawImage(tmp, 0, 0);
     clearTimeout(_zoomBadgeTimer);
     var badge = document.getElementById('pdfZoomBadge');
@@ -1339,7 +1336,7 @@ document.addEventListener('keydown', e => { if (e.key === 'Escape') closePDF(); 
 document.addEventListener('abl-pdf-zoom', function(e) {
   _pdfZoom = Math.max(0.4, Math.min(4.0, e.detail.zoom));
   _showZoomBadge(_pdfZoom);
-  renderPDF(_pdfUrl, e.detail.scrollRatio);
+  if (_isImage) _applyImgZoom(); else renderPDF(_pdfUrl, e.detail.scrollRatio);
 });
 
 /* ══════════════════════════════════════
