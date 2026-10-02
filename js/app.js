@@ -995,10 +995,15 @@ function _applyImgZoom() {
   if (!_imgEl) return;
   var w = Math.round(_imgEl.width  * _imgFitScale * _pdfZoom);
   var h = Math.round(_imgEl.height * _imgFitScale * _pdfZoom);
-  _imgEl.style.width  = w + 'px';
-  _imgEl.style.height = h + 'px';
-  _imgEl.style.maxWidth = 'none';
-  _imgEl.style.transform = '';
+  requestAnimationFrame(function() {
+    /* Atomic: clear body CSS preview transform and apply new size in one frame */
+    var body = document.getElementById('pdfModalBody');
+    if (body) { body.style.transform = ''; body.style.transformOrigin = ''; }
+    _imgEl.style.width    = w + 'px';
+    _imgEl.style.height   = h + 'px';
+    _imgEl.style.maxWidth = 'none';
+    _imgEl.style.transform = '';
+  });
 }
 
 function _pdfErrMsg(text) {
@@ -1132,7 +1137,6 @@ function renderImage(url) {
 
   body.appendChild(canvas);
   _imgEl = canvas;
-  if (window.ablPinchZoom) window.ablPinchZoom.attachImg(canvas);
 
   tmp.src = url;
 }
