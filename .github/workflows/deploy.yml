@@ -4,7 +4,6 @@ on:
   push:
     branches:
       - main
-      - claude/cbse-class-10-website-DLe33
 
 concurrency:
   group: pages
