@@ -3835,14 +3835,14 @@ function escH(s) {
    LANDING PAGE (index.html)
 ══════════════════════════════════════ */
 function initLandingPage() {
-  /* Auth and nav handled automatically by auth.js.
-   * Nothing else needed on the pure landing page. */
+  initMobileNav();
 }
 
 /* ══════════════════════════════════════
    LEARN PAGE APP SHELL (learn.html)
 ══════════════════════════════════════ */
 function initLearnPage() {
+  initMobileNav();
   renderAppSubjects();
   renderAppTools();
   initAppSearch();
