@@ -564,7 +564,7 @@
       _wbody    = body;
     }
 
-    _wzTarget = clamp(_wzTarget * Math.pow(1.0015, -dy), PDF_MIN, PDF_MAX);
+    _wzTarget = clamp(_wzTarget * Math.pow(1.003, -dy), PDF_MIN, PDF_MAX);
 
     /* Immediate CSS preview — scale relative to what's already on-screen */
     var cssScale = _wzTarget / _wzBase;

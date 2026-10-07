@@ -1132,7 +1132,7 @@ input:focus-visible,select:focus-visible,textarea:focus-visible { outline:none; 
   border-radius:0; display:block; margin:0 auto;
   image-rendering: auto;
   max-width:none;
-  transition: transform .2s ease;
+  transition: transform .1s ease;
 }
 .pdf-float-close {
   position:fixed;
@@ -1150,31 +1150,9 @@ input:focus-visible,select:focus-visible,textarea:focus-visible { outline:none; 
 .pdf-float-close:hover { background:rgba(0,0,0,.82); }
 .pdf-float-close:active { transform:scale(.86) !important; opacity:.75 !important; transition-duration:60ms !important; }
 
-/* Gallery-style zoom controls — desktop only (touch uses pinch) */
-.pdf-zoom-controls {
-  position:fixed;
-  bottom:calc(1.2rem + env(safe-area-inset-bottom,0px));
-  right:calc(1.2rem + env(safe-area-inset-right,0px));
-  z-index:10001; display:flex; gap:.45rem; align-items:center;
-}
-.pdf-zoom-btn {
-  width:44px; height:44px; border-radius:50%;
-  border:1px solid rgba(255,255,255,.18);
-  background:rgba(0,0,0,.6); color:#fff;
-  font-size:1.45rem; line-height:1;
-  display:flex; align-items:center; justify-content:center;
-  cursor:pointer;
-  -webkit-backdrop-filter:blur(14px) saturate(1.4);
-  backdrop-filter:blur(14px) saturate(1.4);
-  transition:background .15s, transform .1s, opacity .1s;
-  touch-action:manipulation; -webkit-tap-highlight-color:transparent;
-  user-select:none; font-family:inherit;
-}
-.pdf-zoom-fit-btn { font-size:1.05rem; }
-.pdf-zoom-btn:hover { background:rgba(0,0,0,.82); }
-.pdf-zoom-btn:active { transform:scale(.86) !important; opacity:.75 !important; transition-duration:60ms !important; }
-/* Smooth transition when zoom buttons are used */
-.pdf-img-view { transition:transform .2s ease; }
+
+/* Smooth transition on zoom */
+.pdf-img-view { transition:transform .1s ease; }
 
 /* Transient zoom level indicator — appears on pinch/scroll zoom, auto-hides */
 .pdf-zoom-badge {
