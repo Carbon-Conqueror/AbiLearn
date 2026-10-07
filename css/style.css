@@ -1252,7 +1252,6 @@ input:focus-visible,select:focus-visible,textarea:focus-visible { outline:none; 
 
 /* ─── FOOTER ──────────────────────────────────── */
 footer {
-  background:#1A1035; color:rgba(255,255,255,.48);
   padding:2.5rem 0 1.5rem; margin-top:3rem;
 }
 .footer-grid {

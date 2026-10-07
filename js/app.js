@@ -3850,7 +3850,6 @@ function escH(s) {
    LANDING PAGE (index.html)
 ══════════════════════════════════════ */
 function initLandingPage() {
-  initMobileNav();
   initSearch();
 }
 
