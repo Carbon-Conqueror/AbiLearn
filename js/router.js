@@ -119,6 +119,7 @@
 
   /* ── Core navigate ──────────────────────────────────────────────── */
   var _busy = false;
+  var _busyTimer = null;
   var _currentHref = location.href;
 
   function navigate(href, push) {
@@ -128,6 +129,9 @@
 
     _busy = true;
     progress(20);
+
+    /* Safety valve: if the fetch never settles, unblock after 10 s */
+    _busyTimer = setTimeout(function () { _busy = false; }, 10000);
 
     fetch(href, { credentials: 'same-origin', cache: 'default' })
       .then(function (r) {
@@ -191,10 +195,13 @@
           } catch (e) {}
 
           progress(100);
+          clearTimeout(_busyTimer);
           _busy = false;
         });
       })
       .catch(function () {
+        clearTimeout(_busyTimer);
+        _busy = false;
         /* Network error or unexpected response — fall back gracefully */
         location.href = href;
       });

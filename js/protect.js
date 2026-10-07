@@ -67,7 +67,9 @@
     var key   = (e.key || '').toLowerCase();
     var shift = e.shiftKey;
 
-    if (ctrl && ['c','a','s','u','p'].includes(key))      { e.preventDefault(); return; }
+    var inField = ['INPUT','TEXTAREA','SELECT'].includes((e.target||{}).tagName||'');
+    if (ctrl && ['c','s','u','p'].includes(key) && !inField) { e.preventDefault(); return; }
+    if (ctrl && key === 'a' && !inField)                    { e.preventDefault(); return; }
     if (ctrl && shift && ['i','j','c','k'].includes(key)) { e.preventDefault(); return; }
     if (e.key === 'F12')                                  { e.preventDefault(); return; }
     if (_isPrintScreen(e)) {

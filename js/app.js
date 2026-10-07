@@ -272,6 +272,7 @@ function goTo(subjectId, chapterId) {
   const map = { maths:'maths.html', science:'science.html', english:'english.html', social:'social.html' };
   if (!map[subjectId]) return;
   if (typeof getUser === 'function' && !getUser()) {
+    try { sessionStorage.setItem('openChapter', chapterId); } catch(e) {}
     window.location.href = 'auth.html?from=' + encodeURIComponent(location.href);
     return;
   }
@@ -668,9 +669,9 @@ const PDFS = {
       { title: 'Ch 8 Introduction to Trigonometry',        desc: 'Ratios, identities, standard values',           url: 'assets/formula/ch08-trigonometry.png' },
       { title: 'Ch 9 Applications of Trigonometry',        desc: 'Heights & distances, angle of elevation',       url: 'assets/formula/ch09-applications-trigonometry.png' },
       { title: 'Ch 10 Circles',                            desc: 'Tangent, secant, arc, sector formulas',         url: 'assets/formula/ch10-circles.png' },
-      { title: 'Ch 13 Surface Areas and Volumes',          desc: 'Cuboid, cylinder, cone, sphere formulas',       url: 'assets/formula/ch13-surface-areas-volumes.png' },
-      { title: 'Ch 14 Statistics',                         desc: 'Mean, median, mode for grouped data',           url: 'assets/formula/ch14-statistics.png' },
-      { title: 'Ch 14 Probability Formula Sheet',          desc: 'Probability · CBSE Class 10 Maths · PDF',      url: 'pdfs/maths/complete-formula-sheet.pdf' }
+      { title: 'Ch 12 Surface Areas and Volumes',          desc: 'Cuboid, cylinder, cone, sphere formulas',       url: 'assets/formula/ch13-surface-areas-volumes.png' },
+      { title: 'Ch 13 Statistics',                         desc: 'Mean, median, mode for grouped data',           url: 'assets/formula/ch14-statistics.png' },
+      { title: 'Ch 15 Probability Formula Sheet',          desc: 'Probability · CBSE Class 10 Maths · PDF',      url: 'pdfs/maths/complete-formula-sheet.pdf' }
     ],
     notes: [],
     pyqs: [
@@ -838,9 +839,9 @@ const PDFS = {
     civics: [
       { title: 'Ch 1 Power Sharing',            desc: 'Question Bank · 2M + 3M + 5M', url: 'pdfs/social/civics/ch1-power-sharing.pdf' },
       { title: 'Ch 2 Federalism',               desc: 'Question Bank · 2M + 3M + 5M', url: 'pdfs/social/civics/ch2-federalism.pdf' },
-      { title: 'Ch 3 Gender, Religion and Caste',   desc: 'Question Bank · 2M + 3M + 5M', url: 'pdfs/social/civics/ch3-democracy-and-diversity.pdf' },
-      { title: 'Ch 4 Political Parties',            desc: 'Question Bank · 2M + 3M + 5M', url: 'pdfs/social/civics/ch4-gender-religion-caste.pdf' },
-      { title: 'Ch 5 Outcomes of Democracy',        desc: 'Question Bank · 2M + 3M + 5M', url: 'pdfs/social/civics/ch5-popular-struggles.pdf' }
+      { title: 'Ch 3 Gender, Religion and Caste',   desc: 'Question Bank · 2M + 3M + 5M', url: 'pdfs/social/civics/ch3-gender-religion-caste.pdf' },
+      { title: 'Ch 4 Political Parties',            desc: 'Question Bank · 2M + 3M + 5M', url: 'pdfs/social/civics/ch4-political-parties.pdf' },
+      { title: 'Ch 5 Outcomes of Democracy',        desc: 'Question Bank · 2M + 3M + 5M', url: 'pdfs/social/civics/ch5-outcomes-of-democracy.pdf' }
     ],
     economics: [
       { title: 'Ch 1 Development',                      desc: 'Question Bank · 2M + 3M + 5M', url: 'pdfs/social/economics/ch1-development.pdf' },
@@ -1073,6 +1074,11 @@ function openPDF(url, title) {
       '<div class="pdf-modal-box">' +
         '<button class="pdf-float-close" aria-label="Close document" onclick="closePDF()">✕</button>' +
         '<div class="pdf-zoom-badge" id="pdfZoomBadge" aria-live="polite" aria-atomic="true">100%</div>' +
+        '<div class="pdf-zoom-controls" id="pdfZoomControls" aria-label="Zoom controls">' +
+          '<button class="pdf-zoom-btn" aria-label="Zoom out" onclick="pdfZoomOut()">−</button>' +
+          '<button class="pdf-zoom-btn pdf-zoom-fit-btn" aria-label="Reset zoom" onclick="pdfZoomFit()" title="Reset zoom">⊡</button>' +
+          '<button class="pdf-zoom-btn" aria-label="Zoom in" onclick="pdfZoomIn()">+</button>' +
+        '</div>' +
         '<div class="pdf-modal-body" id="pdfModalBody" tabindex="-1"></div>' +
       '</div>';
     document.body.appendChild(modal);
@@ -1398,7 +1404,7 @@ function buildPracticeQuestions(subject) {
   });
   if (!allMCQs.length) return buildComingSoon('Practice Questions', 'Questions will be added here soon.');
   const letters = ['A', 'B', 'C', 'D'];
-  return `<h2 class="section-title" style="margin-bottom:0.5rem">Mcq Practice</h2>
+  return `<h2 class="section-title" style="margin-bottom:0.5rem">MCQ Practice</h2>
     <p style="color:var(--muted);margin-bottom:1.5rem;font-size:0.88rem">Tap an option to check your answer</p>
     <div class="mcq-grid">
       ${allMCQs.map((q, qi) => `
@@ -1484,7 +1490,7 @@ function buildScienceMCQCards(subject) {
       </div>`;
   }).join('');
   return `
-    <h2 class="section-title" style="margin-bottom:0.3rem">Mcq Practice</h2>
+    <h2 class="section-title" style="margin-bottom:0.3rem">MCQ Practice</h2>
     <p style="color:var(--muted);margin-bottom:1.5rem;font-size:0.88rem">100 MCQs per chapter · All topics · High Difficulty</p>
     <div class="pdf-cards-grid">${cards}</div>`;
 }
@@ -1556,7 +1562,7 @@ function buildSocialMCQCards(subject) {
       </div>`;
   }).join('');
   return `
-    <h2 class="section-title" style="margin-bottom:0.3rem">Mcq Practice</h2>
+    <h2 class="section-title" style="margin-bottom:0.3rem">MCQ Practice</h2>
     <p style="color:var(--muted);margin-bottom:1.5rem;font-size:0.88rem">100 MCQs per chapter · History, Geography, Civics, Economics · High Difficulty</p>
     ${sections}`;
 }
@@ -1568,7 +1574,15 @@ function openChapterMCQs(chId, title, subject) {
       ? (typeof MATHS_MCQS !== 'undefined' && MATHS_MCQS[chId])
       : (typeof SCIENCE_MCQS !== 'undefined' && SCIENCE_MCQS[chId]);
   const mcqs = bank || [];
-  if (!mcqs.length) return;
+  if (!mcqs.length) {
+    var _t = document.createElement('div');
+    _t.style.cssText = 'position:fixed;bottom:1.5rem;left:50%;transform:translateX(-50%);background:var(--text,#1A1035);color:#fff;padding:.55rem 1.1rem;border-radius:20px;font-size:.85rem;font-weight:600;z-index:9999;pointer-events:none;opacity:0;transition:opacity .2s';
+    _t.textContent = 'MCQs for this chapter coming soon';
+    document.body.appendChild(_t);
+    requestAnimationFrame(function(){ _t.style.opacity='1'; });
+    setTimeout(function(){ _t.style.opacity='0'; setTimeout(function(){ _t.remove(); }, 250); }, 2200);
+    return;
+  }
   const letters = ['A', 'B', 'C', 'D'];
 
   let modal = document.getElementById('mcqModal');
@@ -3837,6 +3851,7 @@ function escH(s) {
 ══════════════════════════════════════ */
 function initLandingPage() {
   initMobileNav();
+  initSearch();
 }
 
 /* ══════════════════════════════════════
