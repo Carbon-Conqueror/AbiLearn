@@ -519,7 +519,7 @@ function renderSubjectShell(subject) {
     </div>
     <div class="container">
       <div class="section" id="tabContent"></div>
-      <footer style="text-align:center;padding:1.2rem 1rem 2rem;font-size:.78rem;color:var(--muted,#888);border-top:1px solid var(--border,#e5e5e5);">&copy; 2026 AbiLearn. All rights reserved.</footer>
+      <footer style="text-align:center;padding:1.2rem 1rem 2rem;font-size:.78rem;color:var(--muted,#888);border-top:1px solid var(--border,#e5e5e5);background:var(--bg,#F5F4FE);">&copy; 2026 AbiLearn. All rights reserved.</footer>
     </div>`;
 }
 
