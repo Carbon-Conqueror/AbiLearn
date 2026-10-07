@@ -29,12 +29,12 @@
 /css/*.css
   Cache-Control: public, max-age=31536000, immutable
 
-# ── PDFs — no search-engine indexing, private no-store ────────────
-# Hotlink / referer protection is enforced by the Pages Function at
-# functions/pdfs/[[path]].js — headers here add defence-in-depth.
+# ── PDFs — no search-engine indexing, private browser cache ───────
+# private: kept out of shared CDN caches; max-age: browser caches
+# locally so repeat opens are instant (science notes are large).
 /pdfs/*
   X-Robots-Tag: noindex, nofollow
-  Cache-Control: private, no-store, no-cache, must-revalidate
+  Cache-Control: private, max-age=86400
   X-Content-Type-Options: nosniff
   Cross-Origin-Resource-Policy: same-origin
 

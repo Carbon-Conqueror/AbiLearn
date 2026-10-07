@@ -3343,9 +3343,9 @@ function buildMaps() {
             </div>
           </div>`).join('')}
       </div>
-    </div>
-    <div style="margin-top:1.5rem">
-      ${buildComingSoon('Interactive Maps', 'Labeled, clickable maps for practice are coming soon. Use the list above to guide your atlas practice!')}
+      <div class="maps-tip reveal" style="margin-top:1.2rem;padding:0.9rem 1rem;background:var(--accent-bg,#f0f0ff);border-radius:10px;font-size:0.85rem;color:var(--text-2,#555)">
+        <strong>Practice tip:</strong> Use your school atlas to locate each of the above maps. Board exams typically ask you to mark 3–5 locations per map on a blank outline of India or Europe.
+      </div>
     </div>`;
 }
 
