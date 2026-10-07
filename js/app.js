@@ -1340,9 +1340,22 @@ function closePDF() {
 document.addEventListener('keydown', e => { if (e.key === 'Escape') closePDF(); });
 
 document.addEventListener('abl-pdf-zoom', function(e) {
+  var prevZoom = _pdfZoom;
   _pdfZoom = Math.max(0.4, Math.min(4.0, e.detail.zoom));
   _showZoomBadge(_pdfZoom);
-  if (_isImage) _applyImgZoom(); else renderPDF(_pdfUrl, e.detail.scrollRatio);
+  if (_isImage) {
+    _applyImgZoom();
+  } else {
+    var body = document.getElementById('pdfModalBody');
+    /* Double-tap arrives with no prior CSS transform — apply an immediate scale preview
+       so the UI responds instantly while PDF.js pre-renders in the background.
+       Pinch already provides a CSS transform from onPdfMove; leave it as-is. */
+    if (body && !body.style.transform) {
+      body.style.transformOrigin = '50% 50%';
+      body.style.transform = 'scale(' + (_pdfZoom / prevZoom).toFixed(3) + ')';
+    }
+    renderPDF(_pdfUrl, e.detail.scrollRatio);
+  }
 });
 
 /* ══════════════════════════════════════
