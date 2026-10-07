@@ -995,16 +995,15 @@ var _imgEl = null;
 var _imgFitScale = 1;
 function _applyImgZoom() {
   if (!_imgEl) return;
-  var w = Math.round(_imgEl.width  * _imgFitScale * _pdfZoom);
-  var h = Math.round(_imgEl.height * _imgFitScale * _pdfZoom);
-  requestAnimationFrame(function() {
-    /* Atomic: clear body CSS preview transform and apply new size in one frame */
-    var body = document.getElementById('pdfModalBody');
-    if (body) { body.style.transform = ''; body.style.transformOrigin = ''; }
-    _imgEl.style.width    = w + 'px';
-    _imgEl.style.height   = h + 'px';
-    _imgEl.style.maxWidth = 'none';
-    _imgEl.style.transform = '';
+  requestAnimationFrame(function () {
+    _imgEl.style.transform       = _pdfZoom === 1 ? '' : 'scale(' + _pdfZoom + ')';
+    _imgEl.style.transformOrigin = '50% 50%';
+    /* Sync attachImg internal state so next pinch/double-tap starts from this scale */
+    if (_imgEl._ablZState) {
+      _imgEl._ablZState.scale = _pdfZoom;
+      _imgEl._ablZState.tx    = 0;
+      _imgEl._ablZState.ty    = 0;
+    }
   });
 }
 
@@ -1085,7 +1084,7 @@ function openPDF(url, title) {
   }
 
   const body = document.getElementById('pdfModalBody');
-  if (window.ablPinchZoom) window.ablPinchZoom.attachPdf(body);
+  if (window.ablPinchZoom && !_isImage) window.ablPinchZoom.attachPdf(body);
   body.innerHTML = '<div class="pdf-loading">Loading…</div>';
   body.style.padding = _isImage ? '0.5rem' : '0';
   _lastModalTrigger = _lastModalTrigger || document.activeElement;
@@ -1134,6 +1133,7 @@ function renderImage(url) {
     canvas.style.width  = Math.round(tmp.naturalWidth  * _imgFitScale) + 'px';
     canvas.style.height = Math.round(tmp.naturalHeight * _imgFitScale) + 'px';
     canvas.getContext('2d').drawImage(tmp, 0, 0);
+    if (window.ablPinchZoom) window.ablPinchZoom.attachImg(canvas);
     clearTimeout(_zoomBadgeTimer);
     var badge = document.getElementById('pdfZoomBadge');
     if (badge) badge.classList.remove('visible');

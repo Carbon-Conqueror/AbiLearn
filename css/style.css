@@ -1132,7 +1132,7 @@ input:focus-visible,select:focus-visible,textarea:focus-visible { outline:none; 
   border-radius:0; display:block; margin:0 auto;
   image-rendering: auto;
   max-width:none;
-  transition: width .2s ease, height .2s ease;
+  transition: transform .2s ease;
 }
 .pdf-float-close {
   position:fixed;
@@ -1173,13 +1173,8 @@ input:focus-visible,select:focus-visible,textarea:focus-visible { outline:none; 
 .pdf-zoom-fit-btn { font-size:1.05rem; }
 .pdf-zoom-btn:hover { background:rgba(0,0,0,.82); }
 .pdf-zoom-btn:active { transform:scale(.86) !important; opacity:.75 !important; transition-duration:60ms !important; }
-/* Show zoom controls on desktop, hide on touch-only devices */
-@media (hover:none) and (pointer:coarse) {
-  .pdf-zoom-controls { display:none; }
-}
-
 /* Smooth transition when zoom buttons are used */
-.pdf-img-view { transition:width .18s ease, height .18s ease; }
+.pdf-img-view { transition:transform .2s ease; }
 
 /* Transient zoom level indicator — appears on pinch/scroll zoom, auto-hides */
 .pdf-zoom-badge {
