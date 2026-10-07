@@ -2,41 +2,49 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
     <loc>https://www.abilearn.co.in/</loc>
+    <lastmod>2026-10-07</lastmod>
     <priority>1.0</priority>
     <changefreq>monthly</changefreq>
   </url>
   <url>
     <loc>https://www.abilearn.co.in/learn.html</loc>
+    <lastmod>2026-10-07</lastmod>
     <priority>0.9</priority>
     <changefreq>weekly</changefreq>
   </url>
   <url>
     <loc>https://www.abilearn.co.in/maths.html</loc>
+    <lastmod>2026-10-07</lastmod>
     <priority>0.9</priority>
     <changefreq>weekly</changefreq>
   </url>
   <url>
     <loc>https://www.abilearn.co.in/science.html</loc>
+    <lastmod>2026-10-07</lastmod>
     <priority>0.9</priority>
     <changefreq>weekly</changefreq>
   </url>
   <url>
     <loc>https://www.abilearn.co.in/english.html</loc>
+    <lastmod>2026-10-07</lastmod>
     <priority>0.9</priority>
     <changefreq>weekly</changefreq>
   </url>
   <url>
     <loc>https://www.abilearn.co.in/social.html</loc>
+    <lastmod>2026-10-07</lastmod>
     <priority>0.9</priority>
     <changefreq>weekly</changefreq>
   </url>
   <url>
     <loc>https://www.abilearn.co.in/learn-tips.html</loc>
+    <lastmod>2026-10-07</lastmod>
     <priority>0.7</priority>
     <changefreq>monthly</changefreq>
   </url>
   <url>
     <loc>https://www.abilearn.co.in/about.html</loc>
+    <lastmod>2026-10-07</lastmod>
     <priority>0.6</priority>
     <changefreq>monthly</changefreq>
   </url>
