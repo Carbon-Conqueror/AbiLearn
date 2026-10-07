@@ -432,6 +432,8 @@
     /* Live CSS preview state */
     cssScale: 1, tx: 0, ty: 0,
     startPdfZoom: 1,
+    /* Double-tap tracking */
+    lastTap: 0, ltX: 0, ltY: 0,
   };
 
   /* PDF uses translate3d(tx, ty, 0) scale(cssScale) with transformOrigin:0 0
@@ -446,6 +448,29 @@
     var body = e.currentTarget;
     pdfState.ptrs[e.pointerId] = { clientX: e.clientX, clientY: e.clientY };
     var p = pList(pdfState.ptrs);
+
+    /* Double-tap: toggle zoom in/out (1-finger only, before any pinch starts) */
+    if (p.length === 1 && !pdfState.active) {
+      var now = Date.now();
+      var dx  = e.clientX - pdfState.ltX;
+      var dy  = e.clientY - pdfState.ltY;
+      if (now - pdfState.lastTap < 300 && Math.sqrt(dx * dx + dy * dy) < 40) {
+        pdfState.lastTap = 0;
+        delete pdfState.ptrs[e.pointerId];
+        e.preventDefault();
+        var cur     = (typeof _pdfZoom !== 'undefined') ? _pdfZoom : 1;
+        var newZoom = cur > 1.1 ? 1.0 : 2.0;
+        var ratio   = body.scrollHeight > 0
+          ? (body.scrollTop + body.clientHeight * 0.5) / body.scrollHeight : 0;
+        document.dispatchEvent(new CustomEvent('abl-pdf-zoom', {
+          detail: { zoom: newZoom, scrollRatio: ratio }
+        }));
+        return;
+      }
+      pdfState.lastTap = now;
+      pdfState.ltX = e.clientX;
+      pdfState.ltY = e.clientY;
+    }
 
     if (p.length === 2 && !pdfState.active) {
       /* Capture only when a 2-finger pinch begins — capturing on every
