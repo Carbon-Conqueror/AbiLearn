@@ -671,7 +671,7 @@ const PDFS = {
       { title: 'Ch 10 Circles',                            desc: 'Tangent, secant, arc, sector formulas',         url: 'assets/formula/ch10-circles.png' },
       { title: 'Ch 12 Surface Areas and Volumes',          desc: 'Cuboid, cylinder, cone, sphere formulas',       url: 'assets/formula/ch13-surface-areas-volumes.png' },
       { title: 'Ch 13 Statistics',                         desc: 'Mean, median, mode for grouped data',           url: 'assets/formula/ch14-statistics.png' },
-      { title: 'Ch 15 Probability Formula Sheet',          desc: 'Probability · CBSE Class 10 Maths · PDF',      url: 'pdfs/maths/complete-formula-sheet.pdf' }
+      { title: 'Ch 14 Probability',                         desc: 'Sample space, events, theoretical & experimental probability', url: 'assets/formula/ch15-probability.png' }
     ],
     notes: [],
     pyqs: [
