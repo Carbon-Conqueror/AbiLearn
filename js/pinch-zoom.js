@@ -1,23 +1,21 @@
-/* AbiLearn PinchZoom v5 — images, PDFs, and all visual content
+/* AbiLearn PinchZoom v6 — images, PDFs, and all visual content
  *
  * IMAGES / DIAGRAMS
- *   • Two-finger pinch → incremental zoom anchored to live midpoint
- *     spread apart  → scale UP  (zoom in)
- *     pinch together → scale DOWN (zoom out)
+ *   • Two-finger pinch → stable-anchor zoom with elastic resistance
  *   • One-finger drag while zoomed → pan with inertia/momentum
  *   • Ctrl/Cmd + mouse-wheel or natural trackpad pinch → zoom at cursor
- *   • Double-tap → 2.5× / fit toggle
+ *   • Double-tap → 2.5× / fit toggle anchored to tap point
  *   • Smooth snap-back when released below SNAP_MIN
- *   • Elastic resistance at min/max scale limits
  *   • GPU-accelerated via translate3d + scale (transformOrigin: 0 0 always)
  *   • touch-action:none during 1-finger pan — no accidental page scroll
  *
- * PDF MODAL
- *   • Two-finger pinch → live CSS preview (translate3d + scale, stable anchor)
+ * PDF MODAL  (same feel as images)
+ *   • Two-finger pinch → stable anchor + elastic resistance + CSS preview
  *   • Mid-point drift handled — pinch + pan simultaneously
+ *   • One-finger pan after one pinch finger lifts (seamless transition)
+ *   • Double-tap → 2.5× anchored to tap point + immediate CSS preview
  *   • Ctrl/Cmd + wheel → re-render at new zoom
- *   • On release → dispatches `abl-pdf-zoom` for app.js re-render
- *   • touch-action: pan-x pan-y → horizontal + vertical scroll when zoomed
+ *   • On last finger release → dispatches `abl-pdf-zoom` for app.js re-render
  */
 (function () {
   'use strict';
@@ -429,41 +427,59 @@
   var pdfState = {
     ptrs: {}, active: false,
     prevDist: 0, prevMid: null,
-    /* Live CSS preview state */
     cssScale: 1, tx: 0, ty: 0,
     startPdfZoom: 1,
-    /* Double-tap tracking */
     lastTap: 0, ltX: 0, ltY: 0,
+    /* Stable pinch anchor (mirrors image engine) */
+    startDist: 0, startCssScale: 1,
+    /* 1-finger pan after one pinch finger lifts */
+    panning: false,
+    panSX: 0, panSY: 0, panSTx: 0, panSTy: 0,
   };
 
-  /* PDF uses translate3d(tx, ty, 0) scale(cssScale) with transformOrigin:0 0
-   * so the anchor formula is identical to the image engine:
-   *   tx_new = currMid.x - ratio * (prevMid.x - tx)
-   *
-   * "body" here is the pdf-modal-body scrollable container (position:fixed;inset:0)
-   * Its natural top-left is at viewport (0, 0), so nl=nt=0 and the formula
-   * simplifies — but we write it generically for robustness. */
+  function applyPdfTransform(body) {
+    body.style.transformOrigin = '0 0';
+    body.style.transform = 'translate3d(' + pdfState.tx + 'px,' + pdfState.ty + 'px,0) scale(' + pdfState.cssScale + ')';
+  }
+
+  function pdfConstrainTx(body) {
+    var s  = pdfState.cssScale;
+    var bw = body.clientWidth  || window.innerWidth;
+    var bh = body.clientHeight || window.innerHeight;
+    pdfState.tx = clamp(pdfState.tx, s > 1 ? -(s - 1) * bw : 0, 0);
+    pdfState.ty = clamp(pdfState.ty, s > 1 ? -(s - 1) * bh : 0, 0);
+  }
 
   function onPdfDown(e) {
     var body = e.currentTarget;
     pdfState.ptrs[e.pointerId] = { clientX: e.clientX, clientY: e.clientY };
     var p = pList(pdfState.ptrs);
 
-    /* Double-tap: toggle zoom in/out (1-finger only, before any pinch starts) */
-    if (p.length === 1 && !pdfState.active) {
+    /* ── Double-tap: 2.5× anchored to tap point, or reset to 1× ── */
+    if (p.length === 1 && !pdfState.active && !pdfState.panning) {
       var now = Date.now();
       var dx  = e.clientX - pdfState.ltX;
       var dy  = e.clientY - pdfState.ltY;
-      if (now - pdfState.lastTap < 300 && Math.sqrt(dx * dx + dy * dy) < 40) {
+      if (now - pdfState.lastTap < DBL_MS && Math.sqrt(dx * dx + dy * dy) < 40) {
         pdfState.lastTap = 0;
         delete pdfState.ptrs[e.pointerId];
         e.preventDefault();
         var cur     = (typeof _pdfZoom !== 'undefined') ? _pdfZoom : 1;
-        var newZoom = cur > 1.1 ? 1.0 : 2.0;
-        var ratio   = body.scrollHeight > 0
+        var isIn    = cur > 1.1;
+        var newZoom = isIn ? 1.0 : 2.5;
+        if (!isIn) {
+          /* Immediate CSS preview anchored to tap point (transformOrigin 0 0) */
+          var ratio = newZoom / cur;
+          pdfState.cssScale = ratio;
+          pdfState.tx = e.clientX * (1 - ratio);
+          pdfState.ty = e.clientY * (1 - ratio);
+          body.style.transformOrigin = '0 0';
+          body.style.transform = 'translate3d(' + pdfState.tx + 'px,' + pdfState.ty + 'px,0) scale(' + ratio + ')';
+        }
+        var scrollRatio = body.scrollHeight > 0
           ? (body.scrollTop + body.clientHeight * 0.5) / body.scrollHeight : 0;
         document.dispatchEvent(new CustomEvent('abl-pdf-zoom', {
-          detail: { zoom: newZoom, scrollRatio: ratio }
+          detail: { zoom: newZoom, scrollRatio: scrollRatio }
         }));
         return;
       }
@@ -472,18 +488,21 @@
       pdfState.ltY = e.clientY;
     }
 
+    /* ── 2-finger: start pinch ── */
     if (p.length === 2 && !pdfState.active) {
-      /* Capture only when a 2-finger pinch begins — capturing on every
-         pointerdown blocks the browser's native scroll on PC/trackpad. */
-      body.setPointerCapture(e.pointerId);
+      try { body.setPointerCapture(e.pointerId); } catch (_) {}
+      pdfState.panning      = false;
       pdfState.active       = true;
       pdfState.cssScale     = 1;
       pdfState.tx           = 0;
       pdfState.ty           = 0;
       pdfState.startPdfZoom = (typeof _pdfZoom !== 'undefined') ? _pdfZoom : 1;
-      pdfState.prevDist     = pDist(p[0], p[1]);
-      pdfState.prevMid      = { x: (p[0].clientX + p[1].clientX) * 0.5,
-                                y: (p[0].clientY + p[1].clientY) * 0.5 };
+      var d = pDist(p[0], p[1]);
+      pdfState.prevDist      = d;
+      pdfState.startDist     = d;
+      pdfState.startCssScale = 1;
+      pdfState.prevMid = { x: (p[0].clientX + p[1].clientX) * 0.5,
+                           y: (p[0].clientY + p[1].clientY) * 0.5 };
       body.style.transformOrigin = '0 0';
       body.style.transform       = 'translate3d(0,0,0) scale(1)';
       body.style.touchAction     = 'none';
@@ -492,12 +511,23 @@
   }
 
   function onPdfMove(e) {
-    if (!pdfState.active) return;
     var body = e.currentTarget;
     if (!pdfState.ptrs[e.pointerId]) return;
     pdfState.ptrs[e.pointerId] = { clientX: e.clientX, clientY: e.clientY };
     var p = pList(pdfState.ptrs);
-    if (p.length < 2) return;
+
+    /* ── Pan (1-finger after one pinch finger lifts) ── */
+    if (pdfState.panning && p.length === 1) {
+      e.preventDefault();
+      pdfState.tx = pdfState.panSTx + (e.clientX - pdfState.panSX);
+      pdfState.ty = pdfState.panSTy + (e.clientY - pdfState.panSY);
+      pdfConstrainTx(body);
+      applyPdfTransform(body);
+      return;
+    }
+
+    /* ── Pinch ── */
+    if (!pdfState.active || p.length < 2) return;
     e.preventDefault();
 
     var currDist = pDist(p[0], p[1]);
@@ -505,12 +535,21 @@
                      y: (p[0].clientY + p[1].clientY) * 0.5 };
 
     if (pdfState.prevDist > 0) {
-      var ratio = currDist / pdfState.prevDist;
-      /* Same anchor formula as images */
-      pdfState.tx       = currMid.x - ratio * (pdfState.prevMid.x - pdfState.tx);
-      pdfState.ty       = currMid.y - ratio * (pdfState.prevMid.y - pdfState.ty);
-      pdfState.cssScale = clamp(pdfState.cssScale * ratio, 0.1, 8.0);
-      body.style.transform = 'translate3d(' + pdfState.tx + 'px,' + pdfState.ty + 'px,0) scale(' + pdfState.cssScale + ')';
+      /* Stable anchor: scale relative to startDist/startCssScale */
+      var rawScale = (pdfState.startDist > 0)
+        ? pdfState.startCssScale * (currDist / pdfState.startDist)
+        : pdfState.cssScale * (currDist / pdfState.prevDist);
+      /* Elastic resistance at pinch limits */
+      var newCssScale = (rawScale < 0.1 || rawScale > 8.0)
+        ? resist(rawScale, 0.1, 8.0)
+        : rawScale;
+      newCssScale = clamp(newCssScale, 0.082, 9.44);
+
+      var r = newCssScale / pdfState.cssScale;
+      pdfState.tx       = currMid.x - r * (pdfState.prevMid.x - pdfState.tx);
+      pdfState.ty       = currMid.y - r * (pdfState.prevMid.y - pdfState.ty);
+      pdfState.cssScale = newCssScale;
+      applyPdfTransform(body);
     }
     pdfState.prevDist = currDist;
     pdfState.prevMid  = currMid;
@@ -518,27 +557,51 @@
 
   function onPdfUp(e) {
     delete pdfState.ptrs[e.pointerId];
-    if (!pdfState.active || pList(pdfState.ptrs).length >= 2) return;
+    var body = e.currentTarget;
+    var p    = pList(pdfState.ptrs);
 
+    /* ── Pan ended ── */
+    if (pdfState.panning) {
+      if (p.length === 0) {
+        /* Last finger lifted — commit zoom */
+        pdfState.panning = false;
+        pdfState.active  = false;
+        var newZoom = clamp(pdfState.startPdfZoom * pdfState.cssScale, PDF_MIN, PDF_MAX);
+        var scrollRatio = body.scrollHeight > 0
+          ? (body.scrollTop + body.clientHeight * 0.5) / body.scrollHeight : 0;
+        pdfState.cssScale = 1; pdfState.tx = 0; pdfState.ty = 0;
+        pdfState.prevDist = 0; pdfState.prevMid = null;
+        body.style.touchAction = 'pan-x pan-y';
+        document.dispatchEvent(new CustomEvent('abl-pdf-zoom', {
+          detail: { zoom: newZoom, scrollRatio: scrollRatio }
+        }));
+      } else {
+        pdfState.panning = false;
+      }
+      return;
+    }
+
+    if (!pdfState.active || p.length >= 2) return;
+
+    /* ── Pinch: seamless transition to 1-finger pan ── */
+    if (p.length === 1) {
+      var rem = p[0];
+      pdfState.panning = true;
+      pdfState.panSX   = rem.clientX; pdfState.panSY   = rem.clientY;
+      pdfState.panSTx  = pdfState.tx; pdfState.panSTy  = pdfState.ty;
+      return;
+    }
+
+    /* ── Last finger lifted ── */
     pdfState.active = false;
-    var body        = e.currentTarget;
-
-    /* Commit new zoom — clamp to supported range */
-    var newZoom = clamp(pdfState.startPdfZoom * pdfState.cssScale, PDF_MIN, PDF_MAX);
-
-    /* Preserve center-of-viewport position through the re-render.
-     * scrollRatio is (visible center) / (total content height). */
-    var scrollRatio = body.scrollHeight > 0
-      ? (body.scrollTop + body.clientHeight * 0.5) / body.scrollHeight
-      : 0;
-
-    /* Reset pinch state — keep CSS preview alive until renderPDF clears it */
+    var newZoom2 = clamp(pdfState.startPdfZoom * pdfState.cssScale, PDF_MIN, PDF_MAX);
+    var scrollRatio2 = body.scrollHeight > 0
+      ? (body.scrollTop + body.clientHeight * 0.5) / body.scrollHeight : 0;
     pdfState.cssScale = 1; pdfState.tx = 0; pdfState.ty = 0;
     pdfState.prevDist = 0; pdfState.prevMid = null;
     body.style.touchAction = 'pan-x pan-y';
-
     document.dispatchEvent(new CustomEvent('abl-pdf-zoom', {
-      detail: { zoom: newZoom, scrollRatio: scrollRatio }
+      detail: { zoom: newZoom2, scrollRatio: scrollRatio2 }
     }));
   }
 
