@@ -1144,7 +1144,7 @@ input:focus-visible,select:focus-visible,textarea:focus-visible { outline:none; 
   display:flex; align-items:center; justify-content:center;
   -webkit-backdrop-filter:blur(14px) saturate(1.4);
   backdrop-filter:blur(14px) saturate(1.4);
-  transition:background .15s; -webkit-tap-highlight-color:transparent;
+  transition:background .15s, opacity 0.4s; -webkit-tap-highlight-color:transparent;
   touch-action:manipulation;
 }
 .pdf-float-close:hover { background:rgba(0,0,0,.82); }
