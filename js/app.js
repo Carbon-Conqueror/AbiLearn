@@ -993,7 +993,6 @@ function pdfZoomFit() {
 }
 var _imgEl = null;
 var _imgFitScale = 1;
-var _closeHideTimer = null;
 function _applyImgZoom() {
   if (!_imgEl) return;
   requestAnimationFrame(function () {
@@ -1088,20 +1087,6 @@ function openPDF(url, title) {
   _installFocusTrap(modal);
   requestAnimationFrame(function() { body.focus({ preventScroll: true }); });
   document.body.style.overflow = 'hidden';
-
-  var _closeBtn = modal.querySelector('.pdf-float-close');
-  function _showCloseBtn() {
-    if (!_closeBtn) return;
-    clearTimeout(_closeHideTimer);
-    _closeBtn.style.opacity = '1';
-    _closeBtn.style.pointerEvents = '';
-    _closeHideTimer = setTimeout(function() {
-      _closeBtn.style.opacity = '0';
-      _closeBtn.style.pointerEvents = 'none';
-    }, 2500);
-  }
-  _showCloseBtn();
-  modal.addEventListener('touchstart', _showCloseBtn, { passive: true });
 
   if (_isImage) { renderImage(url); return; }
   if (window.pdfjsLib) { renderPDF(url); return; }
@@ -1346,7 +1331,6 @@ function renderPDF(url, scrollRatio) {
 }
 
 function closePDF() {
-  clearTimeout(_closeHideTimer);
   if (_pdfObserver) { _pdfObserver.disconnect(); _pdfObserver = null; }
   const m = document.getElementById('pdfModal');
   if (m) { _removeFocusTrap(m); m.classList.remove('open'); }
