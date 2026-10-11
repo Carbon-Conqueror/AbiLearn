@@ -5,4 +5,4 @@ Disallow: /pdfs/
 # Allow all public pages
 Allow: /
 
-Sitemap: https://www.abilearn.co.in/sitemap.xml
+Sitemap: https://www.abilearn.com/sitemap.xml

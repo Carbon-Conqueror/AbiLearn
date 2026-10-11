@@ -202,7 +202,7 @@
         'This educational content is protected by copyright.<br>' +
         'Printing or reproducing AbiLearn material is not permitted.' +
       '</p>' +
-      '<p style="font-size:.8rem;color:#999;margin-top:.75rem">www.abilearn.co.in</p>';
+      '<p style="font-size:.8rem;color:#999;margin-top:.75rem">www.abilearn.com</p>';
     document.body.appendChild(pn);
   }
 

@@ -21,8 +21,8 @@
   (function () {
     var host    = (window.location.hostname || '').toLowerCase();
     var allowed = [
-      'abilearn.co.in',
-      'www.abilearn.co.in',
+      'abilearn.com',
+      'www.abilearn.com',
       'abilearn-89c92.web.app',
       'abilearn-89c92.firebaseapp.com',
     ];
@@ -34,7 +34,7 @@
     if (!isOk) {
       document.documentElement.style.cssText = 'display:none!important';
       window.location.replace(
-        'https://www.abilearn.co.in' + window.location.pathname + window.location.search
+        'https://www.abilearn.com' + window.location.pathname + window.location.search
       );
     }
   }());
