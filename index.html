@@ -347,13 +347,13 @@
 
   .s-hero {
     position: relative;
-    min-height: 100svh;
+    height: calc(100svh - var(--nav-h));
+    min-height: 0;
     display: flex;
     align-items: center;
     justify-content: center;
     overflow: hidden;
     padding-top: var(--nav-h);
-    padding-bottom: clamp(3rem, 6vh, 5rem);
     scroll-margin-top: 0;
   }
 
@@ -1295,6 +1295,5 @@ initLandingPage();
 <script src="js/community.js?v=3"></script>
   <script src="js/router.js?v=7"></script>
   <script src="js/pinch-zoom.js?v=10"></script>
-<footer style="text-align:center;padding:1.4rem 1rem 1.8rem;font-size:.78rem;color:var(--muted,#888);border-top:1px solid var(--border,#e5e5e5);margin-top:2rem;">&copy; 2026 AbiLearn. All rights reserved.</footer>
 </body>
 </html>
