@@ -1303,41 +1303,7 @@ input,textarea{-webkit-user-select:text!important;user-select:text!important;}
 initLandingPage();
 </script>
 
-<div class="a2hs-banner" id="a2hsBanner" hidden>
-  <span class="a2hs-icon">📲</span>
-  <div class="a2hs-text">
-    <strong>Add AbiLearn to your home screen</strong>
-    Works offline — no internet needed after first visit
-  </div>
-  <button class="a2hs-add" id="a2hsAdd">Add</button>
-  <button class="a2hs-close" id="a2hsClose" aria-label="Dismiss">×</button>
-</div>
-
-<script>
-(function(){
-  if ('serviceWorker' in navigator) navigator.serviceWorker.register('/sw.js');
-  var banner = document.getElementById('a2hsBanner');
-  var addBtn = document.getElementById('a2hsAdd');
-  var closeBtn = document.getElementById('a2hsClose');
-  var deferredPrompt = null;
-  var DISMISSED_KEY = 'a2hs_dismissed';
-  try { if (localStorage.getItem(DISMISSED_KEY)) return; } catch(e){}
-  if (window.matchMedia('(display-mode: standalone)').matches) return;
-  window.addEventListener('beforeinstallprompt', function(e) {
-    e.preventDefault();
-    deferredPrompt = e;
-    banner.hidden = false;
-  });
-  addBtn.addEventListener('click', function() {
-    banner.hidden = true;
-    if (deferredPrompt) { deferredPrompt.prompt(); deferredPrompt = null; }
-  });
-  closeBtn.addEventListener('click', function() {
-    banner.hidden = true;
-    try { localStorage.setItem(DISMISSED_KEY, '1'); } catch(e){}
-  });
-})();
-</script>
+<script>if ('serviceWorker' in navigator) navigator.serviceWorker.register('/sw.js');</script>
 
 <script src="js/protect.js?v=9"></script>
 <script src="js/community.js?v=3"></script>
