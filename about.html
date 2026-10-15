@@ -622,6 +622,7 @@ input,textarea{-webkit-user-select:text!important;user-select:text!important;}
     els.forEach(function(el){ el.classList.add('visible'); });
   }
 }());
+if ('serviceWorker' in navigator) navigator.serviceWorker.register('/sw.js');
 </script>
 
 <script src="js/protect.js?v=9"></script>
