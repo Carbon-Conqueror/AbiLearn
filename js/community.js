@@ -60,7 +60,6 @@
 }
 @media (max-width: 600px) {
   #abl-community-cta { bottom: 16px; right: 16px; }
-  #abl-cm-pill { font-size: .82rem; padding: 10px 16px 10px 12px; gap: 6px; }
 }
 
 /* pill trigger */
