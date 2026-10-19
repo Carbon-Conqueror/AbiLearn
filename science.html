@@ -63,14 +63,14 @@ input,textarea{-webkit-user-select:text!important;user-select:text!important;}
   <div class="nav-right">
     <div class="search-bar">
       <span class="search-icon"></span>
-      <input type="text" placeholder="Search topics..." id="searchInput" autocomplete="off">
+      <input type="text" placeholder="Search topics..." id="searchInput" autocomplete="off" aria-label="Search topics">
       <div class="search-results" id="searchResults"></div>
     </div>
   </div>
 </nav>
 
 <div id="main-content" tabindex="-1" style="outline:none"></div>
-<div id="subjectContent"></div>
+<main id="subjectContent" aria-label="Science study material"></main>
 
 <script src="js/db-stub.js"></script>
 <script src="js/data.js?v=1"></script>

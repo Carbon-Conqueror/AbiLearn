@@ -27,7 +27,7 @@
   <link rel="dns-prefetch" href="https://www.gstatic.com">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet" media="print" onload="this.media='all'"><noscript><link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet"></noscript>
   <style>
   /* ━━ AbiLearn — Landing v5 ━━ */
 
@@ -1043,7 +1043,7 @@ input,textarea{-webkit-user-select:text!important;user-select:text!important;}
   <div class="nav-right">
     <div class="search-bar">
       <span class="search-icon"></span>
-      <input type="text" placeholder="Search topics..." id="searchInput" autocomplete="off">
+      <input type="text" placeholder="Search topics..." id="searchInput" autocomplete="off" aria-label="Search topics">
       <div class="search-results" id="searchResults"></div>
     </div>
   </div>
@@ -1238,7 +1238,7 @@ input,textarea{-webkit-user-select:text!important;user-select:text!important;}
   </svg>
 
   <!-- Hero content -->
-  <div class="hero-content container" id="hero-main">
+  <main class="hero-content container" id="hero-main">
 
     <h1 class="hero-h1">
       <span class="h1-line1 a1">Free CBSE Class 10</span>
@@ -1253,8 +1253,7 @@ input,textarea{-webkit-user-select:text!important;user-select:text!important;}
 
     <div class="hero-actions a3">
       <a href="learn.html"
-         class="btn-primary"
-         role="button">
+         class="btn-primary">
         Start Learning
         <span class="btn-arrow" aria-hidden="true">
           <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
@@ -1263,10 +1262,10 @@ input,textarea{-webkit-user-select:text!important;user-select:text!important;}
           </svg>
         </span>
       </a>
-      <a href="about.html" class="btn-ghost" role="button">About AbiLearn</a>
+      <a href="about.html" class="btn-ghost">About AbiLearn</a>
     </div>
 
-  </div>
+  </main>
 </section>
 
 <script src="js/db-stub.js"></script>

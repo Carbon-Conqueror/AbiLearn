@@ -1117,8 +1117,7 @@ input:focus-visible,select:focus-visible,textarea:focus-visible { outline:none; 
 .pdf-float-close:active { transform:scale(.86) !important; opacity:.75 !important; transition-duration:60ms !important; }
 
 
-/* Smooth transition on zoom */
-.pdf-img-view { transition:transform .1s ease; }
+/* (transition already declared on .pdf-img-view above) */
 
 /* Transient zoom level indicator — appears on pinch/scroll zoom, auto-hides */
 .pdf-zoom-badge {
@@ -1192,8 +1191,16 @@ input:focus-visible,select:focus-visible,textarea:focus-visible { outline:none; 
 }
 .test-timer.warning { color:var(--wrong); background:var(--wrong-l); }
 
-footer {
+footer, .site-footer {
   padding:2.5rem 0 1.5rem; margin-top:3rem;
+}
+.site-footer {
+  text-align:center;
+  padding:1.4rem 1rem 1.8rem;
+  font-size:.78rem;
+  color:var(--muted);
+  border-top:1px solid var(--border);
+  margin-top:2rem;
 }
 .footer-grid {
   max-width:1200px; margin:0 auto;

@@ -170,6 +170,10 @@
   }
   .schip:hover { border-color: var(--border-2); box-shadow: 0 2px 12px var(--accent-glow); }
   .schip-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+  .schip-dot--maths   { background: #3B82F6; }
+  .schip-dot--science { background: #10B981; }
+  .schip-dot--english { background: #EC4899; }
+  .schip-dot--social  { background: #F59E0B; }
 
   /* ── STAT BAND ── */
   .stat-band { background: var(--bg); border-bottom: 1px solid var(--border); padding-block: clamp(2rem,4vw,3rem); }
@@ -362,6 +366,7 @@ input,textarea{-webkit-user-select:text!important;user-select:text!important;}
 </script>
 </head>
 <body>
+<a href="#main-content" class="skip-nav">Skip to main content</a>
 
 <!-- NAV -->
 <nav class="navbar">
@@ -372,11 +377,13 @@ input,textarea{-webkit-user-select:text!important;user-select:text!important;}
   <div class="nav-right">
     <div class="search-bar">
       <span class="search-icon"></span>
-      <input type="text" placeholder="Search topics..." id="searchInput" autocomplete="off">
+      <input type="text" placeholder="Search topics..." id="searchInput" autocomplete="off" aria-label="Search topics">
       <div class="search-results" id="searchResults"></div>
     </div>
   </div>
 </nav>
+
+<main id="main-content" tabindex="-1">
 
 <!-- HERO -->
 <section class="hero" aria-label="About AbiLearn">
@@ -388,10 +395,10 @@ input,textarea{-webkit-user-select:text!important;user-select:text!important;}
       Chapter notes, MCQ sets, PYQ-style questions and formula sheets for all four NCERT subjects. No cost.
     </p>
     <div class="subject-chips" aria-label="Subjects covered">
-      <div class="schip"><span class="schip-dot" style="background:#3B82F6;"></span>Mathematics</div>
-      <div class="schip"><span class="schip-dot" style="background:#10B981;"></span>Science</div>
-      <div class="schip"><span class="schip-dot" style="background:#EC4899;"></span>English</div>
-      <div class="schip"><span class="schip-dot" style="background:#F59E0B;"></span>Social Science</div>
+      <div class="schip"><span class="schip-dot schip-dot--maths"></span>Mathematics</div>
+      <div class="schip"><span class="schip-dot schip-dot--science"></span>Science</div>
+      <div class="schip"><span class="schip-dot schip-dot--english"></span>English</div>
+      <div class="schip"><span class="schip-dot schip-dot--social"></span>Social Science</div>
     </div>
   </div>
 </section>
@@ -614,6 +621,8 @@ input,textarea{-webkit-user-select:text!important;user-select:text!important;}
     </p>
   </div>
 </div>
+
+</main>
 
 <script src="js/db-stub.js"></script>
 <script src="js/data.js?v=1"></script>
