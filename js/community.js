@@ -60,6 +60,9 @@
 }
 @media (max-width: 600px) {
   #abl-community-cta { bottom: 16px; right: 16px; }
+  #abl-cm-pill { padding: 11px 14px; gap: 0; }
+  #abl-cm-pill span:not(#abl-cm-pill-icon):not(#abl-cm-pill-chevron) { display: none; }
+  #abl-cm-pill-chevron { margin-left: 0; }
 }
 
 /* pill trigger */
