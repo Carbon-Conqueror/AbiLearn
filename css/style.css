@@ -1192,7 +1192,7 @@ input:focus-visible,select:focus-visible,textarea:focus-visible { outline:none; 
 .test-timer.warning { color:var(--wrong); background:var(--wrong-l); }
 
 footer, .site-footer {
-  padding:2.5rem 0 1.5rem; margin-top:3rem;
+  padding-block:2.5rem 1.5rem; margin-top:3rem;
 }
 .site-footer {
   text-align:center;
